@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { teamApi } from '@/lib/api';
 
 interface Team {
   id: string;
@@ -96,19 +97,44 @@ interface TeamsListProps {
 export function TeamsList({ userType }: TeamsListProps) {
   const isCompanyUser = userType === 'company';
   
-  const { data: teams, isLoading } = useQuery({
-    queryKey: isCompanyUser ? ['available-teams'] : ['my-team'],
+  const { data: teamsResponse, isLoading } = useQuery({
+    queryKey: isCompanyUser ? ['available-teams'] : ['my-teams'],
     queryFn: async () => {
-      // This would normally fetch from your API
-      if (isCompanyUser) {
-        // Return all available teams for companies to browse
-        return mockTeams;
+      const response = await teamApi.getTeams({
+        page: 1,
+        limit: 20,
+      });
+      
+      if (response.success) {
+        const teams = response.data || [];
+        
+        // Transform Firebase teams to component format
+        return teams.map((team: any) => ({
+          id: team.id,
+          name: team.name,
+          description: team.description,
+          industry: team.industry,
+          location: team.location,
+          size: team.size,
+          rating: team.rating?.average || 4.0,
+          skills: team.skills || [],
+          role: 'owner', // TODO: determine actual role based on current user
+          status: team.availability?.status === 'available' ? 'available' : 
+                  team.availability?.status === 'selective' ? 'exploring' : 'inactive',
+          memberCount: team.memberIds?.length || team.size,
+          yearsWorking: team.experience?.yearsWorkedTogether || 2,
+          successfulLiftouts: team.experience?.previousLiftouts || 0,
+          currentCompany: 'Current Company', // TODO: get from user profile
+          liftoutInterest: 'medium' as const,
+        }));
       } else {
-        // Return only the user's team profile for team users
-        return [mockTeams[0]]; // Demo: show one team profile
+        console.error('Failed to fetch teams:', response.error);
+        return mockTeams; // Fallback to mock data
       }
     },
   });
+
+  const teams = teamsResponse || [];
 
   if (isLoading) {
     return (

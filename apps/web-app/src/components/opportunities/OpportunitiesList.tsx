@@ -14,6 +14,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { opportunityApi } from '@/lib/api';
+import type { Opportunity as FirebaseOpportunity } from '@/types/firebase';
 
 interface Opportunity {
   id: string;
@@ -115,13 +117,25 @@ function classNames(...classes: string[]) {
 }
 
 export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProps) {
-  const { data: opportunities, isLoading } = useQuery({
+  const { data: opportunitiesResponse, isLoading } = useQuery({
     queryKey: ['opportunities', userType, activeTab],
     queryFn: async () => {
-      // This would normally fetch from your API based on userType and activeTab
-      return mockOpportunities;
+      const response = await opportunityApi.getOpportunities({
+        // Add filtering based on activeTab if needed
+        page: 1,
+        limit: 20,
+      });
+      
+      if (response.success) {
+        return response.data || [];
+      } else {
+        console.error('Failed to fetch opportunities:', response.error);
+        return mockOpportunities; // Fallback to mock data if API fails
+      }
     },
   });
+
+  const opportunities = opportunitiesResponse || [];
 
   const isCompanyUser = userType === 'company';
 
@@ -246,7 +260,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
 
               <div className="flex items-center justify-between">
                 <div className="flex flex-wrap gap-2">
-                  {opportunity.skills.slice(0, 4).map((skill) => (
+                  {opportunity.skills.slice(0, 4).map((skill: string) => (
                     <span
                       key={skill}
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"

@@ -132,7 +132,8 @@ export function CreateOpportunityForm() {
 
   const handleAddSkill = (skill: string) => {
     const trimmedSkill = skill.trim();
-    if (trimmedSkill && !skillFields.some(field => field.value === trimmedSkill)) {
+    const currentSkills = skillFields.map((field: any) => field.value || field);
+    if (trimmedSkill && !currentSkills.includes(trimmedSkill)) {
       addSkill(trimmedSkill);
       setSkillInput('');
     }
@@ -387,12 +388,12 @@ export function CreateOpportunityForm() {
                 {/* Selected skills */}
                 {skillFields.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {skillFields.map((field, index) => (
+                    {skillFields.map((field: any, index) => (
                       <span
                         key={field.id}
                         className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
                       >
-                        {field.value}
+                        {field.value || field}
                         <button
                           type="button"
                           onClick={() => removeSkill(index)}
