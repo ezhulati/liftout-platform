@@ -1,29 +1,19 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 
-function SignInForm() {
+export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { signIn, signInWithGoogle } = useAuth();
-  
-  const callbackUrl = searchParams.get('callbackUrl') || '/app/dashboard';
-  const error = searchParams.get('error');
-
-  useEffect(() => {
-    if (error) {
-      toast.error('Authentication failed. Please try again.');
-    }
-  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +28,7 @@ function SignInForm() {
     try {
       await signIn(email, password);
       toast.success('Signed in successfully');
-      router.push(callbackUrl);
+      router.push('/app/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'Sign in failed');
     } finally {
@@ -51,7 +41,7 @@ function SignInForm() {
     try {
       await signInWithGoogle();
       toast.success('Signed in with Google successfully');
-      router.push(callbackUrl);
+      router.push('/app/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'Google sign in failed');
       setIsLoading(false);
@@ -247,13 +237,5 @@ function SignInForm() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div></div>}>
-      <SignInForm />
-    </Suspense>
   );
 }

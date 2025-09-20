@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   HomeIcon,
   UserGroupIcon,
@@ -29,10 +29,9 @@ const teamNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon, current: false },
   { name: 'My Team Profile', href: '/app/teams', icon: UserGroupIcon, current: false },
   { name: 'Liftout Opportunities', href: '/app/opportunities', icon: BriefcaseIcon, current: false },
-  { name: 'AI Matching', href: '/app/matching', icon: CpuChipIcon, current: false },
-  { name: 'Expressions of Interest', href: '/app/applications', icon: DocumentTextIcon, current: false },
+  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon, current: false },
+  { name: 'My Applications', href: '/app/applications', icon: DocumentTextIcon, current: false },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, current: false },
-  { name: 'Browse Teams', href: '/app/search', icon: MagnifyingGlassIcon, current: false },
 ];
 
 // Navigation items that show for company users
@@ -40,10 +39,10 @@ const companyNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon, current: false },
   { name: 'Browse Teams', href: '/app/teams', icon: UserGroupIcon, current: false },
   { name: 'My Opportunities', href: '/app/opportunities', icon: BriefcaseIcon, current: false },
-  { name: 'AI Matching', href: '/app/matching', icon: CpuChipIcon, current: false },
-  { name: 'Team Interest', href: '/app/applications', icon: DocumentTextIcon, current: false },
+  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon, current: false },
+  { name: 'Team Applications', href: '/app/applications', icon: DocumentTextIcon, current: false },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, current: false },
-  { name: 'Search', href: '/app/search', icon: MagnifyingGlassIcon, current: false },
+  { name: 'Advanced Search', href: '/app/search', icon: MagnifyingGlassIcon, current: false },
 ];
 
 const companyExtendedNavigation = [
@@ -68,10 +67,10 @@ function classNames(...classes: string[]) {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { userData } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isCompanyUser = session?.user?.userType === 'company';
+  const isCompanyUser = userData?.type === 'company';
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
   const navigationWithCurrent = currentNavigation.map((item) => ({
@@ -109,8 +108,20 @@ export function AppSidebar() {
                 </svg>
               </button>
             </div>
-            <div className="flex flex-shrink-0 items-center px-4">
+            <div className="flex flex-shrink-0 items-center justify-between px-4">
               <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
+              {userData && (
+                <div className="flex items-center">
+                  {isCompanyUser ? (
+                    <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
+                  ) : (
+                    <UserGroupIcon className="h-4 w-4 text-green-500 mr-1" />
+                  )}
+                  <span className="text-xs text-gray-500 font-medium">
+                    {isCompanyUser ? 'Company' : 'Team'}
+                  </span>
+                </div>
+              )}
             </div>
             <nav className="mt-5 flex-shrink-0 h-full divide-y divide-gray-200 overflow-y-auto">
               <div className="px-2 space-y-1">
@@ -189,8 +200,20 @@ export function AppSidebar() {
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
         <div className="flex flex-col flex-grow bg-white pt-5 pb-4 overflow-y-auto border-r border-gray-200">
-          <div className="flex items-center flex-shrink-0 px-4">
+          <div className="flex items-center justify-between flex-shrink-0 px-4">
             <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
+            {userData && (
+              <div className="flex items-center">
+                {isCompanyUser ? (
+                  <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
+                ) : (
+                  <UserGroupIcon className="h-4 w-4 text-green-500 mr-1" />
+                )}
+                <span className="text-xs text-gray-500 font-medium">
+                  {isCompanyUser ? 'Company' : 'Team'}
+                </span>
+              </div>
+            )}
           </div>
           <nav className="mt-5 flex-1 px-2 space-y-1">
             {navigationWithCurrent.map((item) => (

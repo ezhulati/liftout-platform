@@ -377,82 +377,6 @@ export const opportunityApi = {
   },
 };
 
-// Application API calls (Firebase implementation)
-export const applicationApi = {
-  getMyApplications: async () => {
-    try {
-      const currentUser = await getCurrentUser();
-      if (!currentUser) {
-        return { success: false, error: 'Authentication required' };
-      }
-
-      // Get teams led by current user
-      const teams = await teamService.getTeamsByLeader(currentUser.id);
-      const applications = [];
-      
-      for (const team of teams) {
-        const teamApplications = await applicationService.getApplicationsByTeam(team.id);
-        applications.push(...teamApplications);
-      }
-
-      return { success: true, data: applications };
-    } catch (error: any) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  submitApplication: async (data: {
-    teamId: string;
-    opportunityId: string;
-    coverLetter?: string;
-    proposedCompensation?: number;
-    availabilityDate?: string;
-  }) => {
-    try {
-      const currentUser = await getCurrentUser();
-      if (!currentUser) {
-        return { success: false, error: 'Authentication required' };
-      }
-
-      // Get the opportunity details
-      const opportunity = await opportunityService.getOpportunityById(data.opportunityId);
-      if (!opportunity) {
-        return { success: false, error: 'Opportunity not found' };
-      }
-
-      const applicationData = {
-        teamId: data.teamId,
-        opportunityId: data.opportunityId,
-        companyId: opportunity.companyId,
-        submittedBy: currentUser.id,
-        status: 'pending' as const,
-        proposal: {
-          coverLetter: data.coverLetter || '',
-          proposedCompensation: data.proposedCompensation,
-          availabilityDate: data.availabilityDate ? new Date(data.availabilityDate) : undefined,
-        },
-        timeline: {
-          submittedAt: new Date(),
-        },
-        documentation: [],
-      };
-
-      const applicationId = await applicationService.createApplication(applicationData);
-      return { success: true, data: { id: applicationId } };
-    } catch (error: any) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  updateApplicationStatus: async (id: string, status: string) => {
-    try {
-      await applicationService.updateApplicationStatus(id, status as any);
-      return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.message };
-    }
-  },
-};
 
 // Search API calls (Firebase implementation)
 export const searchApi = {
@@ -518,6 +442,86 @@ export const searchApi = {
       }
 
       return { success: true, data: filteredOpportunities };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+};
+
+// Application API
+export const applicationApi = {
+  async createApplication(data: any) {
+    try {
+      const currentUser = await getCurrentUser();
+      if (!currentUser || currentUser.type !== 'individual') {
+        return { success: false, error: 'Only team members can create applications' };
+      }
+      
+      const { applicationService } = await import('@/lib/services/applicationService');
+      const applicationId = await applicationService.createApplication(data, currentUser.id);
+      return { success: true, data: { id: applicationId } };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  async getApplicationById(applicationId: string) {
+    try {
+      const { applicationService } = await import('@/lib/services/applicationService');
+      const application = await applicationService.getApplicationById(applicationId);
+      return { success: true, data: application };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  async getMyApplications() {
+    try {
+      const currentUser = await getCurrentUser();
+      if (!currentUser) {
+        return { success: false, error: 'Not authenticated' };
+      }
+      
+      const { applicationService } = await import('@/lib/services/applicationService');
+      let applications;
+      
+      if (currentUser.type === 'company') {
+        applications = await applicationService.getCompanyApplications(currentUser.id);
+      } else {
+        applications = await applicationService.getTeamApplications(currentUser.id);
+      }
+      
+      return { success: true, data: applications };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  async updateApplicationStatus(applicationId: string, status: string, notes?: string) {
+    try {
+      const currentUser = await getCurrentUser();
+      if (!currentUser || currentUser.type !== 'company') {
+        return { success: false, error: 'Only companies can update application status' };
+      }
+      
+      const { applicationService } = await import('@/lib/services/applicationService');
+      await applicationService.updateApplicationStatus(applicationId, status as any, notes);
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  async withdrawApplication(applicationId: string) {
+    try {
+      const currentUser = await getCurrentUser();
+      if (!currentUser || currentUser.type !== 'individual') {
+        return { success: false, error: 'Only team members can withdraw applications' };
+      }
+      
+      const { applicationService } = await import('@/lib/services/applicationService');
+      await applicationService.withdrawApplication(applicationId);
+      return { success: true };
     } catch (error: any) {
       return { success: false, error: error.message };
     }

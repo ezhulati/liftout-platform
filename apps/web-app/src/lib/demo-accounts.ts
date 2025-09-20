@@ -2,7 +2,7 @@
 export const DEMO_ACCOUNTS = {
   // Individual/Team Lead Demo Account
   individual: {
-    email: 'demo@liftout.com',
+    email: 'demo@example.com',
     password: 'demo123',
     profile: {
       name: 'Alex Chen',
@@ -43,7 +43,7 @@ export const DEMO_ACCOUNTS = {
 
   // Company Demo Account  
   company: {
-    email: 'company@liftout.com',
+    email: 'company@example.com',
     password: 'demo123',
     profile: {
       name: 'Sarah Rodriguez',

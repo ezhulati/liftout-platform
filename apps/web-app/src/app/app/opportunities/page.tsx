@@ -1,23 +1,30 @@
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+'use client';
+
 import Link from 'next/link';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { OpportunitiesList } from '@/components/opportunities/OpportunitiesList';
 import { Suspense } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSearchParams } from 'next/navigation';
 
-interface PageProps {
-  searchParams: { tab?: string };
-}
-
-export default async function OpportunitiesPage({ searchParams }: PageProps) {
-  const session = await getServerSession(authOptions);
+export default function OpportunitiesPage() {
+  const { userData, loading } = useAuth();
+  const searchParams = useSearchParams();
   
-  if (!session) {
+  if (loading) {
+    return (
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!userData) {
     return null;
   }
 
-  const isCompanyUser = session.user.userType === 'company';
-  const activeTab = searchParams.tab || 'all';
+  const isCompanyUser = userData.type === 'company';
+  const activeTab = searchParams.get('tab') || 'all';
 
   return (
     <div className="space-y-6">
@@ -96,7 +103,7 @@ Team Interest
       {/* Opportunities list */}
       <Suspense fallback={<div className="loading-spinner mx-auto"></div>}>
         <OpportunitiesList 
-          userType={session.user.userType} 
+          userType={userData.type} 
           activeTab={activeTab}
         />
       </Suspense>
