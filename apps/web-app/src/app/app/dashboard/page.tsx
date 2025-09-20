@@ -5,6 +5,7 @@ import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { RecommendedTeams } from '@/components/dashboard/RecommendedTeams';
 import { UpcomingDeadlines } from '@/components/dashboard/UpcomingDeadlines';
+import { DashboardOnboarding } from '@/components/dashboard/DashboardOnboarding';
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -29,6 +30,9 @@ export default async function DashboardPage() {
           }
         </p>
       </div>
+
+      {/* Onboarding and Profile Completeness */}
+      <DashboardOnboarding />
 
       {/* Dashboard stats */}
       <DashboardStats userType={session.user.userType} />

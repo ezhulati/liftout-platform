@@ -84,8 +84,8 @@ export default function SignUpPage() {
         location: formData.location,
       });
       
-      toast.success('Account created successfully! Please check your email for verification.');
-      router.push('/app/dashboard');
+      toast.success('Account created successfully!');
+      router.push('/app/onboarding');
     } catch (error: any) {
       toast.error(error.message || 'Sign up failed');
     } finally {
@@ -98,7 +98,7 @@ export default function SignUpPage() {
     try {
       await signInWithGoogle();
       toast.success('Account created with Google successfully');
-      router.push('/app/dashboard');
+      router.push('/app/onboarding');
     } catch (error: any) {
       toast.error(error.message || 'Google sign up failed');
       setIsLoading(false);
