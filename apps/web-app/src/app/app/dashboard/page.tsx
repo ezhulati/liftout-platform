@@ -1,27 +1,37 @@
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+'use client';
+
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { RecommendedTeams } from '@/components/dashboard/RecommendedTeams';
 import { UpcomingDeadlines } from '@/components/dashboard/UpcomingDeadlines';
 import { DashboardOnboarding } from '@/components/dashboard/DashboardOnboarding';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
+export default function DashboardPage() {
+  const { userData, loading } = useAuth();
   
-  if (!session) {
+  if (loading) {
+    return (
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!userData) {
     return null;
   }
 
-  const isCompanyUser = session.user.userType === 'company';
+  const isCompanyUser = userData.type === 'company';
+  const firstName = userData.name.split(' ')[0] || userData.name;
 
   return (
     <div className="space-y-6">
       {/* Page header */}
       <div className="page-header">
         <h1 className="page-title">
-          Welcome back, {session.user.firstName}!
+          Welcome back, {firstName}!
         </h1>
         <p className="page-subtitle">
           {isCompanyUser 
@@ -35,10 +45,10 @@ export default async function DashboardPage() {
       <DashboardOnboarding />
 
       {/* Dashboard stats */}
-      <DashboardStats userType={session.user.userType} />
+      <DashboardStats userType={userData.type} />
 
       {/* Quick actions */}
-      <QuickActions userType={session.user.userType} />
+      <QuickActions userType={userData.type} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent activity */}

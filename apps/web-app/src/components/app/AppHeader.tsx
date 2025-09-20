@@ -1,26 +1,18 @@
 'use client';
 
 import { Fragment } from 'react';
-import { signOut } from 'next-auth/react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
   BellIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
+  BuildingOfficeIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  firstName: string;
-  lastName: string;
-  userType: string;
-  emailVerified: Date | null;
-  image?: string | null;
-}
+import { useAuth } from '@/contexts/AuthContext';
+import type { User } from '@/types/firebase';
 
 interface AppHeaderProps {
   user: User;
@@ -36,9 +28,21 @@ const userNavigation = [
 ];
 
 export function AppHeader({ user }: AppHeaderProps) {
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' });
+  const { signOut } = useAuth();
+  
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
+
+  const isCompanyUser = user.type === 'company';
+  const nameParts = user.name.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts[1] || '';
+  const initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
 
   return (
     <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
@@ -90,26 +94,38 @@ export function AppHeader({ user }: AppHeaderProps) {
             <Menu as="div" className="relative">
               <Menu.Button className="-m-1.5 flex items-center p-1.5">
                 <span className="sr-only">Open user menu</span>
-                {user.image ? (
+                {user.photoURL ? (
                   <img
                     className="h-8 w-8 rounded-full bg-gray-50"
-                    src={user.image}
+                    src={user.photoURL}
                     alt=""
                   />
                 ) : (
                   <div className="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center">
                     <span className="text-sm font-medium text-white">
-                      {user.firstName?.[0]}{user.lastName?.[0]}
+                      {initials}
                     </span>
                   </div>
                 )}
                 <span className="hidden lg:flex lg:items-center">
-                  <span
-                    className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                    aria-hidden="true"
-                  >
-                    {user.name}
-                  </span>
+                  <div className="ml-4">
+                    <span
+                      className="text-sm font-semibold leading-6 text-gray-900"
+                      aria-hidden="true"
+                    >
+                      {user.name}
+                    </span>
+                    <div className="flex items-center mt-0.5">
+                      {isCompanyUser ? (
+                        <BuildingOfficeIcon className="h-3 w-3 text-blue-500 mr-1" />
+                      ) : (
+                        <UserGroupIcon className="h-3 w-3 text-green-500 mr-1" />
+                      )}
+                      <span className="text-xs text-gray-500">
+                        {isCompanyUser ? 'Company Representative' : 'Team Member'}
+                      </span>
+                    </div>
+                  </div>
                   <ChevronDownIcon
                     className="ml-2 h-5 w-5 text-gray-400"
                     aria-hidden="true"
