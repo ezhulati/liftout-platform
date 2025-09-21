@@ -560,7 +560,7 @@ export class MessagingService {
             documentType: document.documentType,
             version: document.version,
             checksum: document.checksum,
-            expiresAt: document.expiresAt?.toISOString(),
+            expiresAt: document.expiresAt && typeof document.expiresAt === 'object' && 'toDate' in document.expiresAt ? (document.expiresAt as any).toDate().toISOString() : document.expiresAt,
             isExpired: document.isExpired,
           });
         }
