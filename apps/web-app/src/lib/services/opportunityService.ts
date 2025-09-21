@@ -13,7 +13,7 @@ import {
   writeBatch
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import type { Opportunity, CreateOpportunityData, OpportunityFilters } from '@/types/opportunities';
+import type { Opportunity, CreateOpportunityData, OpportunityFilters } from '@/types/firebase';
 
 const OPPORTUNITIES_COLLECTION = 'opportunities';
 
