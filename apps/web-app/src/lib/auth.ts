@@ -9,53 +9,57 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 // Mock prisma for demo
 const prisma = null as any;
 
-export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma), // Commented out for demo
-  providers: [
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-
-        // Mock user for demo purposes
-        if (credentials.email === 'demo@example.com' && credentials.password === 'demo123') {
-          return {
-            id: '1',
-            email: 'demo@example.com',
-            name: 'Alex Chen',
-            firstName: 'Alex',
-            lastName: 'Chen',
-            userType: 'individual',
-            emailVerified: new Date(),
-            image: null,
-          };
-        }
-
-        if (credentials.email === 'company@example.com' && credentials.password === 'demo123') {
-          return {
-            id: '2',
-            email: 'company@example.com',
-            name: 'Sarah Rodriguez',
-            firstName: 'Sarah',
-            lastName: 'Rodriguez',
-            userType: 'company',
-            emailVerified: new Date(),
-            image: null,
-          };
-        }
-
+// Build providers array conditionally based on available environment variables
+const providers: any[] = [
+  CredentialsProvider({
+    name: 'credentials',
+    credentials: {
+      email: { label: 'Email', type: 'email' },
+      password: { label: 'Password', type: 'password' },
+    },
+    async authorize(credentials) {
+      if (!credentials?.email || !credentials?.password) {
         return null;
-      },
-    }),
+      }
+
+      // Mock user for demo purposes
+      if (credentials.email === 'demo@example.com' && credentials.password === 'demo123') {
+        return {
+          id: '1',
+          email: 'demo@example.com',
+          name: 'Alex Chen',
+          firstName: 'Alex',
+          lastName: 'Chen',
+          userType: 'individual',
+          emailVerified: new Date(),
+          image: null,
+        };
+      }
+
+      if (credentials.email === 'company@example.com' && credentials.password === 'demo123') {
+        return {
+          id: '2',
+          email: 'company@example.com',
+          name: 'Sarah Rodriguez',
+          firstName: 'Sarah',
+          lastName: 'Rodriguez',
+          userType: 'company',
+          emailVerified: new Date(),
+          image: null,
+        };
+      }
+
+      return null;
+    },
+  }),
+];
+
+// Add Google provider only if credentials are available
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           prompt: 'consent',
@@ -63,17 +67,29 @@ export const authOptions: NextAuthOptions = {
           response_type: 'code',
         },
       },
-    }),
+    })
+  );
+}
+
+// Add LinkedIn provider only if credentials are available
+if (process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET) {
+  providers.push(
     LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
+      clientId: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
       authorization: {
         params: {
           scope: 'r_liteprofile r_emailaddress',
         },
       },
-    }),
-  ],
+    })
+  );
+}
+
+export const authOptions: NextAuthOptions = {
+  // adapter: PrismaAdapter(prisma), // Commented out for demo
+  providers,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-demo-only-not-secure',
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
