@@ -326,6 +326,65 @@ export interface MarketData extends BaseDocument {
   }[];
 }
 
+// Create Opportunity Data type for creating new opportunities
+export interface CreateOpportunityData {
+  title: string;
+  description: string;
+  companyId: string;
+  companyName: string;
+  industry: string;
+  location: string;
+  type: 'expansion' | 'capability_building' | 'market_entry' | 'acquisition';
+  teamSize: {
+    min: number;
+    max: number;
+  };
+  skills: string[];
+  experience: {
+    minYears: number;
+    preferredYears: number;
+  };
+  compensation: {
+    min: number;
+    max: number;
+    currency: string;
+    type: 'salary' | 'equity' | 'total_package';
+    benefits?: string[];
+  };
+  timeline: {
+    startDate?: Timestamp;
+    urgency: 'immediate' | 'within_month' | 'within_quarter' | 'flexible';
+  };
+  requirements: {
+    mustHave: string[];
+    niceToHave: string[];
+    dealBreakers: string[];
+  };
+  confidential: boolean;
+  status: 'draft' | 'active' | 'paused' | 'closed' | 'filled';
+  tags: string[];
+}
+
+// Opportunity Filters for searching
+export interface OpportunityFilters {
+  industry?: string[];
+  location?: string[];
+  type?: ('expansion' | 'capability_building' | 'market_entry' | 'acquisition')[];
+  teamSize?: {
+    min?: number;
+    max?: number;
+  };
+  compensation?: {
+    min?: number;
+    max?: number;
+    currency?: string;
+  };
+  urgency?: ('immediate' | 'within_month' | 'within_quarter' | 'flexible')[];
+  skills?: string[];
+  status?: ('draft' | 'active' | 'paused' | 'closed' | 'filled')[];
+  confidential?: boolean;
+}
+
 // Collection names as constants
 export const COLLECTIONS = {
   USERS: 'users',
