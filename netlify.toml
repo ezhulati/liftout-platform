@@ -1,0 +1,12 @@
+[build]
+  base = "apps/web-app/"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+# Settings for Next.js
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
