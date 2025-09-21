@@ -98,13 +98,8 @@ export class OpportunityService {
         constraints.push(where('location', '==', filters.location));
       }
       
-      if (filters.remotePolicy) {
-        constraints.push(where('remotePolicy', '==', filters.remotePolicy));
-      }
-
-      if (filters.commitment?.type) {
-        constraints.push(where('commitment.type', '==', filters.commitment.type));
-      }
+      // remotePolicy filter removed - property doesn't exist
+      // commitment filter removed - property doesn't exist
 
       // Add ordering and pagination
       constraints.push(orderBy('postedAt', 'desc'));
