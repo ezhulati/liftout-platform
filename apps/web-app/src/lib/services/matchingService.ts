@@ -87,8 +87,7 @@ export class MatchingService {
           
           if (!teamExpectation) return true;
           
-          // Basic currency compatibility check (in real app, convert currencies)
-          if (teamExpectation.currency !== filterRange.currency) return true;
+          // Skip currency check for now (would need to convert in real app)
           
           return teamExpectation.min <= filterRange.max && teamExpectation.max >= filterRange.min;
         });
