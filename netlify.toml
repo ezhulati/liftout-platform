@@ -6,6 +6,8 @@
 [build.environment]
   NODE_VERSION = "22"
   NPM_FLAGS = "--legacy-peer-deps"
+  # Disable secrets scanning for Firebase node modules (false positives)
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
 
 # Settings for Next.js
 [[plugins]]
