@@ -265,7 +265,7 @@ export class OpportunityService {
           viewCount: opportunity.viewCount || 0,
           applicantCount: opportunity.applicantCount || 0,
           status: opportunity.status,
-          daysActive: Math.floor((new Date().getTime() - opportunity.postedAt.getTime()) / (1000 * 60 * 60 * 24)),
+          daysActive: Math.floor((new Date().getTime() - opportunity.createdAt.toDate().getTime()) / (1000 * 60 * 60 * 24)),
         };
       } else {
         // Get platform-wide opportunity stats
