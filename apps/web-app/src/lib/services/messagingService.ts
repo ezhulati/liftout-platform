@@ -434,7 +434,7 @@ export class MessagingService {
       constraints.push(orderBy('timestamp', 'desc'));
       constraints.push(firestoreLimit(options.limit || 50));
 
-      const finalQuery = query(q, ...constraints);
+      const finalQuery = query(q as any, ...constraints);
       const querySnapshot = await getDocs(finalQuery);
       
       const messages = querySnapshot.docs.map(doc => {
