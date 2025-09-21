@@ -377,7 +377,6 @@ export class ApplicationService {
   async updateApplicationStatus(id: string, status: Application['status']): Promise<void> {
     return firestoreService.update<Application>(COLLECTIONS.APPLICATIONS, id, {
       status,
-      'timeline.lastUpdatedAt': serverTimestamp() as any,
     });
   }
 }
