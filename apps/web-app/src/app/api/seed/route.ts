@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { seedDatabase } from '@/scripts/seed-database';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +11,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Dynamically import seedDatabase to avoid Firebase initialization during build
+    const { seedDatabase } = await import('@/scripts/seed-database');
     const result = await seedDatabase();
     
     if (result.success) {
