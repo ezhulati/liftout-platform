@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSession } from 'next-auth/react';
+import { getDemoDataForUser } from '@/lib/demo-accounts';
 import {
   HomeIcon,
   UserGroupIcon,
@@ -67,10 +68,15 @@ function classNames(...classes: string[]) {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { userData } = useAuth();
+  const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isCompanyUser = userData?.type === 'company';
+  // Get user data from NextAuth session
+  const user = session?.user;
+  const demoData = user?.email ? getDemoDataForUser(user.email) : null;
+  const userType = user?.userType || demoData?.userType || 'individual';
+  
+  const isCompanyUser = userType === 'company';
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
   const navigationWithCurrent = currentNavigation.map((item) => ({
@@ -110,7 +116,7 @@ export function AppSidebar() {
             </div>
             <div className="flex flex-shrink-0 items-center justify-between px-4">
               <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
-              {userData && (
+              {user && (
                 <div className="flex items-center">
                   {isCompanyUser ? (
                     <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
@@ -202,7 +208,7 @@ export function AppSidebar() {
         <div className="flex flex-col flex-grow bg-white pt-5 pb-4 overflow-y-auto border-r border-gray-200">
           <div className="flex items-center justify-between flex-shrink-0 px-4">
             <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
-            {userData && (
+            {user && (
               <div className="flex items-center">
                 {isCompanyUser ? (
                   <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
