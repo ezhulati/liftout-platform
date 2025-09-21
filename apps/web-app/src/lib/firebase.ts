@@ -5,13 +5,13 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD_8v3wHgvAWXaDAcWypktYXxMCInInNgM",
-  authDomain: "liftout-29094.firebaseapp.com",
-  projectId: "liftout-29094",
-  storageBucket: "liftout-29094.firebasestorage.app",
-  messagingSenderId: "195008193891",
-  appId: "1:195008193891:web:332d80caa1ec01ff7f1f56",
-  measurementId: "G-RF9ZK8TNSL"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase app (only once)
