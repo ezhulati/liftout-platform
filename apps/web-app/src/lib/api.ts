@@ -79,7 +79,7 @@ export const teamApi = {
       const teams = await teamService.searchTeams({
         industry: params?.industry,
         location: params?.location,
-        size: params?.size ? parseInt(params.size) : undefined,
+        minSize: params?.size ? parseInt(params.size) : undefined,
       });
       return { success: true, data: teams };
     } catch (error: any) {
@@ -132,14 +132,24 @@ export const teamApi = {
         availability: {
           status: 'available' as const,
         },
+        compensation: {
+          currentRange: {
+            min: 0,
+            max: 0,
+            currency: 'USD',
+          },
+          expectations: {
+            min: 0,
+            max: 0,
+            currency: 'USD',
+          },
+          type: 'salary' as const,
+        },
+        visibility: 'public' as const,
+        verificationStatus: 'pending' as const,
         profileViews: 0,
-        rating: {
-          average: 0,
-          count: 0,
-        },
-        verification: {
-          status: 'pending' as const,
-        },
+        expressionsOfInterest: 0,
+        tags: [],
       };
 
       const teamId = await teamService.createTeam(teamData);
@@ -234,8 +244,7 @@ export const opportunityApi = {
         industry: params?.industry,
         location: params?.location,
         skills: params?.skills,
-        liftoutType: params?.liftoutType,
-        companyId: params?.companyId,
+        type: params?.liftoutType,
       });
       
       // Transform Firebase opportunities to component format
@@ -330,34 +339,38 @@ export const opportunityApi = {
         title: data.title,
         description: data.description,
         companyId: currentUser.id,
+        companyName: currentUser.companyName || 'Unknown Company',
         industry: data.industry,
         location: data.location,
-        liftoutType: 'capability_building', // Default for now
-        workStyle: data.workStyle,
-        compensation: {
-          type: 'budget' as const,
-          amount: data.budget.max,
-          currency: data.budget.currency,
-          equity: false,
+        type: 'capability_building' as const,
+        teamSize: {
+          min: data.teamSize?.min || 1,
+          max: data.teamSize?.max || 10,
         },
-        teamRequirements: {
-          minSize: data.teamSize.min,
-          maxSize: data.teamSize.max,
-          skills: data.skills,
-          experienceLevel: 'senior' as const,
+        skills: data.skills || [],
+        experience: {
+          minYears: 0,
+          preferredYears: 5,
+        },
+        compensation: {
+          min: data.budget?.min || 0,
+          max: data.budget?.max || 0,
+          currency: data.budget?.currency || 'USD',
+          type: 'total_package' as const,
         },
         timeline: {
-          applicationDeadline: new Date(data.deadline),
-          expectedStartDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-          projectDuration: `${data.duration.value} ${data.duration.unit}`,
+          urgency: 'within_quarter' as const,
         },
-        requirements: data.requirements,
-        whatWeOffer: data.deliverables,
-        applicationCount: 0,
-        viewCount: 0,
-        status: 'open' as const,
+        requirements: {
+          mustHave: Array.isArray(data.requirements) ? data.requirements : (data.requirements ? [data.requirements] : []),
+          niceToHave: [],
+          culturalFit: [],
+        },
         confidential: false,
-        featured: false,
+        status: 'active' as const,
+        applicantCount: 0,
+        viewCount: 0,
+        tags: [],
       };
 
       const opportunityId = await opportunityService.createOpportunity(opportunityData);
@@ -393,7 +406,7 @@ export const searchApi = {
       const teams = await teamService.searchTeams({
         industry: params.industry?.[0], // Firestore simple search for now
         location: params.location,
-        size: params.teamSize ? parseInt(params.teamSize) : undefined,
+        minSize: params.teamSize ? parseInt(params.teamSize) : undefined,
         skills: params.skills,
       });
       

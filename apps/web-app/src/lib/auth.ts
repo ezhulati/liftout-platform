@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import LinkedInProvider from 'next-auth/providers/linkedin';
 // import { prisma } from '@liftout/database';
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 
 // Mock prisma for demo
 const prisma = null as any;
@@ -135,7 +135,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/signin',
-    signUp: '/auth/signup',
     error: '/auth/error',
     verifyRequest: '/auth/verify-request',
   },

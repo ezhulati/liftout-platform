@@ -87,7 +87,7 @@ export const DEMO_IDENTIFIERS = {
 } as const;
 
 export const isDemoEntity = (id: string, type: keyof typeof DEMO_IDENTIFIERS) => {
-  return id.startsWith(DEMO_IDENTIFIERS[`${type}Prefix`]);
+  return id.startsWith(DEMO_IDENTIFIERS[type]);
 };
 
 // Demo analytics

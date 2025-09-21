@@ -214,7 +214,8 @@ export function useSendMessage() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: messagingService.sendMessage.bind(messagingService),
+    mutationFn: (messageData: Omit<Message, 'id' | 'createdAt' | 'updatedAt'>) => 
+      messagingService.sendMessage(messageData),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['messages', variables.conversationId] });
       queryClient.invalidateQueries({ queryKey: ['conversations'] });

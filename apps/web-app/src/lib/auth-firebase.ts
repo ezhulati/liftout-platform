@@ -104,18 +104,16 @@ export class AuthService {
         email: 'demo@example.com',
         name: 'Alex Chen',
         type: 'individual',
+        verified: true,
+        status: 'active',
+        preferences: {
+          notifications: true,
+          marketing: false,
+          confidentialMode: false,
+        },
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
-        lastLoginAt: Timestamp.now(),
-        isOnboarded: true,
-        profileCompleteness: {
-          overall: 100,
-          sections: {
-            basicInfo: 100,
-            professionalInfo: 100,
-            preferences: 100
-          }
-        }
+        lastLoginAt: Timestamp.now()
       };
 
       return { user: mockFirebaseUser, userData: mockUserData };
@@ -135,18 +133,20 @@ export class AuthService {
         email: 'company@example.com',
         name: 'Sarah Rodriguez',
         type: 'company',
+        companyName: 'TechFlow Solutions',
+        position: 'Head of Talent Acquisition',
+        industry: 'Technology',
+        location: 'San Francisco, CA',
+        verified: true,
+        status: 'active',
+        preferences: {
+          notifications: true,
+          marketing: true,
+          confidentialMode: false,
+        },
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
-        lastLoginAt: Timestamp.now(),
-        isOnboarded: true,
-        profileCompleteness: {
-          overall: 100,
-          sections: {
-            basicInfo: 100,
-            professionalInfo: 100,
-            preferences: 100
-          }
-        }
+        lastLoginAt: Timestamp.now()
       };
 
       return { user: mockFirebaseUser, userData: mockUserData };

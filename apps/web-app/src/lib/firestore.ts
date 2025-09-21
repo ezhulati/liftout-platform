@@ -64,10 +64,10 @@ class FirestoreService {
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return {
+      return ({
         id: docSnap.id,
         ...docSnap.data(),
-      } as T;
+      } as unknown) as T;
     }
     
     return null;
@@ -109,7 +109,7 @@ class FirestoreService {
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as T[];
+    } as unknown)) as T[];
   }
 
   // Real-time listener
@@ -130,7 +130,7 @@ class FirestoreService {
       const data = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-      })) as T[];
+      } as unknown)) as T[];
       callback(data);
     });
   }

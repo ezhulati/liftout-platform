@@ -39,7 +39,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   const currentStep = progress ? steps.find(step => step.id === progress.currentStep) || steps[0] : null;
 
   // Check if onboarding is required (new user with incomplete profile)
-  const isOnboardingRequired = !progress?.isCompleted && userData && !userData.verified;
+  const isOnboardingRequired = Boolean(!progress?.isCompleted && userData && !userData.verified);
 
   // Check if onboarding is completed
   const isOnboardingCompleted = progress?.isCompleted || false;
