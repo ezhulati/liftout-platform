@@ -936,6 +936,7 @@ export const mockIntegrationTracker: IntegrationTracker = {
         relationshipQuality: 8,
       },
     ],
+    networkIntegration: 78,
     communicationMetrics: [
       {
         metric: 'Cross-team collaboration',
