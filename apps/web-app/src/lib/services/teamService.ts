@@ -34,7 +34,7 @@ export class TeamService {
   // Create a new team profile
   async createTeam(data: CreateTeamData, creatorUserId: string): Promise<string> {
     try {
-      const teamData: Partial<TeamProfile> = {
+      const teamData = {
         ...data,
         leaderId: creatorUserId,
         size: data.members.length,
@@ -73,7 +73,7 @@ export class TeamService {
         activeOpportunities: 0,
       };
 
-      const docRef = await addDoc(collection(db, TEAMS_COLLECTION), teamData);
+      const docRef = await addDoc(collection(db, TEAMS_COLLECTION), teamData as any);
       return docRef.id;
     } catch (error) {
       console.error('Error creating team:', error);
