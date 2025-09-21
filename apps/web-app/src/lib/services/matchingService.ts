@@ -1,7 +1,7 @@
 import { teamService } from './teamService';
 import { opportunityService } from './opportunityService';
 import type { TeamProfile } from '@/types/teams';
-import type { Opportunity } from '@/types/opportunities';
+import type { Opportunity } from '@/types/firebase';
 
 export interface MatchScore {
   total: number; // 0-100
