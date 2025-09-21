@@ -207,7 +207,7 @@ export class MatchingService {
   private calculateIndustryMatch(team: TeamProfile, opportunity: Opportunity): number {
     const maxScore = 20;
     
-    const teamIndustries = [team.industry?.toLowerCase() || ''];
+    const teamIndustries = team.industry?.map(i => i.toLowerCase()) || [];
     const oppIndustries = [opportunity.industry?.toLowerCase() || ''];
     
     const hasExactMatch = teamIndustries.some(ti => oppIndustries.includes(ti));
