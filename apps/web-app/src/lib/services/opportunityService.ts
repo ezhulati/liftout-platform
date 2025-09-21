@@ -149,14 +149,14 @@ export class OpportunityService {
       
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map(doc => {
-        const data = doc.data();
+        const data = doc.data() as any;
         return {
           id: doc.id,
-          ...data,
+          ...(data as object),
           postedAt: data.postedAt?.toDate(),
           updatedAt: data.updatedAt?.toDate(),
           deadline: data.deadline?.toDate(),
-        } as Opportunity;
+        } as unknown as Opportunity;
       });
     } catch (error) {
       console.error('Error getting company opportunities:', error);
@@ -239,14 +239,14 @@ export class OpportunityService {
       
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map(doc => {
-        const data = doc.data();
+        const data = doc.data() as any;
         return {
           id: doc.id,
-          ...data,
+          ...(data as object),
           postedAt: data.postedAt?.toDate(),
           updatedAt: data.updatedAt?.toDate(),
           deadline: data.deadline?.toDate(),
-        } as Opportunity;
+        } as unknown as Opportunity;
       });
     } catch (error) {
       console.error('Error getting featured opportunities:', error);
