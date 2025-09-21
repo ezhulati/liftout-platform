@@ -24,26 +24,26 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Mock user for demo purposes
-        if (credentials.email === 'demo@example.com' && credentials.password === 'password') {
+        if (credentials.email === 'demo@example.com' && credentials.password === 'demo123') {
           return {
             id: '1',
             email: 'demo@example.com',
-            name: 'Demo User',
-            firstName: 'Demo',
-            lastName: 'User',
+            name: 'Alex Chen',
+            firstName: 'Alex',
+            lastName: 'Chen',
             userType: 'individual',
             emailVerified: new Date(),
             image: null,
           };
         }
 
-        if (credentials.email === 'company@example.com' && credentials.password === 'password') {
+        if (credentials.email === 'company@example.com' && credentials.password === 'demo123') {
           return {
             id: '2',
             email: 'company@example.com',
-            name: 'Company User',
-            firstName: 'Company',
-            lastName: 'User',
+            name: 'Sarah Rodriguez',
+            firstName: 'Sarah',
+            lastName: 'Rodriguez',
             userType: 'company',
             emailVerified: new Date(),
             image: null,

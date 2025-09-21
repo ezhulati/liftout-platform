@@ -2,70 +2,66 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { opportunityApi } from '@/lib/api';
+import { useCreateOpportunity } from '@/hooks/useOpportunities';
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const createOpportunitySchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
+  company: z.string().min(2, 'Company name is required'),
+  type: z.string().min(1, 'Please select a liftout type'),
   description: z.string().min(50, 'Description must be at least 50 characters'),
-  industry: z.string().min(1, 'Please select an industry'),
+  teamSize: z.string().min(1, 'Team size requirement is required'),
+  compensation: z.string().min(1, 'Compensation details are required'),
   location: z.string().min(1, 'Location is required'),
-  workStyle: z.enum(['remote', 'hybrid', 'onsite']),
-  budget: z.object({
-    min: z.number().min(1000, 'Minimum budget must be at least $1,000'),
-    max: z.number().min(1000, 'Maximum budget must be at least $1,000'),
-    currency: z.string().default('USD'),
-  }),
-  duration: z.object({
-    value: z.number().min(1, 'Duration must be at least 1'),
-    unit: z.enum(['weeks', 'months']),
-  }),
-  teamSize: z.object({
-    min: z.number().min(1, 'Minimum team size must be at least 1'),
-    max: z.number().min(1, 'Maximum team size must be at least 1'),
-  }),
-  deadline: z.string().min(1, 'Application deadline is required'),
-  skills: z.array(z.string()).min(1, 'At least one skill is required'),
-  requirements: z.string().min(20, 'Requirements must be at least 20 characters'),
-  deliverables: z.string().min(20, 'Deliverables must be at least 20 characters'),
+  timeline: z.string().min(1, 'Timeline is required'),
+  requirements: z.array(z.string()).min(1, 'At least one requirement is required'),
+  whatWeOffer: z.array(z.string()).min(1, 'At least one offering is required'),
+  integrationPlan: z.string().min(20, 'Integration plan must be at least 20 characters'),
+  confidential: z.boolean(),
+  urgent: z.boolean(),
+  industry: z.string().min(1, 'Please select an industry'),
 });
 
 type CreateOpportunityFormData = z.infer<typeof createOpportunitySchema>;
 
 const industries = [
-  'Technology',
-  'Healthcare',
-  'Finance',
-  'Education',
-  'Retail',
-  'Manufacturing',
-  'Consulting',
+  'Financial Services',
+  'Investment Banking',
+  'Private Equity',
+  'Management Consulting',
+  'Healthcare Technology',
+  'Biotechnology',
+  'Enterprise Software',
+  'Fintech',
+  'Legal Services',
   'Media & Entertainment',
-  'Non-profit',
-  'Government',
-  'Real Estate',
+  'Real Estate Private Equity',
+  'Energy & Utilities',
   'Other',
 ];
 
-const commonSkills = [
-  'React', 'Node.js', 'TypeScript', 'Python', 'Java', 'C#', '.NET',
-  'Angular', 'Vue.js', 'Next.js', 'Express.js', 'Django', 'Flask',
-  'PostgreSQL', 'MongoDB', 'MySQL', 'Redis', 'AWS', 'Azure', 'GCP',
-  'Docker', 'Kubernetes', 'GraphQL', 'REST API', 'Microservices',
-  'UI/UX Design', 'Figma', 'Adobe Creative Suite', 'Sketch',
-  'Mobile Development', 'React Native', 'Flutter', 'iOS', 'Android',
-  'Machine Learning', 'Data Science', 'TensorFlow', 'PyTorch',
-  'DevOps', 'CI/CD', 'Terraform', 'Ansible',
+const liftoutTypes = [
+  'Strategic Expansion',
+  'Market Entry',
+  'Capability Building',
+  'Competitive Acquisition',
+  'Rapid Scaling',
+  'New Division Launch',
+  'Geographic Expansion',
+  'Technology Integration',
+  'Talent Acquisition',
+  'Other',
 ];
 
 export function CreateOpportunityForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [skillInput, setSkillInput] = useState('');
+  const [requirementInput, setRequirementInput] = useState('');
+  const [offeringInput, setOfferingInput] = useState('');
   const router = useRouter();
+  const createOpportunityMutation = useCreateOpportunity();
 
   const {
     register,
@@ -73,87 +69,57 @@ export function CreateOpportunityForm() {
     formState: { errors },
     watch,
     setValue,
-    control,
   } = useForm<CreateOpportunityFormData>({
     resolver: zodResolver(createOpportunitySchema),
     defaultValues: {
-      budget: { currency: 'USD' },
-      duration: { unit: 'months' },
-      teamSize: { min: 1, max: 5 },
-      skills: [],
+      requirements: [],
+      whatWeOffer: [],
+      confidential: false,
+      urgent: false,
     },
   });
 
-  const { fields: skillFields, append: addSkill, remove: removeSkill } = useFieldArray({
-    control,
-    name: 'skills',
-  });
+  const requirements = watch('requirements');
+  const whatWeOffer = watch('whatWeOffer');
 
-  const watchedBudgetMin = watch('budget.min');
-  const watchedTeamSizeMin = watch('teamSize.min');
+  const addRequirement = () => {
+    if (!requirementInput.trim()) return;
+    setValue('requirements', [...requirements, requirementInput.trim()]);
+    setRequirementInput('');
+  };
+
+  const removeRequirement = (index: number) => {
+    setValue('requirements', requirements.filter((_, i) => i !== index));
+  };
+
+  const addOffering = () => {
+    if (!offeringInput.trim()) return;
+    setValue('whatWeOffer', [...whatWeOffer, offeringInput.trim()]);
+    setOfferingInput('');
+  };
+
+  const removeOffering = (index: number) => {
+    setValue('whatWeOffer', whatWeOffer.filter((_, i) => i !== index));
+  };
 
   const onSubmit = async (data: CreateOpportunityFormData) => {
-    // Validate budget range
-    if (data.budget.max < data.budget.min) {
-      toast.error('Maximum budget must be greater than minimum budget');
-      return;
-    }
-
-    // Validate team size range
-    if (data.teamSize.max < data.teamSize.min) {
-      toast.error('Maximum team size must be greater than minimum team size');
-      return;
-    }
-
-    // Validate deadline is in the future
-    if (new Date(data.deadline) <= new Date()) {
-      toast.error('Deadline must be in the future');
-      return;
-    }
-
-    setIsSubmitting(true);
-
     try {
-      const response = await opportunityApi.createOpportunity(data);
-
-      if (response.success) {
-        toast.success('Opportunity posted successfully!');
-        router.push('/app/opportunities');
-      } else {
-        toast.error(response.error || 'Failed to post opportunity');
-      }
+      await createOpportunityMutation.mutateAsync(data);
+      toast.success('Liftout opportunity created successfully!');
+      router.push('/app/opportunities');
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Failed to post opportunity. Please try again.';
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleAddSkill = (skill: string) => {
-    const trimmedSkill = skill.trim();
-    const currentSkills = skillFields.map((field: any) => field.value || field);
-    if (trimmedSkill && !currentSkills.includes(trimmedSkill)) {
-      addSkill(trimmedSkill);
-      setSkillInput('');
-    }
-  };
-
-  const handleSkillKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddSkill(skillInput);
+      toast.error(error.message || 'Failed to create opportunity');
     }
   };
 
   return (
     <div className="card">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-6">Basic Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout Opportunity Details</h3>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6">
             <div>
               <label htmlFor="title" className="label-text">
                 Opportunity Title *
@@ -162,22 +128,56 @@ export function CreateOpportunityForm() {
                 {...register('title')}
                 type="text"
                 className="input-field"
-                placeholder="e.g., E-commerce Platform Development"
+                placeholder="e.g., Lead FinTech Analytics Division"
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
               )}
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="company" className="label-text">
+                  Company Name *
+                </label>
+                <input
+                  {...register('company')}
+                  type="text"
+                  className="input-field"
+                  placeholder="Your company name"
+                />
+                {errors.company && (
+                  <p className="mt-1 text-sm text-red-600">{errors.company.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="type" className="label-text">
+                  Liftout Type *
+                </label>
+                <select {...register('type')} className="input-field">
+                  <option value="">Select liftout type</option>
+                  {liftoutTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.type && (
+                  <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
+                )}
+              </div>
+            </div>
+
             <div>
               <label htmlFor="description" className="label-text">
-                Description *
+                Strategic Description *
               </label>
               <textarea
                 {...register('description')}
-                rows={5}
+                rows={4}
                 className="input-field"
-                placeholder="Provide a detailed description of the project, goals, and expectations..."
+                placeholder="Describe the strategic need, business context, and why you're seeking to acquire an intact team..."
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
@@ -190,7 +190,7 @@ export function CreateOpportunityForm() {
                   Industry *
                 </label>
                 <select {...register('industry')} className="input-field">
-                  <option value="">Select an industry</option>
+                  <option value="">Select industry</option>
                   {industries.map((industry) => (
                     <option key={industry} value={industry}>
                       {industry}
@@ -203,15 +203,41 @@ export function CreateOpportunityForm() {
               </div>
 
               <div>
-                <label htmlFor="workStyle" className="label-text">
-                  Work Style *
+                <label htmlFor="teamSize" className="label-text">
+                  Team Size Needed *
                 </label>
-                <select {...register('workStyle')} className="input-field">
-                  <option value="remote">Remote</option>
-                  <option value="hybrid">Hybrid</option>
-                  <option value="onsite">On-site</option>
-                </select>
+                <input
+                  {...register('teamSize')}
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g., 4-6 people, or exactly 5 members"
+                />
+                {errors.teamSize && (
+                  <p className="mt-1 text-sm text-red-600">{errors.teamSize.message}</p>
+                )}
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Compensation & Logistics */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Compensation & Logistics</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="compensation" className="label-text">
+                Total Team Compensation *
+              </label>
+              <input
+                {...register('compensation')}
+                type="text"
+                className="input-field"
+                placeholder="e.g., $1.2M-$1.8M total package + equity"
+              />
+              {errors.compensation && (
+                <p className="mt-1 text-sm text-red-600">{errors.compensation.message}</p>
+              )}
             </div>
 
             <div>
@@ -222,252 +248,198 @@ export function CreateOpportunityForm() {
                 {...register('location')}
                 type="text"
                 className="input-field"
-                placeholder="e.g., San Francisco, CA or Global/Remote"
+                placeholder="e.g., New York, NY (Hybrid) or Remote"
               />
               {errors.location && (
                 <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* Project Details */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-6">Project Details</h3>
-          
-          <div className="space-y-6">
-            {/* Budget */}
             <div>
-              <label className="label-text">Budget Range (USD) *</label>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <input
-                    {...register('budget.min', { valueAsNumber: true })}
-                    type="number"
-                    min="1000"
-                    step="1000"
-                    className="input-field"
-                    placeholder="Minimum budget"
-                  />
-                  {errors.budget?.min && (
-                    <p className="mt-1 text-sm text-red-600">{errors.budget.min.message}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    {...register('budget.max', { valueAsNumber: true })}
-                    type="number"
-                    min={watchedBudgetMin || 1000}
-                    step="1000"
-                    className="input-field"
-                    placeholder="Maximum budget"
-                  />
-                  {errors.budget?.max && (
-                    <p className="mt-1 text-sm text-red-600">{errors.budget.max.message}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Duration */}
-            <div>
-              <label className="label-text">Project Duration *</label>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <input
-                    {...register('duration.value', { valueAsNumber: true })}
-                    type="number"
-                    min="1"
-                    className="input-field"
-                    placeholder="Duration"
-                  />
-                  {errors.duration?.value && (
-                    <p className="mt-1 text-sm text-red-600">{errors.duration.value.message}</p>
-                  )}
-                </div>
-                <div>
-                  <select {...register('duration.unit')} className="input-field">
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Team Size */}
-            <div>
-              <label className="label-text">Team Size *</label>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <input
-                    {...register('teamSize.min', { valueAsNumber: true })}
-                    type="number"
-                    min="1"
-                    className="input-field"
-                    placeholder="Minimum team size"
-                  />
-                  {errors.teamSize?.min && (
-                    <p className="mt-1 text-sm text-red-600">{errors.teamSize.min.message}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    {...register('teamSize.max', { valueAsNumber: true })}
-                    type="number"
-                    min={watchedTeamSizeMin || 1}
-                    className="input-field"
-                    placeholder="Maximum team size"
-                  />
-                  {errors.teamSize?.max && (
-                    <p className="mt-1 text-sm text-red-600">{errors.teamSize.max.message}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Deadline */}
-            <div>
-              <label htmlFor="deadline" className="label-text">
-                Application Deadline *
+              <label htmlFor="timeline" className="label-text">
+                Start Timeline *
               </label>
               <input
-                {...register('deadline')}
-                type="date"
-                min={new Date().toISOString().split('T')[0]}
+                {...register('timeline')}
+                type="text"
                 className="input-field"
+                placeholder="e.g., Start within 3 months, Q1 2024"
               />
-              {errors.deadline && (
-                <p className="mt-1 text-sm text-red-600">{errors.deadline.message}</p>
+              {errors.timeline && (
+                <p className="mt-1 text-sm text-red-600">{errors.timeline.message}</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Skills & Requirements */}
+        {/* Requirements */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-6">Skills & Requirements</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Requirements</h3>
           
-          <div className="space-y-6">
-            {/* Skills */}
-            <div>
-              <label className="label-text">Required Skills *</label>
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={handleSkillKeyPress}
-                    className="input-field flex-1"
-                    placeholder="Type a skill and press Enter"
-                  />
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2 mb-3">
+              {requirements.map((req, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                >
+                  {req}
                   <button
                     type="button"
-                    onClick={() => handleAddSkill(skillInput)}
-                    className="btn-secondary"
+                    onClick={() => removeRequirement(index)}
+                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-500"
                   >
-                    <PlusIcon className="h-4 w-4" />
+                    <XMarkIcon className="w-3 h-3" />
                   </button>
-                </div>
-                
-                {/* Common skills suggestions */}
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-sm text-gray-500">Suggestions:</span>
-                  {commonSkills.slice(0, 8).map((skill) => (
-                    <button
-                      key={skill}
-                      type="button"
-                      onClick={() => handleAddSkill(skill)}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200"
-                    >
-                      {skill}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Selected skills */}
-                {skillFields.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {skillFields.map((field: any, index) => (
-                      <span
-                        key={field.id}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
-                      >
-                        {field.value || field}
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(index)}
-                          className="ml-2 text-primary-600 hover:text-primary-800"
-                        >
-                          <XMarkIcon className="h-3 w-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {errors.skills && (
-                <p className="mt-1 text-sm text-red-600">{errors.skills.message}</p>
-              )}
+                </span>
+              ))}
             </div>
-
-            {/* Requirements */}
-            <div>
-              <label htmlFor="requirements" className="label-text">
-                Requirements *
-              </label>
-              <textarea
-                {...register('requirements')}
-                rows={4}
-                className="input-field"
-                placeholder="Describe specific requirements, experience level, and qualifications..."
+            
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={requirementInput}
+                onChange={(e) => setRequirementInput(e.target.value)}
+                className="input-field flex-1"
+                placeholder="Add a requirement (e.g., 3+ years working together, Quantitative finance expertise)"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addRequirement();
+                  }
+                }}
               />
-              {errors.requirements && (
-                <p className="mt-1 text-sm text-red-600">{errors.requirements.message}</p>
-              )}
+              <button
+                type="button"
+                onClick={addRequirement}
+                className="px-4 py-2 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+              >
+                Add
+              </button>
             </div>
-
-            {/* Deliverables */}
-            <div>
-              <label htmlFor="deliverables" className="label-text">
-                Deliverables *
-              </label>
-              <textarea
-                {...register('deliverables')}
-                rows={4}
-                className="input-field"
-                placeholder="List the expected deliverables and milestones..."
-              />
-              {errors.deliverables && (
-                <p className="mt-1 text-sm text-red-600">{errors.deliverables.message}</p>
-              )}
-            </div>
+            
+            {errors.requirements && (
+              <p className="mt-1 text-sm text-red-600">{errors.requirements.message}</p>
+            )}
           </div>
         </div>
 
-        {/* Form Actions */}
-        <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        {/* What We Offer */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">What We Offer</h3>
+          
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2 mb-3">
+              {whatWeOffer.map((offer, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                >
+                  {offer}
+                  <button
+                    type="button"
+                    onClick={() => removeOffering(index)}
+                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-green-400 hover:bg-green-200 hover:text-green-500"
+                  >
+                    <XMarkIcon className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={offeringInput}
+                onChange={(e) => setOfferingInput(e.target.value)}
+                className="input-field flex-1"
+                placeholder="Add what you offer (e.g., Full team autonomy, Equity participation, $50B+ trading data access)"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addOffering();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={addOffering}
+                className="px-4 py-2 text-sm bg-green-100 text-green-700 rounded-md hover:bg-green-200"
+              >
+                Add
+              </button>
+            </div>
+            
+            {errors.whatWeOffer && (
+              <p className="mt-1 text-sm text-red-600">{errors.whatWeOffer.message}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Integration Plan */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Integration Plan</h3>
+          
+          <div>
+            <label htmlFor="integrationPlan" className="label-text">
+              Team Integration Strategy *
+            </label>
+            <textarea
+              {...register('integrationPlan')}
+              rows={4}
+              className="input-field"
+              placeholder="Describe how the team will be integrated: office space, reporting structure, decision-making authority, timeline, support systems..."
+            />
+            {errors.integrationPlan && (
+              <p className="mt-1 text-sm text-red-600">{errors.integrationPlan.message}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Options */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Opportunity Settings</h3>
+          
+          <div className="space-y-4">
+            <label className="flex items-center">
+              <input
+                {...register('confidential')}
+                type="checkbox"
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">
+                Confidential opportunity (only visible to invited teams)
+              </span>
+            </label>
+
+            <label className="flex items-center">
+              <input
+                {...register('urgent')}
+                type="checkbox"
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">
+                Urgent timeline (expedited review process)
+              </span>
+            </label>
+          </div>
+        </div>
+
+        {/* Submit */}
+        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
           <button
             type="button"
             onClick={() => router.back()}
-            className="btn-secondary"
-            disabled={isSubmitting}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
           >
             Cancel
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="btn-primary"
+            disabled={createOpportunityMutation.isPending}
+            className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (
-              <div className="flex items-center">
-                <div className="loading-spinner mr-2"></div>
-                Posting Liftout Opportunity...
-              </div>
-            ) : (
-              'Post Liftout Opportunity'
-            )}
+            {createOpportunityMutation.isPending ? 'Creating...' : 'Post Liftout Opportunity'}
           </button>
         </div>
       </form>

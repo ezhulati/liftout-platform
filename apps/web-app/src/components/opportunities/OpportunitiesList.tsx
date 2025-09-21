@@ -1,8 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { formatDistanceToNow, format } from 'date-fns';
+import { useState, useMemo } from 'react';
 import {
   BriefcaseIcon,
   MapPinIcon,
@@ -11,133 +11,110 @@ import {
   UserGroupIcon,
   EllipsisVerticalIcon,
   DocumentTextIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { opportunityApi } from '@/lib/api';
-import type { Opportunity as FirebaseOpportunity } from '@/types/firebase';
+import { useOpportunities } from '@/hooks/useOpportunities';
+import { SearchAndFilter } from '@/components/common/SearchAndFilter';
 
-interface Opportunity {
-  id: string;
-  title: string;
-  description: string;
-  industry: string;
-  location: string;
-  compensation: {
-    min: number;
-    max: number;
-    currency: string;
-    type: 'salary' | 'equity' | 'total_package';
-  };
-  commitment: {
-    duration: string;
-    startDate: string;
-  };
-  teamSize: {
-    min: number;
-    max: number;
-  };
-  skills: string[];
-  status: 'active' | 'closed' | 'evaluating' | 'completed';
-  expressionsOfInterest: number;
-  postedAt: string;
-  deadline: string;
-  company: {
-    name: string;
-    logo?: string;
-  };
-  liftoutType: 'expansion' | 'acquisition' | 'market_entry' | 'capability_building';
-  confidential: boolean;
-}
 
 interface OpportunitiesListProps {
   userType: string;
   activeTab: string;
 }
 
-const mockOpportunities: Opportunity[] = [
-  {
-    id: '1',
-    title: 'Strategic FinTech Analytics Team',
-    description: 'Seeking an elite analytics team to lead our expansion into predictive financial modeling. Looking for a proven team with deep expertise in quantitative finance and machine learning.',
-    industry: 'Financial Services',
-    location: 'New York, NY',
-    compensation: { min: 180000, max: 250000, currency: 'USD', type: 'salary' },
-    commitment: { duration: 'Permanent', startDate: 'Q1 2025' },
-    teamSize: { min: 4, max: 6 },
-    skills: ['Python', 'R', 'Machine Learning', 'Quantitative Finance', 'Risk Management'],
-    status: 'active',
-    expressionsOfInterest: 8,
-    postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    company: { name: 'Goldman Sachs Technology' },
-    liftoutType: 'capability_building',
-    confidential: false,
-  },
-  {
-    id: '2',
-    title: 'Healthcare AI Innovation Team',
-    description: 'Leading medical technology company seeking an intact AI/ML team to accelerate our diagnostic imaging platform. Team must have proven track record in healthcare applications.',
-    industry: 'Healthcare Technology',
-    location: 'Boston, MA / Remote Hybrid',
-    compensation: { min: 200000, max: 300000, currency: 'USD', type: 'total_package' },
-    commitment: { duration: 'Permanent', startDate: 'February 2025' },
-    teamSize: { min: 5, max: 8 },
-    skills: ['Computer Vision', 'TensorFlow', 'PyTorch', 'Medical Imaging', 'Deep Learning'],
-    status: 'active',
-    expressionsOfInterest: 12,
-    postedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-    company: { name: 'MedTech Innovations' },
-    liftoutType: 'market_entry',
-    confidential: false,
-  },
-  {
-    id: '3',
-    title: 'European Market Expansion Team',
-    description: 'Confidential opportunity for a high-performing business development team to lead our European market entry. Seeking team with established relationships and proven market expansion success.',
-    industry: 'Enterprise Software',
-    location: 'London, UK',
-    compensation: { min: 150000, max: 220000, currency: 'GBP', type: 'salary' },
-    commitment: { duration: 'Permanent', startDate: 'March 2025' },
-    teamSize: { min: 3, max: 5 },
-    skills: ['Business Development', 'Enterprise Sales', 'Market Strategy', 'Partnership Development'],
-    status: 'evaluating',
-    expressionsOfInterest: 6,
-    postedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-    company: { name: 'Confidential - Fortune 500 Tech Company' },
-    liftoutType: 'expansion',
-    confidential: true,
-  },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProps) {
-  const { data: opportunitiesResponse, isLoading } = useQuery({
-    queryKey: ['opportunities', userType, activeTab],
-    queryFn: async () => {
-      const response = await opportunityApi.getOpportunities({
-        // Add filtering based on activeTab if needed
-        page: 1,
-        limit: 20,
-      });
-      
-      if (response.success) {
-        return response.data || [];
-      } else {
-        console.error('Failed to fetch opportunities:', response.error);
-        return mockOpportunities; // Fallback to mock data if API fails
-      }
-    },
+  const [searchValue, setSearchValue] = useState('');
+  const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({});
+  
+  const { data: opportunitiesResponse, isLoading, error } = useOpportunities({
+    search: searchValue,
+    industry: activeFilters.industry as string,
+    location: activeFilters.location as string,
+    type: activeFilters.type as string,
+    urgent: activeFilters.urgent === 'true' ? 'true' : undefined,
+    confidential: activeFilters.confidential === 'true' ? 'true' : undefined,
+    skills: Array.isArray(activeFilters.skills) ? activeFilters.skills.join(',') : undefined,
   });
 
-  const opportunities = opportunitiesResponse || [];
-
+  const opportunities = opportunitiesResponse?.opportunities || [];
+  const filterMetadata = opportunitiesResponse?.filters || { industries: [], locations: [], types: [] };
   const isCompanyUser = userType === 'company';
+
+  // Filter groups for the SearchAndFilter component
+  const filterGroups = useMemo(() => [
+    {
+      label: 'Industry',
+      key: 'industry',
+      type: 'select' as const,
+      options: filterMetadata.industries.map(industry => ({ label: industry, value: industry }))
+    },
+    {
+      label: 'Location',
+      key: 'location', 
+      type: 'select' as const,
+      options: filterMetadata.locations.map(location => ({ label: location, value: location }))
+    },
+    {
+      label: 'Type',
+      key: 'type',
+      type: 'select' as const,
+      options: filterMetadata.types.map(type => ({ label: type, value: type }))
+    },
+    {
+      label: 'Priority',
+      key: 'urgent',
+      type: 'select' as const,
+      options: [
+        { label: 'Urgent Only', value: 'true' },
+        { label: 'All Priorities', value: 'false' }
+      ]
+    },
+    ...(isCompanyUser ? [{
+      label: 'Visibility',
+      key: 'confidential',
+      type: 'select' as const,
+      options: [
+        { label: 'Confidential Only', value: 'true' },
+        { label: 'All Opportunities', value: 'false' }
+      ]
+    }] : []),
+    {
+      label: 'Skills',
+      key: 'skills',
+      type: 'multi-select' as const,
+      options: [
+        { label: 'Quantitative Finance', value: 'quantitative finance' },
+        { label: 'Risk Management', value: 'risk management' },
+        { label: 'Leadership', value: 'leadership' },
+        { label: 'Analytics', value: 'analytics' },
+        { label: 'Trading', value: 'trading' },
+        { label: 'AI/ML', value: 'ai ml machine learning' },
+        { label: 'Healthcare', value: 'healthcare' },
+        { label: 'Compliance', value: 'compliance' },
+        { label: 'Strategy', value: 'strategy' },
+        { label: 'Business Development', value: 'business development' }
+      ]
+    }
+  ], [filterMetadata, isCompanyUser]);
+
+  const handleFilterChange = (filterKey: string, value: string | string[]) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [filterKey]: value
+    }));
+  };
+
+  const handleClearFilters = () => {
+    setActiveFilters({});
+    setSearchValue('');
+  };
 
   if (isLoading) {
     return (
@@ -186,8 +163,22 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
   }
 
   return (
-    <div className="space-y-4">
-      {opportunities.map((opportunity) => (
+    <div className="space-y-6">
+      {/* Search and Filter */}
+      <SearchAndFilter
+        searchPlaceholder="Search liftout opportunities by title, company, description, or requirements..."
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        filterGroups={filterGroups}
+        activeFilters={activeFilters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+        resultCount={opportunities.length}
+      />
+
+      {/* Opportunities List */}
+      <div className="space-y-4">
+        {opportunities.map((opportunity) => (
         <div key={opportunity.id} className="card hover:shadow-md transition-shadow">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
@@ -212,17 +203,27 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                 )}>
                   {opportunity.status.replace('_', ' ')}
                 </span>
+                {opportunity.urgent && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    Urgent
+                  </span>
+                )}
+                {opportunity.confidential && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                    Confidential
+                  </span>
+                )}
               </div>
               
               <div className="flex items-center text-sm text-gray-500 mb-3 space-x-4">
-                <span className="font-medium">{opportunity.company.name}</span>
+                <span className="font-medium">{opportunity.company}</span>
                 <div className="flex items-center">
                   <MapPinIcon className="h-4 w-4 mr-1" />
                   {opportunity.location}
                 </div>
                 <div className="flex items-center">
                   <ClockIcon className="h-4 w-4 mr-1" />
-                  Posted {formatDistanceToNow(new Date(opportunity.postedAt), { addSuffix: true })}
+                  Posted {formatDistanceToNow(new Date(opportunity.createdAt), { addSuffix: true })}
                 </div>
               </div>
 
@@ -234,49 +235,48 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                 <div className="flex items-center text-sm text-gray-600">
                   <CurrencyDollarIcon className="h-4 w-4 mr-2 text-green-500" />
                   <span>
-                    {opportunity.compensation.currency} {opportunity.compensation.min.toLocaleString()} - {opportunity.compensation.max.toLocaleString()}
-                    <span className="text-xs text-gray-500 ml-1">({opportunity.compensation.type.replace('_', ' ')})</span>
+                    {opportunity.compensation}
                   </span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <ClockIcon className="h-4 w-4 mr-2 text-blue-500" />
                   <span>
-                    {opportunity.commitment.duration} - {opportunity.commitment.startDate}
+                    {opportunity.timeline}
                   </span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <UserGroupIcon className="h-4 w-4 mr-2 text-purple-500" />
                   <span>
-                    {opportunity.teamSize.min}-{opportunity.teamSize.max} members
+                    {opportunity.teamSize}
                   </span>
                 </div>
                 {isCompanyUser && (
                   <div className="flex items-center text-sm text-gray-600">
                     <DocumentTextIcon className="h-4 w-4 mr-2 text-orange-500" />
-                    <span>{opportunity.expressionsOfInterest} expressions of interest</span>
+                    <span>{opportunity.applications?.length || 0} expressions of interest</span>
                   </div>
                 )}
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex flex-wrap gap-2">
-                  {opportunity.skills.slice(0, 4).map((skill: string) => (
+                  {(opportunity.requirements || []).slice(0, 4).map((requirement: string, index: number) => (
                     <span
-                      key={skill}
+                      key={`${requirement}-${index}`}
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                     >
-                      {skill}
+                      {requirement}
                     </span>
                   ))}
-                  {opportunity.skills.length > 4 && (
+                  {(opportunity.requirements || []).length > 4 && (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                      +{opportunity.skills.length - 4} more
+                      +{(opportunity.requirements || []).length - 4} more requirements
                     </span>
                   )}
                 </div>
 
                 <div className="text-sm text-gray-500">
-                  Deadline: {format(new Date(opportunity.deadline), 'MMM d, yyyy')}
+                  Type: {opportunity.type || 'Strategic Expansion'}
                 </div>
               </div>
             </div>
@@ -296,7 +296,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                     className="btn-secondary flex items-center"
                   >
                     <DocumentTextIcon className="h-4 w-4 mr-2" />
-                    {opportunity.expressionsOfInterest} Expressions of Interest
+                    {opportunity.applications?.length || 0} Expressions of Interest
                   </Link>
                   
                   <Menu as="div" className="relative">
@@ -359,7 +359,8 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
             </div>
           </div>
         </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

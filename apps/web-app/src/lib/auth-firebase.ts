@@ -89,6 +89,69 @@ export class AuthService {
 
   // Sign in with email and password
   async signIn(data: SignInData): Promise<{ user: FirebaseUser; userData: User }> {
+    // Handle demo accounts
+    if (data.email === 'demo@example.com' && data.password === 'demo123') {
+      // Return mock data for Alex Chen (team user)
+      const mockFirebaseUser = {
+        uid: 'demo@example.com',
+        email: 'demo@example.com',
+        displayName: 'Alex Chen',
+        emailVerified: true
+      } as FirebaseUser;
+
+      const mockUserData: User = {
+        id: 'demo@example.com',
+        email: 'demo@example.com',
+        name: 'Alex Chen',
+        type: 'individual',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        lastLoginAt: Timestamp.now(),
+        isOnboarded: true,
+        profileCompleteness: {
+          overall: 100,
+          sections: {
+            basicInfo: 100,
+            professionalInfo: 100,
+            preferences: 100
+          }
+        }
+      };
+
+      return { user: mockFirebaseUser, userData: mockUserData };
+    }
+
+    if (data.email === 'company@example.com' && data.password === 'demo123') {
+      // Return mock data for Sarah Rodriguez (company user)
+      const mockFirebaseUser = {
+        uid: 'company@example.com',
+        email: 'company@example.com',
+        displayName: 'Sarah Rodriguez',
+        emailVerified: true
+      } as FirebaseUser;
+
+      const mockUserData: User = {
+        id: 'company@example.com',
+        email: 'company@example.com',
+        name: 'Sarah Rodriguez',
+        type: 'company',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        lastLoginAt: Timestamp.now(),
+        isOnboarded: true,
+        profileCompleteness: {
+          overall: 100,
+          sections: {
+            basicInfo: 100,
+            professionalInfo: 100,
+            preferences: 100
+          }
+        }
+      };
+
+      return { user: mockFirebaseUser, userData: mockUserData };
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { signIn as nextAuthSignIn } from 'next-auth/react';
 import { DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 
 export default function SignInPage() {
@@ -13,7 +13,6 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { signIn, signInWithGoogle } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,9 +25,20 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      await signIn(email, password);
-      toast.success('Signed in successfully');
-      router.push('/app/dashboard');
+      const result = await nextAuthSignIn('credentials', {
+        email,
+        password,
+        callbackUrl: '/app/dashboard',
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error('Invalid credentials');
+      } else if (result?.ok) {
+        toast.success('Signed in successfully');
+        // Use window.location for a full page redirect to ensure proper session handling
+        window.location.href = '/app/dashboard';
+      }
     } catch (error: any) {
       toast.error(error.message || 'Sign in failed');
     } finally {
@@ -39,9 +49,7 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signInWithGoogle();
-      toast.success('Signed in with Google successfully');
-      router.push('/app/dashboard');
+      await nextAuthSignIn('google', { callbackUrl: '/app/dashboard' });
     } catch (error: any) {
       toast.error(error.message || 'Google sign in failed');
       setIsLoading(false);

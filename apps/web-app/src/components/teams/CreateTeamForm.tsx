@@ -2,30 +2,29 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { teamApi } from '@/lib/api';
+import { useCreateTeam } from '@/hooks/useTeams';
+
+const memberSchema = z.object({
+  name: z.string().min(2, 'Member name is required'),
+  role: z.string().min(2, 'Member role is required'),
+  experience: z.number().min(0, 'Experience must be 0 or greater').max(50),
+  skills: z.array(z.string().min(1)).min(1, 'At least one skill is required'),
+});
 
 const createTeamSchema = z.object({
   name: z.string().min(5, 'Team name must be at least 5 characters'),
   description: z.string().min(50, 'Description must be at least 50 characters'),
   industry: z.string().min(1, 'Please select an industry'),
-  specialization: z.string().min(1, 'Specialization is required for liftout teams'),
-  size: z.number().min(2, 'Liftout teams must have at least 2 members').max(20, 'Team size cannot exceed 20'),
   location: z.string().min(1, 'Location is required'),
-  remoteStatus: z.enum(['remote', 'hybrid', 'onsite']),
-  visibility: z.enum(['open', 'selective', 'confidential']),
-  yearsWorkingTogether: z.number().min(0.5, 'Must have worked together for at least 6 months').max(20),
-  trackRecord: z.string().min(30, 'Track record description must be at least 30 characters'),
-  liftoutExperience: z.enum(['first_time', 'experienced', 'veteran']),
-  currentEmployer: z.string().min(1, 'Current employer information is required'),
-  availabilityTimeline: z.string().min(1, 'Availability timeline is required'),
-  compensationExpectation: z.object({
-    min: z.number().min(50000, 'Minimum expectation too low'),
-    max: z.number().min(50000, 'Maximum expectation too low'),
-    currency: z.string().default('USD'),
+  members: z.array(memberSchema).min(2, 'Team must have at least 2 members'),
+  compensation: z.object({
+    range: z.string().min(1, 'Compensation range is required'),
+    equity: z.boolean(),
+    benefits: z.string(),
   }),
 });
 
@@ -48,51 +47,72 @@ const industries = [
 ];
 
 export function CreateTeamForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [skillInput, setSkillInput] = useState<{ [key: number]: string }>({});
   const router = useRouter();
+  const createTeamMutation = useCreateTeam();
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     watch,
   } = useForm<CreateTeamFormData>({
     resolver: zodResolver(createTeamSchema),
     defaultValues: {
-      size: 4,
-      remoteStatus: 'hybrid',
-      visibility: 'selective',
-      liftoutExperience: 'first_time',
-      compensationExpectation: { currency: 'USD' },
+      members: [
+        { name: '', role: '', experience: 0, skills: [] },
+        { name: '', role: '', experience: 0, skills: [] },
+      ],
+      compensation: {
+        range: '',
+        equity: false,
+        benefits: 'Standard',
+      },
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'members',
+  });
+
   const onSubmit = async (data: CreateTeamFormData) => {
-    setIsSubmitting(true);
-
     try {
-      const response = await teamApi.createTeam(data);
-
-      if (response.success) {
-        toast.success('Team created successfully!');
-        router.push('/app/teams');
-      } else {
-        toast.error(response.error || 'Failed to create team');
-      }
+      await createTeamMutation.mutateAsync(data);
+      toast.success('Team created successfully!');
+      router.push('/app/teams');
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Failed to create team. Please try again.';
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
+      toast.error(error.message || 'Failed to create team');
     }
+  };
+
+  const addSkill = (memberIndex: number, skill: string) => {
+    if (!skill.trim()) return;
+    
+    const currentMembers = watch('members');
+    const updatedMembers = [...currentMembers];
+    updatedMembers[memberIndex].skills = [...updatedMembers[memberIndex].skills, skill.trim()];
+    
+    // Update the form with the new skills
+    const event = new Event('input', { bubbles: true });
+    document.dispatchEvent(event);
+    
+    setSkillInput({ ...skillInput, [memberIndex]: '' });
+  };
+
+  const removeSkill = (memberIndex: number, skillIndex: number) => {
+    const currentMembers = watch('members');
+    const updatedMembers = [...currentMembers];
+    updatedMembers[memberIndex].skills.splice(skillIndex, 1);
   };
 
   return (
     <div className="card">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Team Profile */}
+        {/* Team Basic Info */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Profile for Liftout</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Profile</h3>
           
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -103,7 +123,7 @@ export function CreateTeamForm() {
                 {...register('name')}
                 type="text"
                 className="input-field"
-                placeholder="e.g., Strategic Analytics Core Team, Healthcare AI Innovation Group"
+                placeholder="e.g., Strategic Analytics Core Team"
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -116,9 +136,9 @@ export function CreateTeamForm() {
               </label>
               <textarea
                 {...register('description')}
-                rows={5}
+                rows={4}
                 className="input-field"
-                placeholder="Describe your team's expertise, notable achievements, and what makes you a valuable intact unit for acquisition. Include specific outcomes and impact you've delivered together."
+                placeholder="Describe your team's expertise, achievements, and what makes you valuable for liftout..."
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
@@ -144,237 +164,203 @@ export function CreateTeamForm() {
               </div>
 
               <div>
-                <label htmlFor="specialization" className="label-text">
-                  Core Specialization *
+                <label htmlFor="location" className="label-text">
+                  Location *
                 </label>
                 <input
-                  {...register('specialization')}
+                  {...register('location')}
                   type="text"
                   className="input-field"
-                  placeholder="e.g., Quantitative Risk Management, M&A Advisory, Healthcare AI, Strategic Consulting"
+                  placeholder="e.g., San Francisco, CA or Remote"
                 />
-                {errors.specialization && (
-                  <p className="mt-1 text-sm text-red-600">{errors.specialization.message}</p>
+                {errors.location && (
+                  <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Team Dynamics & History */}
+        {/* Team Members */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Dynamics & History</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
+            <button
+              type="button"
+              onClick={() => append({ name: '', role: '', experience: 0, skills: [] })}
+              className="text-sm text-primary-600 hover:text-primary-700"
+            >
+              + Add Member
+            </button>
+          </div>
+
+          {fields.map((field, index) => (
+            <div key={field.id} className="border border-gray-200 rounded-lg p-4 mb-4">
+              <div className="flex justify-between items-center mb-3">
+                <h4 className="text-md font-medium text-gray-800">Member {index + 1}</h4>
+                {fields.length > 2 && (
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="label-text">Name *</label>
+                  <input
+                    {...register(`members.${index}.name`)}
+                    type="text"
+                    className="input-field"
+                    placeholder="Full name"
+                  />
+                  {errors.members?.[index]?.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.name?.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="label-text">Role *</label>
+                  <input
+                    {...register(`members.${index}.role`)}
+                    type="text"
+                    className="input-field"
+                    placeholder="e.g., Senior Data Scientist"
+                  />
+                  {errors.members?.[index]?.role && (
+                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.role?.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="label-text">Years Experience *</label>
+                  <input
+                    {...register(`members.${index}.experience`, { valueAsNumber: true })}
+                    type="number"
+                    min="0"
+                    max="50"
+                    className="input-field"
+                    placeholder="5"
+                  />
+                  {errors.members?.[index]?.experience && (
+                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.experience?.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="label-text">Skills *</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {watch(`members.${index}.skills`)?.map((skill, skillIndex) => (
+                    <span
+                      key={skillIndex}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => removeSkill(index, skillIndex)}
+                        className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-primary-400 hover:bg-primary-200 hover:text-primary-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={skillInput[index] || ''}
+                    onChange={(e) => setSkillInput({ ...skillInput, [index]: e.target.value })}
+                    className="input-field flex-1"
+                    placeholder="Add a skill and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addSkill(index, skillInput[index] || '');
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => addSkill(index, skillInput[index] || '')}
+                    className="px-3 py-2 text-sm bg-primary-100 text-primary-700 rounded-md hover:bg-primary-200"
+                  >
+                    Add
+                  </button>
+                </div>
+                {errors.members?.[index]?.skills && (
+                  <p className="mt-1 text-sm text-red-600">{errors.members[index]?.skills?.message}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Compensation */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Compensation Expectations</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="size" className="label-text">
-                Team Size *
+              <label htmlFor="compensation.range" className="label-text">
+                Salary Range *
               </label>
               <input
-                {...register('size', { valueAsNumber: true })}
-                type="number"
-                min="2"
-                max="20"
+                {...register('compensation.range')}
+                type="text"
                 className="input-field"
-                placeholder="Number of core team members"
+                placeholder="e.g., $150k-$250k per person"
               />
-              {errors.size && (
-                <p className="mt-1 text-sm text-red-600">{errors.size.message}</p>
+              {errors.compensation?.range && (
+                <p className="mt-1 text-sm text-red-600">{errors.compensation.range.message}</p>
               )}
-              <p className="mt-1 text-sm text-gray-500">Liftouts focus on intact, cohesive teams</p>
             </div>
 
             <div>
-              <label htmlFor="yearsWorkingTogether" className="label-text">
-                Years Working Together *
+              <label htmlFor="compensation.benefits" className="label-text">
+                Benefits Package
               </label>
               <input
-                {...register('yearsWorkingTogether', { valueAsNumber: true })}
-                type="number"
-                min="0.5"
-                max="20"
-                step="0.5"
+                {...register('compensation.benefits')}
+                type="text"
                 className="input-field"
-                placeholder="e.g., 2.5"
+                placeholder="e.g., Full package, Health/Dental/Vision"
               />
-              {errors.yearsWorkingTogether && (
-                <p className="mt-1 text-sm text-red-600">{errors.yearsWorkingTogether.message}</p>
-              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>
-              <label htmlFor="location" className="label-text">
-                Current Location *
-              </label>
+          <div className="mt-4">
+            <label className="flex items-center">
               <input
-                {...register('location')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., New York, NY or London, UK"
+                {...register('compensation.equity')}
+                type="checkbox"
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
-              {errors.location && (
-                <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="currentEmployer" className="label-text">
-                Current Employer *
-              </label>
-              <input
-                {...register('currentEmployer')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., Goldman Sachs, McKinsey & Company"
-              />
-              {errors.currentEmployer && (
-                <p className="mt-1 text-sm text-red-600">{errors.currentEmployer.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="trackRecord" className="label-text">
-              Track Record & Achievements *
+              <span className="ml-2 text-sm text-gray-700">Open to equity participation</span>
             </label>
-            <textarea
-              {...register('trackRecord')}
-              rows={4}
-              className="input-field"
-              placeholder="Describe key achievements, successful projects, and measurable outcomes your team has delivered together. Include specific metrics and impact."
-            />
-            {errors.trackRecord && (
-              <p className="mt-1 text-sm text-red-600">{errors.trackRecord.message}</p>
-            )}
           </div>
         </div>
 
-        {/* Liftout Readiness */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout Readiness & Expectations</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="liftoutExperience" className="label-text">
-                Liftout Experience *
-              </label>
-              <select {...register('liftoutExperience')} className="input-field">
-                <option value="first_time">First-time considering liftout</option>
-                <option value="experienced">Have been lifted out before</option>
-                <option value="veteran">Multiple liftout experiences</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="availabilityTimeline" className="label-text">
-                Availability Timeline *
-              </label>
-              <select {...register('availabilityTimeline')} className="input-field">
-                <option value="">Select timeline</option>
-                <option value="immediate">Immediate (within 1 month)</option>
-                <option value="short_term">Short-term (1-3 months)</option>
-                <option value="medium_term">Medium-term (3-6 months)</option>
-                <option value="long_term">Long-term (6+ months)</option>
-                <option value="exploring">Just exploring opportunities</option>
-              </select>
-              {errors.availabilityTimeline && (
-                <p className="mt-1 text-sm text-red-600">{errors.availabilityTimeline.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="label-text">Team Compensation Expectations *</label>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <input
-                  {...register('compensationExpectation.min', { valueAsNumber: true })}
-                  type="number"
-                  min="50000"
-                  step="10000"
-                  className="input-field"
-                  placeholder="Min per member"
-                />
-                {errors.compensationExpectation?.min && (
-                  <p className="mt-1 text-sm text-red-600">{errors.compensationExpectation.min.message}</p>
-                )}
-              </div>
-              <div>
-                <input
-                  {...register('compensationExpectation.max', { valueAsNumber: true })}
-                  type="number"
-                  min="50000"
-                  step="10000"
-                  className="input-field"
-                  placeholder="Max per member"
-                />
-                {errors.compensationExpectation?.max && (
-                  <p className="mt-1 text-sm text-red-600">{errors.compensationExpectation.max.message}</p>
-                )}
-              </div>
-              <div>
-                <select {...register('compensationExpectation.currency')} className="input-field">
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>
-              <label htmlFor="remoteStatus" className="label-text">
-                Preferred Work Style *
-              </label>
-              <select {...register('remoteStatus')} className="input-field">
-                <option value="remote">Remote</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="onsite">On-site</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="visibility" className="label-text">
-                Profile Visibility *
-              </label>
-              <select {...register('visibility')} className="input-field">
-                <option value="open">Open to all companies</option>
-                <option value="selective">Selective opportunities only</option>
-                <option value="confidential">Confidential (invitation only)</option>
-              </select>
-              <p className="mt-1 text-sm text-gray-500">
-                Open profiles are discoverable by all companies. Selective requires companies to meet certain criteria.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Form Actions */}
-        <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        {/* Submit */}
+        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
           <button
             type="button"
             onClick={() => router.back()}
-            className="btn-secondary"
-            disabled={isSubmitting}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
           >
             Cancel
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="btn-primary"
+            disabled={createTeamMutation.isPending}
+            className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (
-              <div className="flex items-center">
-                <div className="loading-spinner mr-2"></div>
-                Creating Team Profile...
-              </div>
-            ) : (
-              'Create Team Profile'
-            )}
+            {createTeamMutation.isPending ? 'Creating...' : 'Create Team Profile'}
           </button>
         </div>
       </form>

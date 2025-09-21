@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   UserGroupIcon,
@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { teamApi } from '@/lib/api';
+import { useTeams } from '@/hooks/useTeams';
 
 interface Team {
   id: string;
@@ -97,44 +97,7 @@ interface TeamsListProps {
 export function TeamsList({ userType }: TeamsListProps) {
   const isCompanyUser = userType === 'company';
   
-  const { data: teamsResponse, isLoading } = useQuery({
-    queryKey: isCompanyUser ? ['available-teams'] : ['my-teams'],
-    queryFn: async () => {
-      const response = await teamApi.getTeams({
-        page: 1,
-        limit: 20,
-      });
-      
-      if (response.success) {
-        const teams = response.data || [];
-        
-        // Transform Firebase teams to component format
-        return teams.map((team: any) => ({
-          id: team.id,
-          name: team.name,
-          description: team.description,
-          industry: team.industry,
-          location: team.location,
-          size: team.size,
-          rating: team.rating?.average || 4.0,
-          skills: team.skills || [],
-          role: 'owner', // TODO: determine actual role based on current user
-          status: team.availability?.status === 'available' ? 'available' : 
-                  team.availability?.status === 'selective' ? 'exploring' : 'inactive',
-          memberCount: team.memberIds?.length || team.size,
-          yearsWorking: team.experience?.yearsWorkedTogether || 2,
-          successfulLiftouts: team.experience?.previousLiftouts || 0,
-          currentCompany: 'Current Company', // TODO: get from user profile
-          liftoutInterest: 'medium' as const,
-        }));
-      } else {
-        console.error('Failed to fetch teams:', response.error);
-        return mockTeams; // Fallback to mock data
-      }
-    },
-  });
-
-  const teams = teamsResponse || [];
+  const { data: teams = [], isLoading, error } = useTeams();
 
   if (isLoading) {
     return (
@@ -205,27 +168,11 @@ export function TeamsList({ userType }: TeamsListProps) {
                   <h3 className="text-lg font-medium text-gray-900 truncate">
                     {team.name}
                   </h3>
-                  <span className={classNames(
-                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    team.status === 'available' 
-                      ? 'bg-green-100 text-green-800'
-                      : team.status === 'exploring'
-                      ? 'bg-blue-100 text-blue-800'
-                      : team.status === 'committed'
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'bg-gray-100 text-gray-800'
-                  )}>
-                    {team.status}
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    {team.openToLiftout ? 'Open to Liftout' : 'Not Available'}
                   </span>
-                  <span className={classNames(
-                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    team.role === 'owner'
-                      ? 'bg-purple-100 text-purple-800'
-                      : team.role === 'admin'
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'bg-gray-100 text-gray-800'
-                  )}>
-                    {team.role}
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {team.industry}
                   </span>
                 </div>
                 
@@ -236,7 +183,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                 <div className="flex items-center mt-3 space-x-6 text-sm text-gray-500">
                   <div className="flex items-center">
                     <UserGroupIcon className="h-4 w-4 mr-1" />
-                    {team.memberCount} members
+                    {team.size} members
                   </div>
                   <div className="flex items-center">
                     <MapPinIcon className="h-4 w-4 mr-1" />
@@ -244,30 +191,30 @@ export function TeamsList({ userType }: TeamsListProps) {
                   </div>
                   <div className="flex items-center">
                     <StarIcon className="h-4 w-4 mr-1 text-yellow-400 fill-current" />
-                    {team.rating} rating
+                    {team.cohesionScore || 95}% cohesion
                   </div>
                   <div>
                     {team.yearsWorking}y together
                   </div>
                   {isCompanyUser && (
                     <div className="font-medium">
-                      {team.successfulLiftouts} liftouts
+                      {team.successfulProjects || 0} projects
                     </div>
                   )}
                 </div>
                 
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {team.skills.slice(0, 4).map((skill) => (
+                  {(team.members?.flatMap(m => m.skills) || []).slice(0, 4).map((skill, index) => (
                     <span
-                      key={skill}
+                      key={`${skill}-${index}`}
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                     >
                       {skill}
                     </span>
                   ))}
-                  {team.skills.length > 4 && (
+                  {(team.members?.flatMap(m => m.skills) || []).length > 4 && (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                      +{team.skills.length - 4} more
+                      +{(team.members?.flatMap(m => m.skills) || []).length - 4} more
                     </span>
                   )}
                 </div>

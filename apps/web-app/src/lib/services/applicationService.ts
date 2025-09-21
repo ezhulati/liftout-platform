@@ -31,6 +31,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
     viewedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     viewedByCompany: true,
     coverLetter: "Our TechFlow Data Science team is excited about NextGen Financial's expansion into quantitative analytics. With 3.5 years working together and a proven track record of reducing fraud detection false positives by 35%, we've generated over $2.1M in annual savings through our predictive modeling expertise. We're particularly drawn to your team-first culture and the opportunity to lead your new analytics division with full autonomy.",
+    teamMotivation: "We're motivated by the opportunity to build something from the ground up and work with cutting-edge financial technology.",
     availabilityTimeline: "Available to start within 8 weeks with 2-week notice period",
     compensationExpectations: {
       min: 240000,
@@ -38,16 +39,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
       currency: 'USD',
       negotiable: true
     },
-    teamDetails: {
-      currentCompany: 'TechFlow Analytics',
-      yearsWorkingTogether: 3.5,
-      teamSize: 4,
-      keyAchievements: [
-        'Reduced fraud detection false positives by 35%',
-        'Generated $2.1M+ annual savings',
-        'Led 23 successful projects with 96% client satisfaction'
-      ]
-    }
+    documents: []
   },
   {
     id: 'app_002',
@@ -60,6 +52,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
     viewedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
     viewedByCompany: true,
     coverLetter: "While our primary expertise is in fintech analytics, our team has significant experience applying machine learning to healthcare data. We've worked on medical imaging projects during our academic research and are excited about MedTech's mission to revolutionize diagnostic tools. Our team's collaborative approach and research background would be ideal for establishing your AI Innovation Lab.",
+    teamMotivation: "We're excited to apply our ML expertise to healthcare and make a meaningful impact on patient outcomes.",
     availabilityTimeline: "Flexible start date, preferentially Q2 2024",
     compensationExpectations: {
       min: 300000,
@@ -72,16 +65,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
       format: 'video',
       participants: ['Dr. Lisa Chen']
     },
-    teamDetails: {
-      currentCompany: 'TechFlow Analytics',
-      yearsWorkingTogether: 3.5,
-      teamSize: 4,
-      keyAchievements: [
-        'Published 3 papers on medical ML applications',
-        'Built FDA-compliant data processing pipelines',
-        'Experience with HIPAA and medical data regulations'
-      ]
-    }
+    documents: []
   },
   {
     id: 'app_003',
@@ -93,6 +77,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
     updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     viewedByCompany: false,
     coverLetter: "DataFlow Analytics looks like an incredible opportunity to apply our quantitative expertise to financial markets. Our team's experience with real-time data processing and risk modeling aligns perfectly with your algorithmic trading platform needs. We're excited about the startup environment and the potential for significant equity upside.",
+    teamMotivation: "We're drawn to the startup environment and the opportunity for significant equity participation.",
     availabilityTimeline: "Can start immediately with 1-week notice",
     compensationExpectations: {
       min: 200000,
@@ -100,16 +85,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
       currency: 'USD',
       negotiable: true
     },
-    teamDetails: {
-      currentCompany: 'TechFlow Analytics',
-      yearsWorkingTogether: 3.5,
-      teamSize: 4,
-      keyAchievements: [
-        'Built real-time trading analytics systems',
-        'Expertise in market microstructure',
-        'Strong performance under pressure'
-      ]
-    }
+    documents: []
   },
   {
     id: 'app_004',
@@ -122,6 +98,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
     viewedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
     viewedByCompany: true,
     coverLetter: "Our team is interested in GlobalCorp's enterprise analytics transformation. While our experience is primarily in fintech, we believe our quantitative skills and team cohesion would translate well to supply chain optimization and enterprise data analytics.",
+    teamMotivation: "We're interested in expanding our expertise into enterprise analytics and supply chain optimization.",
     availabilityTimeline: "Available within 12 weeks",
     compensationExpectations: {
       min: 250000,
@@ -130,16 +107,7 @@ const DEMO_TEAM_APPLICATIONS: Application[] = [
       negotiable: true
     },
     companyNotes: "Strong technical team but lacks enterprise and supply chain domain expertise. Looking for teams with direct industry experience.",
-    teamDetails: {
-      currentCompany: 'TechFlow Analytics',
-      yearsWorkingTogether: 3.5,
-      teamSize: 4,
-      keyAchievements: [
-        'Excellent technical execution',
-        'Strong team dynamics',
-        'Limited enterprise experience'
-      ]
-    }
+    documents: []
   }
 ];
 
@@ -149,13 +117,13 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
     id: 'app_company_001',
     opportunityId: 'opp_001',
     teamId: 'team_external_001',
-    companyId: 'company_demo_001',
     applicantUserId: 'external_team_lead@goldman.com',
     status: 'pending',
     submittedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     viewedByCompany: false,
     coverLetter: "The QuantRisk Analytics team at Goldman Sachs is intrigued by NextGen Financial's expansion into institutional trading. Our team has 4.2 years of experience working together and has built real-time risk monitoring systems for portfolios exceeding $50B. We're seeking a strategic opportunity that offers greater autonomy and equity participation while maintaining our focus on cutting-edge quantitative finance.",
+    teamMotivation: "We're seeking greater autonomy and equity participation while maintaining our focus on quantitative finance.",
     availabilityTimeline: "Available within 16 weeks with proper transition planning",
     compensationExpectations: {
       min: 350000,
@@ -163,22 +131,12 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
       currency: 'USD',
       negotiable: true
     },
-    teamDetails: {
-      currentCompany: 'Goldman Sachs',
-      yearsWorkingTogether: 4.2,
-      teamSize: 5,
-      keyAchievements: [
-        'Reduced VaR calculation time by 60%',
-        'Built real-time risk monitoring for $50B portfolio',
-        'Published 8 papers in top finance journals'
-      ]
-    }
+    documents: []
   },
   {
     id: 'app_company_002',
     opportunityId: 'opp_001',
     teamId: 'team_external_002',
-    companyId: 'company_demo_001',
     applicantUserId: 'team_lead@jpmorgan.com',
     status: 'under_review',
     submittedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
@@ -186,6 +144,7 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
     viewedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
     viewedByCompany: true,
     coverLetter: "Our derivatives trading analytics team at JPMorgan Chase has been following NextGen Financial's growth trajectory with great interest. With 3.8 years as a cohesive unit, we've developed sophisticated algorithms for options pricing and volatility modeling. We're attracted to your innovative culture and the opportunity to build a new quantitative division from the ground up.",
+    teamMotivation: "We're attracted to your innovative culture and the opportunity to build a new quantitative division from the ground up.",
     availabilityTimeline: "Flexible timing, prefer Q2 2024 start",
     compensationExpectations: {
       min: 320000,
@@ -193,22 +152,12 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
       currency: 'USD',
       negotiable: true
     },
-    teamDetails: {
-      currentCompany: 'JPMorgan Chase',
-      yearsWorkingTogether: 3.8,
-      teamSize: 4,
-      keyAchievements: [
-        'Developed proprietary options pricing models',
-        'Managed $25B+ in derivatives exposure',
-        'Achieved 97% accuracy in volatility predictions'
-      ]
-    }
+    documents: []
   },
   {
     id: 'app_company_003',
     opportunityId: 'opp_ng_002',
     teamId: 'team_external_003',
-    companyId: 'company_demo_001',
     applicantUserId: 'ai_team@mit.edu',
     status: 'accepted',
     submittedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
@@ -216,6 +165,7 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
     viewedAt: new Date(Date.now() - 17 * 24 * 60 * 60 * 1000),
     viewedByCompany: true,
     coverLetter: "The MIT Applied AI Research team is excited about NextGen Financial's vision for AI-powered financial services. Our interdisciplinary team combines machine learning expertise with financial modeling, having published 15+ papers on algorithmic trading and market prediction. We're ready to transition from academic research to industry application.",
+    teamMotivation: "We're ready to transition from academic research to industry application and make a real-world impact.",
     availabilityTimeline: "Ready to start January 2024",
     compensationExpectations: {
       min: 280000,
@@ -224,16 +174,7 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
       negotiable: true
     },
     companyNotes: "Exceptional academic credentials and research output. Strong fit for our AI initiatives. Terms agreed upon.",
-    teamDetails: {
-      currentCompany: 'MIT',
-      yearsWorkingTogether: 2.5,
-      teamSize: 6,
-      keyAchievements: [
-        'Published 15+ papers on financial AI',
-        'Developed novel deep learning architectures',
-        'NSF grant recipients for $2.5M research project'
-      ]
-    }
+    documents: []
   }
 ];
 
@@ -409,13 +350,13 @@ export class ApplicationService {
       }
 
       // Get applications for these opportunities
-      const q = query(
+      const applicationsQuery = query(
         collection(db, APPLICATIONS_COLLECTION),
         where('opportunityId', 'in', opportunityIds),
         orderBy('submittedAt', 'desc')
       );
       
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(applicationsQuery);
       return querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -523,6 +464,7 @@ export class ApplicationService {
       let baseQuery = collection(db, APPLICATIONS_COLLECTION);
       
       // Apply filters if provided
+      let finalQuery;
       if (filters?.companyUserId) {
         // Get company's opportunities first
         const opportunitiesQuery = query(
@@ -537,12 +479,14 @@ export class ApplicationService {
           return { total: 0, pending: 0, underReview: 0, interviewScheduled: 0, accepted: 0, rejected: 0 };
         }
 
-        baseQuery = query(baseQuery, where('opportunityId', 'in', opportunityIds));
+        finalQuery = query(baseQuery, where('opportunityId', 'in', opportunityIds));
       } else if (filters?.teamId) {
-        baseQuery = query(baseQuery, where('teamId', '==', filters.teamId));
+        finalQuery = query(baseQuery, where('teamId', '==', filters.teamId));
+      } else {
+        finalQuery = baseQuery;
       }
 
-      const querySnapshot = await getDocs(baseQuery);
+      const querySnapshot = await getDocs(finalQuery);
       const applications = querySnapshot.docs.map(doc => doc.data());
 
       const stats = {

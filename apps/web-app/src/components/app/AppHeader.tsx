@@ -11,7 +11,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import { signOut } from 'next-auth/react';
 import type { User } from '@/types/firebase';
 
 interface AppHeaderProps {
@@ -28,11 +28,9 @@ const userNavigation = [
 ];
 
 export function AppHeader({ user }: AppHeaderProps) {
-  const { signOut } = useAuth();
-  
   const handleSignOut = async () => {
     try {
-      await signOut();
+      await signOut({ callbackUrl: '/' });
     } catch (error) {
       console.error('Error signing out:', error);
     }
