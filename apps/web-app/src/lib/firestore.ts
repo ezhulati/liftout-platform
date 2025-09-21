@@ -154,7 +154,7 @@ class FirestoreService {
     const data = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as T[];
+    } as unknown)) as T[];
 
     const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1] || null;
     
