@@ -38,9 +38,8 @@ export class OpportunityService {
         status: 'active' as const,
         postedAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
-        views: 0,
-        applications: 0,
-        expressionsOfInterest: 0,
+        viewCount: 0,
+        applicantCount: 0,
       };
 
       const docRef = await addDoc(collection(db, OPPORTUNITIES_COLLECTION), opportunityData);
@@ -263,9 +262,8 @@ export class OpportunityService {
         if (!opportunity) throw new Error('Opportunity not found');
         
         return {
-          views: opportunity.views || 0,
-          applications: opportunity.applications || 0,
-          expressionsOfInterest: opportunity.expressionsOfInterest || 0,
+          viewCount: opportunity.viewCount || 0,
+          applicantCount: opportunity.applicantCount || 0,
           status: opportunity.status,
           daysActive: Math.floor((new Date().getTime() - opportunity.postedAt.getTime()) / (1000 * 60 * 60 * 24)),
         };
