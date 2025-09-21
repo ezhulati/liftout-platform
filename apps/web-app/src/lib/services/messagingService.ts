@@ -393,7 +393,7 @@ export class MessagingService {
   // Search messages
   async searchMessages(
     userId: string,
-    query: string,
+    searchQuery: string,
     options: MessageSearchOptions = {}
   ): Promise<SecureMessage[]> {
     try {
