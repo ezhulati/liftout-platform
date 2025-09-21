@@ -397,7 +397,7 @@ export class DocumentService {
           documents.push({
             ...documentData,
             id: docSnap.id,
-            uploadedAt: documentData.uploadedAt instanceof Timestamp ? documentData.uploadedAt.toDate().toISOString() : documentData.uploadedAt,
+            uploadedAt: documentData.uploadedAt && typeof documentData.uploadedAt === 'object' && 'toDate' in documentData.uploadedAt ? (documentData.uploadedAt as any).toDate().toISOString() : documentData.uploadedAt,
           });
         }
       }
