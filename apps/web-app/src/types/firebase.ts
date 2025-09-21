@@ -367,6 +367,7 @@ export interface CreateOpportunityData {
 
 // Opportunity Filters for searching
 export interface OpportunityFilters {
+  companyId?: string;
   industry?: string[];
   location?: string[];
   type?: ('expansion' | 'capability_building' | 'market_entry' | 'acquisition')[];
@@ -383,6 +384,7 @@ export interface OpportunityFilters {
   skills?: string[];
   status?: ('draft' | 'active' | 'paused' | 'closed' | 'filled')[];
   confidential?: boolean;
+  limit?: number;
 }
 
 // Collection names as constants
