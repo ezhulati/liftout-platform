@@ -3,7 +3,8 @@ export { DemoBanner, DemoModeIndicator, DemoSessionTimer } from './DemoBanner';
 
 // Demo Account Utilities
 export { DEMO_ACCOUNTS, DEMO_DATA, getDemoAccount, isDemoAccount, getDemoDataForUser } from '@/lib/demo-accounts';
-export { DemoSeeder, isDemoUser, getDemoUserData } from '@/lib/demo-seeder';
+// DemoSeeder disabled to prevent Firebase imports during build
+// export { DemoSeeder, isDemoUser, getDemoUserData } from '@/lib/demo-seeder';
 
 // Demo Types
 export interface DemoAccount {
