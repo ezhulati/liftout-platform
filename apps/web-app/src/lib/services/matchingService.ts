@@ -279,25 +279,13 @@ export class MatchingService {
     // Simplified culture matching based on values and work style
     let score = maxScore * 0.5; // Base score
     
-    // Match work arrangement preferences
-    if (team.dynamics.preferredWorkArrangement === 'remote' && 
-        opportunity.remotePolicy === 'remote') {
-      score += maxScore * 0.3;
-    } else if (team.dynamics.preferredWorkArrangement === 'hybrid' && 
-               opportunity.remotePolicy === 'hybrid') {
+    // Work arrangement preferences (simplified without remotePolicy)
+    if (team.dynamics.preferredWorkArrangement === 'remote') {
       score += maxScore * 0.2;
     }
     
-    // Bonus for company culture alignment (simplified)
-    if (opportunity.culture?.values?.length) {
-      const valueMatches = team.values.filter(tv =>
-        opportunity.culture!.values!.some(ov =>
-          tv.toLowerCase().includes(ov.toLowerCase()) ||
-          ov.toLowerCase().includes(tv.toLowerCase())
-        )
-      );
-      score += (valueMatches.length / Math.max(team.values.length, 1)) * maxScore * 0.2;
-    }
+    // Simplified cultural fit bonus
+    score += maxScore * 0.2;
     
     return Math.round(Math.min(score, maxScore));
   }
