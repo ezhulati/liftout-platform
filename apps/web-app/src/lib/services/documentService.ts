@@ -158,7 +158,7 @@ export class DocumentService {
       
       // Generate secure filename
       const secureFileName = this.generateSecureFilename(file.name, metadata.uploadedBy);
-      const storagePath = this.getStoragePath(metadata.documentType, secureFileName);
+      const storagePath = this.getStoragePath(metadata.documentType || 'other', secureFileName);
       
       // Scan for viruses (simulate - would integrate with real service)
       const scanResult = await this.scanForViruses(file);
