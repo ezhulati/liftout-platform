@@ -215,7 +215,7 @@ export class OpportunityService {
 
       const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
       await updateDoc(docRef, {
-        expressionsOfInterest: (opportunity.expressionsOfInterest || 0) + 1,
+        applicantCount: (opportunity.applicantCount || 0) + 1,
         updatedAt: Timestamp.now(),
       });
       
