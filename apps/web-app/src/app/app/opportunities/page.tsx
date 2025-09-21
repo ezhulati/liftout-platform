@@ -24,7 +24,7 @@ export default function OpportunitiesPage() {
   }
 
   const isCompanyUser = session.user.userType === 'company';
-  const activeTab = searchParams.get('tab') || 'all';
+  const activeTab = searchParams?.get('tab') || 'all';
 
   return (
     <div className="space-y-6">

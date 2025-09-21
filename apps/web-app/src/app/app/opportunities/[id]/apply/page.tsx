@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { CreateApplicationForm } from '@/components/applications/CreateApplicationForm';
+// import { CreateApplicationForm } from '@/components/applications/CreateApplicationForm';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { redirect } from 'next/navigation';
@@ -47,11 +47,16 @@ export default async function ApplyToOpportunityPage({ params }: ApplyToOpportun
 
       {/* Application form */}
       <div className="max-w-4xl">
-        <CreateApplicationForm 
-          opportunityId={params.id}
-          opportunityTitle={opportunityTitle}
-          companyName={companyName}
-        />
+        <div className="card">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Application Form</h3>
+          <p className="text-gray-500">Application form is being developed. Please check back soon.</p>
+          <div className="mt-6">
+            <Link href="/app/opportunities" className="btn-primary">
+              <ArrowLeftIcon className="h-4 w-4 mr-2" />
+              Back to Opportunities
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

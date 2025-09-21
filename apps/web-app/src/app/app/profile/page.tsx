@@ -29,8 +29,8 @@ export default function ProfilePage() {
   useEffect(() => {
     if (userData) {
       setFormData({
-        firstName: userData.firstName || '',
-        lastName: userData.lastName || '',
+        firstName: (userData as any).firstName || userData.name?.split(' ')[0] || '',
+        lastName: (userData as any).lastName || userData.name?.split(' ')[1] || '',
         location: userData.location || '',
         industry: userData.industry || '',
         companyName: userData.companyName || '',
@@ -66,8 +66,8 @@ export default function ProfilePage() {
   const handleCancel = () => {
     // Reset form data to original values
     setFormData({
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
+      firstName: (userData as any).firstName || userData.name?.split(' ')[0] || '',
+      lastName: (userData as any).lastName || userData.name?.split(' ')[1] || '',
       location: userData.location || '',
       industry: userData.industry || '',
       companyName: userData.companyName || '',
@@ -103,7 +103,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {userData.firstName} {userData.lastName}
+                  {(userData as any).firstName || userData.name?.split(' ')[0] || ''} {(userData as any).lastName || userData.name?.split(' ')[1] || ''}
                 </h2>
                 <p className="text-sm text-gray-500">
                   {isCompanyUser ? 'Company Representative' : 'Team Member'}
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 ) : (
                   <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">{userData.firstName || 'Not set'}</span>
+                    <span className="text-gray-900">{(userData as any).firstName || userData.name?.split(' ')[0] || 'Not set'}</span>
                   </div>
                 )}
               </div>
@@ -179,7 +179,7 @@ export default function ProfilePage() {
                 ) : (
                   <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">{userData.lastName || 'Not set'}</span>
+                    <span className="text-gray-900">{(userData as any).lastName || userData.name?.split(' ')[1] || 'Not set'}</span>
                   </div>
                 )}
               </div>

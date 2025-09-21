@@ -43,14 +43,33 @@ export default function AppLayout({
     lastName: user.lastName || user.name?.split(' ')[1] || '',
     type: user.userType as 'individual' | 'company',
     userType: user.userType,
+    verified: true,
+    status: 'active' as const,
+    preferences: {
+      notifications: true,
+      marketing: false,
+      confidentialMode: false,
+    },
+    createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+    updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
     ...demoData.profile,
   } : {
     id: user.id,
     email: user.email,
+    name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User',
     firstName: user.firstName || user.name?.split(' ')[0] || 'User',
     lastName: user.lastName || user.name?.split(' ')[1] || '',
     type: (user.userType || 'individual') as 'individual' | 'company',
     userType: user.userType || 'individual',
+    verified: true,
+    status: 'active' as const,
+    preferences: {
+      notifications: true,
+      marketing: false,
+      confidentialMode: false,
+    },
+    createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+    updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
   };
 
   return (

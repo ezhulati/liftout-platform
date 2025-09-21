@@ -1,12 +1,13 @@
-import { LegalDashboard } from '@/components/legal/LegalDashboard';
+// import { LegalDashboard } from '@/components/legal/LegalDashboard';
 import { Suspense } from 'react';
 
 export default function LegalPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <Suspense fallback={<div className="animate-pulse h-96 bg-gray-200 rounded-lg"></div>}>
-        <LegalDashboard />
-      </Suspense>
+      <div className="text-center py-12">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Legal & Compliance Dashboard</h1>
+        <p className="text-gray-500">Legal dashboard features are being developed. Please check back soon.</p>
+      </div>
     </div>
   );
 }

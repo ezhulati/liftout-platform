@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { userData: user } = useAuth();
   const { isOnboardingCompleted, isOnboardingRequired, startOnboarding } = useOnboarding();
   const [isLoading, setIsLoading] = useState(true);
 
