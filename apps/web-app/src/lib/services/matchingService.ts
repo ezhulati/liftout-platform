@@ -120,7 +120,7 @@ export class MatchingService {
 
       // Get all active opportunities
       const opportunitiesResult = await opportunityService.searchOpportunities({
-        status: 'active',
+        status: ['active'],
       });
 
       const matches = opportunitiesResult.opportunities.map(opportunity => {
