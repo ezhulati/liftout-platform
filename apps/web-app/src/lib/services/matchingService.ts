@@ -241,23 +241,18 @@ export class MatchingService {
   private calculateLocationMatch(team: TeamProfile, opportunity: Opportunity): number {
     const maxScore = 10;
     
-    // Perfect match for same location or both remote
-    if (team.location.primary === opportunity.location || 
-        (team.location.remote && opportunity.remotePolicy === 'remote')) {
+    // Perfect match for same location
+    if (team.location.primary === opportunity.location) {
       return maxScore;
     }
     
-    // Good match for hybrid arrangements
-    if (opportunity.remotePolicy === 'hybrid' && team.location.remote) {
+    // Good match for remote teams (assume some flexibility)
+    if (team.location.remote) {
       return Math.round(maxScore * 0.8);
     }
     
-    // Partial match for different locations but remote-friendly
-    if (team.location.remote || opportunity.remotePolicy !== 'onsite') {
-      return Math.round(maxScore * 0.6);
-    }
-    
-    return Math.round(maxScore * 0.2);
+    // Partial match for different locations (some distance penalty)
+    return Math.round(maxScore * 0.4);
   }
 
   private calculateCompensationMatch(team: TeamProfile, opportunity: Opportunity): number {
