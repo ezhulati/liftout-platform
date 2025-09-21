@@ -438,19 +438,19 @@ export class MessagingService {
       const querySnapshot = await getDocs(finalQuery);
       
       const messages = querySnapshot.docs.map(doc => {
-        const data = doc.data();
+        const data = doc.data() as any;
         return {
           id: doc.id,
-          ...data,
+          ...(data as object),
           timestamp: data.timestamp?.toDate().toISOString(),
         } as SecureMessage;
       });
 
       // Client-side text search (in production, would use proper search service)
-      const filteredMessages = query.trim() 
+      const filteredMessages = searchQuery.trim() 
         ? messages.filter(message => 
-            message.content.toLowerCase().includes(query.toLowerCase()) ||
-            message.subject?.toLowerCase().includes(query.toLowerCase())
+            message.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            message.subject?.toLowerCase().includes(searchQuery.toLowerCase())
           )
         : messages;
 
