@@ -241,7 +241,7 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
                 </span>
               </div>
               <p className="text-sm text-gray-600">
-                {entityType === 'team' ? opportunity.company?.name : `${team.size} members • ${team.industry.join(', ')}`}
+                {entityType === 'team' ? opportunity.companyName : `${team.size} members • ${team.industry.join(', ')}`}
               </p>
             </div>
           </div>
