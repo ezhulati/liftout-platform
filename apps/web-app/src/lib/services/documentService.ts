@@ -259,9 +259,9 @@ export class DocumentService {
       return {
         ...documentData,
         id: docSnap.id,
-        uploadedAt: documentData.uploadedAt instanceof Timestamp ? documentData.uploadedAt.toDate().toISOString() : documentData.uploadedAt,
-        reviewedAt: documentData.reviewedAt instanceof Timestamp ? documentData.reviewedAt.toDate() : documentData.reviewedAt,
-        retentionDate: documentData.retentionDate instanceof Timestamp ? documentData.retentionDate.toDate() : documentData.retentionDate,
+        uploadedAt: documentData.uploadedAt && documentData.uploadedAt instanceof Timestamp ? documentData.uploadedAt.toDate().toISOString() : documentData.uploadedAt,
+        reviewedAt: documentData.reviewedAt && documentData.reviewedAt instanceof Timestamp ? documentData.reviewedAt.toDate() : documentData.reviewedAt,
+        retentionDate: documentData.retentionDate && documentData.retentionDate instanceof Timestamp ? documentData.retentionDate.toDate() : documentData.retentionDate,
       };
     } catch (error) {
       console.error('Error getting document:', error);
