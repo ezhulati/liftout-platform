@@ -259,9 +259,9 @@ export class DocumentService {
       return {
         ...documentData,
         id: docSnap.id,
-        uploadedAt: documentData.uploadedAt && typeof documentData.uploadedAt === 'object' && 'toDate' in documentData.uploadedAt ? documentData.uploadedAt.toDate().toISOString() : documentData.uploadedAt,
-        reviewedAt: documentData.reviewedAt && typeof documentData.reviewedAt === 'object' && 'toDate' in documentData.reviewedAt ? documentData.reviewedAt.toDate() : documentData.reviewedAt,
-        retentionDate: documentData.retentionDate && typeof documentData.retentionDate === 'object' && 'toDate' in documentData.retentionDate ? documentData.retentionDate.toDate() : documentData.retentionDate,
+        uploadedAt: documentData.uploadedAt && typeof documentData.uploadedAt === 'object' && 'toDate' in documentData.uploadedAt ? (documentData.uploadedAt as any).toDate().toISOString() : documentData.uploadedAt,
+        reviewedAt: documentData.reviewedAt && typeof documentData.reviewedAt === 'object' && 'toDate' in documentData.reviewedAt ? (documentData.reviewedAt as any).toDate() : documentData.reviewedAt,
+        retentionDate: documentData.retentionDate && typeof documentData.retentionDate === 'object' && 'toDate' in documentData.retentionDate ? (documentData.retentionDate as any).toDate() : documentData.retentionDate,
       };
     } catch (error) {
       console.error('Error getting document:', error);
