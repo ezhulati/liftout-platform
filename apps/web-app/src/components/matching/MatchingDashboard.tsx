@@ -320,7 +320,7 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
               <>
                 <span>{opportunity.location}</span>
                 <span>•</span>
-                <span>{opportunity.commitment?.type}</span>
+                <span>{opportunity.timeline?.urgency || 'Flexible timeline'}</span>
               </>
             ) : (
               <>
