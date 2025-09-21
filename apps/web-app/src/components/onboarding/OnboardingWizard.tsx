@@ -32,7 +32,7 @@ interface OnboardingWizardProps {
 }
 
 export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const {
     progress,
     steps,
@@ -130,10 +130,10 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Welcome to Liftout, {user?.name}!
+                Welcome to Liftout, {userData?.name}!
               </h1>
               <p className="text-sm text-gray-600 mt-1">
-                Let's get you set up to {user?.type === 'company' ? 'find amazing teams' : 'discover great opportunities'}
+                Let's get you set up to {userData?.type === 'company' ? 'find amazing teams' : 'discover great opportunities'}
               </p>
             </div>
             <button

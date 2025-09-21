@@ -16,11 +16,11 @@ interface ProfileCompletenessProps {
 }
 
 export function ProfileCompleteness({ className = '', showMinimal = false }: ProfileCompletenessProps) {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const { profileCompleteness, progress, isOnboardingCompleted, startOnboarding } = useOnboarding();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  if (!profileCompleteness || !user) {
+  if (!profileCompleteness || !userData) {
     return null;
   }
 
@@ -90,7 +90,7 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
             Complete Your Profile
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            A complete profile helps {user.type === 'company' ? 'teams understand your company' : 'companies find your team'} and improves your chances of successful matches.
+            A complete profile helps {userData.type === 'company' ? 'teams understand your company' : 'companies find your team'} and improves your chances of successful matches.
           </p>
 
           {/* Overall Progress */}

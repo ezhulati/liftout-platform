@@ -332,13 +332,13 @@ export default function ProfilePage() {
             <div>
               <span className="font-medium text-gray-700">Member Since:</span>
               <span className="ml-2 text-gray-900">
-                {userData.createdAt ? new Date(userData.createdAt).toLocaleDateString() : 'Unknown'}
+                {userData.createdAt ? new Date((userData.createdAt as any).seconds * 1000).toLocaleDateString() : 'Unknown'}
               </span>
             </div>
             <div>
               <span className="font-medium text-gray-700">Email Verified:</span>
               <span className="ml-2 text-gray-900">
-                {userData.emailVerified ? 'Yes' : 'No'}
+                {userData.verified ? 'Yes' : 'No'}
               </span>
             </div>
             <div>

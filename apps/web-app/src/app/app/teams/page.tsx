@@ -200,7 +200,7 @@ export default function TeamsPage() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">TechFlow Data Science Team</h2>
-                  <p className="text-gray-600">Led by {userData.name} • 4 Members • 3.5 Years Together</p>
+                  <p className="text-gray-600">Led by Alex Chen • 4 Members • 3.5 Years Together</p>
                   <div className="flex items-center mt-2 space-x-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Available for Liftout

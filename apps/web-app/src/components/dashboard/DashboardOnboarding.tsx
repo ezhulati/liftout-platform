@@ -16,7 +16,7 @@ export function DashboardOnboarding() {
   const [showWizard, setShowWizard] = useState(false);
 
   // Don't show anything if onboarding is fully completed
-  if (isOnboardingCompleted && profileCompleteness?.overall >= 90) {
+  if (isOnboardingCompleted && (profileCompleteness?.overall ?? 0) >= 90) {
     return null;
   }
 

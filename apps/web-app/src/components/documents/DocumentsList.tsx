@@ -4,9 +4,9 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import {
+  ArrowDownTrayIcon,
   DocumentIcon,
   EyeIcon,
-  DownloadIcon,
   ShareIcon,
   TrashIcon,
   LockClosedIcon,
@@ -338,7 +338,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                     className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                     title="Download"
                   >
-                    <DownloadIcon className="h-5 w-5" />
+                    <ArrowDownTrayIcon className="h-5 w-5" />
                   </button>
                   
                   <Link

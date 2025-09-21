@@ -76,7 +76,7 @@ const commonBenefits = [
 ];
 
 export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupProps) {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [selectedWorkStyles, setSelectedWorkStyles] = useState<string[]>([]);
@@ -91,9 +91,9 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
   } = useForm<CompanyProfileFormData>({
     resolver: zodResolver(companyProfileSchema),
     defaultValues: {
-      companyName: user?.companyName || '',
-      industry: user?.industry || '',
-      location: user?.location || '',
+      companyName: userData?.companyName || '',
+      industry: userData?.industry || '',
+      location: userData?.location || '',
       culture: {
         values: [],
         workStyle: [],

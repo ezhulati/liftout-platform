@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import {
+  ArrowDownTrayIcon,
   DocumentIcon,
-  DownloadIcon,
   ShareIcon,
   EyeIcon,
   LockClosedIcon,
@@ -139,7 +139,7 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
   }
 
   const isOwner = document.uploadedBy === session?.user.id;
-  const isExpired = document.accessControl.expiresAt && new Date(document.accessControl.expiresAt) < new Date();
+  const isExpired = Boolean(document.accessControl.expiresAt && new Date(document.accessControl.expiresAt) < new Date());
 
   return (
     <div className="space-y-6">
@@ -198,7 +198,7 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
                 disabled={downloadMutation.isPending || isExpired}
                 className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <DownloadIcon className="h-4 w-4 mr-2" />
+                <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
                 {downloadMutation.isPending ? 'Downloading...' : 'Download'}
               </button>
               

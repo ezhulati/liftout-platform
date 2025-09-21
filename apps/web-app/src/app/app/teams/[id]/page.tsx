@@ -47,7 +47,7 @@ const availabilityColors = {
 export default function TeamProfilePage() {
   const params = useParams();
   const { userData } = useAuth();
-  const teamId = params.id as string;
+  const teamId = params?.id as string;
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
 
   const { data: team, isLoading, refetch } = useQuery({

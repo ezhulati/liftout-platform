@@ -99,7 +99,7 @@ export function SecureDocumentUpload({
         accessLevel,
         encryptionLevel: securityLevel,
         uploadedBy: 'current-user-id', // Would get from auth context
-        complianceLabels: generateComplianceLabels(uploadFile.file, documentType),
+        complianceLabels: generateComplianceLabels(uploadFile.file, documentType || 'other'),
       });
 
       // Get the uploaded document details

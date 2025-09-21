@@ -75,7 +75,7 @@ const commonInterests = [
 ];
 
 export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [skillInput, setSkillInput] = useState('');
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -90,9 +90,9 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
   } = useForm<ProfileSetupFormData>({
     resolver: zodResolver(profileSetupSchema),
     defaultValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      location: user?.location || '',
+      firstName: userData?.name?.split(' ')[0] || '',
+      lastName: userData?.name?.split(' ')[1] || '',
+      location: userData?.location || '',
       experience: {
         totalYears: 0,
         currentCompany: '',

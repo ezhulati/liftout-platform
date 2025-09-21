@@ -13,78 +13,6 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useTeams } from '@/hooks/useTeams';
 
-interface Team {
-  id: string;
-  name: string;
-  description: string;
-  industry: string;
-  location: string;
-  size: number;
-  rating: number;
-  skills: string[];
-  role: 'owner' | 'admin' | 'member';
-  status: 'available' | 'exploring' | 'committed' | 'inactive';
-  profileImageUrl?: string;
-  memberCount: number;
-  yearsWorking: number;
-  successfulLiftouts: number;
-  currentCompany: string;
-  liftoutInterest: 'high' | 'medium' | 'low';
-}
-
-const mockTeams: Team[] = [
-  {
-    id: '1',
-    name: 'Elite Frontend Unit',
-    description: 'High-performing team with 5 years of collaboration at TechCorp. Specialized in React ecosystems with proven track record of delivering complex web applications.',
-    industry: 'Financial Technology',
-    location: 'New York, NY',
-    size: 6,
-    rating: 4.9,
-    skills: ['React', 'Next.js', 'TypeScript', 'GraphQL', 'AWS'],
-    role: 'owner',
-    status: 'available',
-    memberCount: 6,
-    yearsWorking: 5,
-    successfulLiftouts: 2,
-    currentCompany: 'TechCorp Financial',
-    liftoutInterest: 'high',
-  },
-  {
-    id: '2',
-    name: 'Data Science Collective',
-    description: 'Analytics team from BigData Inc with extensive experience in ML pipelines and real-time data processing. Seeking new challenges in healthcare or climate tech.',
-    industry: 'Data Science',
-    location: 'San Francisco, CA',
-    size: 8,
-    rating: 4.8,
-    skills: ['Python', 'TensorFlow', 'Apache Spark', 'Kubernetes', 'PostgreSQL'],
-    role: 'admin',
-    status: 'exploring',
-    memberCount: 8,
-    yearsWorking: 4,
-    successfulLiftouts: 1,
-    currentCompany: 'BigData Inc',
-    liftoutInterest: 'medium',
-  },
-  {
-    id: '3',
-    name: 'DevOps Infrastructure Team',
-    description: 'Platform engineering team responsible for scaling infrastructure at CloudCorp. Expert in cloud-native technologies and Site Reliability Engineering.',
-    industry: 'Cloud Infrastructure',
-    location: 'Seattle, WA',
-    size: 5,
-    rating: 4.7,
-    skills: ['Kubernetes', 'Terraform', 'AWS', 'Go', 'Prometheus'],
-    role: 'member',
-    status: 'available',
-    memberCount: 5,
-    yearsWorking: 3,
-    successfulLiftouts: 0,
-    currentCompany: 'CloudCorp Systems',
-    liftoutInterest: 'high',
-  },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -97,7 +25,8 @@ interface TeamsListProps {
 export function TeamsList({ userType }: TeamsListProps) {
   const isCompanyUser = userType === 'company';
   
-  const { data: teams = [], isLoading, error } = useTeams();
+  const { data: teamsResponse, isLoading, error } = useTeams();
+  const teams = teamsResponse?.teams || [];
 
   if (isLoading) {
     return (
@@ -150,17 +79,9 @@ export function TeamsList({ userType }: TeamsListProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1">
               <div className="flex-shrink-0">
-                {team.profileImageUrl ? (
-                  <img
-                    className="h-16 w-16 rounded-lg object-cover"
-                    src={team.profileImageUrl}
-                    alt={team.name}
-                  />
-                ) : (
-                  <div className="h-16 w-16 rounded-lg bg-primary-100 flex items-center justify-center">
-                    <UserGroupIcon className="h-8 w-8 text-primary-600" />
-                  </div>
-                )}
+                <div className="h-16 w-16 rounded-lg bg-primary-100 flex items-center justify-center">
+                  <UserGroupIcon className="h-8 w-8 text-primary-600" />
+                </div>
               </div>
               
               <div className="flex-1 min-w-0">
@@ -229,7 +150,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                 {isCompanyUser ? 'View Profile' : 'Manage Profile'}
               </Link>
               
-              {isCompanyUser && team.status === 'available' && (
+              {isCompanyUser && team.openToLiftout && (
                 <Link
                   href={`/app/teams/${team.id}/contact`}
                   className="btn-primary"
@@ -238,7 +159,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                 </Link>
               )}
               
-              {(team.role === 'owner' || team.role === 'admin') && (
+              {!isCompanyUser && (
                 <Menu as="div" className="relative">
                   <Menu.Button className="p-2 text-gray-400 hover:text-gray-600">
                     <EllipsisVerticalIcon className="h-5 w-5" />

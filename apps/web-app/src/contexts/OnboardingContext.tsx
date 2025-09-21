@@ -27,39 +27,39 @@ interface OnboardingContextType {
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 export function OnboardingProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const [progress, setProgress] = useState<OnboardingProgress | null>(null);
   const [profileCompleteness, setProfileCompleteness] = useState<ProfileCompleteness | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Get appropriate steps based on user type
-  const steps = user?.type === 'company' ? COMPANY_ONBOARDING_STEPS : TEAM_ONBOARDING_STEPS;
+  const steps = userData?.type === 'company' ? COMPANY_ONBOARDING_STEPS : TEAM_ONBOARDING_STEPS;
 
   // Get current step
   const currentStep = progress ? steps.find(step => step.id === progress.currentStep) || steps[0] : null;
 
   // Check if onboarding is required (new user with incomplete profile)
-  const isOnboardingRequired = !progress?.isCompleted && user && !user.emailVerified;
+  const isOnboardingRequired = !progress?.isCompleted && userData && !userData.verified;
 
   // Check if onboarding is completed
   const isOnboardingCompleted = progress?.isCompleted || false;
 
   // Initialize onboarding progress for new users
   useEffect(() => {
-    if (user && !isLoading) {
+    if (userData && !isLoading) {
       initializeProgress();
     }
-  }, [user, isLoading]);
+  }, [userData, isLoading]);
 
   // Load onboarding progress
   useEffect(() => {
-    if (user) {
+    if (userData) {
       loadOnboardingProgress();
     }
-  }, [user]);
+  }, [userData]);
 
   const initializeProgress = async () => {
-    if (!user) return;
+    if (!userData) return;
 
     // Check if user already has onboarding progress
     const existingProgress = await loadOnboardingProgressFromStorage();
@@ -70,8 +70,8 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
     // Create new progress for first-time users
     const newProgress: OnboardingProgress = {
-      userId: user.id,
-      userType: user.type,
+      userId: userData.id,
+      userType: userData.type,
       currentStep: steps[0]?.id || '',
       completedSteps: [],
       isCompleted: false,
@@ -100,12 +100,12 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const loadOnboardingProgressFromStorage = async (): Promise<OnboardingProgress | null> => {
-    if (!user) return null;
+    if (!userData) return null;
     
     // In a real app, this would fetch from your API/database
     // For now, use localStorage as a demo
     try {
-      const stored = localStorage.getItem(`onboarding_${user.id}`);
+      const stored = localStorage.getItem(`onboarding_${userData.id}`);
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
@@ -113,16 +113,16 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const saveOnboardingProgress = async (newProgress: OnboardingProgress) => {
-    if (!user) return;
+    if (!userData) return;
     
     // In a real app, this would save to your API/database
     // For now, use localStorage as a demo
-    localStorage.setItem(`onboarding_${user.id}`, JSON.stringify(newProgress));
+    localStorage.setItem(`onboarding_${userData.id}`, JSON.stringify(newProgress));
     setProgress(newProgress);
   };
 
   const calculateProfileCompleteness = async () => {
-    if (!user) return;
+    if (!userData) return;
 
     // Calculate profile completeness based on user data
     const completeness: ProfileCompleteness = {
@@ -140,11 +140,11 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
     // Basic info (from signup)
     let basicInfoScore = 0;
-    if (user.name) basicInfoScore += 20;
-    if (user.email) basicInfoScore += 20;
-    if (user.type) basicInfoScore += 20;
-    if (user.industry) basicInfoScore += 20;
-    if (user.location) basicInfoScore += 20;
+    if (userData.name) basicInfoScore += 20;
+    if (userData.email) basicInfoScore += 20;
+    if (userData.type) basicInfoScore += 20;
+    if (userData.industry) basicInfoScore += 20;
+    if (userData.location) basicInfoScore += 20;
     completeness.sections.basicInfo = basicInfoScore;
 
     // TODO: Calculate other sections based on actual profile data
@@ -158,11 +158,11 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     if (completeness.overall < 40) {
       completeness.nextRecommendedAction = 'Complete your basic profile information';
     } else if (completeness.overall < 70) {
-      completeness.nextRecommendedAction = user.type === 'company' 
+      completeness.nextRecommendedAction = userData.type === 'company' 
         ? 'Add company verification and post your first opportunity'
         : 'Add your skills and team information';
     } else {
-      completeness.nextRecommendedAction = user.type === 'company'
+      completeness.nextRecommendedAction = userData.type === 'company'
         ? 'Start browsing teams and posting opportunities'
         : 'Explore liftout opportunities and connect with companies';
     }
@@ -171,11 +171,11 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const startOnboarding = () => {
-    if (!user || !steps.length) return;
+    if (!userData || !steps.length) return;
 
     const newProgress: OnboardingProgress = {
-      userId: user.id,
-      userType: user.type,
+      userId: userData.id,
+      userType: userData.type,
       currentStep: steps[0].id,
       completedSteps: [],
       isCompleted: false,
@@ -187,7 +187,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const completeStep = async (stepId: string) => {
-    if (!progress || !user) return;
+    if (!progress || !userData) return;
 
     const updatedProgress = {
       ...progress,
@@ -215,7 +215,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const goToStep = async (stepId: string) => {
-    if (!progress || !user) return;
+    if (!progress || !userData) return;
 
     const updatedProgress = {
       ...progress,
@@ -226,7 +226,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const skipOnboarding = async () => {
-    if (!progress || !user) return;
+    if (!progress || !userData) return;
 
     const updatedProgress = {
       ...progress,
