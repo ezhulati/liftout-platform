@@ -109,14 +109,14 @@ export class OpportunityService {
       const querySnapshot = await getDocs(finalQuery);
       
       const opportunities = querySnapshot.docs.map(doc => {
-        const data = doc.data();
+        const data = doc.data() as any;
         return {
           id: doc.id,
-          ...data,
+          ...(data as object),
           postedAt: data.postedAt?.toDate(),
           updatedAt: data.updatedAt?.toDate(),
           deadline: data.deadline?.toDate(),
-        } as Opportunity;
+        } as unknown as Opportunity;
       });
 
       // TODO: Implement aggregation for filter counts
