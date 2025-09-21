@@ -38,7 +38,7 @@ export class TeamService {
         ...data,
         leaderId: creatorUserId,
         size: data.members.length,
-        establishedDate: Timestamp.now(),
+        establishedDate: new Date(),
         performanceMetrics: {
           projectsCompleted: 0,
           successRate: 0,
