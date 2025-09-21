@@ -264,8 +264,7 @@ export class MatchingService {
     
     const teamMin = team.compensationExpectations.totalTeamValue.min;
     const teamMax = team.compensationExpectations.totalTeamValue.max;
-    const oppBudget = opportunity.compensation.total || 
-                     (opportunity.compensation.max * team.size);
+    const oppBudget = opportunity.compensation.max;
     
     if (oppBudget >= teamMax) return maxScore; // Opportunity exceeds expectations
     if (oppBudget >= teamMin) return Math.round(maxScore * 0.8); // Within range
