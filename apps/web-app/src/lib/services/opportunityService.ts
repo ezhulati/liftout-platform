@@ -58,14 +58,14 @@ export class OpportunityService {
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
-        const data = docSnap.data();
+        const data = docSnap.data() as any;
         return {
           id: docSnap.id,
-          ...data,
+          ...(data as object),
           postedAt: data.postedAt?.toDate(),
           updatedAt: data.updatedAt?.toDate(),
           deadline: data.deadline?.toDate(),
-        } as Opportunity;
+        } as unknown as Opportunity;
       }
       
       return null;
