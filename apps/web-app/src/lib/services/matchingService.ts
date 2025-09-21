@@ -189,10 +189,10 @@ export class MatchingService {
   private calculateSkillsMatch(team: TeamProfile, opportunity: Opportunity): number {
     const maxScore = 25;
     
-    if (!opportunity.requiredSkills?.length) return maxScore * 0.5; // Default if no requirements
+    if (!opportunity.skills?.length) return maxScore * 0.5; // Default if no requirements
     
-    const teamSkills = team.specializations.map(s => s.toLowerCase());
-    const requiredSkills = opportunity.requiredSkills.map(s => s.toLowerCase());
+    const teamSkills = team.specializations?.map(s => s.toLowerCase()) || [];
+    const requiredSkills = opportunity.skills.map(s => s.toLowerCase());
     
     const matchedSkills = requiredSkills.filter(skill =>
       teamSkills.some(teamSkill => 
