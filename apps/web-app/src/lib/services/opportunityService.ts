@@ -200,7 +200,7 @@ export class OpportunityService {
 
       const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
       await updateDoc(docRef, {
-        views: (opportunity.views || 0) + 1,
+        viewCount: (opportunity.viewCount || 0) + 1,
       });
     } catch (error) {
       console.error('Error incrementing view count:', error);
