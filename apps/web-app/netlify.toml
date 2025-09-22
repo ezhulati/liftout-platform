@@ -1,5 +1,5 @@
 [build]
-  command = "cd ../.. && mv package.json package.json.bak && mv pnpm-workspace.yaml pnpm-workspace.yaml.bak && mv pnpm-lock.yaml pnpm-lock.yaml.bak 2>/dev/null || true && cd apps/web-app && npm install && npm run build && cd ../.. && mv package.json.bak package.json && mv pnpm-workspace.yaml.bak pnpm-workspace.yaml && mv pnpm-lock.yaml.bak pnpm-lock.yaml 2>/dev/null || true"
+  command = "corepack enable pnpm && pnpm --dir ../.. install --frozen-lockfile && pnpm --dir ../.. --filter @liftout/web-app... build"
   publish = ".next"
   node_version = "20"
 
