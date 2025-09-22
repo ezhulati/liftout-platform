@@ -1,6 +1,6 @@
 [build]
   base = "apps/web-app/"
-  command = "mv ../../package.json ../../package.json.temp && mv ../api-server/package.json ../api-server/package.json.temp 2>/dev/null || true && npm install && npm run build"
+  command = "mv ../../package.json ../../package.json.temp 2>/dev/null || true && mv ../api-server/package.json ../api-server/package.json.temp 2>/dev/null || true && npm install --no-workspaces && npm run build"
   publish = ".next"
 
 [build.environment]
