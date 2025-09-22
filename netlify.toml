@@ -1,11 +1,11 @@
 [build]
-  base = "apps/web-app/"
-  command = "pnpm install && pnpm run build"
-  publish = ".next"
+  command = "npm install -g pnpm@8 && cd apps/web-app && pnpm install --frozen-lockfile=false && pnpm run build"
+  publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "18"
-  PNPM_VERSION = "8"
+  NPM_CONFIG_FUND = "false"
+  NPM_CONFIG_AUDIT = "false"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
