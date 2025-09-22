@@ -1,11 +1,10 @@
 [build]
-  command = "npm install -g pnpm@8 && cd apps/web-app && pnpm install --frozen-lockfile=false && pnpm run build"
-  publish = "apps/web-app/.next"
+  base = "apps/web-app/"
+  command = "mv ../../package.json ../../package.json.temp && mv ../api-server/package.json ../api-server/package.json.temp 2>/dev/null || true && npm install && npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
-  NPM_CONFIG_FUND = "false"
-  NPM_CONFIG_AUDIT = "false"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
