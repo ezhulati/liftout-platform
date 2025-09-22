@@ -554,7 +554,6 @@ model Conversation {
   subject        String?
   status         ConversationStatus  @default(active)
   isAnonymous    Boolean             @default(false) @map("is_anonymous")
-  participants   Json                @default("[]")
   participantRoles Json              @default("{}") @map("participant_roles")
   archivedBy     Json                @default("[]") @map("archived_by")
   lastMessageAt  DateTime?           @map("last_message_at")

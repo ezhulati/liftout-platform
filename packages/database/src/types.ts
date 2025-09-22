@@ -7,7 +7,11 @@ import type {
   ExpressionOfInterest,
   Conversation,
   Message,
-  Notification
+  Notification,
+  TeamMember,
+  CompanyUser,
+  IndividualProfile,
+  ConversationParticipant
 } from '@prisma/client';
 
 // Extended types with relations

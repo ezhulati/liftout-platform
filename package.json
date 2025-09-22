@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "The first marketplace for team-based hiring",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packageManager": "pnpm@8.15.0",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
