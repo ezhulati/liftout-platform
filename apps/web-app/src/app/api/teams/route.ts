@@ -175,37 +175,123 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { name, description, members, industry, location, compensation } = body;
-  
-  if (!name || !description || !members || members.length < 2) {
+  try {
+    const body = await request.json();
+    const { name, description, members, industry, location, compensation } = body;
+    
+    // Enhanced validation
+    if (!name || name.trim().length < 5) {
+      return NextResponse.json({ 
+        error: 'Team name must be at least 5 characters' 
+      }, { status: 400 });
+    }
+
+    if (!description || description.trim().length < 50) {
+      return NextResponse.json({ 
+        error: 'Team description must be at least 50 characters' 
+      }, { status: 400 });
+    }
+
+    if (!members || !Array.isArray(members) || members.length < 2) {
+      return NextResponse.json({ 
+        error: 'Team must have at least 2 members' 
+      }, { status: 400 });
+    }
+
+    if (!industry || !location) {
+      return NextResponse.json({ 
+        error: 'Industry and location are required' 
+      }, { status: 400 });
+    }
+
+    // Validate members
+    for (let i = 0; i < members.length; i++) {
+      const member = members[i];
+      if (!member.name || member.name.trim().length < 2) {
+        return NextResponse.json({ 
+          error: `Member ${i + 1} name is required (minimum 2 characters)` 
+        }, { status: 400 });
+      }
+      if (!member.role || member.role.trim().length < 2) {
+        return NextResponse.json({ 
+          error: `Member ${i + 1} role is required (minimum 2 characters)` 
+        }, { status: 400 });
+      }
+      if (typeof member.experience !== 'number' || member.experience < 0 || member.experience > 50) {
+        return NextResponse.json({ 
+          error: `Member ${i + 1} experience must be between 0 and 50 years` 
+        }, { status: 400 });
+      }
+      if (!member.skills || !Array.isArray(member.skills) || member.skills.length === 0) {
+        return NextResponse.json({ 
+          error: `Member ${i + 1} must have at least one skill` 
+        }, { status: 400 });
+      }
+    }
+
+    // Validate compensation
+    if (!compensation || !compensation.range) {
+      return NextResponse.json({ 
+        error: 'Compensation range is required' 
+      }, { status: 400 });
+    }
+
+    // Calculate team metrics
+    const avgExperience = members.reduce((sum, member) => sum + member.experience, 0) / members.length;
+    const totalSkills = [...new Set(members.flatMap(member => member.skills))].length;
+    
+    // Calculate initial cohesion score based on team composition
+    const experienceVariance = members.reduce((sum, member) => 
+      sum + Math.pow(member.experience - avgExperience, 2), 0) / members.length;
+    const experienceConsistency = Math.max(0, 100 - (experienceVariance * 2));
+    const skillDiversity = Math.min(100, totalSkills * 5);
+    const initialCohesionScore = Math.round((experienceConsistency + skillDiversity) / 2);
+
+    // Add unique IDs to members
+    const membersWithIds = members.map((member, index) => ({
+      ...member,
+      id: `member_${Date.now()}_${index}`,
+      name: member.name.trim(),
+      role: member.role.trim(),
+      skills: member.skills.map((skill: string) => skill.trim()).filter((skill: string) => skill.length > 0)
+    }));
+
+    const newTeam = {
+      id: `team_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      name: name.trim(),
+      description: description.trim(),
+      size: members.length,
+      yearsWorking: 0,
+      cohesionScore: initialCohesionScore,
+      successfulProjects: 0,
+      clientSatisfaction: 0,
+      openToLiftout: true,
+      createdBy: session.user.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      members: membersWithIds,
+      achievements: [],
+      industry: industry.trim(),
+      location: location.trim(),
+      availability: 'Open to strategic opportunities',
+      compensation: {
+        range: compensation.range.trim(),
+        equity: Boolean(compensation.equity),
+        benefits: compensation.benefits ? compensation.benefits.trim() : 'Standard'
+      }
+    };
+
+    teams.push(newTeam);
+    
     return NextResponse.json({ 
-      error: 'Name, description, and at least 2 members required' 
+      team: newTeam,
+      message: 'Team profile created successfully' 
+    }, { status: 201 });
+    
+  } catch (error) {
+    console.error('Team creation error:', error);
+    return NextResponse.json({ 
+      error: 'Invalid request data' 
     }, { status: 400 });
   }
-
-  const newTeam = {
-    id: `team_${Date.now()}`,
-    name,
-    description,
-    size: members.length,
-    yearsWorking: 0,
-    cohesionScore: 0,
-    successfulProjects: 0,
-    clientSatisfaction: 0,
-    openToLiftout: true,
-    createdBy: session.user.id,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    members,
-    achievements: [],
-    industry: industry || 'Technology',
-    location: location || 'Remote',
-    availability: 'Open to opportunities',
-    compensation: compensation || { range: 'Negotiable', equity: false, benefits: 'Standard' }
-  };
-
-  teams.push(newTeam);
-  
-  return NextResponse.json({ team: newTeam }, { status: 201 });
 }

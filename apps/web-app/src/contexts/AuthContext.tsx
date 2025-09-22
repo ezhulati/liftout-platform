@@ -1,196 +1,200 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
-import { auth, authService } from '@/lib/auth-firebase';
+import { useSession } from 'next-auth/react';
 import { User } from '@/types/firebase';
+import { userService } from '@/lib/firestore';
 
 interface AuthContextType {
-  firebaseUser: FirebaseUser | null;
-  userData: User | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (data: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    userType: 'individual' | 'company';
-    companyName?: string;
-    industry?: string;
-    location?: string;
-  }) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signOut: () => Promise<void>;
+  // Session and user data
+  session: any;
+  user: User | null;
+  userData: User | null; // Backward compatibility alias
+  userType: 'individual' | 'company' | null;
+  isAuthenticated: boolean;
+  
+  // Loading states
+  loading: boolean; // Backward compatibility alias
+  isLoading: boolean;
+  isUserLoading: boolean;
+  
+  // User operations
+  refreshUser: () => Promise<void>;
+  updateUserType: (type: 'individual' | 'company') => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
+  signUp: (userData: any) => Promise<any>;
+  signInWithGoogle: () => Promise<any>;
   sendPasswordReset: (email: string) => Promise<void>;
-  updatePassword: (currentPassword: string, newPassword: string) => Promise<void>;
-  updateProfile: (data: {
-    firstName?: string;
-    lastName?: string;
-    location?: string;
-    industry?: string;
-    companyName?: string;
-    position?: string;
-    phone?: string;
-  }) => Promise<void>;
-  deleteAccount: (password: string) => Promise<void>;
-  refreshUserData: () => Promise<void>;
+  
+  // Firebase user for backward compatibility
+  firebaseUser: any;
+  
+  // Role-based access
+  isIndividual: boolean;
+  isCompany: boolean;
+  canAccessTeams: boolean;
+  canCreateOpportunities: boolean;
+  canViewAnalytics: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState<User | null>(null);
+  const [isUserLoading, setIsUserLoading] = useState(false);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+  // Derived state
+  const isAuthenticated = !!session && !!user;
+  const isLoading = status === 'loading';
+  const userType = user?.type || null;
+  const isIndividual = userType === 'individual';
+  const isCompany = userType === 'company';
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
-  const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Role-based access permissions
+  const canAccessTeams = isIndividual;
+  const canCreateOpportunities = isCompany;
+  const canViewAnalytics = isAuthenticated; // Both types can view analytics
 
-  // Listen for Firebase auth state changes
+  // Load user data from Firestore when session changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setFirebaseUser(user);
-      
-      if (user) {
-        // Get user data from Firestore
+    const loadUser = async () => {
+      if (session?.user?.email && !user) {
+        setIsUserLoading(true);
         try {
-          const userData = await authService.getCurrentUserData();
-          setUserData(userData);
+          const userData = await userService.getUserByEmail(session.user.email);
+          if (userData) {
+            setUser(userData);
+            // Update last login
+            await userService.updateLastLogin(userData.id);
+          } else {
+            // Create user if doesn't exist
+            const newUser = await createUserFromSession(session);
+            setUser(newUser);
+          }
         } catch (error) {
-          console.error('Error fetching user data:', error);
-          setUserData(null);
+          console.error('Error loading user:', error);
+        } finally {
+          setIsUserLoading(false);
         }
-      } else {
-        setUserData(null);
+      } else if (!session) {
+        setUser(null);
       }
-      
-      setLoading(false);
-    });
+    };
 
-    return unsubscribe;
-  }, []);
+    loadUser();
+  }, [session, user]);
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      const { user, userData } = await authService.signIn({ email, password });
-      setFirebaseUser(user);
-      setUserData(userData);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      throw error;
+  // Create new user from session data
+  const createUserFromSession = async (sessionData: any): Promise<User> => {
+    const userData = {
+      email: sessionData.user.email,
+      name: sessionData.user.name || sessionData.user.firstName + ' ' + sessionData.user.lastName,
+      type: (sessionData.user.userType as 'individual' | 'company') || 'individual',
+      photoURL: sessionData.user.image || '',
+      phone: '',
+      location: '',
+      industry: '',
+      companyName: '',
+      position: '',
+      verified: false,
+      status: 'active' as const,
+      preferences: {
+        notifications: true,
+        marketing: true,
+        confidentialMode: false,
+      },
+    };
+
+    const userId = await userService.createUser(userData);
+    const createdUser = await userService.getUserById(userId);
+    return createdUser!;
+  };
+
+  // Refresh user data from Firestore
+  const refreshUser = async () => {
+    if (session?.user?.email) {
+      setIsUserLoading(true);
+      try {
+        const userData = await userService.getUserByEmail(session.user.email);
+        setUser(userData);
+      } catch (error) {
+        console.error('Error refreshing user:', error);
+      } finally {
+        setIsUserLoading(false);
+      }
     }
   };
 
-  const signUp = async (data: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    userType: 'individual' | 'company';
-    companyName?: string;
-    industry?: string;
-    location?: string;
-  }) => {
-    try {
-      const { user, userData } = await authService.signUp(data);
-      setFirebaseUser(user);
-      setUserData(userData);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      throw error;
+  // Update user type (for onboarding or type changes)
+  const updateUserType = async (type: 'individual' | 'company') => {
+    if (user) {
+      try {
+        await userService.updateUser(user.id, { type });
+        setUser({ ...user, type });
+      } catch (error) {
+        console.error('Error updating user type:', error);
+        throw error;
+      }
     }
+  };
+
+  // Update user profile
+  const updateProfile = async (data: Partial<User>) => {
+    if (user) {
+      try {
+        await userService.updateUser(user.id, data);
+        setUser({ ...user, ...data });
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        throw error;
+      }
+    }
+  };
+
+  // Placeholder authentication methods for backward compatibility
+  const signUp = async (userData: any) => {
+    throw new Error('signUp method should use NextAuth.js flow');
   };
 
   const signInWithGoogle = async () => {
-    try {
-      const { user, userData } = await authService.signInWithGoogle();
-      setFirebaseUser(user);
-      setUserData(userData);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      await authService.signOut();
-      setFirebaseUser(null);
-      setUserData(null);
-    } catch (error) {
-      throw error;
-    }
+    throw new Error('signInWithGoogle method should use NextAuth.js flow');
   };
 
   const sendPasswordReset = async (email: string) => {
-    await authService.sendPasswordReset(email);
-  };
-
-  const updatePassword = async (currentPassword: string, newPassword: string) => {
-    await authService.updatePassword(currentPassword, newPassword);
-  };
-
-  const updateProfile = async (data: {
-    firstName?: string;
-    lastName?: string;
-    location?: string;
-    industry?: string;
-    companyName?: string;
-    position?: string;
-    phone?: string;
-  }) => {
-    await authService.updateUserProfile(data);
-    // Refresh user data
-    await refreshUserData();
-  };
-
-  const deleteAccount = async (password: string) => {
-    try {
-      await authService.deleteAccount(password);
-      setFirebaseUser(null);
-      setUserData(null);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const refreshUserData = async () => {
-    if (firebaseUser) {
-      try {
-        const userData = await authService.getCurrentUserData();
-        setUserData(userData);
-      } catch (error) {
-        console.error('Error refreshing user data:', error);
-      }
-    }
+    throw new Error('sendPasswordReset method should use NextAuth.js flow');
   };
 
   const value: AuthContextType = {
-    firebaseUser,
-    userData,
-    loading,
-    signIn,
+    // Session and user data
+    session,
+    user,
+    userData: user, // Backward compatibility alias
+    userType,
+    isAuthenticated,
+    
+    // Loading states
+    loading: isLoading, // Backward compatibility alias
+    isLoading,
+    isUserLoading,
+    
+    // User operations
+    refreshUser,
+    updateUserType,
+    updateProfile,
     signUp,
     signInWithGoogle,
-    signOut,
     sendPasswordReset,
-    updatePassword,
-    updateProfile,
-    deleteAccount,
-    refreshUserData,
+    
+    // Firebase user for backward compatibility
+    firebaseUser: session?.user || null,
+    
+    // Role-based access
+    isIndividual,
+    isCompany,
+    canAccessTeams,
+    canCreateOpportunities,
+    canViewAnalytics,
   };
 
   return (
@@ -200,25 +204,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
-// Hook to check if user is authenticated
-export function useRequireAuth() {
-  const { firebaseUser, userData, loading } = useAuth();
-  
-  return {
-    isAuthenticated: !!firebaseUser && !!userData,
-    firebaseUser,
-    userData,
-    loading,
-  };
+// Hook to use auth context
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
 
-// Hook to check user type
-export function useUserType() {
-  const { userData } = useAuth();
+// Hook for role-based access control
+export function usePermissions() {
+  const { 
+    isIndividual, 
+    isCompany, 
+    canAccessTeams, 
+    canCreateOpportunities, 
+    canViewAnalytics,
+    isAuthenticated 
+  } = useAuth();
   
   return {
-    userType: userData?.type || null,
-    isIndividual: userData?.type === 'individual',
-    isCompany: userData?.type === 'company',
+    isIndividual,
+    isCompany,
+    canAccessTeams,
+    canCreateOpportunities,
+    canViewAnalytics,
+    isAuthenticated,
+    
+    // Permission helpers
+    requireAuth: () => {
+      if (!isAuthenticated) {
+        throw new Error('Authentication required');
+      }
+    },
+    
+    requireIndividual: () => {
+      if (!isIndividual) {
+        throw new Error('Individual user access required');
+      }
+    },
+    
+    requireCompany: () => {
+      if (!isCompany) {
+        throw new Error('Company user access required');
+      }
+    },
   };
 }

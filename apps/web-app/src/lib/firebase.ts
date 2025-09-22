@@ -38,15 +38,29 @@ export const analytics = typeof window !== 'undefined' && app
   ? getAnalytics(app) 
   : null;
 
-// Development emulator setup (uncomment for local development)
-// if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-//   try {
-//     connectAuthEmulator(auth, 'http://localhost:9099');
-//     connectFirestoreEmulator(db, 'localhost', 8080);
-//     connectStorageEmulator(storage, 'localhost', 9199);
-//   } catch (error) {
-//     console.log('Emulator connection failed:', error);
-//   }
-// }
+// Environment validation
+const isProduction = process.env.NODE_ENV === 'production';
+const hasRealFirebaseConfig = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID && 
+  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== fallbackConfig.projectId;
+
+// Development emulator setup
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
+  try {
+    connectAuthEmulator(auth, 'http://localhost:9099');
+    connectFirestoreEmulator(db, 'localhost', 8080);
+    connectStorageEmulator(storage, 'localhost', 9199);
+    console.log('🔥 Firebase emulators connected');
+  } catch (error) {
+    console.log('Emulator connection failed:', error);
+  }
+}
+
+// Firebase connection validation
+export const firebaseStatus = {
+  isConfigured: hasRealFirebaseConfig,
+  isProduction,
+  projectId: firebaseConfig.projectId,
+  usingFallback: !hasRealFirebaseConfig
+};
 
 export default app;

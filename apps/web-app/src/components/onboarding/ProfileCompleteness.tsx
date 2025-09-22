@@ -2,11 +2,13 @@
 
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfileCompletion } from '@/hooks/useProfileCompletion';
 import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ArrowRightIcon,
   XMarkIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
@@ -16,20 +18,26 @@ interface ProfileCompletenessProps {
 }
 
 export function ProfileCompleteness({ className = '', showMinimal = false }: ProfileCompletenessProps) {
-  const { userData } = useAuth();
-  const { profileCompleteness, progress, isOnboardingCompleted, startOnboarding } = useOnboarding();
+  const { userData, isIndividual, isCompany } = useAuth();
+  const { progress, isOnboardingCompleted, startOnboarding } = useOnboarding();
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Use the profile completion hook directly for real-time data
+  const completion = useProfileCompletion({
+    threshold: 80,
+    autoUpdate: true,
+  });
 
-  if (!profileCompleteness || !userData) {
+  if (!userData || !completion.score) {
     return null;
   }
-
-  const { overall, sections, missingFields, nextRecommendedAction } = profileCompleteness;
 
   // Don't show if profile is complete or onboarding is done
-  if (overall >= 90 || isOnboardingCompleted) {
+  if (completion.score >= 90 || isOnboardingCompleted) {
     return null;
   }
+
+  const nextRecommendedAction = completion.nextSteps[0] || 'Complete your profile to get started';
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
@@ -48,14 +56,14 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
       <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            {overall >= 70 ? (
+            {completion.score >= 70 ? (
               <CheckCircleIcon className="h-5 w-5 text-green-500" />
             ) : (
               <ExclamationTriangleIcon className="h-5 w-5 text-yellow-500" />
             )}
             <div>
               <p className="text-sm font-medium text-gray-900">
-                Profile {overall}% complete
+                Profile {completion.score}% complete
               </p>
               <p className="text-xs text-gray-500">{nextRecommendedAction}</p>
             </div>
@@ -71,8 +79,7 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
         {isExpanded && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <ProfileCompletenessDetails 
-              sections={sections}
-              overall={overall}
+              completion={completion}
               nextRecommendedAction={nextRecommendedAction}
               onStartOnboarding={startOnboarding}
             />
@@ -97,21 +104,20 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-              <span className={`text-sm font-bold ${getScoreColor(overall)}`}>
-                {overall}%
+              <span className={`text-sm font-bold ${getScoreColor(completion.score)}`}>
+                {completion.score}%
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
-                className={`h-3 rounded-full transition-all duration-300 ${getProgressBarColor(overall)}`}
-                style={{ width: `${overall}%` }}
+                className={`h-3 rounded-full transition-all duration-300 ${getProgressBarColor(completion.score)}`}
+                style={{ width: `${completion.score}%` }}
               />
             </div>
           </div>
 
           <ProfileCompletenessDetails 
-            sections={sections}
-            overall={overall}
+            completion={completion}
             nextRecommendedAction={nextRecommendedAction}
             onStartOnboarding={startOnboarding}
           />
@@ -129,21 +135,38 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
 }
 
 interface ProfileCompletenessDetailsProps {
-  sections: {
-    basicInfo: number;
-    experience: number;
-    skills: number;
-    preferences: number;
-    verification: number;
+  completion: {
+    completionData: {
+      score: number;
+      breakdown: Record<string, number>;
+      recommendations: string[];
+      nextSteps: string[];
+      missingRequired: string[];
+      isComplete: boolean;
+      completionLevel: 'incomplete' | 'basic' | 'good' | 'excellent';
+    };
+    score: number;
+    getPriorityImprovements: (limit?: number) => Array<{
+      section: string;
+      score: number;
+      improvement: string;
+    }>;
+    getCompletionBadge: () => {
+      text: string;
+      color: string;
+      icon: string;
+      score: number;
+      percentage: string;
+    };
+    nextSteps: string[];
+    missingRequired: string[];
   };
-  overall: number;
   nextRecommendedAction: string;
   onStartOnboarding: () => void;
 }
 
 function ProfileCompletenessDetails({ 
-  sections, 
-  overall, 
+  completion, 
   nextRecommendedAction, 
   onStartOnboarding 
 }: ProfileCompletenessDetailsProps) {
@@ -155,38 +178,60 @@ function ProfileCompletenessDetails({
     );
   };
 
-  const sectionNames = {
-    basicInfo: 'Basic Information',
-    experience: 'Experience',
-    skills: 'Skills & Technologies',
-    preferences: 'Preferences',
-    verification: 'Verification',
-  };
+  const priorityImprovements = completion.getPriorityImprovements(5);
+  const badge = completion.getCompletionBadge();
 
   return (
     <div className="space-y-4">
-      {/* Section Progress */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {Object.entries(sections).map(([key, score]) => (
-          <div key={key} className="flex items-center space-x-3">
-            {getSectionIcon(score)}
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-700">
-                  {sectionNames[key as keyof typeof sectionNames]}
-                </span>
-                <span className="text-xs text-gray-500">{score}%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                <div
-                  className="bg-primary-500 h-1.5 rounded-full transition-all duration-300"
-                  style={{ width: `${score}%` }}
-                />
-              </div>
-            </div>
+      {/* Completion Badge */}
+      <div className="flex items-center space-x-3 p-3 bg-white bg-opacity-60 rounded-lg">
+        <span className="text-2xl">{badge.icon}</span>
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-gray-900">{badge.text} Profile</span>
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              badge.color === 'green' ? 'bg-green-100 text-green-700' :
+              badge.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+              badge.color === 'yellow' ? 'bg-yellow-100 text-yellow-700' :
+              'bg-red-100 text-red-700'
+            }`}>
+              {badge.percentage}
+            </span>
           </div>
-        ))}
+          <p className="text-xs text-gray-600">
+            {completion.missingRequired.length > 0 
+              ? `Missing: ${completion.missingRequired.slice(0, 3).join(', ')}${completion.missingRequired.length > 3 ? '...' : ''}`
+              : 'All required fields completed'
+            }
+          </p>
+        </div>
       </div>
+
+      {/* Priority Improvements */}
+      {priorityImprovements.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+            <SparklesIcon className="h-4 w-4 mr-2 text-primary-500" />
+            Priority Improvements
+          </h4>
+          <div className="space-y-2">
+            {priorityImprovements.map((item, index) => (
+              <div key={index} className="flex items-start space-x-3 p-2 bg-white bg-opacity-40 rounded">
+                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-xs font-medium">
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-700">{item.improvement}</p>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-gray-500 capitalize">{item.section}</span>
+                    <span className="text-xs text-gray-500">{item.score}% complete</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Next Action */}
       <div className="bg-white bg-opacity-50 rounded-lg p-4">

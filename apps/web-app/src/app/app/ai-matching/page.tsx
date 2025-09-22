@@ -18,44 +18,44 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function AIMatchingPage() {
-  const { userData } = useAuth();
+  const { user, isCompany, isIndividual } = useAuth();
   const [selectedEntityType, setSelectedEntityType] = useState<'team' | 'opportunity'>('team');
   const [selectedEntityId, setSelectedEntityId] = useState<string>('');
 
-  const isCompanyUser = userData?.type === 'company';
-  const isTeamUser = userData?.type === 'individual';
+  const isCompanyUser = isCompany;
+  const isTeamUser = isIndividual;
 
   // Get user's teams (for team users)
   const { data: userTeams } = useQuery({
-    queryKey: ['user-teams', userData?.id],
+    queryKey: ['user-teams', user?.id],
     queryFn: async () => {
-      if (!isTeamUser || !userData?.id) return [];
-      return await teamService.getTeamsByUser(userData.id);
+      if (!isTeamUser || !user?.id) return [];
+      return await teamService.getTeamsByUser(user.id);
     },
-    enabled: isTeamUser && !!userData?.id,
+    enabled: isTeamUser && !!user?.id,
   });
 
   // Get user's opportunities (for company users)
   const { data: userOpportunities } = useQuery({
-    queryKey: ['user-opportunities', userData?.id],
+    queryKey: ['user-opportunities', user?.id],
     queryFn: async () => {
-      if (!isCompanyUser || !userData?.id) return { opportunities: [] };
+      if (!isCompanyUser || !user?.id) return { opportunities: [] };
       return await opportunityService.searchOpportunities({
-        companyId: userData.id,
+        companyId: user.id,
         limit: 50,
       });
     },
-    enabled: isCompanyUser && !!userData?.id,
+    enabled: isCompanyUser && !!user?.id,
   });
 
   // Get recommended teams (for company users)
   const { data: recommendedTeams } = useQuery({
-    queryKey: ['recommended-teams', userData?.id],
+    queryKey: ['recommended-teams', user?.id],
     queryFn: async () => {
-      if (!isCompanyUser || !userData?.id) return [];
-      return await matchingService.getRecommendedTeams(userData.id, 5);
+      if (!isCompanyUser || !user?.id) return [];
+      return await matchingService.getRecommendedTeams(user.id, 5);
     },
-    enabled: isCompanyUser && !!userData?.id,
+    enabled: isCompanyUser && !!user?.id,
   });
 
   // Get recommended opportunities (for team users)
@@ -68,7 +68,7 @@ export default function AIMatchingPage() {
     enabled: isTeamUser && !!selectedEntityId,
   });
 
-  if (!userData) {
+  if (!user) {
     return (
       <div className="text-center py-12">
         <CpuChipIcon className="mx-auto h-12 w-12 text-gray-400" />

@@ -9,6 +9,7 @@ import {
   COMPANY_ONBOARDING_STEPS,
   TEAM_ONBOARDING_STEPS 
 } from '@/types/onboarding';
+import { useProfileCompletion } from '@/hooks/useProfileCompletion';
 
 interface OnboardingContextType {
   progress: OnboardingProgress | null;
@@ -27,10 +28,16 @@ interface OnboardingContextType {
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 export function OnboardingProvider({ children }: { children: React.ReactNode }) {
-  const { userData } = useAuth();
+  const { userData, isIndividual, isCompany } = useAuth();
   const [progress, setProgress] = useState<OnboardingProgress | null>(null);
   const [profileCompleteness, setProfileCompleteness] = useState<ProfileCompleteness | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Use the profile completion hook
+  const profileCompletionData = useProfileCompletion({
+    threshold: 80,
+    autoUpdate: true,
+  });
 
   // Get appropriate steps based on user type
   const steps = userData?.type === 'company' ? COMPANY_ONBOARDING_STEPS : TEAM_ONBOARDING_STEPS;
@@ -57,6 +64,13 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
       loadOnboardingProgress();
     }
   }, [userData]);
+
+  // Update profile completeness when profile completion data changes
+  useEffect(() => {
+    if (userData && profileCompletionData.score > 0) {
+      calculateProfileCompleteness();
+    }
+  }, [userData, profileCompletionData.score, profileCompletionData.completionData.breakdown, profileCompletionData.nextSteps]);
 
   const initializeProgress = async () => {
     if (!userData) return;
@@ -124,48 +138,19 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   const calculateProfileCompleteness = async () => {
     if (!userData) return;
 
-    // Calculate profile completeness based on user data
+    // Use the profile completion hook data and convert to the onboarding format
     const completeness: ProfileCompleteness = {
-      overall: 0,
+      overall: profileCompletionData.score,
       sections: {
-        basicInfo: 0,
-        experience: 0,
-        skills: 0,
-        preferences: 0,
-        verification: 0,
+        basicInfo: profileCompletionData.completionData.breakdown.basic || 0,
+        experience: profileCompletionData.completionData.breakdown.professional || profileCompletionData.completionData.breakdown.experience || 0,
+        skills: profileCompletionData.completionData.breakdown.skills || 0,
+        preferences: profileCompletionData.completionData.breakdown.preferences || profileCompletionData.completionData.breakdown.hiring || 0,
+        verification: userData.verified ? 100 : 0,
       },
-      missingFields: [],
-      nextRecommendedAction: '',
+      missingFields: profileCompletionData.missingRequired,
+      nextRecommendedAction: profileCompletionData.nextSteps[0] || 'Complete your profile to get started',
     };
-
-    // Basic info (from signup)
-    let basicInfoScore = 0;
-    if (userData.name) basicInfoScore += 20;
-    if (userData.email) basicInfoScore += 20;
-    if (userData.type) basicInfoScore += 20;
-    if (userData.industry) basicInfoScore += 20;
-    if (userData.location) basicInfoScore += 20;
-    completeness.sections.basicInfo = basicInfoScore;
-
-    // TODO: Calculate other sections based on actual profile data
-    // This would integrate with your user profile API
-
-    // Calculate overall score
-    const sectionScores = Object.values(completeness.sections);
-    completeness.overall = Math.round(sectionScores.reduce((a, b) => a + b, 0) / sectionScores.length);
-
-    // Determine next recommended action
-    if (completeness.overall < 40) {
-      completeness.nextRecommendedAction = 'Complete your basic profile information';
-    } else if (completeness.overall < 70) {
-      completeness.nextRecommendedAction = userData.type === 'company' 
-        ? 'Add company verification and post your first opportunity'
-        : 'Add your skills and team information';
-    } else {
-      completeness.nextRecommendedAction = userData.type === 'company'
-        ? 'Start browsing teams and posting opportunities'
-        : 'Explore liftout opportunities and connect with companies';
-    }
 
     setProfileCompleteness(completeness);
   };
@@ -189,10 +174,13 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   const completeStep = async (stepId: string) => {
     if (!progress || !userData) return;
 
+    // Recalculate profile completion after step completion
+    profileCompletionData.recalculate();
+
     const updatedProgress = {
       ...progress,
       completedSteps: [...progress.completedSteps, stepId],
-      profileCompleteness: Math.min(progress.profileCompleteness + 15, 100),
+      profileCompleteness: profileCompletionData.score,
     };
 
     // Find next incomplete step

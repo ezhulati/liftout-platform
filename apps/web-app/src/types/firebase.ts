@@ -26,6 +26,7 @@ export interface User extends BaseDocument {
     marketing: boolean;
     confidentialMode: boolean;
   };
+  profileData?: any; // Extended profile data for individual/company specific fields
 }
 
 // Team types

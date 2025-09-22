@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
-    "clean": "rm -rf .next"
+    "clean": "rm -rf .next",
+    "migrate": "tsx src/scripts/run-migrations.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.0",

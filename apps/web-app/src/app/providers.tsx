@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { SettingsProvider } from '@/contexts/SettingsContext';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { SocketProvider } from '@/contexts/SocketContext';
 import { useState } from 'react';
@@ -30,8 +31,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <OnboardingProvider>
-            <SocketProvider>
+          <SettingsProvider>
+            <OnboardingProvider>
+              <SocketProvider>
               {children}
               <Toaster
                 position="top-right"
@@ -58,8 +60,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 }}
               />
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-            </SocketProvider>
-          </OnboardingProvider>
+              </SocketProvider>
+            </OnboardingProvider>
+          </SettingsProvider>
         </AuthProvider>
       </QueryClientProvider>
     </SessionProvider>
