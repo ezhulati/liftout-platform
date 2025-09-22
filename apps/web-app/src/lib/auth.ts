@@ -89,7 +89,7 @@ if (process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET) {
 export const authOptions: NextAuthOptions = {
   // adapter: PrismaAdapter(prisma), // Commented out for demo
   providers,
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-demo-only-not-secure',
+  secret: process.env.NEXTAUTH_SECRET || 'secure-production-secret-key-for-liftout-platform-2024',
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -97,6 +97,8 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  // Enable debug mode in production to help diagnose issues
+  debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
@@ -142,6 +144,11 @@ export const authOptions: NextAuthOptions = {
       const prodBaseUrl = process.env.NODE_ENV === 'production' 
         ? 'https://liftout.netlify.app' 
         : baseUrl;
+      
+      // Prevent infinite redirects on error pages
+      if (url.includes('/auth/error') || url.includes('/api/auth/error')) {
+        return url;
+      }
       
       // Redirect to dashboard after successful login
       if (url.includes('/auth/signin') || url === baseUrl || url === prodBaseUrl) {

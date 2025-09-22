@@ -3,14 +3,6 @@
   publish = ".next"
 
 [build.environment]
-  # NextAuth.js Configuration
-  NEXTAUTH_URL = "https://liftout.netlify.app"
-  NEXTAUTH_SECRET = "secure-production-secret-key-for-liftout-platform-2024"
-  AUTH_TRUST_HOST = "true"
-  
-  # API Configuration
-  NEXT_PUBLIC_API_URL = "https://liftout.netlify.app/api"
-  
   # Node.js Configuration
   NODE_VERSION = "18"
   NPM_FLAGS = "--prefix=/dev/null"
