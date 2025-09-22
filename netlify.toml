@@ -2,9 +2,7 @@
   base = "apps/web-app/"
   command = "npm install && npm run build"
   publish = ".next"
-
-[build.environment]
-  NODE_VERSION = "18"
+  node_version = "20"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
