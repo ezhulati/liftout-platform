@@ -18,6 +18,7 @@ import {
   EyeIcon,
   HeartIcon,
   ChatBubbleLeftRightIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import {
   CheckBadgeIcon as CheckBadgeIconSolid,
@@ -245,6 +246,10 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                   <Link href={`/app/teams/${teamId}/edit`} className="btn-secondary flex items-center">
                     <PencilIcon className="h-4 w-4 mr-2" />
                     Edit Team
+                  </Link>
+                  <Link href={`/app/teams/${teamId}/verification`} className="btn-secondary flex items-center">
+                    <ShieldCheckIcon className="h-4 w-4 mr-2" />
+                    Verification
                   </Link>
                   <button
                     onClick={handleDeleteTeam}
