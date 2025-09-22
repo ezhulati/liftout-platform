@@ -49,7 +49,6 @@ const nextConfig = {
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     API_URL: process.env.API_URL,
   },
-  transpilePackages: ['@liftout/database'],
 };
 
 module.exports = nextConfig;
