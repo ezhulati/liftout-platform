@@ -270,10 +270,10 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium text-gray-900">Team Members</h2>
                 {isTeamOwner && (
-                  <button className="btn-sm btn-secondary flex items-center">
+                  <Link href={`/app/teams/${teamId}/members`} className="btn-sm btn-secondary flex items-center">
                     <PlusIcon className="h-4 w-4 mr-1" />
-                    Add Member
-                  </button>
+                    Manage Members
+                  </Link>
                 )}
               </div>
             </div>
