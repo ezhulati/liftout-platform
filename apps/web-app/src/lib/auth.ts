@@ -138,15 +138,29 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async redirect({ url, baseUrl }) {
+      // Handle production domain
+      const prodBaseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://liftout.netlify.app' 
+        : baseUrl;
+      
       // Redirect to dashboard after successful login
-      if (url.includes('/auth/signin') || url === baseUrl) {
-        return `${baseUrl}/app/dashboard`;
+      if (url.includes('/auth/signin') || url === baseUrl || url === prodBaseUrl) {
+        return `${prodBaseUrl}/app/dashboard`;
       }
+      
       // Allows relative callback URLs
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (url.startsWith('/')) return `${prodBaseUrl}${url}`;
+      
       // Allows callback URLs on the same origin
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      try {
+        const urlObj = new URL(url);
+        const baseUrlObj = new URL(prodBaseUrl);
+        if (urlObj.origin === baseUrlObj.origin) return url;
+      } catch (e) {
+        // Invalid URL, return base
+      }
+      
+      return prodBaseUrl;
     },
   },
   pages: {
