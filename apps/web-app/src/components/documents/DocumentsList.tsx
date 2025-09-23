@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import {
   ArrowDownTrayIcon,
-  DocumentIcon,
+  DocumentTextIcon,
   EyeIcon,
   ShareIcon,
   TrashIcon,
@@ -282,7 +282,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3 text-sm text-gray-600">
                       <div className="flex items-center">
-                        <DocumentIcon className="h-4 w-4 mr-2" />
+                        <DocumentTextIcon className="h-4 w-4 mr-2" />
                         <span>{formatFileSize(document.size)}</span>
                       </div>
                       <div className="flex items-center">

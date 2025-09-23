@@ -5,7 +5,7 @@ import { documentService } from '@/lib/services/documentService';
 import type { SecureDocument } from '@/lib/services/documentService';
 import {
   CloudArrowUpIcon,
-  DocumentIcon,
+  DocumentTextIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
   XMarkIcon,
@@ -334,7 +334,7 @@ export function SecureDocumentUpload({
             <div key={uploadFile.id} className="border border-gray-200 rounded-lg p-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-3 flex-1">
-                  <DocumentIcon className="h-8 w-8 text-gray-400 mt-1" />
+                  <DocumentTextIcon className="h-8 w-8 text-gray-400 mt-1" />
                   
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">

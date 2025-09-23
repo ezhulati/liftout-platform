@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { documentService } from '@/lib/services/documentService';
 import type { SecureDocument, DocumentShare } from '@/lib/services/documentService';
 import {
-  DocumentIcon,
+  DocumentTextIcon,
   EyeIcon,
   ArrowDownTrayIcon,
   ShareIcon,
@@ -293,7 +293,7 @@ export function SecureDocumentViewer({
     <div className={`space-y-4 ${className}`}>
       {documents.length === 0 ? (
         <div className="text-center py-8">
-          <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">No documents</h3>
           <p className="mt-1 text-sm text-gray-500">No documents are available for this conversation.</p>
         </div>

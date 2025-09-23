@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import {
   ArrowDownTrayIcon,
-  DocumentIcon,
+  DocumentTextIcon,
   ShareIcon,
   EyeIcon,
   LockClosedIcon,
@@ -173,7 +173,7 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                   <div className="flex items-center">
-                    <DocumentIcon className="h-4 w-4 mr-2" />
+                    <DocumentTextIcon className="h-4 w-4 mr-2" />
                     <span>{formatFileSize(document.size)}</span>
                   </div>
                   <div className="flex items-center">
@@ -253,7 +253,7 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
         </div>
         <div className="p-6">
           <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-            <DocumentIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Preview Not Available</h3>
             <p className="text-gray-600 mb-4">
               Document preview is not available in the demo. In a real implementation, 

@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import {
   CloudArrowUpIcon,
-  DocumentIcon,
+  DocumentTextIcon,
   XMarkIcon,
   LockClosedIcon,
   UsersIcon,
@@ -267,7 +267,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
             <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <DocumentIcon className="h-8 w-8 text-blue-500" />
+                  <DocumentTextIcon className="h-8 w-8 text-blue-500" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{selectedFile.name}</p>
                     <p className="text-xs text-gray-500">
