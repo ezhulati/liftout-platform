@@ -58,8 +58,7 @@ export async function PATCH(
     });
 
   } catch (error) {
-    const action = body?.action || 'processing';
-    console.error(`Error ${action}ing invitation:`, error);
+    console.error('Error processing invitation:', error);
     
     if (error instanceof Error) {
       return NextResponse.json(
@@ -69,7 +68,7 @@ export async function PATCH(
     }
 
     return NextResponse.json(
-      { error: `Failed to ${action} invitation` },
+      { error: 'Failed to process invitation' },
       { status: 500 }
     );
   }
