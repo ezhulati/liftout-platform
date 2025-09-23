@@ -183,6 +183,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.0.0
         version: 5.90.1(@tanstack/react-query@5.90.1)(react@18.3.1)
+      autoprefixer:
+        specifier: ^10.4.0
+        version: 10.4.21(postcss@8.5.6)
       axios:
         specifier: ^1.6.0
         version: 1.12.2
@@ -210,6 +213,9 @@ importers:
       next-auth:
         specifier: ^4.24.0
         version: 4.24.11(next@14.2.32)(react-dom@18.3.1)(react@18.3.1)
+      postcss:
+        specifier: ^8.4.0
+        version: 8.5.6
       puppeteer:
         specifier: ^24.22.0
         version: 24.22.0(typescript@5.9.2)
@@ -277,9 +283,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.7.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.9.2)
-      autoprefixer:
-        specifier: ^10.4.0
-        version: 10.4.21(postcss@8.5.6)
       eslint:
         specifier: ^8.50.0
         version: 8.57.1
@@ -292,9 +295,6 @@ importers:
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
-      postcss:
-        specifier: ^8.4.0
-        version: 8.5.6
       typescript:
         specifier: ^5.2.0
         version: 5.9.2
@@ -4334,7 +4334,7 @@ packages:
       picocolors: 1.1.1
       postcss: 8.5.6
       postcss-value-parser: 4.2.0
-    dev: true
+    dev: false
 
   /available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -6350,7 +6350,7 @@ packages:
 
   /fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
-    dev: true
+    dev: false
 
   /framer-motion@10.18.0(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-oGlDh1Q1XqYPksuTD/usb0I70hq95OUzmL9+6Zd+Hs4XV0oaISBa/UUMSjYiq6m8EUF32132mOJ8xVZS+I0S6w==}
@@ -8383,7 +8383,7 @@ packages:
   /normalize-range@0.1.2:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
-    dev: true
+    dev: false
 
   /npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
