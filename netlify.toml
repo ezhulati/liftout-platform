@@ -1,6 +1,6 @@
 [build]
   base = "apps/web-app"
-  command = "npm run build"
+  command = "pnpm run build"
   publish = ".next"
   node_version = "20"
 
