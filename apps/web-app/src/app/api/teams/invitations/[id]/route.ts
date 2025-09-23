@@ -8,6 +8,8 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  let body: any;
+  
   try {
     const session = await getServerSession(authOptions);
     
@@ -18,7 +20,7 @@ export async function PATCH(
       );
     }
 
-    const body = await request.json();
+    body = await request.json();
     const { action } = body;
     const invitationId = params.id;
     const userEmail = session.user.email;
@@ -56,7 +58,7 @@ export async function PATCH(
     });
 
   } catch (error) {
-    console.error(`Error ${body?.action}ing invitation:`, error);
+    console.error(`Error ${body?.action || 'processing'}ing invitation:`, error);
     
     if (error instanceof Error) {
       return NextResponse.json(
@@ -66,7 +68,7 @@ export async function PATCH(
     }
 
     return NextResponse.json(
-      { error: `Failed to ${body?.action} invitation` },
+      { error: `Failed to ${body?.action || 'process'} invitation` },
       { status: 500 }
     );
   }
