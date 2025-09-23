@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   ChartBarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   UsersIcon,
   CurrencyDollarIcon,
   StarIcon,
@@ -222,7 +222,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
               title="Liftout Success Rate"
               value={formatPercentage(metrics.liftoutSuccessRate)}
               subtitle={`${metrics.totalLiftouts} total liftouts`}
-              icon={<TrendingUpIcon className="h-6 w-6" />}
+              icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
               trend={{
                 value: 12.5,
                 direction: 'up',

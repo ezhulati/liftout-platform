@@ -3,8 +3,8 @@
 import React from 'react';
 import {
   ChartBarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   ArrowUpIcon,
   ArrowDownIcon
 } from '@heroicons/react/24/outline';
