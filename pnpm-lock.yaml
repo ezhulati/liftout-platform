@@ -189,6 +189,15 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.0.0
         version: 5.90.1(@tanstack/react-query@5.90.1)(react@18.3.1)
+      '@types/node':
+        specifier: ^20.8.0
+        version: 20.19.17
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.3.7(@types/react@18.3.24)
       autoprefixer:
         specifier: ^10.4.0
         version: 10.4.21(postcss@8.5.6)
@@ -252,6 +261,9 @@ importers:
       tailwindcss:
         specifier: ^3.3.0
         version: 3.4.17
+      typescript:
+        specifier: ^5.2.0
+        version: 5.9.2
       zod:
         specifier: ^3.22.0
         version: 3.25.76
@@ -268,15 +280,6 @@ importers:
       '@testing-library/react':
         specifier: ^13.4.0
         version: 13.4.0(@types/react@18.3.24)(react-dom@18.3.1)(react@18.3.1)
-      '@types/node':
-        specifier: ^20.8.0
-        version: 20.19.17
-      '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.0
-        version: 18.3.7(@types/react@18.3.24)
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.7.0
         version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.1)(typescript@5.9.2)
@@ -295,9 +298,6 @@ importers:
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
-      typescript:
-        specifier: ^5.2.0
-        version: 5.9.2
 
   packages/database:
     dependencies:
@@ -3662,7 +3662,6 @@ packages:
       '@types/react': ^18.0.0
     dependencies:
       '@types/react': 18.3.24
-    dev: true
 
   /@types/react@18.3.24:
     resolution: {integrity: sha512-0dLEBsA1kI3OezMBF8nSsb7Nk19ZnsyE1LLhB8r27KbgU5H4pvuqZLdtE+aUkJVoXgTVuA+iLIwmZ0TuK4tx6A==}
