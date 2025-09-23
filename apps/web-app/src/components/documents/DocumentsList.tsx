@@ -14,7 +14,6 @@ import {
   UsersIcon,
   ClockIcon,
   TagIcon,
-  DocumentTextIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import { LockClosedIcon as LockClosedIconSolid } from '@heroicons/react/24/solid';
