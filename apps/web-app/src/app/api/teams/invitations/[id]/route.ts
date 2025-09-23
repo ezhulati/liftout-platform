@@ -21,7 +21,7 @@ export async function PATCH(
     }
 
     body = await request.json();
-    const { action } = body;
+    const { action } = body || {};
     const invitationId = params.id;
     const userEmail = session.user.email;
 
