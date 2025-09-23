@@ -57,7 +57,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Initialize data and socket listeners

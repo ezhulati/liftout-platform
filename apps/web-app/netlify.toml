@@ -1,7 +1,0 @@
-[build]
-  command = "corepack enable pnpm && cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @liftout/web-app... build"
-  publish = ".next"
-  node_version = "20"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"

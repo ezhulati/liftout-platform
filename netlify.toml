@@ -1,7 +1,6 @@
 [build]
-  base = "apps/web-app"
-  command = "corepack enable pnpm && cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @liftout/web-app... build"
-  publish = ".next"
+  command = "corepack enable pnpm && pnpm install --frozen-lockfile && pnpm --filter @liftout/web-app... build"
+  publish = "apps/web-app/.next"
   node_version = "20"
 
 [build.environment]
