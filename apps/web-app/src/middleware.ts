@@ -66,7 +66,7 @@ function isProtectedRoute(pathname: string): boolean {
 }
 
 export default withAuth(
-  function middleware(req: NextRequest & { nextauth: any }) {
+  function middleware(req: NextRequest & { nextauth: { token?: { userType?: string; [key: string]: unknown } } }) {
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 

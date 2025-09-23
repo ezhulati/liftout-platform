@@ -162,7 +162,7 @@ class TeamAnalyticsService {
       // Calculate average tenure
       const now = new Date();
       const tenures = members.map(member => {
-        const joinedAt = new Date(member.joinedAt);
+        const joinedAt = member.joinedAt instanceof Date ? member.joinedAt : member.joinedAt.toDate();
         return (now.getTime() - joinedAt.getTime()) / (1000 * 60 * 60 * 24 * 30); // months
       });
       const avgTenure = tenures.length > 0 ? tenures.reduce((a, b) => a + b, 0) / tenures.length : 0;
@@ -203,7 +203,8 @@ class TeamAnalyticsService {
 
     // Factors: average tenure, role balance, team size
     const avgTenureMonths = members.reduce((sum, member) => {
-      const months = (new Date().getTime() - new Date(member.joinedAt).getTime()) / (1000 * 60 * 60 * 24 * 30);
+      const joinedAt = member.joinedAt instanceof Date ? member.joinedAt : member.joinedAt.toDate();
+      const months = (new Date().getTime() - joinedAt.getTime()) / (1000 * 60 * 60 * 24 * 30);
       return sum + months;
     }, 0) / members.length;
 

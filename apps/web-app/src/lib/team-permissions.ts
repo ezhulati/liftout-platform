@@ -8,7 +8,8 @@ import {
   getDoc,
   query, 
   where, 
-  serverTimestamp 
+  serverTimestamp,
+  Timestamp 
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -147,10 +148,10 @@ export interface TeamPermissionMember {
   email: string;
   name: string;
   role: TeamRole;
-  joinedAt: Date;
-  invitedAt?: Date;
+  joinedAt: Timestamp | Date;
+  invitedAt?: Timestamp | Date;
   invitedBy?: string;
-  lastActive?: Date;
+  lastActive?: Timestamp | Date;
   isActive: boolean;
   permissions?: Permission[]; // Computed field
 }
@@ -163,7 +164,7 @@ export interface RoleChangeHistory {
   previousRole: TeamRole;
   newRole: TeamRole;
   reason?: string;
-  changedAt: Date;
+  changedAt: Timestamp | Date;
 }
 
 class TeamPermissionService {

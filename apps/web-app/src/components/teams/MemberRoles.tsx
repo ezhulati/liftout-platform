@@ -419,7 +419,10 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                         {ROLE_DESCRIPTIONS[member.role].title}
                       </span>
                       <span className="text-xs text-gray-400">
-                        Joined {formatDistanceToNow(new Date(member.joinedAt), { addSuffix: true })}
+                        Joined {formatDistanceToNow(
+                          member.joinedAt instanceof Date ? member.joinedAt : member.joinedAt.toDate(), 
+                          { addSuffix: true }
+                        )}
                       </span>
                     </div>
                   </div>

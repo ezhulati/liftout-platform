@@ -198,7 +198,10 @@ export function RoleChangeNotification({
                   )}
 
                   <div className="text-xs text-gray-500">
-                    {formatDistanceToNow(new Date(change.changedAt), { addSuffix: true })}
+                    {formatDistanceToNow(
+                      change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate(), 
+                      { addSuffix: true }
+                    )}
                   </div>
                 </div>
 
@@ -252,7 +255,10 @@ export function RoleChangeAlert({ teamId }: { teamId: string }) {
       yesterday.setDate(yesterday.getDate() - 1);
       
       const recent = history.filter(
-        change => new Date(change.changedAt) > yesterday
+        change => {
+          const changeDate = change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate();
+          return changeDate > yesterday;
+        }
       ).slice(0, 3);
       
       setRecentChanges(recent);
