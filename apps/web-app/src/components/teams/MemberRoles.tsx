@@ -14,7 +14,7 @@ import {
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { 
-  TeamMember, 
+  TeamPermissionMember, 
   TeamRole, 
   ROLE_DESCRIPTIONS, 
   teamPermissionService 
@@ -31,7 +31,7 @@ interface MemberRolesProps {
 interface RoleChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember | null;
+  member: TeamPermissionMember | null;
   currentUserRole: TeamRole | null;
   onRoleChange: (memberId: string, newRole: TeamRole, reason?: string) => void;
   loading: boolean;
@@ -267,11 +267,11 @@ function RoleChangeModal({
 
 export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
   const { user } = useAuth();
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [currentUserMember, setCurrentUserMember] = useState<TeamMember | null>(null);
+  const [members, setMembers] = useState<TeamPermissionMember[]>([]);
+  const [currentUserMember, setCurrentUserMember] = useState<TeamPermissionMember | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [selectedMember, setSelectedMember] = useState<TeamPermissionMember | null>(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
 
   useEffect(() => {
@@ -329,7 +329,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
     }
   };
 
-  const handleRemoveMember = async (member: TeamMember) => {
+  const handleRemoveMember = async (member: TeamPermissionMember) => {
     if (!user || !currentUserMember) return;
 
     const confirmed = window.confirm(
@@ -358,7 +358,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
   const canEditRoles = currentUserMember?.permissions?.includes('members.edit.roles') || false;
   const canRemoveMembers = currentUserMember?.permissions?.includes('members.remove') || false;
 
-  const openRoleModal = (member: TeamMember) => {
+  const openRoleModal = (member: TeamPermissionMember) => {
     setSelectedMember(member);
     setShowRoleModal(true);
   };

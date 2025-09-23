@@ -270,7 +270,7 @@ class TeamCommunicationService {
   async getChannelMessages(
     channelId: string, 
     limitCount: number = 50,
-    startAfterDoc?: any
+    startAfterDoc?: unknown
   ): Promise<TeamMessage[]> {
     try {
       let q = query(

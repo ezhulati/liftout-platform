@@ -13,7 +13,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { TeamMember, TeamRole } from './team-permissions';
+import { TeamPermissionMember, TeamRole } from './team-permissions';
 
 export interface TeamMetrics {
   // Core team metrics
@@ -143,7 +143,7 @@ class TeamAnalyticsService {
         where('isActive', '==', true)
       );
       const membersSnapshot = await getDocs(membersQuery);
-      const members = membersSnapshot.docs.map(doc => doc.data() as TeamMember);
+      const members = membersSnapshot.docs.map(doc => doc.data() as TeamPermissionMember);
 
       // Calculate basic metrics
       const totalMembers = members.length;
@@ -198,7 +198,7 @@ class TeamAnalyticsService {
   /**
    * Calculate team cohesion score based on tenure and role distribution
    */
-  private calculateTeamCohesion(members: TeamMember[]): number {
+  private calculateTeamCohesion(members: TeamPermissionMember[]): number {
     if (members.length === 0) return 0;
 
     // Factors: average tenure, role balance, team size

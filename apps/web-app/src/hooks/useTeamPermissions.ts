@@ -3,14 +3,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
-  TeamMember, 
+  TeamPermissionMember, 
   Permission, 
   TeamRole,
   teamPermissionService 
 } from '@/lib/team-permissions';
 
 interface UseTeamPermissionsReturn {
-  member: TeamMember | null;
+  member: TeamPermissionMember | null;
   loading: boolean;
   error: string | null;
   hasPermission: (permission: Permission) => boolean;
@@ -23,7 +23,7 @@ interface UseTeamPermissionsReturn {
 
 export function useTeamPermissions(teamId: string): UseTeamPermissionsReturn {
   const { user } = useAuth();
-  const [member, setMember] = useState<TeamMember | null>(null);
+  const [member, setMember] = useState<TeamPermissionMember | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

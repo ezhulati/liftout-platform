@@ -140,7 +140,7 @@ export const ROLE_DESCRIPTIONS: Record<TeamRole, { title: string; description: s
   },
 };
 
-export interface TeamMember {
+export interface TeamPermissionMember {
   id?: string;
   teamId: string;
   userId: string;
@@ -226,7 +226,7 @@ class TeamPermissionService {
   /**
    * Add a team member
    */
-  async addTeamMember(memberData: Omit<TeamMember, 'id' | 'joinedAt' | 'isActive'>): Promise<string> {
+  async addTeamMember(memberData: Omit<TeamPermissionMember, 'id' | 'joinedAt' | 'isActive'>): Promise<string> {
     try {
       // Check if member already exists
       const existingMember = await this.getTeamMember(memberData.teamId, memberData.userId);
@@ -234,7 +234,7 @@ class TeamPermissionService {
         throw new Error('User is already a member of this team');
       }
 
-      const member: Omit<TeamMember, 'id'> = {
+      const member: Omit<TeamPermissionMember, 'id'> = {
         ...memberData,
         joinedAt: new Date(),
         isActive: true,
@@ -255,7 +255,7 @@ class TeamPermissionService {
   /**
    * Get a team member by team and user ID
    */
-  async getTeamMember(teamId: string, userId: string): Promise<TeamMember | null> {
+  async getTeamMember(teamId: string, userId: string): Promise<TeamPermissionMember | null> {
     try {
       const q = query(
         collection(db, this.MEMBERS_COLLECTION),
@@ -270,7 +270,7 @@ class TeamPermissionService {
       }
 
       const doc = querySnapshot.docs[0];
-      const data = doc.data() as TeamMember;
+      const data = doc.data() as TeamPermissionMember;
       
       return {
         id: doc.id,
@@ -286,7 +286,7 @@ class TeamPermissionService {
   /**
    * Get all members of a team
    */
-  async getTeamMembers(teamId: string): Promise<TeamMember[]> {
+  async getTeamMembers(teamId: string): Promise<TeamPermissionMember[]> {
     try {
       const q = query(
         collection(db, this.MEMBERS_COLLECTION),
@@ -297,7 +297,7 @@ class TeamPermissionService {
       const querySnapshot = await getDocs(q);
       
       return querySnapshot.docs.map(doc => {
-        const data = doc.data() as TeamMember;
+        const data = doc.data() as TeamPermissionMember;
         return {
           id: doc.id,
           ...data,
@@ -406,7 +406,7 @@ class TeamPermissionService {
   /**
    * Get team members by role
    */
-  async getTeamMembersByRole(teamId: string, role: TeamRole): Promise<TeamMember[]> {
+  async getTeamMembersByRole(teamId: string, role: TeamRole): Promise<TeamPermissionMember[]> {
     try {
       const q = query(
         collection(db, this.MEMBERS_COLLECTION),
@@ -418,7 +418,7 @@ class TeamPermissionService {
       const querySnapshot = await getDocs(q);
       
       return querySnapshot.docs.map(doc => {
-        const data = doc.data() as TeamMember;
+        const data = doc.data() as TeamPermissionMember;
         return {
           id: doc.id,
           ...data,

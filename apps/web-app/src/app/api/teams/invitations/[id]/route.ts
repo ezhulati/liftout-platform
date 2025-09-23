@@ -8,7 +8,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  let body: any;
+  let body: { action?: string } | null = null;
   
   try {
     const session = await getServerSession(authOptions);
