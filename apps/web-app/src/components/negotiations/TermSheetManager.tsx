@@ -8,7 +8,7 @@ import {
 } from '@/lib/negotiations';
 import {
   DocumentTextIcon,
-  PencilIcon,
+  PencilSquareIcon,
   ClockIcon,
   CheckCircleIcon,
   XCircleIcon,
@@ -107,7 +107,7 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
               <span className="ml-2">{deal.currentTermSheet.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
             </div>
             <button className="btn-primary inline-flex items-center">
-              <PencilIcon className="h-4 w-4 mr-2" />
+              <PencilSquareIcon className="h-4 w-4 mr-2" />
               Edit Term Sheet
             </button>
           </div>

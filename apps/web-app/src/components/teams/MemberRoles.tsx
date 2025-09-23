@@ -6,7 +6,7 @@ import {
   AdjustmentsHorizontalIcon,
   ShieldCheckIcon,
   UserIcon,
-  CrownIcon,
+  StarIcon,
   TrashIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon
@@ -40,7 +40,7 @@ interface RoleChangeModalProps {
 const getRoleIcon = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return <CrownIcon className="h-5 w-5 text-yellow-600" />;
+      return <StarIcon className="h-5 w-5 text-yellow-600" />;
     case 'admin':
       return <ShieldCheckIcon className="h-5 w-5 text-blue-600" />;
     case 'member':

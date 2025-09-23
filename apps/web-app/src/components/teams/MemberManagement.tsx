@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import {
   PlusIcon,
   TrashIcon,
-  PencilIcon,
+  PencilSquareIcon,
   UserIcon,
   CheckIcon,
   XMarkIcon,
@@ -333,7 +333,7 @@ export function MemberManagement({
                             className="text-primary-600 hover:text-primary-700"
                             title="Edit member"
                           >
-                            <PencilIcon className="h-5 w-5" />
+                            <PencilSquareIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => toggleTeamLead(index)}

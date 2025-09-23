@@ -12,7 +12,7 @@ import {
   ClockIcon,
   StarIcon,
   DocumentTextIcon,
-  PencilIcon,
+  PencilSquareIcon,
   TrashIcon,
   PlusIcon,
   EyeIcon,
@@ -244,7 +244,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
               {isTeamOwner && (
                 <>
                   <Link href={`/app/teams/${teamId}/edit`} className="btn-secondary flex items-center">
-                    <PencilIcon className="h-4 w-4 mr-2" />
+                    <PencilSquareIcon className="h-4 w-4 mr-2" />
                     Edit Team
                   </Link>
                   <Link href={`/app/teams/${teamId}/verification`} className="btn-secondary flex items-center">
@@ -303,7 +303,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                         {isTeamOwner && (
                           <div className="flex space-x-2">
                             <button className="text-sm text-primary-600 hover:text-primary-700">
-                              <PencilIcon className="h-4 w-4" />
+                              <PencilSquareIcon className="h-4 w-4" />
                             </button>
                             <button className="text-sm text-red-600 hover:text-red-700">
                               <TrashIcon className="h-4 w-4" />
