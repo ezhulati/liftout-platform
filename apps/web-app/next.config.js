@@ -3,6 +3,20 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+      '@/components': require('path').resolve(__dirname, 'src/components'),
+      '@/contexts': require('path').resolve(__dirname, 'src/contexts'),
+      '@/lib': require('path').resolve(__dirname, 'src/lib'),
+      '@/hooks': require('path').resolve(__dirname, 'src/hooks'),
+      '@/store': require('path').resolve(__dirname, 'src/store'),
+      '@/types': require('path').resolve(__dirname, 'src/types'),
+      '@/utils': require('path').resolve(__dirname, 'src/utils'),
+    };
+    return config;
+  },
   images: {
     domains: ['assets.liftout.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
     remotePatterns: [
