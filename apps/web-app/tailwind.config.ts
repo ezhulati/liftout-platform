@@ -9,90 +9,110 @@ const config: Config = {
   darkMode: 'class', // Disabled - only activates with explicit .dark class
   theme: {
     extend: {
-      // Deep Navy + Gold color palette
+      // Practical UI HSB Monochromatic Color System
+      // Navy Hue: 220, Gold Hue: 38
       colors: {
-        // Background layers - Warm cream, not pure white
+        // Background layers - Warm cream (H=40), not pure white
         bg: {
-          DEFAULT: 'hsl(40, 30%, 97%)',
-          surface: 'hsl(40, 20%, 99%)',
-          elevated: 'hsl(40, 25%, 95%)',
+          DEFAULT: 'hsl(40, 30%, 97%)',      // Main background
+          surface: 'hsl(40, 20%, 100%)',     // Component backgrounds (white)
+          elevated: 'hsl(40, 25%, 95%)',     // Hover states, elevated surfaces
+          alt: 'hsl(220, 2%, 98%)',          // Lightest navy-tinted alt bg
         },
-        // Primary accent: Deep Navy - executive, trustworthy
+        // Primary: Navy (H=220) - HSB Monochromatic Scale
+        // Following Practical UI formula for light interfaces
         navy: {
-          DEFAULT: 'hsl(220, 60%, 20%)',
-          light: 'hsl(220, 50%, 30%)',
-          dark: 'hsl(220, 70%, 15%)',
-          50: 'hsl(220, 50%, 95%)',
-          100: 'hsl(220, 50%, 90%)',
-          200: 'hsl(220, 50%, 80%)',
-          300: 'hsl(220, 50%, 65%)',
-          400: 'hsl(220, 50%, 45%)',
-          500: 'hsl(220, 55%, 35%)',
-          600: 'hsl(220, 60%, 25%)',
-          700: 'hsl(220, 60%, 20%)',
-          800: 'hsl(220, 65%, 15%)',
-          900: 'hsl(220, 70%, 10%)',
-          950: 'hsl(220, 75%, 6%)',
+          DEFAULT: 'hsl(220, 70%, 50%)',     // Primary actions HSB(220,70,80) → hsl approx
+          darkest: 'hsl(220, 60%, 20%)',     // Headings HSB(220,60,20)
+          dark: 'hsl(220, 30%, 45%)',        // Secondary text HSB(220,30,45)
+          medium: 'hsl(220, 20%, 66%)',      // Non-decorative borders HSB(220,20,66)
+          light: 'hsl(220, 10%, 95%)',       // Decorative borders HSB(220,10,95)
+          lightest: 'hsl(220, 2%, 98%)',     // Alt backgrounds HSB(220,2,98)
+          // Full scale for compatibility
+          50: 'hsl(220, 10%, 95%)',
+          100: 'hsl(220, 15%, 90%)',
+          200: 'hsl(220, 20%, 80%)',
+          300: 'hsl(220, 25%, 66%)',
+          400: 'hsl(220, 35%, 50%)',
+          500: 'hsl(220, 50%, 40%)',
+          600: 'hsl(220, 60%, 30%)',
+          700: 'hsl(220, 60%, 25%)',
+          800: 'hsl(220, 60%, 20%)',
+          900: 'hsl(220, 65%, 15%)',
+          950: 'hsl(220, 70%, 10%)',
         },
-        // Secondary accent: Gold - premium, distinctive
+        // Secondary: Gold (H=38) - HSB Monochromatic Scale
         gold: {
-          DEFAULT: 'hsl(38, 50%, 55%)',
-          light: 'hsl(38, 60%, 75%)',
-          dark: 'hsl(38, 60%, 42%)',
+          DEFAULT: 'hsl(38, 70%, 50%)',      // Primary gold actions HSB(38,70,80)
+          darkest: 'hsl(38, 60%, 20%)',      // Gold text on light HSB(38,60,20)
+          dark: 'hsl(38, 50%, 40%)',         // Darker gold
+          medium: 'hsl(38, 30%, 60%)',       // Medium gold
+          light: 'hsl(38, 20%, 85%)',        // Light gold
+          lightest: 'hsl(38, 10%, 95%)',     // Lightest gold bg
+          // Full scale for compatibility
           50: 'hsl(38, 60%, 95%)',
           100: 'hsl(38, 60%, 90%)',
           200: 'hsl(38, 60%, 82%)',
-          300: 'hsl(38, 60%, 75%)',
-          400: 'hsl(38, 55%, 65%)',
-          500: 'hsl(38, 50%, 55%)',
-          600: 'hsl(38, 55%, 48%)',
-          700: 'hsl(38, 60%, 42%)',
-          800: 'hsl(38, 65%, 35%)',
-          900: 'hsl(38, 70%, 28%)',
-          950: 'hsl(38, 75%, 20%)',
+          300: 'hsl(38, 55%, 70%)',
+          400: 'hsl(38, 60%, 55%)',
+          500: 'hsl(38, 70%, 50%)',
+          600: 'hsl(38, 70%, 45%)',
+          700: 'hsl(38, 65%, 40%)',
+          800: 'hsl(38, 60%, 35%)',
+          900: 'hsl(38, 55%, 28%)',
+          950: 'hsl(38, 50%, 20%)',
         },
-        // Text hierarchy - Deep navy tones, NOT pure black
+        // Text hierarchy - Following Practical UI contrast requirements
+        // Small text needs 4.5:1, Large text 3:1, UI components 3:1
         text: {
-          primary: 'hsl(220, 60%, 15%)',
-          secondary: 'hsl(220, 30%, 40%)',
-          tertiary: 'hsl(220, 20%, 55%)',
-          inverse: 'hsl(40, 20%, 92%)',
+          primary: 'hsl(220, 60%, 20%)',     // Darkest - headings, primary text
+          secondary: 'hsl(220, 30%, 45%)',   // Dark - secondary text
+          tertiary: 'hsl(220, 20%, 55%)',    // Medium - helper text, placeholders
+          inverse: 'hsl(0, 0%, 100%)',       // White - text on dark backgrounds
+          'on-navy': 'hsl(0, 0%, 100%)',     // White text on navy
+          'on-gold': 'hsl(220, 60%, 15%)',   // Dark text on gold
         },
-        // Borders - subtle navy tint
+        // Borders - Following Practical UI 3:1 contrast for non-decorative
         border: {
-          DEFAULT: 'hsl(220, 15%, 85%)',
-          hover: 'hsl(220, 20%, 70%)',
-          focus: 'hsl(220, 60%, 50%)',
+          DEFAULT: 'hsl(220, 20%, 85%)',     // Default border
+          hover: 'hsl(220, 25%, 70%)',       // Hover state
+          focus: 'hsl(220, 70%, 50%)',       // Focus ring - primary color
+          decorative: 'hsl(220, 10%, 90%)',  // Decorative only (no contrast req)
         },
-        // Semantic colors
+        // Semantic colors - with icons, never color alone
         success: {
           DEFAULT: 'hsl(142, 55%, 38%)',
-          light: 'hsl(142, 55%, 92%)',
+          light: 'hsl(142, 40%, 92%)',
           dark: 'hsl(142, 60%, 28%)',
         },
         warning: {
-          DEFAULT: 'hsl(38, 95%, 50%)',
-          light: 'hsl(38, 95%, 92%)',
-          dark: 'hsl(38, 95%, 40%)',
+          DEFAULT: 'hsl(38, 90%, 50%)',
+          light: 'hsl(38, 80%, 92%)',
+          dark: 'hsl(38, 90%, 40%)',
         },
         error: {
           DEFAULT: 'hsl(0, 65%, 50%)',
-          light: 'hsl(0, 65%, 95%)',
+          light: 'hsl(0, 50%, 95%)',
           dark: 'hsl(0, 65%, 40%)',
         },
-        // Legacy primary colors (for gradual migration)
+        info: {
+          DEFAULT: 'hsl(220, 70%, 50%)',
+          light: 'hsl(220, 50%, 95%)',
+          dark: 'hsl(220, 70%, 40%)',
+        },
+        // Legacy primary alias (maps to navy)
         primary: {
-          50: 'hsl(220, 50%, 95%)',
-          100: 'hsl(220, 50%, 90%)',
-          200: 'hsl(220, 50%, 80%)',
-          300: 'hsl(220, 50%, 65%)',
-          400: 'hsl(220, 50%, 45%)',
-          500: 'hsl(220, 55%, 35%)',
-          600: 'hsl(220, 60%, 25%)',
-          700: 'hsl(220, 60%, 20%)',
-          800: 'hsl(220, 65%, 15%)',
-          900: 'hsl(220, 70%, 10%)',
-          950: 'hsl(220, 75%, 6%)',
+          50: 'hsl(220, 10%, 95%)',
+          100: 'hsl(220, 15%, 90%)',
+          200: 'hsl(220, 20%, 80%)',
+          300: 'hsl(220, 25%, 66%)',
+          400: 'hsl(220, 35%, 50%)',
+          500: 'hsl(220, 50%, 40%)',
+          600: 'hsl(220, 60%, 30%)',
+          700: 'hsl(220, 60%, 25%)',
+          800: 'hsl(220, 60%, 20%)',
+          900: 'hsl(220, 65%, 15%)',
+          950: 'hsl(220, 70%, 10%)',
         },
       },
       // Typography - Playfair Display + Source Sans 3

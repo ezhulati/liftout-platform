@@ -8,62 +8,78 @@
    ============================================ */
 
 @layer base {
-  /* Design System CSS Variables */
+  /* ============================================
+     PRACTICAL UI DESIGN SYSTEM
+     HSB Monochromatic Color System
+     Navy (H=220) + Gold (H=38)
+     ============================================ */
   :root {
-    /* Background layers - Warm cream, not pure white */
+    /* Background layers - Warm cream (H=40), not pure white */
     --bg: hsl(40, 30%, 97%);
-    --bg-surface: hsl(40, 20%, 99%);
+    --bg-surface: hsl(0, 0%, 100%);
     --bg-elevated: hsl(40, 25%, 95%);
+    --bg-alt: hsl(220, 2%, 98%);
 
-    /* Text hierarchy - Deep navy tones, NOT pure black */
-    --text-primary: hsl(220, 60%, 15%);
-    --text-secondary: hsl(220, 30%, 40%);
-    --text-tertiary: hsl(220, 20%, 55%);
-    --text-inverse: hsl(40, 30%, 98%); /* Clean off-white for button text */
-    --text-on-navy: hsl(40, 30%, 98%); /* Text on navy backgrounds */
-    --text-on-gold: hsl(220, 70%, 12%); /* Dark text on gold backgrounds */
+    /* Text hierarchy - Practical UI contrast requirements
+       Small text: 4.5:1, Large text: 3:1, UI: 3:1 */
+    --text-primary: hsl(220, 60%, 20%);    /* Darkest - headings */
+    --text-secondary: hsl(220, 30%, 45%);  /* Secondary text */
+    --text-tertiary: hsl(220, 20%, 55%);   /* Helper text */
+    --text-inverse: hsl(0, 0%, 100%);      /* White on dark */
+    --text-on-navy: hsl(0, 0%, 100%);      /* White on navy */
+    --text-on-gold: hsl(220, 60%, 15%);    /* Dark on gold */
 
-    /* Primary accent: Deep Navy */
-    --navy: hsl(220, 60%, 20%);
-    --navy-light: hsl(220, 50%, 30%);
-    --navy-dark: hsl(220, 70%, 15%);
-    --navy-50: hsl(220, 50%, 95%);
-    --navy-100: hsl(220, 50%, 90%);
-    --navy-200: hsl(220, 50%, 80%);
-    --navy-300: hsl(220, 50%, 65%);
-    --navy-400: hsl(220, 50%, 45%);
-    --navy-500: hsl(220, 55%, 35%);
-    --navy-600: hsl(220, 60%, 25%);
-    --navy-700: hsl(220, 60%, 20%);
-    --navy-800: hsl(220, 65%, 15%);
-    --navy-900: hsl(220, 70%, 10%);
+    /* Primary: Navy (H=220) - HSB Monochromatic Scale */
+    --navy: hsl(220, 70%, 50%);            /* Primary actions */
+    --navy-darkest: hsl(220, 60%, 20%);    /* Headings */
+    --navy-dark: hsl(220, 30%, 45%);       /* Secondary text */
+    --navy-medium: hsl(220, 20%, 66%);     /* Borders (3:1) */
+    --navy-light: hsl(220, 10%, 95%);      /* Decorative */
+    --navy-lightest: hsl(220, 2%, 98%);    /* Alt bg */
+    --navy-hover: hsl(220, 70%, 45%);      /* Button hover */
+    --navy-50: hsl(220, 10%, 95%);
+    --navy-100: hsl(220, 15%, 90%);
+    --navy-200: hsl(220, 20%, 80%);
+    --navy-300: hsl(220, 25%, 66%);
+    --navy-400: hsl(220, 35%, 50%);
+    --navy-500: hsl(220, 50%, 40%);
+    --navy-600: hsl(220, 60%, 30%);
+    --navy-700: hsl(220, 60%, 25%);
+    --navy-800: hsl(220, 60%, 20%);
+    --navy-900: hsl(220, 65%, 15%);
 
-    /* Secondary accent: Gold */
-    --gold: hsl(38, 50%, 55%);
-    --gold-light: hsl(38, 60%, 75%);
-    --gold-dark: hsl(38, 60%, 42%);
-    --gold-hover: hsl(38, 55%, 48%);
+    /* Secondary: Gold (H=38) - HSB Monochromatic Scale */
+    --gold: hsl(38, 70%, 50%);             /* Secondary actions */
+    --gold-darkest: hsl(38, 60%, 20%);     /* Gold text */
+    --gold-dark: hsl(38, 50%, 40%);
+    --gold-medium: hsl(38, 30%, 60%);
+    --gold-light: hsl(38, 20%, 85%);
+    --gold-lightest: hsl(38, 10%, 95%);
+    --gold-hover: hsl(38, 70%, 45%);       /* Button hover */
     --gold-50: hsl(38, 60%, 95%);
     --gold-100: hsl(38, 60%, 90%);
     --gold-200: hsl(38, 60%, 82%);
-    --gold-300: hsl(38, 60%, 75%);
-    --gold-400: hsl(38, 55%, 65%);
-    --gold-500: hsl(38, 50%, 55%);
-    --gold-600: hsl(38, 55%, 48%);
-    --gold-700: hsl(38, 60%, 42%);
+    --gold-300: hsl(38, 55%, 70%);
+    --gold-400: hsl(38, 60%, 55%);
+    --gold-500: hsl(38, 70%, 50%);
+    --gold-600: hsl(38, 70%, 45%);
+    --gold-700: hsl(38, 65%, 40%);
 
-    /* Semantic colors */
+    /* Semantic colors - always pair with icons */
     --success: hsl(142, 55%, 38%);
-    --success-light: hsl(142, 55%, 92%);
-    --warning: hsl(38, 95%, 50%);
-    --warning-light: hsl(38, 95%, 92%);
+    --success-light: hsl(142, 40%, 92%);
+    --warning: hsl(38, 90%, 50%);
+    --warning-light: hsl(38, 80%, 92%);
     --error: hsl(0, 65%, 50%);
-    --error-light: hsl(0, 65%, 95%);
+    --error-light: hsl(0, 50%, 95%);
+    --info: hsl(220, 70%, 50%);
+    --info-light: hsl(220, 50%, 95%);
 
-    /* Borders */
-    --border: hsl(220, 15%, 85%);
-    --border-hover: hsl(220, 20%, 70%);
-    --border-focus: hsl(220, 60%, 50%);
+    /* Borders - 3:1 contrast for non-decorative */
+    --border: hsl(220, 20%, 85%);
+    --border-hover: hsl(220, 25%, 70%);
+    --border-focus: hsl(220, 70%, 50%);
+    --border-decorative: hsl(220, 10%, 90%);
 
     /* Shadows */
     --shadow-color: 220 60% 15%;
@@ -82,8 +98,11 @@
     --font-body: 'Source Sans 3', system-ui, -apple-system, sans-serif;
 
     /* Focus ring */
-    --focus-ring: 0 0 0 3px hsl(220, 60%, 50% / 0.4);
+    --focus-ring: 0 0 0 3px hsl(220, 70%, 50% / 0.4);
     --focus-ring-offset: 2px;
+
+    /* Touch targets - Practical UI minimum 48px */
+    --touch-target-min: 48px;
   }
 
   /* Reduced motion */
@@ -204,20 +223,32 @@
      BUTTONS
      ============================================ */
 
-  /* Primary Button - Navy background with white text */
+  /* ============================================
+     PRACTICAL UI BUTTON SYSTEM
+     - Primary: Solid fill (ONE per screen)
+     - Secondary: Solid gold fill
+     - Outline: Border only (Practical UI secondary)
+     - Ghost: Minimal styling
+     - Tertiary/TextLink: Underlined text (for cancel)
+     - Min 48px touch target
+     ============================================ */
+
+  /* Primary Button - Navy solid fill, white text
+     Use for the MOST IMPORTANT action (ONE per screen) */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
     font-weight: 600;
+    font-size: 1rem;
     background-color: var(--navy);
     color: var(--text-on-navy);
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-primary:hover {
-    background-color: var(--navy-light);
+    background-color: var(--navy-hover);
     color: var(--text-on-navy);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.2);
@@ -240,15 +271,17 @@
     color: var(--text-on-navy);
   }
 
-  /* Secondary Button - Gold background with dark text */
+  /* Secondary Button - Gold solid fill
+     Use for prominent secondary actions */
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
     font-weight: 600;
+    font-size: 1rem;
     background-color: var(--gold);
     color: var(--text-on-gold);
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
@@ -256,7 +289,7 @@
     background-color: var(--gold-hover);
     color: var(--text-on-gold);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px hsl(38 50% 55% / 0.3);
+    box-shadow: 0 4px 12px hsl(38 70% 50% / 0.3);
   }
 
   .btn-secondary:active {
@@ -276,41 +309,18 @@
     color: var(--text-on-gold);
   }
 
-  /* Ghost Button */
-  .btn-ghost {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md;
-    font-family: var(--font-body);
-    font-weight: 600;
-    color: var(--text-secondary);
-    background-color: transparent;
-    min-height: 44px;
-    min-width: 44px;
-    transition: all var(--duration-fast) var(--ease-out-quart);
-  }
-
-  .btn-ghost:hover {
-    background-color: var(--bg-elevated);
-    color: var(--text-primary);
-  }
-
-  .btn-ghost:focus-visible {
-    box-shadow: var(--focus-ring);
-  }
-
-  .btn-ghost:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
-
-  /* Outline Button - Navy border, fills on hover */
+  /* Outline Button - Border only, no fill
+     Practical UI "secondary" style for alternative actions */
   .btn-outline {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
     font-weight: 600;
+    font-size: 1rem;
     background-color: transparent;
     color: var(--navy);
     border: 2px solid var(--navy);
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
@@ -328,8 +338,81 @@
     @apply opacity-50 cursor-not-allowed;
   }
 
+  /* Ghost Button - Minimal styling */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text-secondary);
+    background-color: transparent;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  .btn-ghost:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-ghost:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Text Link - For cancel/tertiary actions
+     Practical UI "tertiary" - underlined text, no button styling */
+  .text-link {
+    @apply inline-flex items-center justify-center;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    min-height: var(--touch-target-min);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .text-link:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .text-link:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .text-link:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Danger text link - for destructive actions */
+  .text-link-danger {
+    @apply text-link;
+    color: var(--error);
+  }
+
+  .text-link-danger:hover {
+    color: var(--error-dark, hsl(0, 65%, 40%));
+    text-decoration: underline;
+  }
+
   /* ============================================
-     FORM ELEMENTS
+     PRACTICAL UI FORM SYSTEM
+     - Labels on TOP of fields
+     - Errors ABOVE fields (not below)
+     - Hints ABOVE fields (below label)
+     - Single column layout
+     - 48px touch targets
+     - 3:1 border contrast
      ============================================ */
 
   .input-field {
@@ -338,7 +421,7 @@
     border: 1px solid var(--border);
     color: var(--text-primary);
     padding: 12px 16px;
-    min-height: 44px;
+    min-height: var(--touch-target-min);
     transition: border-color var(--duration-fast) var(--ease-out-quart),
                 box-shadow var(--duration-fast) var(--ease-out-quart);
   }
@@ -361,6 +444,16 @@
     background-color: var(--bg-elevated);
     color: var(--text-tertiary);
     cursor: not-allowed;
+  }
+
+  /* Error state for inputs */
+  .input-field-error {
+    border-color: var(--error);
+  }
+
+  .input-field-error:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px hsl(0 65% 50% / 0.2);
   }
 
   /* Select dropdown styling */
@@ -386,10 +479,83 @@
     line-height: 1.5;
   }
 
+  /* Label - Above input, close proximity (<8px gap) */
   .label-text {
-    @apply block font-body font-semibold mb-1;
+    @apply block font-body font-semibold;
     color: var(--text-primary);
     font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+
+  /* Required indicator */
+  .label-required::after {
+    content: ' *';
+    color: var(--error);
+  }
+
+  /* Form field container - groups label, hint, error, input */
+  .form-field {
+    @apply flex flex-col;
+    gap: 4px;
+  }
+
+  /* Error message - ABOVE input, color + icon */
+  .form-field-error {
+    @apply flex items-center gap-2 text-sm font-medium;
+    color: var(--error);
+    padding: 8px 12px;
+    background-color: var(--error-light);
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+
+  /* Hint text - ABOVE input, below label */
+  .form-field-hint {
+    @apply text-sm;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+
+  /* Required fields instruction */
+  .form-required-note {
+    @apply text-sm;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+  }
+
+  /* Single column form layout - Practical UI standard */
+  .form-single-column {
+    @apply flex flex-col;
+    gap: 24px;
+    max-width: 480px;
+  }
+
+  /* Form section with title */
+  .form-section {
+    @apply flex flex-col;
+    gap: 16px;
+  }
+
+  .form-section-title {
+    @apply font-heading font-semibold text-lg;
+    color: var(--text-primary);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-decorative);
+    margin-bottom: 8px;
+  }
+
+  /* Button group - LEFT aligned, primary first */
+  .btn-group {
+    @apply flex items-center;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-decorative);
+    margin-top: 8px;
+  }
+
+  /* Right-aligned button group (use sparingly) */
+  .btn-group-right {
+    @apply btn-group justify-end;
   }
 
   /* ============================================
@@ -658,10 +824,10 @@
     box-shadow: var(--focus-ring);
   }
 
-  /* Touch-friendly tap targets */
+  /* Touch-friendly tap targets - Practical UI 48px minimum */
   .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
   }
 
   /* ============================================

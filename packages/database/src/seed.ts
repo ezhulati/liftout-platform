@@ -114,6 +114,37 @@ async function main() {
 
   // Create sample individual users
   const password = await hashPassword('password123!');
+  const demoPassword = await hashPassword('password');
+
+  // Create documented demo users (demo@example.com / password)
+  const demoUser = await prisma.user.upsert({
+    where: { email: 'demo@example.com' },
+    update: {},
+    create: {
+      email: 'demo@example.com',
+      passwordHash: demoPassword,
+      firstName: 'Demo',
+      lastName: 'User',
+      userType: 'individual',
+      emailVerified: true,
+      profileCompleted: true,
+      profile: {
+        create: {
+          title: 'Team Lead',
+          location: 'San Francisco, CA',
+          bio: 'Demo team lead user for testing the platform.',
+          yearsExperience: 10,
+          availabilityStatus: 'open_to_opportunities',
+          salaryExpectationMin: 180000,
+          salaryExpectationMax: 250000,
+          remotePreference: 'hybrid',
+          skillsSummary: 'Leadership, Full-Stack Development, Team Management'
+        }
+      }
+    }
+  });
+
+  console.log('✅ Created demo team user (demo@example.com / password)');
   
   const user1 = await prisma.user.upsert({
     where: { email: 'john.doe@example.com' },
@@ -269,6 +300,51 @@ async function main() {
   });
 
   console.log('✅ Created sample team');
+
+  // Create documented company demo user (company@example.com / password)
+  const demoCompanyUser = await prisma.user.upsert({
+    where: { email: 'company@example.com' },
+    update: {},
+    create: {
+      email: 'company@example.com',
+      passwordHash: demoPassword,
+      firstName: 'Company',
+      lastName: 'Demo',
+      userType: 'company',
+      emailVerified: true,
+      profileCompleted: true
+    }
+  });
+
+  // Create demo company for the demo company user
+  const demoCompany = await prisma.company.upsert({
+    where: { slug: 'demo-company' },
+    update: {},
+    create: {
+      name: 'Demo Company',
+      slug: 'demo-company',
+      description: 'Demo company for testing the platform.',
+      industry: 'Technology',
+      companySize: 'large',
+      foundedYear: 2010,
+      websiteUrl: 'https://demo-company.com',
+      headquartersLocation: 'New York, NY',
+      companyCulture: 'Innovative and collaborative.',
+      employeeCount: 500,
+      verificationStatus: 'verified',
+      verifiedAt: new Date(),
+      users: {
+        create: {
+          userId: demoCompanyUser.id,
+          role: 'admin',
+          isPrimaryContact: true,
+          title: 'Head of Talent Acquisition'
+        }
+      }
+    }
+  });
+
+  console.log('✅ Created demo company user (company@example.com / password)');
 
   // Create company user
   const companyUser = await prisma.user.upsert({

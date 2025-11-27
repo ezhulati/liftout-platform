@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
+import { FormField, RequiredFieldsNote } from '@/components/ui';
 
 const industries = [
   'Investment Banking & Finance',
@@ -119,8 +120,8 @@ export default function SignUpPage() {
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center shadow-gold transition-all duration-fast group-hover:shadow-lg">
               <span className="text-navy-900 font-heading font-bold text-xl">L</span>
             </div>
             <span className="font-heading font-bold text-2xl tracking-tight">Liftout</span>
@@ -169,8 +170,8 @@ export default function SignUpPage() {
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
+          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8 group">
+            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center shadow-navy transition-all duration-fast group-hover:shadow-lg">
               <span className="text-gold font-heading font-bold text-xl">L</span>
             </div>
             <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>

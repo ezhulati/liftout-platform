@@ -34,7 +34,7 @@ export function LandingHeader() {
             aria-label="Liftout Home"
           >
             {/* Logo mark: 40px = 5 * 8px grid */}
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center transition-transform duration-fast ease-out-quart group-hover:scale-105">
+            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center shadow-navy transition-all duration-fast ease-out-quart group-hover:scale-105 group-hover:shadow-lg">
               <span className="text-gold font-heading font-bold text-xl leading-none">L</span>
             </div>
             {/* Wordmark with proper tracking */}
@@ -44,12 +44,18 @@ export function LandingHeader() {
           </Link>
 
           {/* Navigation links - hidden on mobile, shown on larger screens */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <Link
-              href="#features"
+              href="/for-companies"
               className="text-text-secondary hover:text-navy font-medium text-base transition-colors duration-fast ease-out-quart min-h-[44px] flex items-center"
             >
-              Features
+              For Companies
+            </Link>
+            <Link
+              href="/for-teams"
+              className="text-text-secondary hover:text-navy font-medium text-base transition-colors duration-fast ease-out-quart min-h-[44px] flex items-center"
+            >
+              For Teams
             </Link>
             <Link
               href="/auth/signin"
@@ -64,7 +70,7 @@ export function LandingHeader() {
             href="/auth/signup"
             className="btn-secondary min-h-[44px] px-6 text-base font-semibold"
           >
-            Get Early Access
+            Get Started
           </Link>
         </div>
       </nav>

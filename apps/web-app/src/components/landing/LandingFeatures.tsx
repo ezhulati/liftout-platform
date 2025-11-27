@@ -49,80 +49,45 @@ export function LandingFeatures() {
       aria-labelledby="features-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header
-            - Centered text, max-width for readability
-            - Proper spacing using 8-point grid
-        */}
+        {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          {/* Eyebrow - uppercase, wide tracking, small */}
           <p className="text-gold-600 font-semibold tracking-wider uppercase text-xs mb-4">
             Why Liftout
           </p>
-
-          {/* Section headline
-              - font-heading (Playfair Display)
-              - leading-tight (1.1) for headings
-              - tracking-tight (-0.02em) for large text
-          */}
           <h2
             id="features-heading"
             className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-6"
           >
             The smart alternative to mergers and individual hiring
           </h2>
-
-          {/* Section description
-              - font-body (Source Sans 3)
-              - leading-relaxed (1.6) for body text
-              - text-secondary for hierarchy
-          */}
           <p className="font-body text-lg lg:text-xl text-text-secondary leading-relaxed">
             Strategic team acquisition delivers lower risk, faster integration, and immediate business impact.
           </p>
         </div>
 
-        {/* Features grid
-            - 8-point grid spacing (gap-8 = 64px, gap-10 = 80px)
-            - Cards with varied border-radius (rounded-xl = 24px)
-            - Proper padding inside cards (p-8 = 64px)
-        */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
-          {features.map((feature, index) => (
+        {/* Features grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {features.map((feature) => (
             <article
               key={feature.name}
-              className="group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-gold/40 transition-all duration-base ease-out-quart hover:shadow-lg opacity-0 animate-fade-in-up"
-              style={{
-                animationDelay: `${index * 0.1}s`,
-                animationFillMode: 'forwards',
-              }}
+              className="group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-navy/30 transition-all duration-base ease-out-quart hover:shadow-lg"
             >
-              {/* Icon container
-                  - 56px = 7 * 8px grid
-                  - rounded-lg (16px) for variation
-              */}
-              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-colors duration-base ease-out-quart group-hover:bg-navy-600">
+              {/* Icon container */}
+              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-base ease-out-quart group-hover:bg-navy-600 group-hover:shadow-navy">
                 <feature.icon className="w-7 h-7 text-gold" aria-hidden="true" />
               </div>
 
-              {/* Feature title
-                  - font-heading
-                  - text-xl (1.563rem per Major Third scale)
-                  - leading-snug (1.3) for subheadings
-              */}
+              {/* Feature title */}
               <h3 className="font-heading text-xl font-bold text-text-primary leading-snug mb-3">
                 {feature.name}
               </h3>
 
-              {/* Feature description
-                  - font-body
-                  - leading-relaxed (1.6)
-                  - text-secondary
-              */}
+              {/* Feature description */}
               <p className="font-body text-text-secondary leading-relaxed text-base">
                 {feature.description}
               </p>
 
-              {/* Subtle hover accent line - decorative */}
+              {/* Subtle hover accent line */}
               <div
                 className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity duration-base rounded-full"
                 aria-hidden="true"
@@ -131,17 +96,14 @@ export function LandingFeatures() {
           ))}
         </div>
 
-        {/* Bottom CTA section
-            - Generous spacing (mt-16 = 128px, lg:mt-20 = 160px)
-            - Centered
-        */}
+        {/* Bottom CTA section */}
         <div className="mt-16 lg:mt-20 text-center">
           <p className="text-text-secondary mb-6 text-base">
             Ready to transform your talent strategy?
           </p>
           <Link
             href="/auth/signup"
-            className="btn-secondary min-h-[48px] px-8 py-3 text-lg font-semibold inline-flex items-center gap-3"
+            className="btn-secondary min-h-[48px] px-8 py-3 text-lg font-semibold inline-flex items-center gap-3 group"
           >
             Get Started Today
             <svg

@@ -1,18 +1,18 @@
 import Link from 'next/link';
 
-export function LandingCTA() {
+export function TeamCTA() {
   return (
     <section
       className="relative py-20 lg:py-28 bg-navy overflow-hidden"
-      aria-labelledby="cta-heading"
+      aria-labelledby="team-cta-heading"
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {/* Soft gold glows */}
-        <div className="absolute top-0 left-[25%] w-96 h-96 rounded-full bg-gold/5 blur-3xl" />
-        <div className="absolute bottom-0 right-[25%] w-80 h-80 rounded-full bg-gold/8 blur-3xl" />
+        <div className="absolute top-0 right-[20%] w-96 h-96 rounded-full bg-gold/5 blur-3xl" />
+        <div className="absolute bottom-0 left-[20%] w-80 h-80 rounded-full bg-gold/8 blur-3xl" />
 
-        {/* Subtle grid pattern overlay */}
+        {/* Subtle grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -25,32 +25,32 @@ export function LandingCTA() {
       <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
-          Ready to Transform Your Growth?
+          Your Team&apos;s Next Chapter Awaits
         </p>
 
-        {/* Main headline */}
+        {/* Headline */}
         <h2
-          id="cta-heading"
+          id="team-cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
         >
-          Join the future of
-          <span className="block text-gold mt-2">strategic talent acquisition</span>
+          Don&apos;t let your next opportunity
+          <span className="block text-gold mt-2">break up what you&apos;ve built</span>
         </h2>
 
         {/* Description */}
         <p className="font-body text-navy-200 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          Whether you&apos;re a company seeking proven teams or a high-performing team exploring new opportunities,
-          Liftout connects you with the right strategic partnerships.
+          You&apos;ve spent years building trust, refining processes, and achieving together.
+          Companies value that. Let&apos;s find the right one for your team.
         </p>
 
-        {/* Dual CTA buttons */}
+        {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          {/* Primary CTA - Gold */}
+          {/* Primary CTA */}
           <Link
-            href="/auth/signup?type=company"
+            href="/auth/signup?type=team"
             className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Acquire Proven Teams
+            Register Your Team
             <svg
               className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
               fill="none"
@@ -62,21 +62,12 @@ export function LandingCTA() {
             </svg>
           </Link>
 
-          {/* Secondary CTA - White outline */}
+          {/* Secondary CTA */}
           <Link
-            href="/auth/signup?type=team"
+            href="/for-companies"
             className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
           >
-            Join as a Team
-            <svg
-              className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            Looking to Acquire Teams?
           </Link>
         </div>
 
@@ -91,19 +82,33 @@ export function LandingCTA() {
           </Link>
         </p>
 
-        {/* Trust indicators section */}
+        {/* What teams are saying */}
         <div className="mt-16 pt-8 border-t border-navy-600">
           <p className="text-navy-400 text-xs mb-6 uppercase tracking-wider font-semibold">
-            Trusted by forward-thinking organizations
+            Teams that moved together
           </p>
-          <div className="flex flex-wrap justify-center gap-8 lg:gap-12 text-navy-400">
-            {['Finance', 'Technology', 'Healthcare', 'Consulting'].map((industry) => (
+          <div className="grid sm:grid-cols-3 gap-8 text-left">
+            {[
+              {
+                quote: 'After 5 years together, we weren\'t willing to split up. Found a company that valued our unit.',
+                team: 'Engineering Team, 6 members',
+              },
+              {
+                quote: 'The confidential process meant we could explore without risking our current positions.',
+                team: 'Analytics Team, 4 members',
+              },
+              {
+                quote: 'Our collective negotiation secured better terms than any of us could individually.',
+                team: 'Design Team, 5 members',
+              },
+            ].map((item) => (
               <div
-                key={industry}
-                className="flex items-center gap-2 text-sm font-medium"
+                key={item.team}
               >
-                <div className="w-2 h-2 rounded-full bg-gold/50" aria-hidden="true" />
-                <span>{industry}</span>
+                <blockquote className="font-body text-navy-200 text-sm leading-relaxed mb-3 italic">
+                  &ldquo;{item.quote}&rdquo;
+                </blockquote>
+                <p className="text-navy-400 text-xs">{item.team}</p>
               </div>
             ))}
           </div>

@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { signIn as nextAuthSignIn } from 'next-auth/react';
 import { DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { FormField } from '@/components/ui';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -74,8 +75,8 @@ export default function SignInPage() {
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center shadow-gold transition-all duration-fast group-hover:shadow-lg">
               <span className="text-navy-900 font-heading font-bold text-xl">L</span>
             </div>
             <span className="font-heading font-bold text-2xl tracking-tight">Liftout</span>
@@ -111,8 +112,8 @@ export default function SignInPage() {
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
+          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8 group">
+            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center shadow-navy transition-all duration-fast group-hover:shadow-lg">
               <span className="text-gold font-heading font-bold text-xl">L</span>
             </div>
             <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
@@ -127,52 +128,43 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="bg-navy-50 border border-navy-100 rounded-xl p-5 mb-8">
-            <h3 className="font-semibold text-navy mb-3">Try the Demo</h3>
-            <p className="text-text-secondary text-sm mb-4">
-              Experience Liftout from both perspectives:
-            </p>
-            <div className="space-y-3">
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials('individual')}
-                className="w-full text-left p-3 bg-bg-surface rounded-lg border border-border hover:border-gold/50 hover:shadow-sm transition-all duration-fast group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center group-hover:bg-navy-200 transition-colors">
-                    <span className="text-lg">👤</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-text-primary text-sm">Team Lead / Individual</p>
-                    <p className="text-text-tertiary text-xs">Alex Chen - Data Science Team Lead</p>
-                  </div>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials('company')}
-                className="w-full text-left p-3 bg-bg-surface rounded-lg border border-border hover:border-gold/50 hover:shadow-sm transition-all duration-fast group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gold-100 rounded-full flex items-center justify-center group-hover:bg-gold-200 transition-colors">
-                    <span className="text-lg">🏢</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-text-primary text-sm">Company / Talent Acquisition</p>
-                    <p className="text-text-tertiary text-xs">Sarah Rodriguez - VP Talent, NextGen Financial</p>
-                  </div>
-                </div>
-              </button>
+          {/* Demo Credentials - Less prominent, below main form conceptually */}
+          <details className="mb-6 group">
+            <summary className="cursor-pointer text-sm text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
+              <span className="text-gold">▸</span>
+              <span className="group-open:hidden">Try demo credentials</span>
+              <span className="hidden group-open:inline">Hide demo credentials</span>
+            </summary>
+            <div className="mt-3 bg-bg-alt border border-border-decorative rounded-lg p-4">
+              <p className="text-text-tertiary text-sm mb-3">
+                Click to fill credentials:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('individual')}
+                  className="text-link text-sm"
+                >
+                  Team lead demo
+                </button>
+                <span className="text-text-tertiary">|</span>
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('company')}
+                  className="text-link text-sm"
+                >
+                  Company demo
+                </button>
+              </div>
             </div>
-          </div>
+          </details>
 
-          {/* Google Sign In */}
+          {/* Google Sign In - Outline style (not competing with primary) */}
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-bg-surface border border-border rounded-lg font-medium text-text-primary hover:bg-bg-elevated hover:border-border-hover transition-all duration-fast touch-target disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-outline w-full flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -205,12 +197,13 @@ export default function SignInPage() {
             </div>
           </div>
 
-          {/* Email/Password Form */}
+          {/* Email/Password Form - Single column, sentence case labels */}
           <form className="space-y-5" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email-address" className="label-text">
-                Email address
-              </label>
+            <FormField
+              label="Email address"
+              name="email-address"
+              required
+            >
               <input
                 id="email-address"
                 name="email"
@@ -222,12 +215,13 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-            </div>
+            </FormField>
 
-            <div>
-              <label htmlFor="password" className="label-text">
-                Password
-              </label>
+            <FormField
+              label="Password"
+              name="password"
+              required
+            >
               <div className="relative">
                 <input
                   id="password"
@@ -242,7 +236,7 @@ export default function SignInPage() {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -253,12 +247,12 @@ export default function SignInPage() {
                   )}
                 </button>
               </div>
-            </div>
+            </FormField>
 
             <div className="flex items-center justify-end">
               <Link
                 href="/auth/forgot-password"
-                className="text-sm font-medium text-gold hover:text-gold-dark transition-colors"
+                className="text-link text-sm"
               >
                 Forgot your password?
               </Link>
@@ -267,7 +261,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-primary w-full py-3 text-base"
+              className="btn-primary w-full"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -288,9 +282,9 @@ export default function SignInPage() {
             Don&apos;t have an account?{' '}
             <Link
               href="/auth/signup"
-              className="font-medium text-gold hover:text-gold-dark transition-colors"
+              className="text-link inline"
             >
-              Join the platform
+              Create account
             </Link>
           </p>
         </div>
