@@ -1,12 +1,12 @@
 [build]
-  command = "pnpm install && pnpm --filter @liftout/web-app run build"
-  publish = "apps/web-app/.next"
+  base = "apps/web-app"
+  command = "cd ../.. && pnpm install --shamefully-hoist && cd apps/web-app && pnpm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
   NETLIFY_USE_PNPM = "true"
-  PNPM_FLAGS = "--shamefully-hoist"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
