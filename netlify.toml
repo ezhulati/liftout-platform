@@ -1,17 +1,11 @@
 [build]
-  command = "pnpm install && pnpm --filter @liftout/web-app run build"
+  command = "pnpm install && pnpm --filter @liftout/web-app run build && mkdir -p apps/web-app/node_modules && cp -rL node_modules/next apps/web-app/node_modules/"
   publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
   NETLIFY_USE_PNPM = "true"
-  # Tell the plugin where Next.js is located in the monorepo
-  NEXT_PLUGIN_FORCE_RUN = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-  [plugins.inputs]
-    # Explicitly set the base directory for Next.js
-    packagePath = "apps/web-app"
