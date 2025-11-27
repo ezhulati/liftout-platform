@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm install && pnpm --filter @liftout/web-app run build && mkdir -p apps/web-app/node_modules && cp -rL node_modules/next apps/web-app/node_modules/"
+  command = "pnpm install && cd apps/web-app && npm install next@14 --legacy-peer-deps && pnpm run build"
   publish = "apps/web-app/.next"
 
 [build.environment]
