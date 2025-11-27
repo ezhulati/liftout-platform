@@ -1,7 +1,7 @@
 [build]
-  base = ""
-  command = "cd apps/web-app && pnpm run build"
-  publish = "apps/web-app/.next"
+  base = "apps/web-app"
+  command = "cd ../.. && pnpm install && cd apps/web-app && pnpm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
