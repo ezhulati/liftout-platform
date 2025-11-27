@@ -1,6 +1,6 @@
 [build]
   base = "apps/web-app"
-  command = "cd ../.. && pnpm install --shamefully-hoist && cd apps/web-app && pnpm run build"
+  command = "cd ../.. && pnpm install --shamefully-hoist && cp -rL ../../node_modules/next node_modules/ 2>/dev/null || true && pnpm run build"
   publish = ".next"
 
 [build.environment]
