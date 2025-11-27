@@ -1,12 +1,11 @@
 [build]
   base = "apps/web-app"
-  command = "cd ../.. && pnpm install --shamefully-hoist && cd apps/web-app && mkdir -p node_modules && cp -rL ../../node_modules/next node_modules/ 2>/dev/null || true && pnpm run build"
+  command = "cd ../.. && pnpm install && cd apps/web-app && pnpm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
-  NPM_FLAGS = "--legacy-peer-deps"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
