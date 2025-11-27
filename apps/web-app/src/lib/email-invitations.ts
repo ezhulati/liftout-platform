@@ -35,6 +35,7 @@ export interface InvitationSummary {
   accepted: number;
   declined: number;
   expired: number;
+  revoked: number;
   total: number;
 }
 
@@ -283,6 +284,7 @@ class EmailInvitationService {
         accepted: 0,
         declined: 0,
         expired: 0,
+        revoked: 0,
         total: invitations.length
       };
 

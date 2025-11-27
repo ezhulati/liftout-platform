@@ -1,6 +1,5 @@
-import { withAuth } from 'next-auth/middleware';
+import { withAuth, NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
 // Routes that don't require authentication
 const publicRoutes = [
@@ -66,7 +65,7 @@ function isProtectedRoute(pathname: string): boolean {
 }
 
 export default withAuth(
-  function middleware(req: NextRequest & { nextauth: { token?: { userType?: string; [key: string]: unknown } } }) {
+  function middleware(req: NextRequestWithAuth) {
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 
@@ -102,7 +101,8 @@ export default withAuth(
     }
 
     // For protected routes accessible to both types, ensure user has a type set
-    if (isProtectedRoute(pathname) && !userType) {
+    // Skip this check for the onboarding page to avoid redirect loop
+    if (isProtectedRoute(pathname) && !userType && pathname !== '/app/onboarding') {
       // Redirect to onboarding if user doesn't have a type set
       return NextResponse.redirect(new URL('/app/onboarding', req.url));
     }

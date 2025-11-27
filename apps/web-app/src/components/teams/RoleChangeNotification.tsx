@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   BellIcon,
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
   UserGroupIcon,
   ShieldCheckIcon,
-  CrownIcon,
+  StarIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
 import { 
@@ -35,7 +35,7 @@ interface RoleChangeWithUserInfo extends RoleChangeHistory {
 const getRoleIcon = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return <CrownIcon className="h-4 w-4 text-yellow-600" />;
+      return <StarIcon className="h-4 w-4 text-yellow-600" />;
     case 'admin':
       return <ShieldCheckIcon className="h-4 w-4 text-blue-600" />;
     case 'member':
@@ -75,17 +75,21 @@ export function RoleChangeNotification({
       
       // Sort by most recent first
       const sortedHistory = roleHistory.sort(
-        (a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime()
+        (a, b) => {
+          const dateA = a.changedAt instanceof Date ? a.changedAt : a.changedAt.toDate();
+          const dateB = b.changedAt instanceof Date ? b.changedAt : b.changedAt.toDate();
+          return dateB.getTime() - dateA.getTime();
+        }
       );
 
       // If not showing all, limit the results
       const displayHistory = showAllHistory ? sortedHistory : sortedHistory.slice(0, limit);
-      
+
       // TODO: Enhance with user name lookups
       const historyWithNames = displayHistory.map(item => ({
         ...item,
         userName: `User ${item.userId.slice(-4)}`, // Placeholder
-        changedByName: item.changedBy === user?.uid ? 'You' : `User ${item.changedBy.slice(-4)}`
+        changedByName: item.changedBy === user?.id ? 'You' : `User ${item.changedBy.slice(-4)}`
       }));
 
       setHistory(historyWithNames);

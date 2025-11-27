@@ -283,7 +283,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
       setLoading(true);
       const [teamMembers, currentMember] = await Promise.all([
         teamPermissionService.getTeamMembers(teamId),
-        user ? teamPermissionService.getTeamMember(teamId, user.uid) : null
+        user ? teamPermissionService.getTeamMember(teamId, user.id) : null
       ]);
       
       setMembers(teamMembers);
@@ -311,7 +311,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
         teamId, 
         member.userId, 
         newRole, 
-        user.uid, 
+        user.id, 
         reason
       );
 
@@ -341,7 +341,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
     try {
       setActionLoading(member.id!);
       
-      await teamPermissionService.removeTeamMember(teamId, member.userId, user.uid);
+      await teamPermissionService.removeTeamMember(teamId, member.userId, user.id);
       
       toast.success(`${member.name} has been removed from the team`);
       await loadMembers();
@@ -408,7 +408,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                       <h4 className="text-sm font-medium text-gray-900">
                         {member.name}
                       </h4>
-                      {member.userId === user?.uid && (
+                      {member.userId === user?.id && (
                         <span className="text-xs text-blue-600 font-medium">(You)</span>
                       )}
                     </div>
@@ -429,7 +429,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  {canEditRoles && member.userId !== user?.uid && (
+                  {canEditRoles && member.userId !== user?.id && (
                     <button
                       onClick={() => openRoleModal(member)}
                       disabled={actionLoading === member.id}
@@ -440,7 +440,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                     </button>
                   )}
 
-                  {canRemoveMembers && member.userId !== user?.uid && (
+                  {canRemoveMembers && member.userId !== user?.id && (
                     <button
                       onClick={() => handleRemoveMember(member)}
                       disabled={actionLoading === member.id}

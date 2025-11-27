@@ -28,7 +28,7 @@ export function useTeamPermissions(teamId: string): UseTeamPermissionsReturn {
   const [error, setError] = useState<string | null>(null);
 
   const fetchMember = async () => {
-    if (!user?.uid || !teamId) {
+    if (!user?.id || !teamId) {
       setMember(null);
       setLoading(false);
       return;
@@ -37,7 +37,7 @@ export function useTeamPermissions(teamId: string): UseTeamPermissionsReturn {
     try {
       setLoading(true);
       setError(null);
-      const memberData = await teamPermissionService.getTeamMember(teamId, user.uid);
+      const memberData = await teamPermissionService.getTeamMember(teamId, user.id);
       setMember(memberData);
     } catch (err) {
       console.error('Error fetching team member:', err);
@@ -50,7 +50,7 @@ export function useTeamPermissions(teamId: string): UseTeamPermissionsReturn {
 
   useEffect(() => {
     fetchMember();
-  }, [user?.uid, teamId]);
+  }, [user?.id, teamId]);
 
   const hasPermission = useMemo(() => {
     return (permission: Permission): boolean => {
