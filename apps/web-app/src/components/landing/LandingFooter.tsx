@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+// Using text-based logo to avoid hydration issues with Image component
+
 export function LandingFooter() {
   const currentYear = new Date().getFullYear();
 
@@ -11,26 +13,21 @@ export function LandingFooter() {
 
           {/* Brand column - spans 2 cols on large screens */}
           <div className="lg:col-span-2">
-            {/* Logo */}
+            {/* Logo - text-based for reliable hydration */}
             <Link
               href="/"
-              className="inline-flex items-center gap-3 mb-6 min-h-[44px] group"
+              className="inline-flex items-center gap-4 mb-6 group"
               aria-label="Liftout Home"
             >
-              {/* Logo mark - 40px = 5 * 8px grid */}
-              <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center shadow-gold transition-all duration-fast group-hover:shadow-lg">
-                <span className="text-navy-900 font-heading font-bold text-xl leading-none">L</span>
+              <div className="w-16 h-16 rounded-xl bg-gold flex items-center justify-center transition-transform duration-fast group-hover:scale-[1.02]">
+                <span className="text-navy font-heading font-bold text-3xl leading-none">L</span>
               </div>
-              {/* Wordmark */}
-              <span className="font-heading font-bold text-2xl text-white tracking-tight leading-none">
-                Liftout
-              </span>
+              <span className="font-heading font-bold text-4xl text-white tracking-tight leading-none">Liftout</span>
             </Link>
 
             {/* Tagline */}
-            <p className="font-body text-navy-200 max-w-md leading-relaxed text-base mb-6">
-              The premier platform for strategic team acquisition. Connect companies with proven,
-              intact teams ready for new opportunities.
+            <p className="font-body text-white/80 max-w-md leading-relaxed text-base mb-6">
+              Hire proven teams, not individuals. 500+ verified teams. 200+ companies. Zero team-building phase.
             </p>
 
             {/* Quick action links for different user types */}
@@ -41,7 +38,7 @@ export function LandingFooter() {
               >
                 For Companies
               </Link>
-              <span className="text-navy-600">|</span>
+              <span className="text-white/30">|</span>
               <Link
                 href="/for-teams"
                 className="text-sm font-medium text-gold hover:text-gold-300 transition-colors duration-fast"
@@ -60,25 +57,25 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/auth/signup"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  Get Started
+                  Create account
                 </Link>
               </li>
               <li>
                 <Link
                   href="/auth/signin"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  Sign In
+                  Sign in
                 </Link>
               </li>
               <li>
                 <Link
                   href="#features"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  Features
+                  View features
                 </Link>
               </li>
             </ul>
@@ -93,25 +90,25 @@ export function LandingFooter() {
               <li>
                 <a
                   href="mailto:support@liftout.io"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  support@liftout.io
+                  Contact support
                 </a>
               </li>
               <li>
                 <Link
                   href="/privacy"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  Privacy Policy
+                  Privacy policy
                 </Link>
               </li>
               <li>
                 <Link
                   href="/terms"
-                  className="font-body text-navy-200 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
+                  className="font-body text-white/80 hover:text-gold transition-colors duration-fast text-base inline-block min-h-[44px] py-1"
                 >
-                  Terms of Service
+                  Terms of service
                 </Link>
               </li>
             </ul>
@@ -119,12 +116,12 @@ export function LandingFooter() {
         </div>
 
         {/* Bottom bar - copyright and social */}
-        <div className="mt-12 pt-8 border-t border-navy-700">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="font-body text-navy-400 text-sm">
+        <div className="mt-12 pt-8 border-t border-white/20">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <p className="font-body text-white/60 text-sm">
               &copy; {currentYear} Liftout. All rights reserved.
             </p>
-            <p className="font-body text-navy-500 text-sm">
+            <p className="font-body text-white/50 text-sm">
               Strategic Team Acquisition Platform
             </p>
           </div>
