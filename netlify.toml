@@ -1,17 +1,12 @@
 [build]
   command = "pnpm --filter @liftout/web-app run build"
   publish = "apps/web-app/.next"
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
 
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
   NETLIFY_USE_PNPM = "true"
   PNPM_FLAGS = "--shamefully-hoist"
-
-# Skip caching node_modules to avoid pnpm linking errors
-[build.processing]
-  skip_processing = false
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
