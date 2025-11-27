@@ -22,16 +22,16 @@ function ToggleSwitch({ enabled, onChange, disabled = false }: ToggleSwitchProps
       type="button"
       onClick={() => !disabled && onChange(!enabled)}
       className={`${
-        enabled ? 'bg-primary-600' : 'bg-gray-200'
+        enabled ? 'bg-navy' : 'bg-bg-alt'
       } ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
+      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy touch-target`}
       disabled={disabled}
     >
       <span
         className={`${
           enabled ? 'translate-x-5' : 'translate-x-0'
-        } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}
+        } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-base`}
       />
     </button>
   );
@@ -151,19 +151,19 @@ export function NotificationSettings() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-2/3 mb-6"></div>
+          <div className="h-6 bg-bg-alt rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-bg-alt rounded w-2/3 mb-6"></div>
           {[1, 2, 3].map((i) => (
             <div key={i} className="mb-6">
-              <div className="h-5 bg-gray-200 rounded w-1/4 mb-4"></div>
+              <div className="h-5 bg-bg-alt rounded w-1/4 mb-4"></div>
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((j) => (
-                  <div key={j} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={j} className="flex items-center justify-between p-4 border border-border rounded-lg">
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                      <div className="h-4 bg-bg-alt rounded w-1/3 mb-2"></div>
+                      <div className="h-3 bg-bg-alt rounded w-2/3"></div>
                     </div>
-                    <div className="w-11 h-6 bg-gray-200 rounded-full"></div>
+                    <div className="w-11 h-6 bg-bg-alt rounded-full"></div>
                   </div>
                 ))}
               </div>
@@ -177,16 +177,16 @@ export function NotificationSettings() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="pb-4 border-b border-gray-200">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Notification Preferences</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="pb-4 border-b border-border">
+        <h3 className="text-lg leading-6 font-medium text-text-primary">Notification preferences</h3>
+        <p className="mt-1 text-sm text-text-secondary">
           Choose how you want to be notified about liftout activities and platform updates.
         </p>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-900 mb-3">Quick Actions</h4>
+      <div className="bg-bg-alt rounded-lg p-4">
+        <h4 className="text-sm font-medium text-text-primary mb-3">Quick actions</h4>
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => updateNotificationSettings({
@@ -203,10 +203,10 @@ export function NotificationSettings() {
                 [key]: true
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200"
+            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-success-dark bg-success-light hover:bg-success-light/80 min-h-[36px]"
           >
             <CheckCircleIcon className="h-4 w-4 mr-1" />
-            Enable All
+            Enable all
           </button>
           <button
             onClick={() => updateNotificationSettings({
@@ -223,10 +223,10 @@ export function NotificationSettings() {
                 [key]: false
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200"
+            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-error-dark bg-error-light hover:bg-error-light/80 min-h-[36px]"
           >
             <XCircleIcon className="h-4 w-4 mr-1" />
-            Disable All
+            Disable all
           </button>
         </div>
       </div>
@@ -234,15 +234,15 @@ export function NotificationSettings() {
       {/* Email Notifications */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <EnvelopeIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Email Notifications</h4>
+          <EnvelopeIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Email notifications</h4>
         </div>
         <div className="space-y-4">
           {emailNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                <p className="text-sm text-gray-500">{notification.description}</p>
+                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
+                <p className="text-sm text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.email[notification.key]}
@@ -256,15 +256,15 @@ export function NotificationSettings() {
       {/* Push Notifications */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <DevicePhoneMobileIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Push Notifications</h4>
+          <DevicePhoneMobileIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Push notifications</h4>
         </div>
         <div className="space-y-4">
           {pushNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                <p className="text-sm text-gray-500">{notification.description}</p>
+                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
+                <p className="text-sm text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.push[notification.key]}
@@ -278,15 +278,15 @@ export function NotificationSettings() {
       {/* In-App Notifications */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <BellIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">In-App Notifications</h4>
+          <BellIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">In-app notifications</h4>
         </div>
         <div className="space-y-4">
           {inAppNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                <p className="text-sm text-gray-500">{notification.description}</p>
+                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
+                <p className="text-sm text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.inApp[notification.key]}
@@ -298,16 +298,16 @@ export function NotificationSettings() {
       </div>
 
       {/* Information */}
-      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+      <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
         <div className="flex">
           <div className="flex-shrink-0">
-            <BellIcon className="h-5 w-5 text-blue-400" />
+            <BellIcon className="h-5 w-5 text-navy" />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">
-              About Notifications
+            <h3 className="text-sm font-medium text-navy-900">
+              About notifications
             </h3>
-            <div className="mt-2 text-sm text-blue-700">
+            <div className="mt-2 text-sm text-navy-700">
               <p>
                 You can adjust these settings at any time. Critical account security notifications will always be sent regardless of your preferences.
               </p>

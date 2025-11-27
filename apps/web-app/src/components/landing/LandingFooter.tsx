@@ -20,12 +20,12 @@ export function LandingFooter() {
             >
               <Image
                 src="/logo-icon.png"
-                alt=""
-                width={64}
-                height={64}
-                className="w-16 h-16 brightness-0 invert transition-transform duration-fast group-hover:scale-[1.02]"
+                alt="Liftout"
+                width={48}
+                height={48}
+                className="w-12 h-12 brightness-0 invert transition-transform duration-fast group-hover:scale-[1.02]"
               />
-              <span className="font-heading font-bold text-4xl text-white tracking-tight leading-none">Liftout</span>
+              <span className="font-heading font-bold text-3xl text-white tracking-tight leading-none">Liftout</span>
             </Link>
 
             {/* Tagline */}

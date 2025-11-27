@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { CheckCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { FormField } from '@/components/ui';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -103,10 +104,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="label-text">
-              Email address
-            </label>
+          <FormField label="Email address" name="email" required>
             <input
               id="email"
               name="email"
@@ -118,12 +116,12 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
+          </FormField>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="btn-primary w-full py-3 text-base"
+            className="btn-primary w-full"
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">
@@ -141,7 +139,7 @@ export default function ForgotPasswordPage() {
           <div className="text-center">
             <Link
               href="/auth/signin"
-              className="inline-flex items-center gap-2 font-medium text-navy hover:text-navy-light transition-colors"
+              className="text-link inline-flex items-center gap-2"
             >
               <ArrowLeftIcon className="w-4 h-4" />
               Back to sign in

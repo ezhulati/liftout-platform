@@ -16,6 +16,7 @@ import {
   UserPlusIcon,
 } from '@heroicons/react/24/outline';
 import { useDocument, useShareDocument } from '@/hooks/useDocuments';
+import { FormField, ButtonGroup, TextLink } from '@/components/ui';
 
 const shareDocumentSchema = z.object({
   accessType: z.enum(['public', 'restricted', 'private']),
@@ -39,24 +40,24 @@ const accessTypes = [
     label: 'Private',
     description: 'Only you can access this document',
     icon: LockClosedIcon,
-    color: 'text-red-600',
-    bgColor: 'bg-red-50 border-red-200',
+    color: 'text-error',
+    bgColor: 'bg-error-light border-error',
   },
   {
     value: 'restricted',
     label: 'Restricted',
     description: 'Share with specific users or roles',
     icon: UsersIcon,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50 border-blue-200',
+    color: 'text-navy',
+    bgColor: 'bg-navy-50 border-navy-200',
   },
   {
     value: 'public',
     label: 'Public',
     description: 'All authenticated users can access',
     icon: GlobeAltIcon,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50 border-green-200',
+    color: 'text-success',
+    bgColor: 'bg-success-light border-success',
   },
 ];
 
@@ -155,11 +156,11 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
     return (
       <div className="card max-w-2xl">
         <div className="animate-pulse p-6">
-          <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+          <div className="h-6 bg-bg-alt rounded w-48 mb-4"></div>
           <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-full"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-bg-alt rounded w-full"></div>
+            <div className="h-4 bg-bg-alt rounded w-3/4"></div>
+            <div className="h-4 bg-bg-alt rounded w-1/2"></div>
           </div>
         </div>
       </div>
@@ -170,7 +171,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
     return (
       <div className="card max-w-2xl">
         <div className="p-6 text-center">
-          <p className="text-gray-500">Document not found</p>
+          <p className="text-text-secondary">Document not found</p>
         </div>
       </div>
     );
@@ -178,9 +179,9 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
 
   return (
     <div className="card max-w-2xl">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-gray-900">Share Document</h2>
-        <p className="text-sm text-gray-600">
+      <div className="px-6 py-4 border-b border-border">
+        <h2 className="text-lg font-medium text-text-primary">Share document</h2>
+        <p className="text-sm text-text-secondary">
           Control who can access "{document.name}"
         </p>
       </div>
@@ -188,15 +189,15 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
       {showShareUrl ? (
         <div className="p-6">
           <div className="mb-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Document Shared Successfully!</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="text-lg font-medium text-text-primary mb-2">Document shared successfully</h3>
+            <p className="text-sm text-text-secondary">
               Your document sharing settings have been updated. Use the link below to share the document.
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="label-text mb-2">
                 Share URL
               </label>
               <div className="flex">
@@ -204,24 +205,25 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                   type="text"
                   value={shareUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md text-sm bg-gray-50"
+                  className="flex-1 input-field rounded-r-none border-r-0"
                 />
                 <button
                   onClick={copyShareUrl}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-r-md hover:bg-primary-700 text-sm"
+                  className="btn-primary rounded-l-none px-4"
+                  aria-label="Copy URL"
                 >
-                  <ClipboardDocumentIcon className="h-4 w-4" />
+                  <ClipboardDocumentIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <LinkIcon className="h-5 w-5 text-blue-600 mt-0.5" />
+                <LinkIcon className="h-5 w-5 text-navy mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-blue-900">Security Notice</h4>
-                  <p className="text-sm text-blue-700">
-                    This link provides access according to your sharing settings. 
+                  <h4 className="font-medium text-navy-900">Security notice</h4>
+                  <p className="text-sm text-navy-700">
+                    This link provides access according to your sharing settings.
                     {document.accessControl.expiresAt && (
                       <> Access will expire on {new Date(document.accessControl.expiresAt).toLocaleDateString()}.</>
                     )}
@@ -231,26 +233,25 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 mt-6">
-            <button
-              onClick={() => setShowShareUrl(false)}
-              className="btn-secondary"
-            >
-              Update Settings
-            </button>
-            <button
-              onClick={onCancel || (() => router.back())}
-              className="btn-primary"
-            >
-              Done
-            </button>
+          <div className="mt-6">
+            <ButtonGroup>
+              <button
+                onClick={onCancel || (() => router.back())}
+                className="btn-primary"
+              >
+                Done
+              </button>
+              <TextLink onClick={() => setShowShareUrl(false)}>
+                Update settings
+              </TextLink>
+            </ButtonGroup>
           </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Current Access Level */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-2">Current Access Level</h3>
+          <div className="bg-bg-alt border border-border rounded-lg p-4">
+            <h3 className="font-medium text-text-primary mb-2">Current access level</h3>
             <div className="flex items-center space-x-2">
               {(() => {
                 const currentAccess = accessTypes.find(t => t.value === document.accessControl.type);
@@ -258,8 +259,8 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                 return (
                   <>
                     <Icon className={`h-5 w-5 ${currentAccess?.color}`} />
-                    <span className="font-medium">{currentAccess?.label}</span>
-                    <span className="text-gray-600">- {currentAccess?.description}</span>
+                    <span className="font-medium text-text-primary">{currentAccess?.label}</span>
+                    <span className="text-text-secondary">- {currentAccess?.description}</span>
                   </>
                 );
               })()}
@@ -268,29 +269,29 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
 
           {/* Access Control */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Who can access this document?</h3>
+            <h3 className="text-lg font-medium text-text-primary">Who can access this document?</h3>
             <div className="space-y-3">
               {accessTypes.map((type) => {
                 const Icon = type.icon;
                 return (
-                  <label 
-                    key={type.value} 
+                  <label
+                    key={type.value}
                     className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-colors ${
-                      accessType === type.value ? type.bgColor : 'border-gray-200 hover:bg-gray-50'
+                      accessType === type.value ? type.bgColor : 'border-border hover:bg-bg-alt'
                     }`}
                   >
                     <input
                       {...register('accessType')}
                       type="radio"
                       value={type.value}
-                      className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500"
+                      className="mt-1 h-5 w-5 text-navy focus:ring-navy"
                     />
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
                         <Icon className={`h-5 w-5 ${type.color}`} />
-                        <span className="text-sm font-medium text-gray-900">{type.label}</span>
+                        <span className="text-sm font-medium text-text-primary">{type.label}</span>
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">{type.description}</p>
+                      <p className="text-sm text-text-tertiary mt-1">{type.description}</p>
                     </div>
                   </label>
                 );
@@ -300,27 +301,26 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
 
           {/* Restricted Access Settings */}
           {accessType === 'restricted' && (
-            <div className="space-y-4 pl-7">
-              <div>
-                <label htmlFor="allowedUsers" className="label-text">
-                  Specific Users (Email addresses)
-                </label>
+            <div className="space-y-5 pl-7">
+              <FormField
+                label="Specific users (email addresses)"
+                name="allowedUsers"
+                hint="Enter email addresses separated by commas"
+              >
                 <input
                   {...register('allowedUsers')}
+                  id="allowedUsers"
                   type="text"
                   className="input-field"
                   placeholder="user1@example.com, user2@example.com"
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  Enter email addresses separated by commas
-                </p>
-              </div>
+              </FormField>
 
               <div>
-                <label className="label-text">User Roles</label>
-                <div className="space-y-2">
+                <label className="label-text">User roles</label>
+                <div className="space-y-3 mt-2">
                   {roleOptions.map((role) => (
-                    <label key={role.value} className="flex items-center">
+                    <label key={role.value} className="flex items-center gap-3 cursor-pointer">
                       <input
                         type="checkbox"
                         value={role.value}
@@ -333,9 +333,9 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                           }
                         }}
                         defaultChecked={document.accessControl.allowedRoles.includes(role.value)}
-                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        className="rounded border-border text-navy focus:ring-navy w-5 h-5"
                       />
-                      <span className="ml-2 text-sm text-gray-700">{role.label}</span>
+                      <span className="text-sm text-text-secondary">{role.label}</span>
                     </label>
                   ))}
                 </div>
@@ -344,47 +344,40 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
           )}
 
           {/* Expiration */}
-          <div>
-            <label htmlFor="expiresIn" className="label-text">
-              Access Expires
-            </label>
-            <select {...register('expiresIn')} className="input-field">
+          <FormField label="Access expires" name="expiresIn">
+            <select {...register('expiresIn')} id="expiresIn" className="input-field">
               {expirationOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-          </div>
+          </FormField>
 
           {/* Notification Settings */}
-          <div className="flex items-center">
+          <label className="flex items-center gap-3 cursor-pointer">
             <input
               {...register('sendNotification')}
               type="checkbox"
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              className="rounded border-border text-navy focus:ring-navy w-5 h-5"
             />
-            <label className="ml-2 block text-sm text-gray-700">
-              Send notification emails to users when access is granted
-            </label>
-          </div>
+            <span className="text-text-secondary">Send notification emails to users when access is granted</span>
+          </label>
 
-          {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onCancel || (() => router.back())}
-              className="btn-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={shareDocumentMutation.isPending}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {shareDocumentMutation.isPending ? 'Updating...' : 'Update Sharing'}
-            </button>
+          {/* Actions - LEFT aligned per Practical UI */}
+          <div className="pt-6 border-t border-border">
+            <ButtonGroup>
+              <button
+                type="submit"
+                disabled={shareDocumentMutation.isPending}
+                className="btn-primary"
+              >
+                {shareDocumentMutation.isPending ? 'Updating...' : 'Update sharing'}
+              </button>
+              <TextLink onClick={onCancel || (() => router.back())}>
+                Cancel
+              </TextLink>
+            </ButtonGroup>
           </div>
         </form>
       )}

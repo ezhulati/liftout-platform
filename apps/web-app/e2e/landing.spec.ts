@@ -14,13 +14,13 @@ test.describe('Landing Pages', () => {
 
     // Verify For Companies section
     await expect(page.locator('text=For Companies')).toBeVisible();
-    await expect(page.locator("text=Tired of hiring individuals that don't gel?")).toBeVisible();
-    await expect(page.locator('text=Acquire Proven Teams')).toBeVisible();
+    await expect(page.locator('text=Stop building teams from scratch')).toBeVisible();
+    await expect(page.locator('text=Browse teams').first()).toBeVisible();
 
     // Verify For Teams section
     await expect(page.locator('text=For Teams')).toBeVisible();
-    await expect(page.locator('text=Ready for a new challenge together?')).toBeVisible();
-    await expect(page.locator('text=Register Your Team')).toBeVisible();
+    await expect(page.locator('text=Move together, grow together')).toBeVisible();
+    await expect(page.locator('text=Register team').first()).toBeVisible();
   });
 
   test('for-companies page loads correctly', async ({ page }) => {
@@ -29,8 +29,8 @@ test.describe('Landing Pages', () => {
 
     await page.screenshot({ path: 'test-results/for-companies.png', fullPage: true });
 
-    await expect(page.locator("text=Tired of hiring individuals that don't gel?")).toBeVisible();
-    await expect(page.locator('text=Start Acquiring Proven Teams')).toBeVisible();
+    await expect(page.locator('text=Tired of hiring individuals that never gel?')).toBeVisible();
+    await expect(page.locator('text=Browse teams').first()).toBeVisible();
   });
 
   test('for-teams page loads correctly', async ({ page }) => {
@@ -39,7 +39,7 @@ test.describe('Landing Pages', () => {
 
     await page.screenshot({ path: 'test-results/for-teams.png', fullPage: true });
 
-    await expect(page.locator("text=Ready for a new challenge, but don't want to break up your team?")).toBeVisible();
-    await expect(page.locator('text=Register Your Team').first()).toBeVisible();
+    await expect(page.locator('text=Ready for a new challenge without breaking up your team?')).toBeVisible();
+    await expect(page.locator('text=Register team').first()).toBeVisible();
   });
 });

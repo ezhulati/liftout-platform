@@ -9,32 +9,32 @@ import {
 
 const features = [
   {
-    name: 'Team Profile',
-    description: 'Showcase your collective achievements, collaboration history, and combined expertise. Let your track record speak for itself.',
+    name: 'Team profile',
+    description: 'Showcase collective achievements, collaboration history, and combined expertise. Let your track record speak for itself.',
     icon: UserGroupIcon,
   },
   {
-    name: 'AI-Powered Matching',
-    description: 'Our intelligent matching connects you with companies actively seeking your specific combination of skills and experience.',
+    name: 'AI-powered matching',
+    description: 'Intelligent matching connects you with companies actively seeking your specific combination of skills and experience.',
     icon: SparklesIcon,
   },
   {
-    name: 'Confidential Browsing',
+    name: 'Confidential browsing',
     description: 'Explore opportunities without exposing your current employment. Your identity stays protected until you choose to engage.',
     icon: EyeSlashIcon,
   },
   {
-    name: 'Negotiation Support',
+    name: 'Negotiation support',
     description: 'Tools and guidance to structure fair collective compensation packages. Leverage your combined value effectively.',
     icon: ScaleIcon,
   },
   {
-    name: 'Culture Fit Assessment',
-    description: 'Evaluate potential employers before committing. Ensure the company aligns with your team\'s values and working style.',
+    name: 'Culture fit assessment',
+    description: 'Evaluate potential employers before committing. Ensure the company aligns with your team values and working style.',
     icon: HeartIcon,
   },
   {
-    name: 'Transition Coordination',
+    name: 'Transition coordination',
     description: 'Manage the logistics of moving together smoothly. Coordinated onboarding and integration support.',
     icon: TruckIcon,
   },
@@ -51,8 +51,8 @@ export function TeamFeatures() {
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
           {/* Eyebrow */}
-          <p className="text-gold-600 font-semibold tracking-wider uppercase text-xs mb-4">
-            Platform Features
+          <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
+            Platform features
           </p>
 
           {/* Headline */}
@@ -105,7 +105,7 @@ export function TeamFeatures() {
         <div className="mt-20 lg:mt-28">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
-              Your Journey to the Next Chapter
+              Your journey to the next chapter
             </h3>
             <p className="font-body text-text-secondary leading-relaxed">
               A confidential, team-first process designed for high-performing groups.
@@ -116,22 +116,22 @@ export function TeamFeatures() {
             {[
               {
                 step: '01',
-                title: 'Create Your Profile',
-                description: 'Showcase your team\'s achievements, dynamics, and collective expertise.',
+                title: 'Create your profile',
+                description: 'Showcase your team achievements, dynamics, and collective expertise.',
               },
               {
                 step: '02',
-                title: 'Get Matched',
-                description: 'Our AI connects you with companies seeking teams with your skills.',
+                title: 'Get matched',
+                description: 'AI connects you with companies seeking teams with your skills.',
               },
               {
                 step: '03',
-                title: 'Evaluate Opportunities',
+                title: 'Evaluate opportunities',
                 description: 'Explore companies, assess culture fit, and review terms confidentially.',
               },
               {
                 step: '04',
-                title: 'Move Together',
+                title: 'Move together',
                 description: 'Transition as a unit with coordinated onboarding and support.',
               },
             ].map((item) => (

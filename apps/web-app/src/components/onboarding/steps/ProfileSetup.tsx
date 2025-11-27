@@ -12,6 +12,7 @@ import {
   AcademicCapIcon,
   CheckIcon,
 } from '@heroicons/react/24/outline';
+import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
 
 const profileSetupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -170,227 +171,166 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Basic Information */}
-        <div className="space-y-4">
-          <h4 className="text-md font-medium text-gray-900 flex items-center">
-            <UserIcon className="h-5 w-5 mr-2 text-gray-400" />
-            Basic Information
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <RequiredFieldsNote />
+
+        {/* Basic Information - Single column per Practical UI */}
+        <div className="space-y-5">
+          <h4 className="text-base font-medium text-text-primary flex items-center">
+            <UserIcon className="h-5 w-5 mr-2 text-text-tertiary" />
+            Basic information
           </h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="label-text">
-                First Name *
-              </label>
-              <input
-                {...register('firstName')}
-                type="text"
-                className="input-field"
-                placeholder="John"
-              />
-              {errors.firstName && (
-                <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
-              )}
-            </div>
 
-            <div>
-              <label htmlFor="lastName" className="label-text">
-                Last Name *
-              </label>
-              <input
-                {...register('lastName')}
-                type="text"
-                className="input-field"
-                placeholder="Doe"
-              />
-              {errors.lastName && (
-                <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
-              )}
-            </div>
+          <FormField label="First name" name="firstName" required error={errors.firstName?.message}>
+            <input
+              {...register('firstName')}
+              id="firstName"
+              type="text"
+              className="input-field"
+              placeholder="John"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="title" className="label-text">
-                Professional Title *
-              </label>
-              <input
-                {...register('title')}
-                type="text"
-                className="input-field"
-                placeholder="Senior Software Engineer"
-              />
-              {errors.title && (
-                <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-              )}
-            </div>
+          <FormField label="Last name" name="lastName" required error={errors.lastName?.message}>
+            <input
+              {...register('lastName')}
+              id="lastName"
+              type="text"
+              className="input-field"
+              placeholder="Doe"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="seniorityLevel" className="label-text">
-                Seniority Level *
-              </label>
-              <select {...register('seniorityLevel')} className="input-field">
-                <option value="">Select seniority level</option>
-                {seniorityLevels.map((level) => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </select>
-              {errors.seniorityLevel && (
-                <p className="mt-1 text-sm text-red-600">{errors.seniorityLevel.message}</p>
-              )}
-            </div>
+          <FormField label="Professional title" name="title" required error={errors.title?.message}>
+            <input
+              {...register('title')}
+              id="title"
+              type="text"
+              className="input-field"
+              placeholder="Senior Software Engineer"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="location" className="label-text">
-                Location *
-              </label>
-              <input
-                {...register('location')}
-                type="text"
-                className="input-field"
-                placeholder="San Francisco, CA"
-              />
-              {errors.location && (
-                <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
-              )}
-            </div>
+          <FormField label="Seniority level" name="seniorityLevel" required error={errors.seniorityLevel?.message}>
+            <select {...register('seniorityLevel')} id="seniorityLevel" className="input-field">
+              <option value="">Select seniority level</option>
+              {seniorityLevels.map((level) => (
+                <option key={level.value} value={level.value}>
+                  {level.label}
+                </option>
+              ))}
+            </select>
+          </FormField>
 
-            <div>
-              <label htmlFor="linkedinUrl" className="label-text">
-                LinkedIn URL
-              </label>
-              <input
-                {...register('linkedinUrl')}
-                type="url"
-                className="input-field"
-                placeholder="https://linkedin.com/in/johndoe"
-              />
-              {errors.linkedinUrl && (
-                <p className="mt-1 text-sm text-red-600">{errors.linkedinUrl.message}</p>
-              )}
-            </div>
-          </div>
+          <FormField label="Location" name="location" required error={errors.location?.message}>
+            <input
+              {...register('location')}
+              id="location"
+              type="text"
+              className="input-field"
+              placeholder="San Francisco, CA"
+            />
+          </FormField>
 
-          <div>
-            <label htmlFor="bio" className="label-text">
-              Professional Bio *
-            </label>
+          <FormField label="LinkedIn URL" name="linkedinUrl" error={errors.linkedinUrl?.message}>
+            <input
+              {...register('linkedinUrl')}
+              id="linkedinUrl"
+              type="url"
+              className="input-field"
+              placeholder="https://linkedin.com/in/johndoe"
+            />
+          </FormField>
+
+          <FormField label="Professional bio" name="bio" required error={errors.bio?.message}>
             <textarea
               {...register('bio')}
+              id="bio"
               rows={3}
               className="input-field"
               placeholder="Tell us about your background, expertise, and what drives you professionally..."
             />
-            {errors.bio && (
-              <p className="mt-1 text-sm text-red-600">{errors.bio.message}</p>
-            )}
-          </div>
+          </FormField>
         </div>
 
         {/* Experience */}
-        <div className="space-y-4">
-          <h4 className="text-md font-medium text-gray-900 flex items-center">
-            <BriefcaseIcon className="h-5 w-5 mr-2 text-gray-400" />
+        <div className="space-y-5">
+          <h4 className="text-base font-medium text-text-primary flex items-center">
+            <BriefcaseIcon className="h-5 w-5 mr-2 text-text-tertiary" />
             Experience
           </h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="experience.totalYears" className="label-text">
-                Years of Experience *
-              </label>
-              <input
-                {...register('experience.totalYears', { valueAsNumber: true })}
-                type="number"
-                min="0"
-                max="50"
-                className="input-field"
-                placeholder="5"
-              />
-              {errors.experience?.totalYears && (
-                <p className="mt-1 text-sm text-red-600">{errors.experience.totalYears.message}</p>
-              )}
-            </div>
 
-            <div>
-              <label htmlFor="experience.currentCompany" className="label-text">
-                Current Company *
-              </label>
-              <input
-                {...register('experience.currentCompany')}
-                type="text"
-                className="input-field"
-                placeholder="TechCorp Inc."
-              />
-              {errors.experience?.currentCompany && (
-                <p className="mt-1 text-sm text-red-600">{errors.experience.currentCompany.message}</p>
-              )}
-            </div>
+          <FormField label="Years of experience" name="experience.totalYears" required error={errors.experience?.totalYears?.message}>
+            <input
+              {...register('experience.totalYears', { valueAsNumber: true })}
+              id="experience.totalYears"
+              type="number"
+              min="0"
+              max="50"
+              className="input-field"
+              placeholder="5"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="experience.currentRole" className="label-text">
-                Current Role *
-              </label>
-              <input
-                {...register('experience.currentRole')}
-                type="text"
-                className="input-field"
-                placeholder="Senior Engineer"
-              />
-              {errors.experience?.currentRole && (
-                <p className="mt-1 text-sm text-red-600">{errors.experience.currentRole.message}</p>
-              )}
-            </div>
-          </div>
+          <FormField label="Current company" name="experience.currentCompany" required error={errors.experience?.currentCompany?.message}>
+            <input
+              {...register('experience.currentCompany')}
+              id="experience.currentCompany"
+              type="text"
+              className="input-field"
+              placeholder="TechCorp Inc."
+            />
+          </FormField>
+
+          <FormField label="Current role" name="experience.currentRole" required error={errors.experience?.currentRole?.message}>
+            <input
+              {...register('experience.currentRole')}
+              id="experience.currentRole"
+              type="text"
+              className="input-field"
+              placeholder="Senior Engineer"
+            />
+          </FormField>
         </div>
 
         {/* Education */}
-        <div className="space-y-4">
-          <h4 className="text-md font-medium text-gray-900 flex items-center">
-            <AcademicCapIcon className="h-5 w-5 mr-2 text-gray-400" />
-            Education (Optional)
+        <div className="space-y-5">
+          <h4 className="text-base font-medium text-text-primary flex items-center">
+            <AcademicCapIcon className="h-5 w-5 mr-2 text-text-tertiary" />
+            Education (optional)
           </h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="education.degree" className="label-text">
-                Degree
-              </label>
-              <input
-                {...register('education.degree')}
-                type="text"
-                className="input-field"
-                placeholder="Bachelor of Science"
-              />
-            </div>
 
-            <div>
-              <label htmlFor="education.school" className="label-text">
-                School/University
-              </label>
-              <input
-                {...register('education.school')}
-                type="text"
-                className="input-field"
-                placeholder="Stanford University"
-              />
-            </div>
+          <FormField label="Degree" name="education.degree">
+            <input
+              {...register('education.degree')}
+              id="education.degree"
+              type="text"
+              className="input-field"
+              placeholder="Bachelor of Science"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="education.year" className="label-text">
-                Graduation Year
-              </label>
-              <input
-                {...register('education.year', { valueAsNumber: true })}
-                type="number"
-                min="1950"
-                max={new Date().getFullYear() + 10}
-                className="input-field"
-                placeholder="2020"
-              />
-            </div>
-          </div>
+          <FormField label="School/university" name="education.school">
+            <input
+              {...register('education.school')}
+              id="education.school"
+              type="text"
+              className="input-field"
+              placeholder="Stanford University"
+            />
+          </FormField>
+
+          <FormField label="Graduation year" name="education.year">
+            <input
+              {...register('education.year', { valueAsNumber: true })}
+              id="education.year"
+              type="number"
+              min="1950"
+              max={new Date().getFullYear() + 10}
+              className="input-field"
+              placeholder="2020"
+            />
+          </FormField>
         </div>
 
         {/* Skills */}
@@ -490,18 +430,8 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
           )}
         </div>
 
-        {/* Submit Button */}
-        <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-          {onSkip && (
-            <button
-              type="button"
-              onClick={onSkip}
-              className="btn-secondary"
-              disabled={isSubmitting}
-            >
-              Skip for now
-            </button>
-          )}
+        {/* Submit Button - LEFT aligned per Practical UI */}
+        <ButtonGroup>
           <button
             type="submit"
             disabled={isSubmitting}
@@ -513,10 +443,15 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
                 Saving...
               </div>
             ) : (
-              'Save Profile'
+              'Save profile'
             )}
           </button>
-        </div>
+          {onSkip && (
+            <TextLink onClick={onSkip} disabled={isSubmitting}>
+              Skip for now
+            </TextLink>
+          )}
+        </ButtonGroup>
       </form>
     </div>
   );

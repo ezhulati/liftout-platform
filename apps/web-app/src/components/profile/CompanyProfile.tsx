@@ -365,13 +365,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
               />
               
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-text-primary">
                   {profileData.companyName || 'Company Name'}
                 </h1>
-                <p className="text-lg text-gray-600 mt-1">
+                <p className="text-lg text-text-secondary mt-1">
                   {profileData.tagline || 'Company tagline'}
                 </p>
-                <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                <div className="flex items-center space-x-4 mt-2 text-sm text-text-tertiary">
                   <div className="flex items-center space-x-1">
                     <MapPinIcon className="h-4 w-4" />
                     <span>{profileData.headquarters || 'Location not set'}</span>
@@ -385,17 +385,17 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                     <span>Founded {profileData.foundedYear}</span>
                   </div>
                 </div>
-                
+
                 {/* Trust Score */}
                 <div className="flex items-center space-x-2 mt-3">
-                  <ShieldCheckIcon className={`h-5 w-5 ${profileData.verified ? 'text-green-500' : 'text-gray-400'}`} />
+                  <ShieldCheckIcon className={`h-5 w-5 ${profileData.verified ? 'text-success' : 'text-text-tertiary'}`} />
                   <span className="text-sm font-medium">
-                    {profileData.verified ? 'Verified Company' : 'Unverified'}
+                    {profileData.verified ? 'Verified company' : 'Unverified'}
                   </span>
                   {profileData.trustScore > 0 && (
                     <div className="flex items-center space-x-1 ml-4">
-                      <StarSolidIcon className="h-4 w-4 text-yellow-400" />
-                      <span className="text-sm font-medium">{profileData.trustScore}/5.0 Trust Score</span>
+                      <StarSolidIcon className="h-4 w-4 text-gold" />
+                      <span className="text-sm font-medium">{profileData.trustScore}/5.0 trust score</span>
                     </div>
                   )}
                 </div>
@@ -434,12 +434,12 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           {/* Profile Completeness */}
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Profile Completeness</span>
-              <span className="text-sm text-gray-500">{completeness}%</span>
+              <span className="text-sm font-medium text-text-secondary">Profile completeness</span>
+              <span className="text-sm text-text-tertiary">{completeness}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+            <div className="w-full bg-bg-alt rounded-full h-2">
+              <div
+                className="bg-navy-500 h-2 rounded-full transition-all duration-fast"
                 style={{ width: `${completeness}%` }}
               />
             </div>
@@ -448,11 +448,11 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'overview', label: 'Overview', icon: BuildingOfficeIcon },
-            { id: 'culture', label: 'Culture & Values', icon: StarIcon },
+            { id: 'culture', label: 'Culture & values', icon: StarIcon },
             { id: 'team', label: 'Team', icon: UsersIcon },
             { id: 'benefits', label: 'Benefits', icon: TrophyIcon },
             { id: 'hiring', label: 'Hiring', icon: BriefcaseIcon },
@@ -461,10 +461,10 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-fast ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy-500 text-navy-600'
+                  : 'border-transparent text-text-tertiary hover:text-text-secondary hover:border-border'
               }`}
             >
               <tab.icon className="h-5 w-5 mr-2" />

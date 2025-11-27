@@ -1,0 +1,194 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "Liftout Home" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7] [cursor=pointer]: L
+          - generic [ref=e8] [cursor=pointer]: Liftout
+        - generic [ref=e9]:
+          - link "For Companies" [ref=e10] [cursor=pointer]:
+            - /url: /for-companies
+          - link "For Teams" [ref=e11] [cursor=pointer]:
+            - /url: /for-teams
+          - link "Sign In" [ref=e12] [cursor=pointer]:
+            - /url: /auth/signin
+        - link "Get Started" [ref=e13] [cursor=pointer]:
+          - /url: /auth/signup
+  - main [ref=e14]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - img [ref=e20]
+        - paragraph [ref=e22]: For Companies
+        - heading "Tired of hiring individuals that don't gel?" [level=1] [ref=e23]:
+          - text: Tired of hiring individuals that
+          - generic [ref=e24]: don't gel?
+        - paragraph [ref=e25]: Acquire proven, intact teams that hit the ground running. Zero team-building phase, verified track records, immediate productivity.
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - img [ref=e29]
+            - generic [ref=e31]: Zero team-building phase - immediate productivity
+          - generic [ref=e32]:
+            - img [ref=e34]
+            - generic [ref=e36]: Verified track records - quantifiable performance history
+          - generic [ref=e37]:
+            - img [ref=e39]
+            - generic [ref=e41]: Lower risk than M&A - strategic alternative to acquisitions
+          - generic [ref=e42]:
+            - img [ref=e44]
+            - generic [ref=e46]: Competitive advantage - weaken competitors while strengthening yourself
+        - generic [ref=e47]:
+          - link "Start Acquiring Proven Teams" [ref=e48] [cursor=pointer]:
+            - /url: /auth/signup?type=company
+            - text: Start Acquiring Proven Teams
+            - img [ref=e49] [cursor=pointer]
+          - link "See How It Works" [ref=e51] [cursor=pointer]:
+            - /url: "#features"
+      - generic [ref=e53]:
+        - heading "Why Companies Choose Liftout" [level=3] [ref=e54]
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: 3x
+            - generic [ref=e58]: Faster time to productivity vs individual hiring
+          - generic [ref=e59]:
+            - generic [ref=e60]: 67%
+            - generic [ref=e61]: Lower integration risk compared to M&A
+          - generic [ref=e62]:
+            - generic [ref=e63]: 85%
+            - generic [ref=e64]: Team retention rate after 2 years
+          - generic [ref=e65]:
+            - generic [ref=e66]: 40%
+            - generic [ref=e67]: Cost savings vs building teams from scratch
+        - generic [ref=e68]:
+          - paragraph [ref=e69]: Trusted by industry leaders
+          - generic [ref=e70]:
+            - generic [ref=e73]: Finance
+            - generic [ref=e76]: Technology
+            - generic [ref=e79]: Healthcare
+            - generic [ref=e82]: Consulting
+    - region "Everything you need to acquire proven teams" [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - paragraph [ref=e86]: Platform Features
+          - heading "Everything you need to acquire proven teams" [level=2] [ref=e87]
+          - paragraph [ref=e88]: Our platform streamlines the entire team acquisition process, from discovery through successful integration.
+        - generic [ref=e89]:
+          - article [ref=e90]:
+            - img [ref=e92]
+            - heading "Team Discovery" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Browse verified high-performing teams filtered by industry, skills, location, and availability. Find the perfect match for your strategic needs.
+          - article [ref=e97]:
+            - img [ref=e99]
+            - heading "Due Diligence Tools" [level=3] [ref=e101]
+            - paragraph [ref=e102]: Access comprehensive reference checks, performance verification, and cultural fit assessments before making your decision.
+          - article [ref=e104]:
+            - img [ref=e106]
+            - heading "Confidential Process" [level=3] [ref=e108]
+            - paragraph [ref=e109]: Discrete exploration and negotiation that protects sensitive information and maintains professional relationships.
+          - article [ref=e111]:
+            - img [ref=e113]
+            - heading "Integration Planning" [level=3] [ref=e115]
+            - paragraph [ref=e116]: Structured onboarding roadmaps, success metrics, and milestone tracking to ensure seamless team transitions.
+          - article [ref=e118]:
+            - img [ref=e120]
+            - heading "Market Intelligence" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Industry-specific compensation benchmarks, talent flow trends, and competitive landscape insights.
+          - article [ref=e125]:
+            - img [ref=e127]
+            - heading "Success Analytics" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Track ROI on team acquisitions, monitor integration outcomes, and measure long-term business impact.
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - heading "How Team Acquisition Works" [level=3] [ref=e134]
+            - paragraph [ref=e135]: A streamlined process designed for strategic, confidential talent acquisition.
+          - generic [ref=e136]:
+            - generic [ref=e137]:
+              - generic [ref=e139]: "01"
+              - heading "Define Your Needs" [level=4] [ref=e140]
+              - paragraph [ref=e141]: Specify the team profile, skills, and strategic objectives for your acquisition.
+            - generic [ref=e142]:
+              - generic [ref=e144]: "02"
+              - heading "Discover Teams" [level=4] [ref=e145]
+              - paragraph [ref=e146]: Browse verified teams that match your criteria, all with documented track records.
+            - generic [ref=e147]:
+              - generic [ref=e149]: "03"
+              - heading "Due Diligence" [level=4] [ref=e150]
+              - paragraph [ref=e151]: Conduct reference checks, cultural assessments, and performance verification.
+            - generic [ref=e152]:
+              - generic [ref=e154]: "04"
+              - heading "Integrate & Succeed" [level=4] [ref=e155]
+              - paragraph [ref=e156]: Execute a structured transition with onboarding support and success tracking.
+    - region "Acquire the teams that will drive your next phase of growth" [ref=e157]:
+      - generic [ref=e158]:
+        - paragraph [ref=e159]: Ready to Transform Your Talent Strategy?
+        - heading "Acquire the teams that will drive your next phase of growth" [level=2] [ref=e160]:
+          - text: Acquire the teams that will
+          - generic [ref=e161]: drive your next phase of growth
+        - paragraph [ref=e162]: Stop building teams from scratch. Access proven, intact teams with verified track records who are ready to deliver immediate impact.
+        - generic [ref=e163]:
+          - link "Start Acquiring Teams" [ref=e164] [cursor=pointer]:
+            - /url: /auth/signup?type=company
+            - text: Start Acquiring Teams
+            - img [ref=e165] [cursor=pointer]
+          - link "Looking to Register a Team?" [ref=e167] [cursor=pointer]:
+            - /url: /for-teams
+        - paragraph [ref=e168]:
+          - text: Already have an account?
+          - link "Sign in here" [ref=e169] [cursor=pointer]:
+            - /url: /auth/signin
+        - generic [ref=e171]:
+          - generic [ref=e172]:
+            - heading "Immediate Impact" [level=3] [ref=e173]
+            - paragraph [ref=e174]: Teams hit the ground running with established collaboration patterns.
+          - generic [ref=e175]:
+            - heading "Verified Quality" [level=3] [ref=e176]
+            - paragraph [ref=e177]: Every team comes with documented performance history and references.
+          - generic [ref=e178]:
+            - heading "Confidential Process" [level=3] [ref=e179]
+            - paragraph [ref=e180]: Discrete exploration protects all parties throughout negotiations.
+  - contentinfo [ref=e181]:
+    - generic [ref=e182]:
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - link "Liftout Home" [ref=e185] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e187] [cursor=pointer]: L
+            - generic [ref=e188] [cursor=pointer]: Liftout
+          - paragraph [ref=e189]: The premier platform for strategic team acquisition. Connect companies with proven, intact teams ready for new opportunities.
+          - generic [ref=e190]:
+            - link "For Companies" [ref=e191] [cursor=pointer]:
+              - /url: /for-companies
+            - generic [ref=e192]: "|"
+            - link "For Teams" [ref=e193] [cursor=pointer]:
+              - /url: /for-teams
+        - navigation "Platform navigation" [ref=e194]:
+          - heading "Platform" [level=3] [ref=e195]
+          - list [ref=e196]:
+            - listitem [ref=e197]:
+              - link "Get Started" [ref=e198] [cursor=pointer]:
+                - /url: /auth/signup
+            - listitem [ref=e199]:
+              - link "Sign In" [ref=e200] [cursor=pointer]:
+                - /url: /auth/signin
+            - listitem [ref=e201]:
+              - link "Features" [ref=e202] [cursor=pointer]:
+                - /url: "#features"
+        - navigation "Support navigation" [ref=e203]:
+          - heading "Support" [level=3] [ref=e204]
+          - list [ref=e205]:
+            - listitem [ref=e206]:
+              - link "support@liftout.io" [ref=e207] [cursor=pointer]:
+                - /url: mailto:support@liftout.io
+            - listitem [ref=e208]:
+              - link "Privacy Policy" [ref=e209] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e210]:
+              - link "Terms of Service" [ref=e211] [cursor=pointer]:
+                - /url: /terms
+      - generic [ref=e213]:
+        - paragraph [ref=e214]: © 2025 Liftout. All rights reserved.
+        - paragraph [ref=e215]: Strategic Team Acquisition Platform
+```

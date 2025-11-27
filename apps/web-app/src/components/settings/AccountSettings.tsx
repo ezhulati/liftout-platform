@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { signOut } from 'next-auth/react';
-import { 
+import {
   Cog6ToothIcon,
-  DocumentArrowDownIcon,
   ExclamationTriangleIcon,
   TrashIcon,
   PauseIcon,
@@ -22,6 +21,7 @@ import {
   DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
+import { ButtonGroup, TextLink } from '@/components/ui';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -34,45 +34,44 @@ interface ConfirmationModalProps {
   isDestructive?: boolean;
 }
 
-function ConfirmationModal({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
-  title, 
-  description, 
-  confirmText, 
-  confirmButtonClass = "bg-red-600 hover:bg-red-700",
-  isDestructive = true 
+function ConfirmationModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  description,
+  confirmText,
+  confirmButtonClass = "bg-error hover:bg-error-dark",
+  isDestructive = true
 }: ConfirmationModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="px-6 py-4">
+    <div className="fixed inset-0 bg-navy-900/75 flex items-center justify-center p-4 z-50">
+      <div className="bg-bg-surface rounded-lg max-w-md w-full shadow-xl">
+        <div className="px-6 py-5">
           <div className="flex items-center">
             {isDestructive ? (
-              <ExclamationTriangleIcon className="h-6 w-6 text-red-600 mr-3" />
+              <ExclamationTriangleIcon className="h-6 w-6 text-error mr-3" />
             ) : (
-              <CheckCircleIcon className="h-6 w-6 text-blue-600 mr-3" />
+              <CheckCircleIcon className="h-6 w-6 text-info mr-3" />
             )}
-            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+            <h3 className="text-lg font-medium text-text-primary">{title}</h3>
           </div>
-          <p className="mt-2 text-sm text-gray-600">{description}</p>
+          <p className="mt-2 text-sm text-text-secondary">{description}</p>
         </div>
-        <div className="px-6 py-3 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className={`px-4 py-2 text-sm font-medium text-white rounded-md ${confirmButtonClass}`}
-          >
-            {confirmText}
-          </button>
+        <div className="px-6 py-4 bg-bg-alt rounded-b-lg">
+          <ButtonGroup>
+            <button
+              onClick={onConfirm}
+              className={`btn-primary ${isDestructive ? confirmButtonClass : ''}`}
+            >
+              {confirmText}
+            </button>
+            <TextLink onClick={onClose}>
+              Cancel
+            </TextLink>
+          </ButtonGroup>
         </div>
       </div>
     </div>
@@ -179,89 +178,89 @@ export function AccountSettings() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="pb-4 border-b border-gray-200">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Account Management</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="pb-4 border-b border-border">
+        <h3 className="text-lg font-medium text-text-primary">Account management</h3>
+        <p className="mt-1 text-sm text-text-secondary">
           Manage your account preferences, data, and account status.
         </p>
       </div>
 
       {/* Account Information */}
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h4 className="text-base font-medium text-gray-900 flex items-center">
-            <UserIcon className="h-5 w-5 text-gray-400 mr-2" />
-            Account Information
+      <div className="card">
+        <div className="px-6 py-4 border-b border-border">
+          <h4 className="text-base font-medium text-text-primary flex items-center">
+            <UserIcon className="h-5 w-5 text-text-tertiary mr-2" />
+            Account information
           </h4>
         </div>
         <div className="px-6 py-4">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-medium text-gray-500 flex items-center">
+              <dt className="text-sm font-medium text-text-tertiary flex items-center">
                 <EnvelopeIcon className="h-4 w-4 mr-1" />
                 Email
               </dt>
-              <dd className="mt-1 text-sm text-gray-900 flex items-center">
+              <dd className="mt-1 text-sm text-text-primary flex items-center">
                 {user?.email}
                 {user?.verified ? (
-                  <CheckCircleIcon className="h-4 w-4 text-green-500 ml-2" title="Verified" />
+                  <CheckCircleIcon className="h-4 w-4 text-success ml-2" title="Verified" />
                 ) : (
-                  <XCircleIcon className="h-4 w-4 text-red-500 ml-2" title="Not verified" />
+                  <XCircleIcon className="h-4 w-4 text-error ml-2" title="Not verified" />
                 )}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-gray-500 flex items-center">
+              <dt className="text-sm font-medium text-text-tertiary flex items-center">
                 <PhoneIcon className="h-4 w-4 mr-1" />
                 Phone
               </dt>
-              <dd className="mt-1 text-sm text-gray-900 flex items-center">
+              <dd className="mt-1 text-sm text-text-primary flex items-center">
                 {user?.phone || 'Not provided'}
                 {settings.account.phoneVerified ? (
-                  <CheckCircleIcon className="h-4 w-4 text-green-500 ml-2" title="Verified" />
+                  <CheckCircleIcon className="h-4 w-4 text-success ml-2" title="Verified" />
                 ) : (
-                  <XCircleIcon className="h-4 w-4 text-red-500 ml-2" title="Not verified" />
+                  <XCircleIcon className="h-4 w-4 text-error ml-2" title="Not verified" />
                 )}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-gray-500 flex items-center">
+              <dt className="text-sm font-medium text-text-tertiary flex items-center">
                 <CalendarIcon className="h-4 w-4 mr-1" />
-                Member Since
+                Member since
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dd className="mt-1 text-sm text-text-primary">
                 {settings.account.memberSince.toLocaleDateString()}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-gray-500 flex items-center">
+              <dt className="text-sm font-medium text-text-tertiary flex items-center">
                 <ClockIcon className="h-4 w-4 mr-1" />
-                Last Login
+                Last login
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {settings.account.lastLogin 
+              <dd className="mt-1 text-sm text-text-primary">
+                {settings.account.lastLogin
                   ? settings.account.lastLogin.toLocaleDateString()
                   : 'Never'
                 }
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-gray-500">Account Status</dt>
+              <dt className="text-sm font-medium text-text-tertiary">Account status</dt>
               <dd className="mt-1">
                 <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                  settings.account.accountStatus === 'active' 
-                    ? 'bg-green-100 text-green-800'
+                  settings.account.accountStatus === 'active'
+                    ? 'bg-success-light text-success-dark'
                     : settings.account.accountStatus === 'pending'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-red-100 text-red-800'
+                    ? 'bg-gold-100 text-gold-800'
+                    : 'bg-error-light text-error-dark'
                 }`}>
                   {settings.account.accountStatus}
                 </span>
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-gray-500">Profile Completion</dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dt className="text-sm font-medium text-text-tertiary">Profile completion</dt>
+              <dd className="mt-1 text-sm text-text-primary">
                 {settings.account.profileCompletion}%
               </dd>
             </div>
@@ -270,118 +269,110 @@ export function AccountSettings() {
       </div>
 
       {/* Data Management */}
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h4 className="text-base font-medium text-gray-900 flex items-center">
-            <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-2" />
-            Data Management
+      <div className="card">
+        <div className="px-6 py-4 border-b border-border">
+          <h4 className="text-base font-medium text-text-primary flex items-center">
+            <DocumentTextIcon className="h-5 w-5 text-text-tertiary mr-2" />
+            Data management
           </h4>
         </div>
         <div className="px-6 py-4 space-y-4">
           {/* Export Data */}
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
             <div>
-              <h5 className="text-sm font-medium text-gray-900">Export Account Data</h5>
-              <p className="text-sm text-gray-500">
+              <h5 className="text-sm font-medium text-text-primary">Export account data</h5>
+              <p className="text-sm text-text-secondary">
                 Download a copy of your account data including profile, applications, and messages.
               </p>
             </div>
             <button
               onClick={handleExportData}
               disabled={isExporting}
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md border ${
-                isExporting 
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-              }`}
+              className={`btn-outline flex items-center ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isExporting ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-tertiary mr-2"></div>
                   Exporting...
                 </>
               ) : (
                 <>
                   <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
-                  Export Data
+                  Export data
                 </>
               )}
             </button>
           </div>
 
           {/* Import Settings */}
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
             <div>
-              <h5 className="text-sm font-medium text-gray-900">Import Settings</h5>
-              <p className="text-sm text-gray-500">
+              <h5 className="text-sm font-medium text-text-primary">Import settings</h5>
+              <p className="text-sm text-text-secondary">
                 Import your settings from a previously exported file.
               </p>
             </div>
             <button
               onClick={handleImportSettings}
               disabled={isImporting}
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md border ${
-                isImporting 
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-              }`}
+              className={`btn-outline flex items-center ${isImporting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isImporting ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-tertiary mr-2"></div>
                   Importing...
                 </>
               ) : (
                 <>
                   <ArrowUpTrayIcon className="h-4 w-4 mr-2" />
-                  Import Settings
+                  Import settings
                 </>
               )}
             </button>
           </div>
 
           {/* Reset Settings */}
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
             <div>
-              <h5 className="text-sm font-medium text-gray-900">Reset Settings</h5>
-              <p className="text-sm text-gray-500">
+              <h5 className="text-sm font-medium text-text-primary">Reset settings</h5>
+              <p className="text-sm text-text-secondary">
                 Reset all settings to their default values. This cannot be undone.
               </p>
             </div>
             <button
               onClick={() => setShowResetModal(true)}
-              className="flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100"
+              className="flex items-center px-4 py-2 text-sm font-medium text-error-dark bg-error-light border border-error rounded-md hover:bg-error/20 transition-colors duration-fast"
             >
               <Cog6ToothIcon className="h-4 w-4 mr-2" />
-              Reset Settings
+              Reset settings
             </button>
           </div>
         </div>
       </div>
 
       {/* Privacy Preferences */}
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h4 className="text-base font-medium text-gray-900">Privacy Preferences</h4>
+      <div className="card">
+        <div className="px-6 py-4 border-b border-border">
+          <h4 className="text-base font-medium text-text-primary">Privacy preferences</h4>
         </div>
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h5 className="text-sm font-medium text-gray-900">Marketing Communications</h5>
-              <p className="text-sm text-gray-500">
+              <h5 className="text-sm font-medium text-text-primary">Marketing communications</h5>
+              <p className="text-sm text-text-secondary">
                 Receive emails about new features, product updates, and industry insights.
               </p>
             </div>
             <button
               onClick={handleMarketingConsentToggle}
               className={`${
-                settings.account.marketingConsent ? 'bg-primary-600' : 'bg-gray-200'
-              } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
+                settings.account.marketingConsent ? 'bg-navy' : 'bg-bg-alt'
+              } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy`}
             >
               <span
                 className={`${
                   settings.account.marketingConsent ? 'translate-x-5' : 'translate-x-0'
-                } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}
+                } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-base`}
               />
             </button>
           </div>
@@ -391,21 +382,21 @@ export function AccountSettings() {
       {/* Account Actions */}
       <div className="space-y-4">
         {/* Deactivate Account */}
-        <div className="bg-white shadow rounded-lg">
+        <div className="card">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-base font-medium text-gray-900 flex items-center">
-                  <PauseIcon className="h-5 w-5 text-yellow-500 mr-2" />
-                  Deactivate Account
+                <h4 className="text-base font-medium text-text-primary flex items-center">
+                  <PauseIcon className="h-5 w-5 text-gold mr-2" />
+                  Deactivate account
                 </h4>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Temporarily deactivate your account. You can reactivate it at any time by signing in.
                 </p>
               </div>
               <button
                 onClick={() => setShowDeactivateModal(true)}
-                className="bg-yellow-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                className="bg-gold text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gold-700 transition-colors duration-fast focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold"
               >
                 Deactivate
               </button>
@@ -414,23 +405,23 @@ export function AccountSettings() {
         </div>
 
         {/* Delete Account */}
-        <div className="bg-red-50 border border-red-200 rounded-lg">
+        <div className="bg-error-light border border-error rounded-lg">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-base font-medium text-red-800 flex items-center">
-                  <TrashIcon className="h-5 w-5 text-red-600 mr-2" />
-                  Delete Account
+                <h4 className="text-base font-medium text-error-dark flex items-center">
+                  <TrashIcon className="h-5 w-5 text-error mr-2" />
+                  Delete account
                 </h4>
-                <p className="text-sm text-red-700 mt-1">
+                <p className="text-sm text-error-dark/80 mt-1">
                   Permanently delete your account and all associated data. This action cannot be undone.
                 </p>
               </div>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                className="btn-danger"
               >
-                Delete Account
+                Delete account
               </button>
             </div>
           </div>
@@ -442,10 +433,10 @@ export function AccountSettings() {
         isOpen={showDeactivateModal}
         onClose={() => setShowDeactivateModal(false)}
         onConfirm={handleDeactivateAccount}
-        title="Deactivate Account"
+        title="Deactivate account"
         description="Are you sure you want to deactivate your account? You can reactivate it anytime by signing in."
         confirmText="Deactivate"
-        confirmButtonClass="bg-yellow-600 hover:bg-yellow-700"
+        confirmButtonClass="bg-gold hover:bg-gold-700"
         isDestructive={false}
       />
 
@@ -453,18 +444,18 @@ export function AccountSettings() {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDeleteAccount}
-        title="Delete Account"
+        title="Delete account"
         description="This will permanently delete your account and all associated data. This action cannot be undone. Are you absolutely sure?"
-        confirmText="Delete Forever"
+        confirmText="Delete forever"
       />
 
       <ConfirmationModal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
         onConfirm={handleResetSettings}
-        title="Reset Settings"
+        title="Reset settings"
         description="This will reset all your settings to their default values. This action cannot be undone."
-        confirmText="Reset Settings"
+        confirmText="Reset settings"
       />
     </div>
   );

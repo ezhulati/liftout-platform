@@ -29,12 +29,12 @@ function classNames(...classes: string[]) {
 }
 
 const statusColors = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  under_review: 'bg-blue-100 text-blue-800',
-  interview_scheduled: 'bg-purple-100 text-purple-800',
-  accepted: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
-  withdrawn: 'bg-gray-100 text-gray-800',
+  pending: 'bg-gold-100 text-gold-800',
+  under_review: 'bg-navy-50 text-navy-800',
+  interview_scheduled: 'bg-gold-100 text-gold-800',
+  accepted: 'bg-success-light text-success-dark',
+  rejected: 'bg-error-light text-error-dark',
+  withdrawn: 'bg-bg-alt text-text-secondary',
 };
 
 const statusIcons = {
@@ -101,14 +101,14 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
 
   if (applications.length === 0) {
     return (
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="card p-6">
         <div className="text-center py-12">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+          <h3 className="mt-4 text-lg font-medium text-text-primary">
             {isCompanyUser ? 'No applications yet' : 'No applications submitted'}
           </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            {isCompanyUser 
+          <p className="mt-2 text-sm text-text-secondary">
+            {isCompanyUser
               ? 'When teams express interest in your opportunities, they\'ll appear here.'
               : 'Applications you submit to liftout opportunities will be tracked here.'
             }
@@ -118,7 +118,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
               href={isCompanyUser ? "/app/opportunities/create" : "/app/opportunities"}
               className="btn-primary"
             >
-              {isCompanyUser ? 'Post Your First Opportunity' : 'Browse Opportunities'}
+              {isCompanyUser ? 'Post your first opportunity' : 'Browse opportunities'}
             </Link>
           </div>
         </div>
@@ -130,14 +130,14 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
     <div className="space-y-4">
       {applications.map((application) => {
         const StatusIcon = statusIcons[application.status];
-        
+
         return (
-          <div key={application.id} className="card hover:shadow-md transition-shadow">
+          <div key={application.id} className="card hover:shadow-md transition-shadow duration-fast">
             <div className="px-6 py-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <StatusIcon className="h-5 w-5 text-gray-400" />
+                    <StatusIcon className="h-5 w-5 text-text-tertiary" />
                     <span className={classNames(
                       'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                       statusColors[application.status]
@@ -145,29 +145,29 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                       {application.status.replace('_', ' ')}
                     </span>
                     {isCompanyUser && !application.viewedByCompany && (
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-error-light text-error-dark">
                         New
                       </span>
                     )}
                   </div>
-                  
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+
+                  <h3 className="text-lg font-medium text-text-primary mb-2">
                     {getOpportunityTitle(application.opportunityId)}
                   </h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-text-secondary mb-4">
                     <div className="flex items-center">
                       <ClockIcon className="h-4 w-4 mr-2" />
                       <span>
                         Submitted {formatDistanceToNow(application.submittedAt, { addSuffix: true })}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center">
                       <UserGroupIcon className="h-4 w-4 mr-2" />
                       <span>Team ID: {application.teamId.slice(-6)}</span>
                     </div>
-                    
+
                     {application.compensationExpectations && (
                       <div className="flex items-center">
                         <CurrencyDollarIcon className="h-4 w-4 mr-2" />
@@ -176,7 +176,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                         </span>
                       </div>
                     )}
-                    
+
                     {application.viewedAt && (
                       <div className="flex items-center">
                         <EyeIcon className="h-4 w-4 mr-2" />
@@ -188,11 +188,11 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                   </div>
 
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-gray-700 line-clamp-3 mb-2">
-                      <strong>Cover Letter:</strong> {application.coverLetter}
+                    <p className="text-text-secondary line-clamp-3 mb-2">
+                      <strong className="text-text-primary">Cover letter:</strong> {application.coverLetter}
                     </p>
-                    <p className="text-gray-700 line-clamp-2">
-                      <strong>Availability:</strong> {application.availabilityTimeline}
+                    <p className="text-text-secondary line-clamp-2">
+                      <strong className="text-text-primary">Availability:</strong> {application.availabilityTimeline}
                     </p>
                   </div>
                 </div>

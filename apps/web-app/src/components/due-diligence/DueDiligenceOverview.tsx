@@ -36,10 +36,10 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-64"></div>
+        <div className="h-8 bg-bg-alt rounded w-64"></div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            <div key={i} className="h-32 bg-bg-alt rounded"></div>
           ))}
         </div>
       </div>
@@ -53,19 +53,19 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'text-green-600 bg-green-100';
-      case 'in_progress': return 'text-blue-600 bg-blue-100';
-      case 'on_hold': return 'text-yellow-600 bg-yellow-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'completed': return 'text-success-dark bg-success-light';
+      case 'in_progress': return 'text-navy-800 bg-navy-50';
+      case 'on_hold': return 'text-gold-800 bg-gold-100';
+      default: return 'text-text-secondary bg-bg-alt';
     }
   };
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'text-green-600 bg-green-100';
-      case 'medium': return 'text-yellow-600 bg-yellow-100';
-      case 'high': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'low': return 'text-success-dark bg-success-light';
+      case 'medium': return 'text-gold-800 bg-gold-100';
+      case 'high': return 'text-error-dark bg-error-light';
+      default: return 'text-text-secondary bg-bg-alt';
     }
   };
 

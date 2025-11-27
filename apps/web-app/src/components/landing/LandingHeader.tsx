@@ -36,7 +36,7 @@ export function LandingHeader() {
           >
             <Image
               src="/logo-icon.png"
-              alt=""
+              alt="Liftout"
               width={40}
               height={40}
               className="w-10 h-10 transition-transform duration-fast ease-out-quart group-hover:scale-105"

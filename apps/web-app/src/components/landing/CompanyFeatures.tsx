@@ -9,32 +9,32 @@ import {
 
 const features = [
   {
-    name: 'Team Discovery',
-    description: 'Browse verified high-performing teams filtered by industry, skills, location, and availability. Find the perfect match for your strategic needs.',
+    name: 'Team discovery',
+    description: 'Browse 500+ verified high-performing teams filtered by industry, skills, location, and availability.',
     icon: MagnifyingGlassIcon,
   },
   {
-    name: 'Due Diligence Tools',
-    description: 'Access comprehensive reference checks, performance verification, and cultural fit assessments before making your decision.',
+    name: 'Due diligence tools',
+    description: 'Access comprehensive reference checks, performance verification, and cultural fit assessments before deciding.',
     icon: ShieldCheckIcon,
   },
   {
-    name: 'Confidential Process',
+    name: 'Confidential process',
     description: 'Discrete exploration and negotiation that protects sensitive information and maintains professional relationships.',
     icon: LockClosedIcon,
   },
   {
-    name: 'Integration Planning',
-    description: 'Structured onboarding roadmaps, success metrics, and milestone tracking to ensure seamless team transitions.',
+    name: 'Integration planning',
+    description: 'Structured onboarding roadmaps, success metrics, and milestone tracking for seamless team transitions.',
     icon: MapIcon,
   },
   {
-    name: 'Market Intelligence',
+    name: 'Market intelligence',
     description: 'Industry-specific compensation benchmarks, talent flow trends, and competitive landscape insights.',
     icon: ChartBarIcon,
   },
   {
-    name: 'Success Analytics',
+    name: 'Success analytics',
     description: 'Track ROI on team acquisitions, monitor integration outcomes, and measure long-term business impact.',
     icon: ArrowTrendingUpIcon,
   },
@@ -50,8 +50,8 @@ export function CompanyFeatures() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <p className="text-gold-600 font-semibold tracking-wider uppercase text-xs mb-4">
-            Platform Features
+          <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
+            Platform features
           </p>
           <h2
             id="features-heading"
@@ -100,7 +100,7 @@ export function CompanyFeatures() {
         <div className="mt-20 lg:mt-28">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
-              How Team Acquisition Works
+              How team acquisition works
             </h3>
             <p className="font-body text-text-secondary leading-relaxed">
               A streamlined process designed for strategic, confidential talent acquisition.
@@ -111,22 +111,22 @@ export function CompanyFeatures() {
             {[
               {
                 step: '01',
-                title: 'Define Your Needs',
+                title: 'Define your needs',
                 description: 'Specify the team profile, skills, and strategic objectives for your acquisition.',
               },
               {
                 step: '02',
-                title: 'Discover Teams',
+                title: 'Discover teams',
                 description: 'Browse verified teams that match your criteria, all with documented track records.',
               },
               {
                 step: '03',
-                title: 'Due Diligence',
+                title: 'Due diligence',
                 description: 'Conduct reference checks, cultural assessments, and performance verification.',
               },
               {
                 step: '04',
-                title: 'Integrate & Succeed',
+                title: 'Integrate and succeed',
                 description: 'Execute a structured transition with onboarding support and success tracking.',
               },
             ].map((item) => (

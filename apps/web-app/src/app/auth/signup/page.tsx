@@ -186,12 +186,12 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          {/* Google Sign Up */}
+          {/* Google Sign Up - Outline style */}
           <button
             type="button"
             onClick={handleGoogleSignUp}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-bg-surface border border-border rounded-lg font-medium text-text-primary hover:bg-bg-elevated hover:border-border-hover transition-all duration-fast touch-target disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-outline w-full flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -214,9 +214,11 @@ export default function SignUpPage() {
 
           {/* Sign Up Form */}
           <form className="space-y-5" onSubmit={handleSubmit}>
+            <RequiredFieldsNote />
+
             {/* User Type Selection */}
             <div>
-              <label className="label-text mb-3">Account Type</label>
+              <label className="label-text mb-3">Account type</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -251,39 +253,35 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* Name Fields */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="firstName" className="label-text">First Name</label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  required
-                  className="input-field"
-                  placeholder="John"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="label-text">Last Name</label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  required
-                  className="input-field"
-                  placeholder="Smith"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
+            {/* Name Fields - Single column per Practical UI */}
+            <FormField label="First name" name="firstName" required>
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                required
+                className="input-field"
+                placeholder="John"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField label="Last name" name="lastName" required>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                required
+                className="input-field"
+                placeholder="Smith"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+            </FormField>
 
             {/* Email */}
-            <div>
-              <label htmlFor="email" className="label-text">Email address</label>
+            <FormField label="Email address" name="email" required>
               <input
                 id="email"
                 name="email"
@@ -295,12 +293,11 @@ export default function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
               />
-            </div>
+            </FormField>
 
             {/* Company Name (if company type) */}
             {formData.userType === 'company' && (
-              <div>
-                <label htmlFor="companyName" className="label-text">Company Name</label>
+              <FormField label="Company name" name="companyName" required>
                 <input
                   id="companyName"
                   name="companyName"
@@ -311,12 +308,11 @@ export default function SignUpPage() {
                   value={formData.companyName}
                   onChange={handleChange}
                 />
-              </div>
+              </FormField>
             )}
 
             {/* Industry */}
-            <div>
-              <label htmlFor="industry" className="label-text">Industry</label>
+            <FormField label="Industry" name="industry">
               <select
                 id="industry"
                 name="industry"
@@ -331,11 +327,10 @@ export default function SignUpPage() {
                   </option>
                 ))}
               </select>
-            </div>
+            </FormField>
 
             {/* Location */}
-            <div>
-              <label htmlFor="location" className="label-text">Location</label>
+            <FormField label="Location" name="location">
               <input
                 id="location"
                 name="location"
@@ -345,11 +340,10 @@ export default function SignUpPage() {
                 value={formData.location}
                 onChange={handleChange}
               />
-            </div>
+            </FormField>
 
             {/* Password */}
-            <div>
-              <label htmlFor="password" className="label-text">Password</label>
+            <FormField label="Password" name="password" required hint="Minimum 6 characters">
               <div className="relative">
                 <input
                   id="password"
@@ -358,24 +352,23 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   required
                   className="input-field pr-12"
-                  placeholder="Min 6 characters"
+                  placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                 </button>
               </div>
-            </div>
+            </FormField>
 
             {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="label-text">Confirm Password</label>
+            <FormField label="Confirm password" name="confirmPassword" required>
               <div className="relative">
                 <input
                   id="confirmPassword"
@@ -384,20 +377,20 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   required
                   className="input-field pr-12"
-                  placeholder="Confirm your password"
+                  placeholder="Re-enter your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 >
                   {showConfirmPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                 </button>
               </div>
-            </div>
+            </FormField>
 
             {/* Terms */}
             <p className="text-text-tertiary text-xs">
@@ -416,7 +409,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-primary w-full py-3 text-base"
+              className="btn-primary w-full"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -427,7 +420,7 @@ export default function SignUpPage() {
                   Creating account...
                 </span>
               ) : (
-                'Create Account'
+                'Create account'
               )}
             </button>
           </form>
@@ -437,7 +430,7 @@ export default function SignUpPage() {
             Already have an account?{' '}
             <Link
               href="/auth/signin"
-              className="font-medium text-gold hover:text-gold-dark transition-colors"
+              className="text-link inline"
             >
               Sign in
             </Link>

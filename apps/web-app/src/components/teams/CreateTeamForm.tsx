@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useCreateTeam } from '@/hooks/useTeams';
+import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
 
 const memberSchema = z.object({
   name: z.string().min(2, 'Member name is required'),
@@ -109,165 +110,162 @@ export function CreateTeamForm() {
 
   return (
     <div className="card">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <RequiredFieldsNote />
+
         {/* Team Basic Info */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Profile</h3>
-          
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label htmlFor="name" className="label-text">
-                Team Name *
-              </label>
-              <input
-                {...register('name')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., Strategic Analytics Core Team"
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-              )}
-            </div>
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Team profile</h3>
 
-            <div>
-              <label htmlFor="description" className="label-text">
-                Team Description & Expertise *
-              </label>
-              <textarea
-                {...register('description')}
-                rows={4}
-                className="input-field"
-                placeholder="Describe your team's expertise, achievements, and what makes you valuable for liftout opportunities. Include your track record, key accomplishments, and what sets your team apart..."
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-              )}
-              <p className="mt-1 text-sm text-gray-500">
-                Minimum 50 characters. Be specific about your team's achievements and expertise.
-              </p>
-            </div>
+          <FormField
+            label="Team name"
+            name="name"
+            required
+            error={errors.name?.message}
+          >
+            <input
+              {...register('name')}
+              id="name"
+              type="text"
+              className="input-field"
+              placeholder="e.g., Strategic Analytics Core Team"
+            />
+          </FormField>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="industry" className="label-text">
-                  Industry *
-                </label>
-                <select {...register('industry')} className="input-field">
-                  <option value="">Select an industry</option>
-                  {industries.map((industry) => (
-                    <option key={industry} value={industry}>
-                      {industry}
-                    </option>
-                  ))}
-                </select>
-                {errors.industry && (
-                  <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
-                )}
-              </div>
+          <FormField
+            label="Team description and expertise"
+            name="description"
+            required
+            error={errors.description?.message}
+            hint="Minimum 50 characters. Be specific about your team's achievements and expertise."
+          >
+            <textarea
+              {...register('description')}
+              id="description"
+              rows={4}
+              className="input-field"
+              placeholder="Describe your team's expertise, achievements, and what makes you valuable for liftout opportunities..."
+            />
+          </FormField>
 
-              <div>
-                <label htmlFor="location" className="label-text">
-                  Location *
-                </label>
-                <input
-                  {...register('location')}
-                  type="text"
-                  className="input-field"
-                  placeholder="e.g., San Francisco, CA or Remote"
-                />
-                {errors.location && (
-                  <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <FormField
+            label="Industry"
+            name="industry"
+            required
+            error={errors.industry?.message}
+          >
+            <select {...register('industry')} id="industry" className="input-field">
+              <option value="">Select an industry</option>
+              {industries.map((industry) => (
+                <option key={industry} value={industry}>
+                  {industry}
+                </option>
+              ))}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Location"
+            name="location"
+            required
+            error={errors.location?.message}
+          >
+            <input
+              {...register('location')}
+              id="location"
+              type="text"
+              className="input-field"
+              placeholder="e.g., San Francisco, CA or Remote"
+            />
+          </FormField>
         </div>
 
         {/* Team Members */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
-            <button
-              type="button"
-              onClick={() => append({ name: '', role: '', experience: 0, skills: [] })}
-              className="text-sm text-primary-600 hover:text-primary-700"
-            >
-              + Add Member
-            </button>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium text-text-primary">Team members</h3>
+            <TextLink onClick={() => append({ name: '', role: '', experience: 0, skills: [] })}>
+              + Add member
+            </TextLink>
           </div>
 
           {fields.map((field, index) => (
-            <div key={field.id} className="border border-gray-200 rounded-lg p-4 mb-4">
-              <div className="flex justify-between items-center mb-3">
-                <h4 className="text-md font-medium text-gray-800">Member {index + 1}</h4>
+            <div key={field.id} className="border border-border rounded-lg p-5 space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium text-text-primary">Member {index + 1}</h4>
                 {fields.length > 2 && (
-                  <button
-                    type="button"
-                    onClick={() => remove(index)}
-                    className="text-sm text-red-600 hover:text-red-700"
-                  >
+                  <TextLink variant="danger" onClick={() => remove(index)}>
                     Remove
-                  </button>
+                  </TextLink>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="label-text">Name *</label>
-                  <input
-                    {...register(`members.${index}.name`)}
-                    type="text"
-                    className="input-field"
-                    placeholder="Full name"
-                  />
-                  {errors.members?.[index]?.name && (
-                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.name?.message}</p>
-                  )}
-                </div>
+              {/* Single column layout per Practical UI */}
+              <FormField
+                label="Name"
+                name={`members.${index}.name`}
+                required
+                error={errors.members?.[index]?.name?.message}
+              >
+                <input
+                  {...register(`members.${index}.name`)}
+                  id={`members.${index}.name`}
+                  type="text"
+                  className="input-field"
+                  placeholder="Full name"
+                />
+              </FormField>
 
-                <div>
-                  <label className="label-text">Role *</label>
-                  <input
-                    {...register(`members.${index}.role`)}
-                    type="text"
-                    className="input-field"
-                    placeholder="e.g., Senior Data Scientist"
-                  />
-                  {errors.members?.[index]?.role && (
-                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.role?.message}</p>
-                  )}
-                </div>
+              <FormField
+                label="Role"
+                name={`members.${index}.role`}
+                required
+                error={errors.members?.[index]?.role?.message}
+              >
+                <input
+                  {...register(`members.${index}.role`)}
+                  id={`members.${index}.role`}
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g., Senior Data Scientist"
+                />
+              </FormField>
 
-                <div>
-                  <label className="label-text">Years Experience *</label>
-                  <input
-                    {...register(`members.${index}.experience`, { valueAsNumber: true })}
-                    type="number"
-                    min="0"
-                    max="50"
-                    className="input-field"
-                    placeholder="5"
-                  />
-                  {errors.members?.[index]?.experience && (
-                    <p className="mt-1 text-sm text-red-600">{errors.members[index]?.experience?.message}</p>
-                  )}
-                </div>
-              </div>
+              <FormField
+                label="Years experience"
+                name={`members.${index}.experience`}
+                required
+                error={errors.members?.[index]?.experience?.message}
+              >
+                <input
+                  {...register(`members.${index}.experience`, { valueAsNumber: true })}
+                  id={`members.${index}.experience`}
+                  type="number"
+                  min="0"
+                  max="50"
+                  className="input-field"
+                  placeholder="5"
+                />
+              </FormField>
 
-              <div className="mt-4">
-                <label className="label-text">Skills *</label>
+              <FormField
+                label="Skills"
+                name={`members.${index}.skills`}
+                required
+                error={errors.members?.[index]?.skills?.message}
+              >
                 <div className="flex flex-wrap gap-2 mb-2">
                   {watch(`members.${index}.skills`)?.map((skill, skillIndex) => (
                     <span
                       key={skillIndex}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-800"
                     >
                       {skill}
                       <button
                         type="button"
                         onClick={() => removeSkill(index, skillIndex)}
-                        className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-primary-400 hover:bg-primary-200 hover:text-primary-500"
+                        className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                        aria-label={`Remove ${skill}`}
                       >
                         ×
                       </button>
@@ -291,84 +289,74 @@ export function CreateTeamForm() {
                   <button
                     type="button"
                     onClick={() => addSkill(index, skillInput[index] || '')}
-                    className="px-3 py-2 text-sm bg-primary-100 text-primary-700 rounded-md hover:bg-primary-200"
+                    className="btn-outline"
                   >
                     Add
                   </button>
                 </div>
-                {errors.members?.[index]?.skills && (
-                  <p className="mt-1 text-sm text-red-600">{errors.members[index]?.skills?.message}</p>
-                )}
-              </div>
+              </FormField>
             </div>
           ))}
         </div>
 
         {/* Compensation */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Compensation Expectations</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="compensation.range" className="label-text">
-                Compensation Range *
-              </label>
-              <input
-                {...register('compensation.range')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., $150k-$250k per person, $600k total team package"
-              />
-              {errors.compensation?.range && (
-                <p className="mt-1 text-sm text-red-600">{errors.compensation.range.message}</p>
-              )}
-              <p className="mt-1 text-sm text-gray-500">
-                Include total compensation expectations for your team or per-person ranges.
-              </p>
-            </div>
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Compensation expectations</h3>
 
-            <div>
-              <label htmlFor="compensation.benefits" className="label-text">
-                Benefits Package
-              </label>
-              <input
-                {...register('compensation.benefits')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., Full package, Health/Dental/Vision"
-              />
-            </div>
-          </div>
+          <FormField
+            label="Compensation range"
+            name="compensation.range"
+            required
+            error={errors.compensation?.range?.message}
+            hint="Include total compensation expectations for your team or per-person ranges."
+          >
+            <input
+              {...register('compensation.range')}
+              id="compensation.range"
+              type="text"
+              className="input-field"
+              placeholder="e.g., $150k-$250k per person, $600k total team package"
+            />
+          </FormField>
+
+          <FormField
+            label="Benefits package"
+            name="compensation.benefits"
+          >
+            <input
+              {...register('compensation.benefits')}
+              id="compensation.benefits"
+              type="text"
+              className="input-field"
+              placeholder="e.g., Full package, Health/Dental/Vision"
+            />
+          </FormField>
 
           <div className="mt-4">
-            <label className="flex items-center">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 {...register('compensation.equity')}
                 type="checkbox"
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="ml-2 text-sm text-gray-700">Open to equity participation</span>
+              <span className="text-text-secondary">Open to equity participation</span>
             </label>
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-          >
-            Cancel
-          </button>
+        {/* Submit - LEFT aligned per Practical UI, primary button FIRST */}
+        <ButtonGroup>
           <button
             type="submit"
             disabled={createTeamMutation.isPending}
-            className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary"
           >
-            {createTeamMutation.isPending ? 'Creating...' : 'Create Team Profile'}
+            {createTeamMutation.isPending ? 'Creating...' : 'Create team'}
           </button>
-        </div>
+          <TextLink onClick={() => router.back()}>
+            Cancel
+          </TextLink>
+        </ButtonGroup>
       </form>
     </div>
   );

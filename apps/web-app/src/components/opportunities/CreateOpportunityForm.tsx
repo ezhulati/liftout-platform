@@ -7,7 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useCreateOpportunity } from '@/hooks/useOpportunities';
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
 
 const createOpportunitySchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -114,194 +115,192 @@ export function CreateOpportunityForm() {
 
   return (
     <div className="card">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Basic Information */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout Opportunity Details</h3>
-          
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label htmlFor="title" className="label-text">
-                Opportunity Title *
-              </label>
-              <input
-                {...register('title')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., Lead FinTech Analytics Division"
-              />
-              {errors.title && (
-                <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-              )}
-            </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <RequiredFieldsNote />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="company" className="label-text">
-                  Company Name *
-                </label>
-                <input
-                  {...register('company')}
-                  type="text"
-                  className="input-field"
-                  placeholder="Your company name"
-                />
-                {errors.company && (
-                  <p className="mt-1 text-sm text-red-600">{errors.company.message}</p>
-                )}
-              </div>
+        {/* Basic Information - Single column per Practical UI */}
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Liftout opportunity details</h3>
 
-              <div>
-                <label htmlFor="type" className="label-text">
-                  Liftout Type *
-                </label>
-                <select {...register('type')} className="input-field">
-                  <option value="">Select liftout type</option>
-                  {liftoutTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                {errors.type && (
-                  <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
-                )}
-              </div>
-            </div>
+          <FormField
+            label="Opportunity title"
+            name="title"
+            required
+            error={errors.title?.message}
+          >
+            <input
+              {...register('title')}
+              id="title"
+              type="text"
+              className="input-field"
+              placeholder="e.g., Lead FinTech Analytics Division"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="description" className="label-text">
-                Strategic Description *
-              </label>
-              <textarea
-                {...register('description')}
-                rows={4}
-                className="input-field"
-                placeholder="Describe the strategic need, business context, and why you're seeking to acquire an intact team..."
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-              )}
-            </div>
+          <FormField
+            label="Company name"
+            name="company"
+            required
+            error={errors.company?.message}
+          >
+            <input
+              {...register('company')}
+              id="company"
+              type="text"
+              className="input-field"
+              placeholder="Your company name"
+            />
+          </FormField>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="industry" className="label-text">
-                  Industry *
-                </label>
-                <select {...register('industry')} className="input-field">
-                  <option value="">Select industry</option>
-                  {industries.map((industry) => (
-                    <option key={industry} value={industry}>
-                      {industry}
-                    </option>
-                  ))}
-                </select>
-                {errors.industry && (
-                  <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
-                )}
-              </div>
+          <FormField
+            label="Liftout type"
+            name="type"
+            required
+            error={errors.type?.message}
+          >
+            <select {...register('type')} id="type" className="input-field">
+              <option value="">Select liftout type</option>
+              {liftoutTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </FormField>
 
-              <div>
-                <label htmlFor="teamSize" className="label-text">
-                  Team Size Needed *
-                </label>
-                <input
-                  {...register('teamSize')}
-                  type="text"
-                  className="input-field"
-                  placeholder="e.g., 4-6 people, or exactly 5 members"
-                />
-                {errors.teamSize && (
-                  <p className="mt-1 text-sm text-red-600">{errors.teamSize.message}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <FormField
+            label="Strategic description"
+            name="description"
+            required
+            error={errors.description?.message}
+          >
+            <textarea
+              {...register('description')}
+              id="description"
+              rows={4}
+              className="input-field"
+              placeholder="Describe the strategic need, business context, and why you're seeking to acquire an intact team..."
+            />
+          </FormField>
+
+          <FormField
+            label="Industry"
+            name="industry"
+            required
+            error={errors.industry?.message}
+          >
+            <select {...register('industry')} id="industry" className="input-field">
+              <option value="">Select industry</option>
+              {industries.map((industry) => (
+                <option key={industry} value={industry}>
+                  {industry}
+                </option>
+              ))}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Team size needed"
+            name="teamSize"
+            required
+            error={errors.teamSize?.message}
+          >
+            <input
+              {...register('teamSize')}
+              id="teamSize"
+              type="text"
+              className="input-field"
+              placeholder="e.g., 4-6 people, or exactly 5 members"
+            />
+          </FormField>
         </div>
 
         {/* Compensation & Logistics */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Compensation & Logistics</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="compensation" className="label-text">
-                Total Team Compensation *
-              </label>
-              <input
-                {...register('compensation')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., $1.2M-$1.8M total package + equity"
-              />
-              {errors.compensation && (
-                <p className="mt-1 text-sm text-red-600">{errors.compensation.message}</p>
-              )}
-            </div>
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Compensation and logistics</h3>
 
-            <div>
-              <label htmlFor="location" className="label-text">
-                Location *
-              </label>
-              <input
-                {...register('location')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., New York, NY (Hybrid) or Remote"
-              />
-              {errors.location && (
-                <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
-              )}
-            </div>
+          <FormField
+            label="Total team compensation"
+            name="compensation"
+            required
+            error={errors.compensation?.message}
+          >
+            <input
+              {...register('compensation')}
+              id="compensation"
+              type="text"
+              className="input-field"
+              placeholder="e.g., $1.2M-$1.8M total package + equity"
+            />
+          </FormField>
 
-            <div>
-              <label htmlFor="timeline" className="label-text">
-                Start Timeline *
-              </label>
-              <input
-                {...register('timeline')}
-                type="text"
-                className="input-field"
-                placeholder="e.g., Start within 3 months, Q1 2024"
-              />
-              {errors.timeline && (
-                <p className="mt-1 text-sm text-red-600">{errors.timeline.message}</p>
-              )}
-            </div>
-          </div>
+          <FormField
+            label="Location"
+            name="location"
+            required
+            error={errors.location?.message}
+          >
+            <input
+              {...register('location')}
+              id="location"
+              type="text"
+              className="input-field"
+              placeholder="e.g., New York, NY (Hybrid) or Remote"
+            />
+          </FormField>
+
+          <FormField
+            label="Start timeline"
+            name="timeline"
+            required
+            error={errors.timeline?.message}
+          >
+            <input
+              {...register('timeline')}
+              id="timeline"
+              type="text"
+              className="input-field"
+              placeholder="e.g., Start within 3 months, Q1 2024"
+            />
+          </FormField>
         </div>
 
         {/* Requirements */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Team Requirements</h3>
-          
-          <div className="space-y-4">
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Team requirements</h3>
+
+          <FormField
+            label="Requirements"
+            name="requirements"
+            required
+            error={errors.requirements?.message}
+          >
             <div className="flex flex-wrap gap-2 mb-3">
               {requirements.map((req, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
                 >
                   {req}
                   <button
                     type="button"
                     onClick={() => removeRequirement(index)}
-                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-500"
+                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                    aria-label={`Remove ${req}`}
                   >
                     <XMarkIcon className="w-3 h-3" />
                   </button>
                 </span>
               ))}
             </div>
-            
+
             <div className="flex gap-2">
               <input
                 type="text"
                 value={requirementInput}
                 onChange={(e) => setRequirementInput(e.target.value)}
                 className="input-field flex-1"
-                placeholder="Add a requirement (e.g., 3+ years working together, Quantitative finance expertise)"
+                placeholder="Add a requirement (e.g., 3+ years working together)"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
@@ -312,48 +311,50 @@ export function CreateOpportunityForm() {
               <button
                 type="button"
                 onClick={addRequirement}
-                className="px-4 py-2 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                className="btn-outline"
               >
                 Add
               </button>
             </div>
-            
-            {errors.requirements && (
-              <p className="mt-1 text-sm text-red-600">{errors.requirements.message}</p>
-            )}
-          </div>
+          </FormField>
         </div>
 
         {/* What We Offer */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">What We Offer</h3>
-          
-          <div className="space-y-4">
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">What we offer</h3>
+
+          <FormField
+            label="Offerings"
+            name="whatWeOffer"
+            required
+            error={errors.whatWeOffer?.message}
+          >
             <div className="flex flex-wrap gap-2 mb-3">
               {whatWeOffer.map((offer, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800"
                 >
                   {offer}
                   <button
                     type="button"
                     onClick={() => removeOffering(index)}
-                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-green-400 hover:bg-green-200 hover:text-green-500"
+                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-gold-400 hover:bg-gold-200 hover:text-gold-600 touch-target"
+                    aria-label={`Remove ${offer}`}
                   >
                     <XMarkIcon className="w-3 h-3" />
                   </button>
                 </span>
               ))}
             </div>
-            
+
             <div className="flex gap-2">
               <input
                 type="text"
                 value={offeringInput}
                 onChange={(e) => setOfferingInput(e.target.value)}
                 className="input-field flex-1"
-                placeholder="Add what you offer (e.g., Full team autonomy, Equity participation, $50B+ trading data access)"
+                placeholder="Add what you offer (e.g., Full team autonomy, Equity participation)"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
@@ -364,84 +365,76 @@ export function CreateOpportunityForm() {
               <button
                 type="button"
                 onClick={addOffering}
-                className="px-4 py-2 text-sm bg-green-100 text-green-700 rounded-md hover:bg-green-200"
+                className="btn-outline"
               >
                 Add
               </button>
             </div>
-            
-            {errors.whatWeOffer && (
-              <p className="mt-1 text-sm text-red-600">{errors.whatWeOffer.message}</p>
-            )}
-          </div>
+          </FormField>
         </div>
 
         {/* Integration Plan */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Integration Plan</h3>
-          
-          <div>
-            <label htmlFor="integrationPlan" className="label-text">
-              Team Integration Strategy *
-            </label>
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Integration plan</h3>
+
+          <FormField
+            label="Team integration strategy"
+            name="integrationPlan"
+            required
+            error={errors.integrationPlan?.message}
+          >
             <textarea
               {...register('integrationPlan')}
+              id="integrationPlan"
               rows={4}
               className="input-field"
               placeholder="Describe how the team will be integrated: office space, reporting structure, decision-making authority, timeline, support systems..."
             />
-            {errors.integrationPlan && (
-              <p className="mt-1 text-sm text-red-600">{errors.integrationPlan.message}</p>
-            )}
-          </div>
+          </FormField>
         </div>
 
         {/* Options */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Opportunity Settings</h3>
-          
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Opportunity settings</h3>
+
           <div className="space-y-4">
-            <label className="flex items-center">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 {...register('confidential')}
                 type="checkbox"
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="text-text-secondary">
                 Confidential opportunity (only visible to invited teams)
               </span>
             </label>
 
-            <label className="flex items-center">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 {...register('urgent')}
                 type="checkbox"
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="text-text-secondary">
                 Urgent timeline (expedited review process)
               </span>
             </label>
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-          >
-            Cancel
-          </button>
+        {/* Submit - LEFT aligned per Practical UI, primary button FIRST */}
+        <ButtonGroup>
           <button
             type="submit"
             disabled={createOpportunityMutation.isPending}
-            className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary"
           >
-            {createOpportunityMutation.isPending ? 'Creating...' : 'Post Liftout Opportunity'}
+            {createOpportunityMutation.isPending ? 'Creating...' : 'Post opportunity'}
           </button>
-        </div>
+          <TextLink onClick={() => router.back()}>
+            Cancel
+          </TextLink>
+        </ButtonGroup>
       </form>
     </div>
   );

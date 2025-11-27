@@ -38,7 +38,7 @@ export function CompanyCTA() {
         </h2>
 
         {/* Description */}
-        <p className="font-body text-navy-200 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+        <p className="font-body text-white/80 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
           Stop building teams from scratch. Access proven, intact teams with verified track records
           who are ready to deliver immediate impact.
         </p>
@@ -50,7 +50,7 @@ export function CompanyCTA() {
             href="/auth/signup?type=company"
             className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Start Acquiring Teams
+            Acquire teams
             <svg
               className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
               fill="none"
@@ -67,12 +67,12 @@ export function CompanyCTA() {
             href="/for-teams"
             className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
           >
-            Looking to Register a Team?
+            Register a team
           </Link>
         </div>
 
         {/* Sign in link */}
-        <p className="text-navy-300 text-sm">
+        <p className="text-white/70 text-sm">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
@@ -83,19 +83,19 @@ export function CompanyCTA() {
         </p>
 
         {/* Value props summary */}
-        <div className="mt-16 pt-8 border-t border-navy-600">
+        <div className="mt-16 pt-8 border-t border-white/20">
           <div className="grid sm:grid-cols-3 gap-8 text-left">
             {[
               {
-                title: 'Immediate Impact',
+                title: 'Immediate impact',
                 description: 'Teams hit the ground running with established collaboration patterns.',
               },
               {
-                title: 'Verified Quality',
+                title: 'Verified quality',
                 description: 'Every team comes with documented performance history and references.',
               },
               {
-                title: 'Confidential Process',
+                title: 'Confidential process',
                 description: 'Discrete exploration protects all parties throughout negotiations.',
               },
             ].map((item) => (
@@ -103,7 +103,7 @@ export function CompanyCTA() {
                 key={item.title}
               >
                 <h3 className="font-heading text-lg font-bold text-white mb-2">{item.title}</h3>
-                <p className="font-body text-navy-300 text-sm leading-relaxed">{item.description}</p>
+                <p className="font-body text-white/70 text-sm leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>

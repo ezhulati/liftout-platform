@@ -17,6 +17,7 @@ import {
   CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 import { useCreateDocument } from '@/hooks/useDocuments';
+import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
 
 const documentUploadSchema = z.object({
   name: z.string().min(1, 'Document name is required'),
@@ -219,26 +220,28 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
 
   return (
     <div className="card max-w-4xl">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-gray-900">Upload Document</h2>
-        <p className="text-sm text-gray-600">
+      <div className="px-6 py-4 border-b border-border">
+        <h2 className="text-lg font-medium text-text-primary">Upload document</h2>
+        <p className="text-sm text-text-secondary">
           Share documents securely for liftout discussions and due diligence
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-8">
+        <RequiredFieldsNote />
+
         {/* File Upload Area */}
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Select File *
+          <label className="label-text">
+            Select file *
           </label>
-          
+
           {!selectedFile ? (
             <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-                dragActive 
-                  ? 'border-primary-400 bg-primary-50' 
-                  : 'border-gray-300 hover:border-gray-400'
+              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors min-h-[160px] flex flex-col items-center justify-center ${
+                dragActive
+                  ? 'border-navy bg-navy-50'
+                  : 'border-border hover:border-navy-300'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -246,12 +249,12 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
               onDrop={handleDrop}
               onClick={() => document.getElementById('file-input')?.click()}
             >
-              <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
+              <CloudArrowUpIcon className="mx-auto h-12 w-12 text-text-tertiary" />
               <div className="mt-4">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium text-primary-600">Click to upload</span> or drag and drop
+                <p className="text-sm text-text-secondary">
+                  <span className="font-medium text-navy">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-text-tertiary mt-1">
                   PDF, Word, Excel, PowerPoint (max 10MB)
                 </p>
               </div>
@@ -264,13 +267,13 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
               />
             </div>
           ) : (
-            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <div className="border border-border rounded-lg p-4 bg-bg-alt">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <DocumentTextIcon className="h-8 w-8 text-blue-500" />
+                  <DocumentTextIcon className="h-8 w-8 text-navy" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{selectedFile.name}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm font-medium text-text-primary">{selectedFile.name}</p>
+                    <p className="text-xs text-text-tertiary">
                       {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
@@ -278,7 +281,8 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-text-tertiary hover:text-error touch-target"
+                  aria-label="Remove file"
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
@@ -287,87 +291,72 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
           )}
         </div>
 
-        {/* Document Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="name" className="label-text">
-              Document Name *
-            </label>
+        {/* Document Details - Single column per Practical UI */}
+        <div className="space-y-5">
+          <FormField label="Document name" name="name" required error={errors.name?.message}>
             <input
               {...register('name')}
+              id="name"
               type="text"
               className="input-field"
               placeholder="e.g., Team Profile Q3 2024"
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-            )}
-          </div>
+          </FormField>
 
-          <div>
-            <label htmlFor="type" className="label-text">
-              Document Type *
-            </label>
-            <select {...register('type')} className="input-field">
+          <FormField label="Document type" name="type" required error={errors.type?.message}>
+            <select {...register('type')} id="type" className="input-field">
               {documentTypes.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
                 </option>
               ))}
             </select>
-            {errors.type && (
-              <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
-            )}
-          </div>
-        </div>
+          </FormField>
 
-        <div>
-          <label htmlFor="description" className="label-text">
-            Description
-          </label>
-          <textarea
-            {...register('description')}
-            rows={3}
-            className="input-field"
-            placeholder="Brief description of the document contents and purpose..."
-          />
+          <FormField label="Description" name="description">
+            <textarea
+              {...register('description')}
+              id="description"
+              rows={3}
+              className="input-field"
+              placeholder="Brief description of the document contents and purpose..."
+            />
+          </FormField>
         </div>
 
         {/* Access Control */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Access Control</h3>
-          
-          <div className="flex items-center">
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Access control</h3>
+
+          <label className="flex items-center gap-3 cursor-pointer">
             <input
               {...register('confidential')}
               type="checkbox"
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              className="rounded border-border text-navy focus:ring-navy w-5 h-5"
             />
-            <label className="ml-2 block text-sm text-gray-700">
-              Mark as confidential
-            </label>
-          </div>
+            <span className="text-text-secondary">Mark as confidential</span>
+          </label>
 
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="label-text">
               Who can access this document? *
             </label>
             {accessTypes.map((type) => {
               const Icon = type.icon;
               return (
-                <label key={type.value} className="flex items-start space-x-3 cursor-pointer">
+                <label key={type.value} className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg border border-border hover:bg-bg-alt transition-colors">
                   <input
                     {...register('accessType')}
                     type="radio"
                     value={type.value}
-                    className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                    className="mt-1 h-5 w-5 text-navy focus:ring-navy border-border"
                   />
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <Icon className="h-5 w-5 text-gray-500" />
-                      <span className="text-sm font-medium text-gray-900">{type.label}</span>
+                      <Icon className="h-5 w-5 text-text-tertiary" />
+                      <span className="text-sm font-medium text-text-primary">{type.label}</span>
                     </div>
-                    <p className="text-sm text-gray-500">{type.description}</p>
+                    <p className="text-sm text-text-tertiary">{type.description}</p>
                   </div>
                 </label>
               );
@@ -375,30 +364,29 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
           </div>
 
           {accessType === 'restricted' && (
-            <div className="space-y-4 pl-7">
-              <div>
-                <label htmlFor="allowedUsers" className="label-text">
-                  Allowed Users (Email addresses)
-                </label>
+            <div className="space-y-5 pl-7">
+              <FormField
+                label="Allowed users (email addresses)"
+                name="allowedUsers"
+                hint="Enter email addresses separated by commas"
+              >
                 <input
                   {...register('allowedUsers')}
+                  id="allowedUsers"
                   type="text"
                   className="input-field"
                   placeholder="user1@example.com, user2@example.com"
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  Enter email addresses separated by commas
-                </p>
-              </div>
+              </FormField>
 
               <div>
-                <label className="label-text">Allowed Roles</label>
-                <div className="space-y-2">
+                <label className="label-text">Allowed roles</label>
+                <div className="space-y-3 mt-2">
                   {[
                     { value: 'individual', label: 'Team Members' },
                     { value: 'company', label: 'Company Users' },
                   ].map((role) => (
-                    <label key={role.value} className="flex items-center">
+                    <label key={role.value} className="flex items-center gap-3 cursor-pointer">
                       <input
                         type="checkbox"
                         value={role.value}
@@ -410,9 +398,9 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
                             setValue('allowedRoles', currentRoles.filter(r => r !== role.value));
                           }
                         }}
-                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        className="rounded border-border text-navy focus:ring-navy w-5 h-5"
                       />
-                      <span className="ml-2 text-sm text-gray-700">{role.label}</span>
+                      <span className="text-sm text-text-secondary">{role.label}</span>
                     </label>
                   ))}
                 </div>
@@ -420,56 +408,50 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
             </div>
           )}
 
-          <div>
-            <label htmlFor="expiresIn" className="label-text">
-              Access Expires
-            </label>
-            <select {...register('expiresIn')} className="input-field">
+          <FormField label="Access expires" name="expiresIn">
+            <select {...register('expiresIn')} id="expiresIn" className="input-field">
               {expirationOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-          </div>
+          </FormField>
         </div>
 
         {/* Metadata */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Metadata</h3>
-          
-          <div>
-            <label htmlFor="tags" className="label-text">
-              Tags
-            </label>
+        <div className="space-y-5">
+          <h3 className="text-lg font-medium text-text-primary">Metadata</h3>
+
+          <FormField
+            label="Tags"
+            name="tags"
+            hint="Enter tags separated by commas to help organize documents"
+          >
             <input
               {...register('tags')}
+              id="tags"
               type="text"
               className="input-field"
               placeholder="performance, metrics, case-study"
             />
-            <p className="mt-1 text-xs text-gray-500">
-              Enter tags separated by commas to help organize documents
-            </p>
-          </div>
+          </FormField>
         </div>
 
-        {/* Actions */}
-        <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-          <button
-            type="button"
-            onClick={onCancel || (() => router.back())}
-            className="btn-secondary"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={createDocumentMutation.isPending || !selectedFile}
-            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {createDocumentMutation.isPending ? 'Uploading...' : 'Upload Document'}
-          </button>
+        {/* Actions - LEFT aligned per Practical UI */}
+        <div className="pt-6 border-t border-border">
+          <ButtonGroup>
+            <button
+              type="submit"
+              disabled={createDocumentMutation.isPending || !selectedFile}
+              className="btn-primary"
+            >
+              {createDocumentMutation.isPending ? 'Uploading...' : 'Upload document'}
+            </button>
+            <TextLink onClick={onCancel || (() => router.back())}>
+              Cancel
+            </TextLink>
+          </ButtonGroup>
         </div>
       </form>
     </div>

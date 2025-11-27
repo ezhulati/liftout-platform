@@ -47,17 +47,17 @@ function getFileIcon(fileType: string) {
 function getDocumentTypeColor(type: string) {
   switch (type) {
     case 'team_profile':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-navy-50 text-navy-800';
     case 'legal_document':
       return 'bg-purple-100 text-purple-800';
     case 'term_sheet':
-      return 'bg-green-100 text-green-800';
+      return 'bg-success-light text-success-dark';
     case 'nda':
-      return 'bg-orange-100 text-orange-800';
+      return 'bg-gold-100 text-gold-800';
     case 'presentation':
       return 'bg-pink-100 text-pink-800';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-bg-alt text-text-secondary';
   }
 }
 
@@ -186,11 +186,11 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
         {[1, 2, 3].map((i) => (
           <div key={i} className="card animate-pulse">
             <div className="flex items-center space-x-4">
-              <div className="h-12 w-12 bg-gray-200 rounded"></div>
+              <div className="h-12 w-12 bg-bg-alt rounded"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-64 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-32"></div>
+                <div className="h-4 bg-bg-alt rounded w-48 mb-2"></div>
+                <div className="h-3 bg-bg-alt rounded w-64 mb-2"></div>
+                <div className="h-3 bg-bg-alt rounded w-32"></div>
               </div>
             </div>
           </div>
@@ -204,15 +204,15 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-medium text-gray-900">Documents</h2>
-          <p className="text-sm text-gray-600">
+          <h2 className="text-lg font-medium text-text-primary">Documents</h2>
+          <p className="text-sm text-text-secondary">
             Secure document sharing for liftout transactions
           </p>
         </div>
         {showUpload && (
           <Link href="/app/documents/upload" className="btn-primary flex items-center">
             <PlusIcon className="h-4 w-4 mr-2" />
-            Upload Document
+            Upload document
           </Link>
         )}
       </div>
@@ -233,9 +233,9 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       <div className="space-y-4">
         {documents.length === 0 ? (
           <div className="text-center py-12">
-            <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No documents found</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+            <h3 className="mt-2 text-sm font-medium text-text-primary">No documents found</h3>
+            <p className="mt-1 text-sm text-text-secondary">
               {searchValue || Object.keys(activeFilters).length > 0
                 ? 'Try adjusting your search criteria or filters.'
                 : 'Upload your first document to get started.'}
@@ -243,25 +243,25 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
             {showUpload && (!searchValue && Object.keys(activeFilters).length === 0) && (
               <div className="mt-6">
                 <Link href="/app/documents/upload" className="btn-primary">
-                  Upload Document
+                  Upload document
                 </Link>
               </div>
             )}
           </div>
         ) : (
           documents.map((document) => (
-            <div key={document.id} className="card hover:shadow-md transition-shadow">
+            <div key={document.id} className="card hover:shadow-md transition-shadow duration-fast">
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-4 flex-1">
                   <div className="flex-shrink-0">
-                    <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl">
+                    <div className="h-12 w-12 rounded-lg bg-bg-alt flex items-center justify-center text-2xl">
                       {getFileIcon(document.fileType)}
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-medium text-gray-900 truncate">
+                      <h3 className="text-lg font-medium text-text-primary truncate">
                         {document.name}
                       </h3>
                       <span className={classNames(
@@ -271,15 +271,15 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                         {document.type.replace('_', ' ')}
                       </span>
                       {document.confidential && (
-                        <LockClosedIconSolid className="h-4 w-4 text-red-500" />
+                        <LockClosedIconSolid className="h-4 w-4 text-error" />
                       )}
                     </div>
-                    
+
                     {document.description && (
-                      <p className="text-gray-700 mb-3 line-clamp-2">{document.description}</p>
+                      <p className="text-text-secondary mb-3 line-clamp-2">{document.description}</p>
                     )}
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3 text-sm text-gray-600">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3 text-sm text-text-tertiary">
                       <div className="flex items-center">
                         <DocumentTextIcon className="h-4 w-4 mr-2" />
                         <span>{formatFileSize(document.size)}</span>
@@ -305,14 +305,14 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                         {document.metadata.tags.slice(0, 4).map((tag, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800"
+                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-bg-alt text-text-secondary"
                           >
                             <TagIcon className="h-3 w-3 mr-1" />
                             {tag}
                           </span>
                         ))}
                         {document.metadata.tags.length > 4 && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-bg-alt text-text-secondary">
                             +{document.metadata.tags.length - 4} more
                           </span>
                         )}
@@ -320,7 +320,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                     )}
 
                     {document.accessControl.expiresAt && (
-                      <div className="flex items-center text-sm text-orange-600">
+                      <div className="flex items-center text-sm text-gold">
                         <ClockIcon className="h-4 w-4 mr-1" />
                         <span>
                           Expires {formatDistanceToNow(new Date(document.accessControl.expiresAt), { addSuffix: true })}
@@ -334,16 +334,16 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                   <button
                     onClick={() => handleDownload(document.id, document.name)}
                     disabled={downloadMutation.isPending}
-                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                    className="p-2 text-text-tertiary hover:text-navy transition-colors duration-fast touch-target"
                     title="Download"
                   >
                     <ArrowDownTrayIcon className="h-5 w-5" />
                   </button>
-                  
+
                   <Link
                     href={`/app/documents/${document.id}`}
-                    className="p-2 text-gray-400 hover:text-green-600 transition-colors"
-                    title="View Details"
+                    className="p-2 text-text-tertiary hover:text-success transition-colors duration-fast touch-target"
+                    title="View details"
                   >
                     <EyeIcon className="h-5 w-5" />
                   </Link>
@@ -352,16 +352,16 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                     <>
                       <Link
                         href={`/app/documents/${document.id}/share`}
-                        className="p-2 text-gray-400 hover:text-purple-600 transition-colors"
+                        className="p-2 text-text-tertiary hover:text-purple-600 transition-colors duration-fast touch-target"
                         title="Share"
                       >
                         <ShareIcon className="h-5 w-5" />
                       </Link>
-                      
+
                       <button
                         onClick={() => handleDelete(document.id, document.name)}
                         disabled={deleteMutation.isPending}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-2 text-text-tertiary hover:text-error transition-colors duration-fast touch-target"
                         title="Delete"
                       >
                         <TrashIcon className="h-5 w-5" />

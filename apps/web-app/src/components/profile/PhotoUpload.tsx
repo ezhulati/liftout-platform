@@ -196,9 +196,9 @@ export default function PhotoUpload({
           ref={dropZoneRef}
           className={`
             relative ${sizeClasses[size]} rounded-full overflow-hidden border-2 border-dashed
-            ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-gray-400'}
-            transition-colors duration-200
+            ${dragActive ? 'border-navy bg-navy-50' : 'border-border'}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-navy-300'}
+            transition-colors duration-base
           `}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -214,17 +214,18 @@ export default function PhotoUpload({
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
-              
+
               {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition-opacity duration-200 flex items-center justify-center">
-                <div className="opacity-0 hover:opacity-100 transition-opacity duration-200 flex space-x-2">
+              <div className="absolute inset-0 bg-navy-900/0 hover:bg-navy-900/40 transition-opacity duration-base flex items-center justify-center">
+                <div className="opacity-0 hover:opacity-100 transition-opacity duration-base flex space-x-2">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       openFilePicker();
                     }}
-                    className="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600 transition-colors"
+                    className="p-2 bg-bg-surface rounded-full text-text-secondary hover:text-navy transition-colors touch-target"
                     disabled={disabled}
+                    aria-label="Change photo"
                   >
                     <CameraIcon className="w-4 h-4" />
                   </button>
@@ -233,8 +234,9 @@ export default function PhotoUpload({
                       e.stopPropagation();
                       deletePhoto();
                     }}
-                    className="p-2 bg-white rounded-full text-gray-700 hover:text-red-600 transition-colors"
+                    className="p-2 bg-bg-surface rounded-full text-text-secondary hover:text-error transition-colors touch-target"
                     disabled={disabled}
+                    aria-label="Delete photo"
                   >
                     <TrashIcon className="w-4 h-4" />
                   </button>
@@ -243,7 +245,7 @@ export default function PhotoUpload({
             </>
           ) : (
             /* Upload placeholder */
-            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+            <div className="w-full h-full flex flex-col items-center justify-center text-text-tertiary">
               <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
               <span className="text-xs text-center">
                 {dragActive ? 'Drop here' : 'Upload photo'}
@@ -254,12 +256,12 @@ export default function PhotoUpload({
 
         {/* Upload progress */}
         {isUploading && uploadProgress && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
+          <div className="absolute inset-0 bg-navy-900/50 rounded-full flex items-center justify-center">
             <div className="text-center text-white">
               <div className="text-xs font-medium">{Math.round(uploadProgress.progress)}%</div>
-              <div className="w-16 bg-gray-200 rounded-full h-1 mt-1">
+              <div className="w-16 bg-bg-alt rounded-full h-1 mt-1">
                 <div
-                  className="bg-blue-600 h-1 rounded-full transition-all duration-300"
+                  className="bg-navy h-1 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress.progress}%` }}
                 />
               </div>
@@ -280,25 +282,26 @@ export default function PhotoUpload({
 
       {/* Crop/Preview Modal */}
       {showCropModal && selectedFile && previewUrl && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full mx-4">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-medium text-gray-900">
-                {type === 'profile' ? 'Profile Photo Preview' : 'Company Logo Preview'}
+        <div className="fixed inset-0 bg-navy-900/75 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-surface rounded-lg max-w-md w-full mx-4 shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h3 className="text-lg font-medium text-text-primary">
+                {type === 'profile' ? 'Profile photo preview' : 'Company logo preview'}
               </h3>
               <button
                 onClick={cancelUpload}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-text-tertiary hover:text-text-primary transition-colors touch-target"
                 disabled={isUploading}
+                aria-label="Close"
               >
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               {/* Preview */}
               <div className="flex justify-center mb-4">
-                <div className={`${sizeClasses.xl} rounded-full overflow-hidden border-2 border-gray-200`}>
+                <div className={`${sizeClasses.xl} rounded-full overflow-hidden border-2 border-border`}>
                   <img
                     src={previewUrl}
                     alt="Preview"
@@ -306,43 +309,43 @@ export default function PhotoUpload({
                   />
                 </div>
               </div>
-              
+
               {/* File info */}
-              <div className="text-center text-sm text-gray-600 mb-6">
-                <div className="font-medium">{selectedFile.name}</div>
+              <div className="text-center text-sm text-text-secondary mb-6">
+                <div className="font-medium text-text-primary">{selectedFile.name}</div>
                 <div>{formatFileSize(selectedFile.size)}</div>
                 {type === 'profile' && (
-                  <div className="text-xs mt-1 text-gray-500">
+                  <div className="text-xs mt-1 text-text-tertiary">
                     Image will be cropped to square and resized to 400x400px
                   </div>
                 )}
               </div>
-              
-              {/* Actions */}
+
+              {/* Actions - Primary button first per Practical UI */}
               <div className="flex space-x-3">
                 <button
-                  onClick={cancelUpload}
-                  className="flex-1 btn-secondary"
-                  disabled={isUploading}
-                >
-                  Cancel
-                </button>
-                <button
                   onClick={uploadPhoto}
-                  className="flex-1 btn-primary"
+                  className="flex-1 btn-primary inline-flex items-center justify-center"
                   disabled={isUploading}
                 >
                   {isUploading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <>
+                      <div className="loading-spinner mr-2"></div>
                       Uploading...
-                    </div>
+                    </>
                   ) : (
                     <>
                       <CheckIcon className="w-4 h-4 mr-2" />
-                      Upload Photo
+                      Upload photo
                     </>
                   )}
+                </button>
+                <button
+                  onClick={cancelUpload}
+                  className="flex-1 btn-outline"
+                  disabled={isUploading}
+                >
+                  Cancel
                 </button>
               </div>
             </div>

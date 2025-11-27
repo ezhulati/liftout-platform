@@ -30,8 +30,8 @@ export function TeamHero() {
 
             {/* Pain Point Headline */}
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-              Ready for a new challenge, but don&apos;t want to{' '}
-              <span className="text-gold-700">break up your team?</span>
+              Ready for a new challenge without{' '}
+              <span className="text-gold-700">breaking up your team?</span>
             </h1>
 
             {/* Solution */}
@@ -43,10 +43,10 @@ export function TeamHero() {
             {/* USPs */}
             <div className="space-y-4 mb-10">
               {[
-                'Collective mobility - your team stays intact',
-                'Enhanced negotiating power - leverage your collective value',
-                'Better opportunities - access companies seeking proven teams',
-                'Reduced career risk - team support through transitions',
+                'Collective mobility keeps your team intact',
+                'Enhanced negotiating power from your collective value',
+                'Better opportunities with companies seeking proven teams',
+                'Reduced career risk with team support through transitions',
               ].map((usp) => (
                 <div key={usp} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -63,7 +63,7 @@ export function TeamHero() {
                 href="/auth/signup?type=team"
                 className="btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
-                Register Your Team
+                Register team
                 <svg
                   className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
                   fill="none"
@@ -78,7 +78,7 @@ export function TeamHero() {
                 href="#features"
                 className="min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-2 border-2 border-border text-text-primary bg-transparent hover:bg-bg-elevated hover:border-border-hover transition-all duration-fast ease-out-quart"
               >
-                See How It Works
+                View features
               </Link>
             </div>
           </div>
@@ -88,19 +88,19 @@ export function TeamHero() {
             {/* Benefits card */}
             <div className="bg-bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-lg">
               <h3 className="font-heading text-xl font-bold text-text-primary mb-6">
-                Why Teams Choose Liftout
+                Why teams choose Liftout
               </h3>
 
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {[
-                  { icon: '🤝', label: 'Stay together through transitions' },
-                  { icon: '📈', label: 'Access premium opportunities' },
-                  { icon: '💼', label: 'Negotiate as a collective' },
-                  { icon: '🔒', label: 'Explore confidentially' },
+                  'Stay together through transitions',
+                  'Access 200+ premium opportunities',
+                  'Negotiate as a collective',
+                  'Explore confidentially',
                 ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-4">
-                    <span className="text-2xl">{item.icon}</span>
-                    <span className="text-text-secondary text-base leading-snug">{item.label}</span>
+                  <div key={item} className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-gold flex-shrink-0" aria-hidden="true" />
+                    <span className="text-text-secondary text-base leading-snug">{item}</span>
                   </div>
                 ))}
               </div>
@@ -108,11 +108,11 @@ export function TeamHero() {
               {/* Testimonial/Quote */}
               <div className="mt-8 pt-6 border-t border-border">
                 <blockquote className="text-text-secondary italic text-base leading-relaxed mb-3">
-                  &ldquo;We&apos;d worked together for 4 years. The thought of splitting up was unthinkable.
-                  Liftout helped us find a company that valued what we&apos;d built together.&rdquo;
+                  "We had worked together for 4 years. The thought of splitting up was unthinkable.
+                  Liftout helped us find a company that valued what we had built together."
                 </blockquote>
                 <p className="text-text-tertiary text-sm">
-                  — Analytics Team Lead, FinTech
+                  — Analytics team lead, FinTech
                 </p>
               </div>
             </div>

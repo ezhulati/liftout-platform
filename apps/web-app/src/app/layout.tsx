@@ -29,6 +29,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Liftout Team' }],
   creator: 'Liftout',
   publisher: 'Liftout',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/logo.png',
+  },
   formatDetection: {
     email: false,
     address: false,

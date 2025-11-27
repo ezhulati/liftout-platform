@@ -31,7 +31,7 @@ export function CompanyHero() {
             {/* Pain Point Headline */}
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6">
               Tired of hiring individuals that{' '}
-              <span className="text-navy">don&apos;t gel?</span>
+              <span className="text-navy">never gel?</span>
             </h1>
 
             {/* Solution */}
@@ -43,10 +43,10 @@ export function CompanyHero() {
             {/* USPs */}
             <div className="space-y-4 mb-10">
               {[
-                'Zero team-building phase - immediate productivity',
-                'Verified track records - quantifiable performance history',
-                'Lower risk than M&A - strategic alternative to acquisitions',
-                'Competitive advantage - weaken competitors while strengthening yourself',
+                'Zero team-building phase with immediate productivity',
+                'Verified track records with quantifiable performance history',
+                'Lower risk than M&A as a strategic alternative',
+                'Competitive advantage by acquiring proven talent',
               ].map((usp) => (
                 <div key={usp} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-navy/10 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -63,7 +63,7 @@ export function CompanyHero() {
                 href="/auth/signup?type=company"
                 className="btn-primary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
-                Start Acquiring Proven Teams
+                Browse teams
                 <svg
                   className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
                   fill="none"
@@ -78,7 +78,7 @@ export function CompanyHero() {
                 href="#features"
                 className="min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-2 border-2 border-border text-text-primary bg-transparent hover:bg-bg-elevated hover:border-border-hover transition-all duration-fast ease-out-quart"
               >
-                See How It Works
+                View features
               </Link>
             </div>
           </div>
@@ -88,7 +88,7 @@ export function CompanyHero() {
             {/* Stats card */}
             <div className="bg-bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-lg">
               <h3 className="font-heading text-xl font-bold text-text-primary mb-6">
-                Why Companies Choose Liftout
+                Why companies choose Liftout
               </h3>
 
               <div className="space-y-6">

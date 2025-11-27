@@ -35,22 +35,22 @@ interface RoleChangeWithUserInfo extends RoleChangeHistory {
 const getRoleIcon = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return <StarIcon className="h-4 w-4 text-yellow-600" />;
+      return <StarIcon className="h-4 w-4 text-gold" />;
     case 'admin':
-      return <ShieldCheckIcon className="h-4 w-4 text-blue-600" />;
+      return <ShieldCheckIcon className="h-4 w-4 text-navy" />;
     case 'member':
-      return <UserIcon className="h-4 w-4 text-gray-600" />;
+      return <UserIcon className="h-4 w-4 text-text-tertiary" />;
   }
 };
 
 const getRoleBadgeColor = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-gold-100 text-gold-800';
     case 'admin':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-navy-50 text-navy-800';
     case 'member':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-bg-alt text-text-secondary';
   }
 };
 
@@ -103,13 +103,13 @@ export function RoleChangeNotification({
 
   const getChangeType = (previous: TeamRole, current: TeamRole) => {
     const roleLevels = { member: 1, admin: 2, leader: 3 };
-    
+
     if (roleLevels[current] > roleLevels[previous]) {
-      return { type: 'promotion', icon: '↗️', color: 'text-green-600' };
+      return { type: 'promotion', icon: '↗️', color: 'text-success' };
     } else if (roleLevels[current] < roleLevels[previous]) {
-      return { type: 'demotion', icon: '↘️', color: 'text-red-600' };
+      return { type: 'demotion', icon: '↘️', color: 'text-error' };
     } else {
-      return { type: 'change', icon: '↔️', color: 'text-blue-600' };
+      return { type: 'change', icon: '↔️', color: 'text-navy' };
     }
   };
 
@@ -117,7 +117,7 @@ export function RoleChangeNotification({
     return (
       <div className="animate-pulse space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-gray-200 rounded-lg"></div>
+          <div key={i} className="h-16 bg-bg-alt rounded-lg"></div>
         ))}
       </div>
     );
@@ -126,8 +126,8 @@ export function RoleChangeNotification({
   if (history.length === 0) {
     return (
       <div className="text-center py-8">
-        <ClockIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-        <p className="text-gray-500">No role changes recorded yet</p>
+        <ClockIcon className="h-12 w-12 text-text-tertiary mx-auto mb-2" />
+        <p className="text-text-secondary">No role changes recorded yet</p>
       </div>
     );
   }
@@ -136,18 +136,18 @@ export function RoleChangeNotification({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <BellIcon className="h-5 w-5 text-blue-600 mr-2" />
-          <h3 className="text-lg font-medium text-gray-900">
-            Role Change History
+          <BellIcon className="h-5 w-5 text-navy mr-2" />
+          <h3 className="text-lg font-medium text-text-primary">
+            Role change history
           </h3>
         </div>
-        
+
         {!showAll && history.length >= limit && (
           <button
             onClick={() => setShowAllHistory(true)}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="text-sm text-navy hover:text-navy-800 transition-colors duration-fast"
           >
-            View All
+            View all
           </button>
         )}
       </div>
@@ -159,7 +159,7 @@ export function RoleChangeNotification({
           return (
             <div
               key={change.id}
-              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+              className="card p-4 hover:shadow-sm transition-all duration-fast"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -167,10 +167,10 @@ export function RoleChangeNotification({
                     <span className={`text-lg ${changeInfo.color}`}>
                       {changeInfo.icon}
                     </span>
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-text-primary">
                       {change.userName || 'Team Member'}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-text-tertiary">
                       role changed by {change.changedByName}
                     </span>
                   </div>
@@ -194,16 +194,16 @@ export function RoleChangeNotification({
                   </div>
 
                   {change.reason && (
-                    <div className="bg-gray-50 rounded-md p-2 mb-2">
-                      <p className="text-sm text-gray-700">
+                    <div className="bg-bg-alt rounded-md p-2 mb-2">
+                      <p className="text-sm text-text-secondary">
                         <span className="font-medium">Reason:</span> "{change.reason}"
                       </p>
                     </div>
                   )}
 
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-text-tertiary">
                     {formatDistanceToNow(
-                      change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate(), 
+                      change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate(),
                       { addSuffix: true }
                     )}
                   </div>
@@ -211,13 +211,13 @@ export function RoleChangeNotification({
 
                 <div className="ml-4">
                   {changeInfo.type === 'promotion' && (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                    <CheckCircleIcon className="h-5 w-5 text-success" />
                   )}
                   {changeInfo.type === 'demotion' && (
-                    <XCircleIcon className="h-5 w-5 text-red-500" />
+                    <XCircleIcon className="h-5 w-5 text-error" />
                   )}
                   {changeInfo.type === 'change' && (
-                    <ClockIcon className="h-5 w-5 text-blue-500" />
+                    <ClockIcon className="h-5 w-5 text-navy" />
                   )}
                 </div>
               </div>
@@ -230,9 +230,9 @@ export function RoleChangeNotification({
         <div className="text-center pt-4">
           <button
             onClick={() => setShowAllHistory(false)}
-            className="text-sm text-gray-600 hover:text-gray-800"
+            className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-fast"
           >
-            Show Less
+            Show less
           </button>
         </div>
       )}
@@ -278,14 +278,14 @@ export function RoleChangeAlert({ teamId }: { teamId: string }) {
   }
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+    <div className="bg-navy-50 border border-border rounded-md p-3">
       <div className="flex">
-        <BellIcon className="h-5 w-5 text-blue-400 flex-shrink-0" />
+        <BellIcon className="h-5 w-5 text-navy flex-shrink-0" />
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-blue-800">
-            Recent Role Changes
+          <h3 className="text-sm font-medium text-navy-800">
+            Recent role changes
           </h3>
-          <div className="mt-1 text-sm text-blue-700">
+          <div className="mt-1 text-sm text-navy-700">
             {recentChanges.length} role change{recentChanges.length !== 1 ? 's' : ''} in the last 24 hours
           </div>
         </div>

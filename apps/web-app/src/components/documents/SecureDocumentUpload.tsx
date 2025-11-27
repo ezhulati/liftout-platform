@@ -238,22 +238,22 @@ export function SecureDocumentUpload({
   const getSecurityIcon = () => {
     switch (securityLevel) {
       case 'legal':
-        return <ShieldCheckIcon className="h-4 w-4 text-red-500" />;
+        return <ShieldCheckIcon className="h-4 w-4 text-error" />;
       case 'high':
-        return <LockClosedIcon className="h-4 w-4 text-yellow-500" />;
+        return <LockClosedIcon className="h-4 w-4 text-gold" />;
       default:
-        return <EyeIcon className="h-4 w-4 text-blue-500" />;
+        return <EyeIcon className="h-4 w-4 text-navy" />;
     }
   };
 
   const getSecurityBadgeColor = () => {
     switch (securityLevel) {
       case 'legal':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-light text-error-dark';
       case 'high':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-gold-100 text-gold-800';
       default:
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-navy-50 text-navy-800';
     }
   };
 
@@ -261,25 +261,25 @@ export function SecureDocumentUpload({
     <div className={`space-y-4 ${className}`}>
       {/* Upload Area */}
       <div
-        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors duration-fast ${
           isDragOver
-            ? 'border-blue-400 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? 'border-navy bg-navy-50'
+            : 'border-border hover:border-text-tertiary'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
+        <CloudArrowUpIcon className="mx-auto h-12 w-12 text-text-tertiary" />
         <div className="mt-2">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="text-blue-600 hover:text-blue-500 font-medium"
+            className="text-navy hover:text-navy-700 font-medium transition-colors duration-fast"
           >
             Upload secure documents
           </button>
-          <p className="text-gray-500 text-sm mt-1">or drag and drop files here</p>
+          <p className="text-text-secondary text-sm mt-1">or drag and drop files here</p>
         </div>
 
         <div className="mt-4 flex items-center justify-center space-x-4">
@@ -289,13 +289,13 @@ export function SecureDocumentUpload({
               {securityLevel.toUpperCase()} SECURITY
             </span>
           </div>
-          
-          <span className="text-xs text-gray-500">
+
+          <span className="text-xs text-text-tertiary">
             Max {Math.round(maxFileSize / (1024 * 1024))}MB
           </span>
         </div>
 
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs text-text-tertiary mt-2">
           Supported: {allowedTypes.join(', ')}
         </p>
 
@@ -311,12 +311,12 @@ export function SecureDocumentUpload({
 
       {/* Security Notice */}
       {securityLevel === 'legal' && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+        <div className="bg-error-light border border-error rounded-lg p-3">
           <div className="flex">
-            <ShieldCheckIcon className="h-5 w-5 text-red-400 mr-2 mt-0.5" />
+            <ShieldCheckIcon className="h-5 w-5 text-error mr-2 mt-0.5" />
             <div className="text-sm">
-              <p className="text-red-800 font-medium">Maximum Security Upload</p>
-              <p className="text-red-700 mt-1">
+              <p className="text-error-dark font-medium">Maximum security upload</p>
+              <p className="text-error-dark/80 mt-1">
                 Files uploaded with legal-grade security will be encrypted, require legal review,
                 and are subject to enhanced audit logging and compliance monitoring.
               </p>
@@ -328,24 +328,24 @@ export function SecureDocumentUpload({
       {/* Upload Progress */}
       {uploadingFiles.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-900">Upload Progress</h4>
-          
+          <h4 className="text-sm font-medium text-text-primary">Upload progress</h4>
+
           {uploadingFiles.map((uploadFile) => (
-            <div key={uploadFile.id} className="border border-gray-200 rounded-lg p-3">
+            <div key={uploadFile.id} className="border border-border rounded-lg p-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-3 flex-1">
-                  <DocumentTextIcon className="h-8 w-8 text-gray-400 mt-1" />
-                  
+                  <DocumentTextIcon className="h-8 w-8 text-text-tertiary mt-1" />
+
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-text-primary truncate">
                       {uploadFile.file.name}
                     </p>
-                    
+
                     <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-text-tertiary">
                         {formatFileSize(uploadFile.file.size)}
                       </span>
-                      
+
                       {uploadFile.status === 'complete' && uploadFile.document && (
                         <span className={`text-xs px-2 py-1 rounded-full ${getSecurityBadgeColor()}`}>
                           {uploadFile.document.documentType?.toUpperCase()}
@@ -356,13 +356,13 @@ export function SecureDocumentUpload({
                     {/* Progress Bar */}
                     {(uploadFile.status === 'uploading' || uploadFile.status === 'processing') && (
                       <div className="mt-2">
-                        <div className="bg-gray-200 rounded-full h-2">
+                        <div className="bg-bg-alt rounded-full h-2">
                           <div
-                            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                            className="bg-navy h-2 rounded-full transition-all duration-300"
                             style={{ width: `${uploadFile.progress}%` }}
                           />
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-text-tertiary mt-1">
                           {uploadFile.status === 'processing' ? 'Processing...' : 'Uploading...'}
                         </p>
                       </div>
@@ -370,7 +370,7 @@ export function SecureDocumentUpload({
 
                     {/* Error Message */}
                     {uploadFile.status === 'error' && uploadFile.error && (
-                      <p className="text-xs text-red-600 mt-1">{uploadFile.error}</p>
+                      <p className="text-xs text-error mt-1">{uploadFile.error}</p>
                     )}
                   </div>
                 </div>
@@ -378,18 +378,18 @@ export function SecureDocumentUpload({
                 {/* Status Icon */}
                 <div className="ml-2">
                   {uploadFile.status === 'complete' && (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                    <CheckCircleIcon className="h-5 w-5 text-success" />
                   )}
                   {uploadFile.status === 'error' && (
-                    <ExclamationTriangleIcon className="h-5 w-5 text-red-500" />
+                    <ExclamationTriangleIcon className="h-5 w-5 text-error" />
                   )}
                   {(uploadFile.status === 'uploading' || uploadFile.status === 'processing') && (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-navy" />
                   )}
-                  
+
                   <button
                     onClick={() => removeFile(uploadFile.id)}
-                    className="ml-2 text-gray-400 hover:text-gray-600"
+                    className="ml-2 text-text-tertiary hover:text-text-secondary transition-colors duration-fast"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>

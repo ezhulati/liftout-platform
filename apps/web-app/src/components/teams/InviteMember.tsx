@@ -6,15 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { 
-  XMarkIcon, 
+import {
+  XMarkIcon,
   PaperAirplaneIcon,
   UserPlusIcon,
-  ExclamationTriangleIcon 
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import { emailInvitationService, TeamInvitation } from '@/lib/email-invitations';
 import { useAuth } from '@/contexts/AuthContext';
 import toast from 'react-hot-toast';
+import { FormField, ButtonGroup, TextLink } from '@/components/ui';
 
 const inviteSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -148,104 +149,85 @@ export function InviteMember({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-bg-surface p-6 text-left align-middle shadow-xl transition-all">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <UserPlusIcon className="h-6 w-6 text-blue-600" />
+                      <UserPlusIcon className="h-6 w-6 text-navy" />
                     </div>
                     <div className="ml-3">
-                      <Dialog.Title as="h3" className="text-lg font-medium text-gray-900">
-                        Invite Team Member
+                      <Dialog.Title as="h3" className="text-lg font-medium text-text-primary">
+                        Invite team member
                       </Dialog.Title>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-text-secondary">
                         Invite someone to join "{teamName}"
                       </p>
                     </div>
                   </div>
                   <button
                     type="button"
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    className="text-text-tertiary hover:text-text-primary transition-colors touch-target"
                     onClick={handleClose}
                     disabled={isSubmitting}
+                    aria-label="Close"
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Email Input */}
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
-                    </label>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <FormField label="Email address" name="email" required error={errors.email?.message}>
                     <input
                       type="email"
                       id="email"
                       {...register('email')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="input-field"
                       placeholder="colleague@company.com"
                       disabled={isSubmitting}
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                    )}
-                  </div>
+                  </FormField>
 
-                  {/* Role Selection */}
-                  <div>
-                    <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-                      Role *
-                    </label>
+                  <FormField
+                    label="Role"
+                    name="role"
+                    required
+                    error={errors.role?.message}
+                    hint={selectedRole ? roleDescriptions[selectedRole] : undefined}
+                  >
                     <select
                       id="role"
                       {...register('role')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="input-field"
                       disabled={isSubmitting}
                     >
                       <option value="member">Member</option>
                       <option value="admin">Admin</option>
                       <option value="leader">Leader</option>
                     </select>
-                    {selectedRole && (
-                      <p className="mt-2 text-sm text-gray-600">
-                        {roleDescriptions[selectedRole]}
-                      </p>
-                    )}
-                    {errors.role && (
-                      <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
-                    )}
-                  </div>
+                  </FormField>
 
-                  {/* Personal Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                      Personal Message (Optional)
-                    </label>
+                  <FormField label="Personal message" name="message" error={errors.message?.message}>
                     <textarea
                       id="message"
                       {...register('message')}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="input-field"
                       placeholder="Add a personal note to your invitation..."
                       disabled={isSubmitting}
                     />
-                    {errors.message && (
-                      <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
-                    )}
-                  </div>
+                  </FormField>
 
                   {/* Info Box */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                  <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
                     <div className="flex">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                      <InformationCircleIcon className="h-5 w-5 text-navy flex-shrink-0" />
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium text-blue-800">
-                          Invitation Details
+                        <h3 className="text-sm font-medium text-navy-900">
+                          Invitation details
                         </h3>
-                        <div className="mt-2 text-sm text-blue-700">
+                        <div className="mt-2 text-sm text-navy-700">
                           <ul className="list-disc list-inside space-y-1">
                             <li>Invitation will expire in 7 days</li>
                             <li>The invitee will receive an email with instructions</li>
@@ -256,33 +238,30 @@ export function InviteMember({
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex justify-end space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={handleClose}
-                      disabled={isSubmitting}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <PaperAirplaneIcon className="h-4 w-4 mr-2" />
-                          Send Invitation
-                        </>
-                      )}
-                    </button>
+                  {/* Action Buttons - LEFT aligned per Practical UI */}
+                  <div className="pt-4">
+                    <ButtonGroup>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="btn-primary inline-flex items-center"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="loading-spinner mr-2" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <PaperAirplaneIcon className="h-4 w-4 mr-2" />
+                            Send invitation
+                          </>
+                        )}
+                      </button>
+                      <TextLink onClick={handleClose} disabled={isSubmitting}>
+                        Cancel
+                      </TextLink>
+                    </ButtonGroup>
                   </div>
                 </form>
               </Dialog.Panel>

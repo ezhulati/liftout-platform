@@ -22,29 +22,28 @@ export function LandingCTA() {
         />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
-          Ready to Transform Your Growth?
+          Ready to transform your growth?
         </p>
 
         {/* Main headline */}
         <h2
           id="cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6 max-w-3xl mx-auto"
         >
           Join the future of
           <span className="block text-gold mt-2">strategic talent acquisition</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-navy-200 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          Whether you&apos;re a company seeking proven teams or a high-performing team exploring new opportunities,
-          Liftout connects you with the right strategic partnerships.
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+          Whether you are a company seeking proven teams or a high-performing team exploring new opportunities, Liftout connects you with the right strategic partnerships.
         </p>
 
-        {/* Dual CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        {/* Dual CTA buttons - centered */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-12 justify-center">
           {/* Primary CTA - Gold */}
           <Link
             href="/auth/signup?type=company"
@@ -81,7 +80,7 @@ export function LandingCTA() {
         </div>
 
         {/* Sign in link */}
-        <p className="text-navy-300 text-sm">
+        <p className="text-white/70 text-sm">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
@@ -92,17 +91,17 @@ export function LandingCTA() {
         </p>
 
         {/* Trust indicators section */}
-        <div className="mt-16 pt-8 border-t border-navy-600">
-          <p className="text-navy-400 text-xs mb-6 uppercase tracking-wider font-semibold">
+        <div className="mt-16 pt-8 border-t border-white/20">
+          <p className="text-white/60 text-xs mb-6 uppercase tracking-wider font-semibold">
             Trusted by forward-thinking organizations
           </p>
-          <div className="flex flex-wrap justify-center gap-8 lg:gap-12 text-navy-400">
+          <div className="flex flex-wrap gap-8 lg:gap-12 text-white/70 justify-center">
             {['Finance', 'Technology', 'Healthcare', 'Consulting'].map((industry) => (
               <div
                 key={industry}
                 className="flex items-center gap-2 text-sm font-medium"
               >
-                <div className="w-2 h-2 rounded-full bg-gold/50" aria-hidden="true" />
+                <div className="w-2 h-2 rounded-full bg-gold" aria-hidden="true" />
                 <span>{industry}</span>
               </div>
             ))}

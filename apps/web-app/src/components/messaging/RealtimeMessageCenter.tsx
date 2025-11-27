@@ -287,7 +287,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   if (conversationsLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <div className="animate-pulse h-96 bg-gray-200 rounded-lg w-full max-w-4xl"></div>
+        <div className="animate-pulse h-96 bg-bg-alt rounded-lg w-full max-w-4xl"></div>
       </div>
     );
   }
@@ -295,40 +295,40 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const getSecurityIcon = (level: string) => {
     switch (level) {
       case 'maximum':
-        return <ShieldCheckIcon className="h-4 w-4 text-red-500" />;
+        return <ShieldCheckIcon className="h-4 w-4 text-error" />;
       case 'high':
-        return <LockClosedIcon className="h-4 w-4 text-yellow-500" />;
+        return <LockClosedIcon className="h-4 w-4 text-gold" />;
       default:
-        return <ChatBubbleLeftRightIcon className="h-4 w-4 text-blue-500" />;
+        return <ChatBubbleLeftRightIcon className="h-4 w-4 text-navy" />;
     }
   };
 
   const getSecurityBadge = (level: string) => {
     const colors = {
-      maximum: 'bg-red-100 text-red-800',
-      high: 'bg-yellow-100 text-yellow-800',
-      standard: 'bg-blue-100 text-blue-800',
+      maximum: 'bg-error-light text-error-dark',
+      high: 'bg-gold-100 text-gold-800',
+      standard: 'bg-navy-50 text-navy-800',
     };
     return colors[level as keyof typeof colors] || colors.standard;
   };
 
   const getMessageStatus = (message: ReturnType<typeof transformMessage>) => {
-    if (message.status === 'read') return <CheckCircleIconSolid className="h-4 w-4 text-green-500" />;
-    if (message.status === 'delivered') return <CheckCircleIcon className="h-4 w-4 text-gray-400" />;
+    if (message.status === 'read') return <CheckCircleIconSolid className="h-4 w-4 text-success" />;
+    if (message.status === 'delivered') return <CheckCircleIcon className="h-4 w-4 text-text-tertiary" />;
     if (message.requiresAcknowledgment && !message.acknowledgedBy.length) {
-      return <ExclamationTriangleIconSolid className="h-4 w-4 text-yellow-500" />;
+      return <ExclamationTriangleIconSolid className="h-4 w-4 text-gold" />;
     }
-    return <ClockIcon className="h-4 w-4 text-gray-400" />;
+    return <ClockIcon className="h-4 w-4 text-text-tertiary" />;
   };
 
   const getConnectionStatusIcon = () => {
     switch (connectionStatus) {
       case 'connected':
-        return <WifiIcon className="h-4 w-4 text-green-500" />;
+        return <WifiIcon className="h-4 w-4 text-success" />;
       case 'connecting':
-        return <SignalIcon className="h-4 w-4 text-yellow-500 animate-pulse" />;
+        return <SignalIcon className="h-4 w-4 text-gold animate-pulse" />;
       default:
-        return <WifiIcon className="h-4 w-4 text-red-500" />;
+        return <WifiIcon className="h-4 w-4 text-error" />;
     }
   };
 
@@ -363,58 +363,58 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   };
 
   return (
-    <div className="h-screen flex bg-white">
+    <div className="h-screen flex bg-bg-surface">
       {/* Conversation List */}
-      <div className="w-1/3 border-r border-gray-200 flex flex-col">
+      <div className="w-1/3 border-r border-border flex flex-col">
         {/* Header with connection status */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
-              <h2 className="text-lg font-semibold text-gray-900">Secure Messages</h2>
+              <h2 className="text-lg font-semibold text-text-primary">Secure messages</h2>
               <div className="flex items-center space-x-1">
                 {getConnectionStatusIcon()}
                 <span className={`text-xs ${
-                  connectionStatus === 'connected' ? 'text-green-600' :
-                  connectionStatus === 'connecting' ? 'text-yellow-600' :
-                  'text-red-600'
+                  connectionStatus === 'connected' ? 'text-success' :
+                  connectionStatus === 'connecting' ? 'text-gold' :
+                  'text-error'
                 }`}>
                   {connectionStatus}
                 </span>
               </div>
             </div>
-            <button className="btn-sm bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center">
+            <button className="btn-primary text-sm inline-flex items-center px-3 py-2 min-h-[36px]">
               <PlusIcon className="h-4 w-4 mr-1" />
               New
             </button>
           </div>
-          
+
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-tertiary" />
             <input
               type="text"
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-field pl-10"
             />
           </div>
         </div>
 
         {/* Online Users */}
         {onlineUsers.length > 0 && (
-          <div className="p-4 border-b border-gray-100">
-            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+          <div className="p-4 border-b border-border">
+            <h3 className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">
               Online ({onlineUsers.length})
             </h3>
             <div className="flex flex-wrap gap-2">
               {onlineUsers.slice(0, 6).map((user) => (
                 <div key={user.userId} className="flex items-center space-x-1 text-xs">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-700 truncate">{user.userName}</span>
+                  <div className="w-2 h-2 bg-success rounded-full"></div>
+                  <span className="text-text-secondary truncate">{user.userName}</span>
                 </div>
               ))}
               {onlineUsers.length > 6 && (
-                <span className="text-xs text-gray-500">+{onlineUsers.length - 6} more</span>
+                <span className="text-xs text-text-tertiary">+{onlineUsers.length - 6} more</span>
               )}
             </div>
           </div>
@@ -430,49 +430,49 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
               <div
                 key={conversation.id}
                 onClick={() => setSelectedConversationId(conversation.id)}
-                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 relative ${
-                  selectedConversationId === conversation.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                className={`p-4 border-b border-border cursor-pointer hover:bg-bg-alt relative transition-colors duration-fast ${
+                  selectedConversationId === conversation.id ? 'bg-navy-50 border-l-4 border-l-navy' : ''
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-1">
                       {getSecurityIcon(conversation.securityLevel)}
-                      <h3 className="text-sm font-medium text-gray-900 truncate">
+                      <h3 className="text-sm font-medium text-text-primary truncate">
                         {conversation.title}
                       </h3>
                       {unreadCount > 0 && (
-                        <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                        <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-error rounded-full">
                           {unreadCount}
                         </span>
                       )}
                     </div>
-                    
+
                     <div className="flex items-center space-x-2 mb-2">
                       {conversation.participants.map(p => (
                         <div key={p.userId} className="flex items-center space-x-1">
                           <div className={`w-2 h-2 rounded-full ${
-                            isUserOnline(p.userId) ? 'bg-green-500' : 'bg-gray-300'
+                            isUserOnline(p.userId) ? 'bg-success' : 'bg-bg-alt'
                           }`}></div>
-                          <span className="text-xs text-gray-500">{p.name}</span>
+                          <span className="text-xs text-text-tertiary">{p.name}</span>
                         </div>
                       ))}
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getSecurityBadge(conversation.securityLevel)}`}>
                         {conversation.securityLevel.toUpperCase()}
                       </span>
-                      
+
                       {conversation.isConfidential && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-error-light text-error-dark">
                           CONFIDENTIAL
                         </span>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="text-xs text-gray-400">
+
+                  <div className="text-xs text-text-tertiary">
                     {formatTime(conversation.lastActivity)}
                   </div>
                 </div>
@@ -487,53 +487,53 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
         {selectedConversation ? (
           <>
             {/* Conversation Header */}
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <div className="p-4 border-b border-border bg-bg-alt">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center space-x-2">
                     {getSecurityIcon(selectedConversation.securityLevel)}
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-text-primary">
                       {selectedConversation.title}
                     </h3>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4 mt-2">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSecurityBadge(selectedConversation.securityLevel)}`}>
                       {selectedConversation.securityLevel.toUpperCase()} SECURITY
                     </span>
-                    
+
                     {selectedConversation.encryptionEnabled && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
                         <LockClosedIcon className="h-3 w-3 mr-1" />
                         ENCRYPTED
                       </span>
                     )}
-                    
-                    <span className="text-xs text-gray-500">
+
+                    <span className="text-xs text-text-tertiary">
                       {selectedConversation.participants.length} participants
                     </span>
-                    
+
                     {isConnected && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
+                        <div className="w-2 h-2 bg-success rounded-full mr-1 animate-pulse"></div>
                         REAL-TIME
                       </span>
                     )}
                   </div>
                 </div>
-                
-                <button className="text-gray-400 hover:text-gray-600">
+
+                <button className="text-text-tertiary hover:text-text-primary transition-colors duration-fast">
                   <EllipsisVerticalIcon className="h-5 w-5" />
                 </button>
               </div>
 
               {selectedConversation.legalReviewRequired && (
-                <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="mt-3 p-3 bg-gold-50 border border-gold-200 rounded-lg">
                   <div className="flex">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" />
+                    <ExclamationTriangleIcon className="h-5 w-5 text-gold" />
                     <div className="ml-3">
-                      <p className="text-sm text-yellow-800">
-                        <strong>Legal Review Required:</strong> All messages in this conversation are subject to legal review and compliance monitoring.
+                      <p className="text-sm text-gold-800">
+                        <strong>Legal review required:</strong> All messages in this conversation are subject to legal review and compliance monitoring.
                       </p>
                     </div>
                   </div>
@@ -550,32 +550,32 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                 >
                   <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                     message.senderId === session?.user?.id
-                      ? 'bg-blue-500 text-white' 
-                      : 'bg-gray-100 text-gray-900'
+                      ? 'bg-navy text-white'
+                      : 'bg-bg-alt text-text-primary'
                   }`}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium flex items-center space-x-1">
                         <span>{message.senderName}</span>
                         {isUserOnline(message.senderId) && (
-                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <div className="w-2 h-2 bg-success rounded-full"></div>
                         )}
                       </span>
                       <div className="flex items-center space-x-1">
                         {message.encryptionLevel === 'legal' && (
-                          <LockClosedIcon className="h-3 w-3 text-red-400" />
+                          <LockClosedIcon className="h-3 w-3 text-error" />
                         )}
                         {getMessageStatus(message)}
                       </div>
                     </div>
-                    
+
                     {message.subject && (
                       <div className="text-xs font-semibold mb-2 opacity-75">
                         {message.subject}
                       </div>
                     )}
-                    
+
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    
+
                     {message.attachments.length > 0 && (
                       <div className="mt-2 space-y-1">
                         {message.attachments.map((attachment) => (
@@ -583,7 +583,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                             <PaperClipIcon className="h-3 w-3" />
                             <span className="truncate">{attachment.filename}</span>
                             {attachment.documentType === 'nda' && (
-                              <span className="px-1 py-0.5 bg-red-200 text-red-800 rounded text-xs">
+                              <span className="px-1 py-0.5 bg-error-light text-error-dark rounded text-xs">
                                 NDA
                               </span>
                             )}
@@ -591,14 +591,14 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                         ))}
                       </div>
                     )}
-                    
+
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs opacity-75">
                         {formatTime(message.timestamp)}
                       </span>
-                      
+
                       {message.priority === 'urgent' && (
-                        <span className="text-xs px-1 py-0.5 bg-red-200 text-red-800 rounded">
+                        <span className="text-xs px-1 py-0.5 bg-error-light text-error-dark rounded">
                           URGENT
                         </span>
                       )}
@@ -606,31 +606,31 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   </div>
                 </div>
               ))}
-              
+
               {/* Typing Indicators */}
               {currentTypingUsers.length > 0 && (
                 <div className="flex justify-start">
-                  <div className="max-w-xs lg:max-w-md px-4 py-2 bg-gray-100 rounded-lg">
+                  <div className="max-w-xs lg:max-w-md px-4 py-2 bg-bg-alt rounded-lg">
                     <div className="flex items-center space-x-2">
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       </div>
-                      <span className="text-xs text-gray-600">
-                        {currentTypingUsers.map(u => u.userName).join(', ')} 
-                        {currentTypingUsers.length === 1 ? 'is' : 'are'} typing...
+                      <span className="text-xs text-text-secondary">
+                        {currentTypingUsers.map(u => u.userName).join(', ')}
+                        {currentTypingUsers.length === 1 ? ' is' : ' are'} typing...
                       </span>
                     </div>
                   </div>
                 </div>
               )}
-              
+
               <div ref={messagesEndRef} />
             </div>
 
             {/* Message Input */}
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4 border-t border-border">
               <div className="flex items-end space-x-2">
                 <div className="flex-1">
                   <textarea
@@ -641,24 +641,24 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                     placeholder={isConnected ? "Type your secure message..." : "Connecting..."}
                     rows={3}
                     disabled={!isConnected}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="input-field resize-none disabled:bg-bg-alt disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <button className="text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed" disabled={!isConnected}>
+                  <button className="text-text-tertiary hover:text-text-primary transition-colors duration-fast disabled:cursor-not-allowed touch-target" disabled={!isConnected}>
                     <PaperClipIcon className="h-5 w-5" />
                   </button>
-                  <button 
+                  <button
                     onClick={handleSendMessage}
-                    className="btn-sm bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="btn-primary text-sm px-3 py-2 min-h-[36px] disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
                     disabled={!newMessage.trim() || !isConnected}
                   >
                     Send
                   </button>
                 </div>
               </div>
-              
-              <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+
+              <div className="mt-2 flex items-center justify-between text-xs text-text-tertiary">
                 <div className="flex items-center space-x-4">
                   <span className="flex items-center space-x-1">
                     <LockClosedIcon className="h-3 w-3" />
@@ -668,8 +668,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                     <span>Audit trail enabled</span>
                   )}
                   {isConnected && (
-                    <span className="text-green-600 flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-success flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
                       <span>Real-time messaging active</span>
                     </span>
                   )}
@@ -683,10 +683,10 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No conversation selected</h3>
-              <p className="mt-1 text-sm text-gray-500">Choose a conversation to start real-time messaging</p>
-              <div className="mt-4 flex items-center justify-center space-x-2 text-xs text-gray-500">
+              <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+              <h3 className="mt-2 text-sm font-medium text-text-primary">No conversation selected</h3>
+              <p className="mt-1 text-sm text-text-secondary">Choose a conversation to start real-time messaging</p>
+              <div className="mt-4 flex items-center justify-center space-x-2 text-xs text-text-tertiary">
                 {getConnectionStatusIcon()}
                 <span>Socket.io {connectionStatus}</span>
               </div>

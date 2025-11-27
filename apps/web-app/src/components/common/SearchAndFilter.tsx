@@ -70,13 +70,13 @@ export function SearchAndFilter({
         {/* Search Bar */}
         <div className="flex-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+            <MagnifyingGlassIcon className="h-5 w-5 text-text-tertiary" />
           </div>
           <input
             type="text"
             value={searchValue}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+            className="input-field pl-10"
             placeholder={searchPlaceholder}
           />
         </div>
@@ -86,16 +86,16 @@ export function SearchAndFilter({
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={classNames(
-              "inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium",
+              "inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium min-h-[44px] transition-colors",
               showFilters
-                ? "border-primary-300 text-primary-700 bg-primary-50"
-                : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                ? "border-navy-300 text-navy bg-navy-50"
+                : "border-border text-text-secondary bg-bg-surface hover:bg-bg-alt"
             )}
           >
             <FunnelIcon className="h-4 w-4 mr-2" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-primary-600 rounded-full">
+              <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-navy rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -104,7 +104,7 @@ export function SearchAndFilter({
           {activeFilterCount > 0 && (
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="inline-flex items-center px-3 py-2 border border-border rounded-md text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt min-h-[44px] transition-colors"
             >
               <XMarkIcon className="h-4 w-4 mr-1" />
               Clear
@@ -138,13 +138,14 @@ export function SearchAndFilter({
             return (
               <span
                 key={filterKey}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
               >
-                <span className="mr-1 text-primary-600">{filterGroup.label}:</span>
+                <span className="mr-1 text-navy-600">{filterGroup.label}:</span>
                 {getFilterValueLabel(filterValue)}
                 <button
                   onClick={() => clearFilter(filterKey)}
-                  className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-primary-400 hover:bg-primary-200 hover:text-primary-500"
+                  className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                  aria-label={`Remove ${filterGroup.label} filter`}
                 >
                   <XMarkIcon className="w-3 h-3" />
                 </button>
@@ -156,7 +157,7 @@ export function SearchAndFilter({
 
       {/* Results Count */}
       {resultCount !== undefined && (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-text-tertiary">
           {resultCount} result{resultCount !== 1 ? 's' : ''} found
         </div>
       )}
@@ -172,19 +173,19 @@ export function SearchAndFilter({
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
+        <div className="bg-bg-surface border border-border rounded-lg p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filterGroups.map((group) => (
               <div key={group.key}>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="label-text mb-2">
                   {group.label}
                 </label>
-                
+
                 {group.type === 'select' && (
                   <select
                     value={activeFilters[group.key] as string || ''}
                     onChange={(e) => onFilterChange(group.key, e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+                    className="input-field"
                   >
                     <option value="">All {group.label}</option>
                     {group.options.map((option) => (
@@ -197,34 +198,34 @@ export function SearchAndFilter({
                 )}
 
                 {group.type === 'multi-select' && (
-                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                  <div className="space-y-3 max-h-40 overflow-y-auto">
                     {group.options.map((option) => {
-                      const isSelected = Array.isArray(activeFilters[group.key]) 
+                      const isSelected = Array.isArray(activeFilters[group.key])
                         ? (activeFilters[group.key] as string[]).includes(option.value)
                         : false;
-                      
+
                       return (
-                        <label key={option.value} className="flex items-center">
+                        <label key={option.value} className="flex items-center gap-3 cursor-pointer">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={(e) => {
-                              const currentValues = Array.isArray(activeFilters[group.key]) 
+                              const currentValues = Array.isArray(activeFilters[group.key])
                                 ? activeFilters[group.key] as string[]
                                 : [];
-                              
+
                               if (e.target.checked) {
                                 onFilterChange(group.key, [...currentValues, option.value]);
                               } else {
                                 onFilterChange(group.key, currentValues.filter(v => v !== option.value));
                               }
                             }}
-                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                            className="rounded border-border text-navy focus:ring-navy w-5 h-5"
                           />
-                          <span className="ml-2 text-sm text-gray-700">
+                          <span className="text-sm text-text-secondary">
                             {option.label}
                             {option.count !== undefined && (
-                              <span className="text-gray-500"> ({option.count})</span>
+                              <span className="text-text-tertiary"> ({option.count})</span>
                             )}
                           </span>
                         </label>

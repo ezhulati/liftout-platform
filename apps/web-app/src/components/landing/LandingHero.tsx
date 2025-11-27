@@ -16,15 +16,15 @@ export function LandingHero() {
       {/* Main content container */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20 pt-[120px] lg:pt-[140px] relative z-10 w-full">
 
-        {/* Center brand tagline - above the split */}
-        <div className="text-center mb-12 lg:mb-16">
-          <p className="text-gold-600 font-semibold tracking-wider uppercase text-xs mb-4">
+        {/* Brand tagline - center-aligned */}
+        <div className="mb-12 lg:mb-16 text-center">
+          <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
             The Strategic Team Acquisition Platform
           </p>
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight max-w-4xl mx-auto">
             Where proven teams meet growth opportunities
           </h1>
-          <p className="mt-6 text-text-secondary text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 text-text-secondary text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto">
             The smart alternative to individual hiring and costly acquisitions. Connect with intact, high-performing teams ready for new challenges.
           </p>
         </div>
@@ -49,21 +49,20 @@ export function LandingHero() {
 
             {/* Headline - their pain point */}
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary leading-tight tracking-tight mb-4">
-              Tired of hiring individuals that don&apos;t gel?
+              Stop building teams from scratch
             </h2>
 
             {/* Value prop */}
             <p className="font-body text-text-secondary leading-relaxed mb-6">
-              Acquire proven, intact teams that hit the ground running. Zero team-building phase,
-              verified track records, immediate productivity.
+              Acquire teams with 3+ years working together. Verified results, zero ramp-up time, day-one productivity.
             </p>
 
             {/* USPs with checkmarks */}
             <div className="space-y-3 mb-8">
               {[
-                'Browse verified high-performing teams',
-                'Due diligence tools & reference checks',
-                'Confidential negotiation process',
+                'Browse 500+ verified teams',
+                'Reference checks and track records',
+                'Confidential negotiations',
               ].map((usp) => (
                 <div key={usp} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-navy/10 flex items-center justify-center flex-shrink-0">
@@ -74,12 +73,12 @@ export function LandingHero() {
               ))}
             </div>
 
-            {/* CTA */}
+            {/* CTA - Verb + Noun pattern */}
             <Link
               href="/for-companies"
               className="btn-primary min-h-[48px] px-6 py-3 text-base font-semibold inline-flex items-center gap-2 group/btn"
             >
-              Acquire Proven Teams
+              Browse teams
               <svg
                 className="w-4 h-4 transition-transform duration-fast ease-out-quart group-hover/btn:translate-x-1"
                 fill="none"
@@ -109,21 +108,20 @@ export function LandingHero() {
 
             {/* Headline - their pain point */}
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary leading-tight tracking-tight mb-4">
-              Ready for a new challenge together?
+              Move together, grow together
             </h2>
 
             {/* Value prop */}
             <p className="font-body text-text-secondary leading-relaxed mb-6">
-              Move as a unit. Keep what works, elevate your opportunities.
-              Access companies actively seeking proven teams like yours.
+              Keep your team intact. Access 200+ companies actively seeking proven teams with established track records.
             </p>
 
             {/* USPs with checkmarks */}
             <div className="space-y-3 mb-8">
               {[
-                'Showcase your collective achievements',
+                'Showcase collective achievements',
                 'AI-powered opportunity matching',
-                'Confidential exploration & negotiation',
+                'Confidential exploration',
               ].map((usp) => (
                 <div key={usp} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
@@ -134,12 +132,12 @@ export function LandingHero() {
               ))}
             </div>
 
-            {/* CTA */}
+            {/* CTA - Verb + Noun pattern */}
             <Link
               href="/for-teams"
               className="btn-secondary min-h-[48px] px-6 py-3 text-base font-semibold inline-flex items-center gap-2 group/btn"
             >
-              Register Your Team
+              Register team
               <svg
                 className="w-4 h-4 transition-transform duration-fast ease-out-quart group-hover/btn:translate-x-1"
                 fill="none"
@@ -153,15 +151,15 @@ export function LandingHero() {
           </div>
         </div>
 
-        {/* Bottom trust/social proof */}
+        {/* Bottom trust/social proof - centered */}
         <div className="mt-16 lg:mt-20 text-center">
-          <p className="text-text-tertiary text-sm mb-5 font-medium">
+          <p className="text-text-secondary text-sm mb-5 font-medium">
             Trusted by forward-thinking organizations across industries
           </p>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-text-tertiary">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-text-secondary">
             {['Finance', 'Technology', 'Healthcare', 'Consulting', 'Legal'].map((industry) => (
               <div key={industry} className="flex items-center gap-2 text-sm font-medium">
-                <div className="w-2 h-2 rounded-full bg-gold/60" aria-hidden="true" />
+                <div className="w-2 h-2 rounded-full bg-gold" aria-hidden="true" />
                 <span>{industry}</span>
               </div>
             ))}

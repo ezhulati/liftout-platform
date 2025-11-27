@@ -25,7 +25,7 @@ export function TeamCTA() {
       <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
-          Your Team&apos;s Next Chapter Awaits
+          Your team's next chapter awaits
         </p>
 
         {/* Headline */}
@@ -33,14 +33,14 @@ export function TeamCTA() {
           id="team-cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
         >
-          Don&apos;t let your next opportunity
-          <span className="block text-gold mt-2">break up what you&apos;ve built</span>
+          Your next opportunity should not
+          <span className="block text-gold mt-2">break up what you have built</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-navy-200 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          You&apos;ve spent years building trust, refining processes, and achieving together.
-          Companies value that. Let&apos;s find the right one for your team.
+        <p className="font-body text-white/80 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+          You have spent years building trust, refining processes, and achieving together.
+          Companies value that. Find the right one for your team.
         </p>
 
         {/* CTA buttons */}
@@ -50,7 +50,7 @@ export function TeamCTA() {
             href="/auth/signup?type=team"
             className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Register Your Team
+            Register team
             <svg
               className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
               fill="none"
@@ -67,12 +67,12 @@ export function TeamCTA() {
             href="/for-companies"
             className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
           >
-            Looking to Acquire Teams?
+            Acquire teams
           </Link>
         </div>
 
         {/* Sign in link */}
-        <p className="text-navy-300 text-sm">
+        <p className="text-white/70 text-sm">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
@@ -83,32 +83,32 @@ export function TeamCTA() {
         </p>
 
         {/* What teams are saying */}
-        <div className="mt-16 pt-8 border-t border-navy-600">
-          <p className="text-navy-400 text-xs mb-6 uppercase tracking-wider font-semibold">
+        <div className="mt-16 pt-8 border-t border-white/20">
+          <p className="text-white/60 text-xs mb-6 uppercase tracking-wider font-semibold">
             Teams that moved together
           </p>
           <div className="grid sm:grid-cols-3 gap-8 text-left">
             {[
               {
-                quote: 'After 5 years together, we weren\'t willing to split up. Found a company that valued our unit.',
-                team: 'Engineering Team, 6 members',
+                quote: 'After 5 years together, we were not willing to split up. Found a company that valued our unit.',
+                team: 'Engineering team, 6 members',
               },
               {
                 quote: 'The confidential process meant we could explore without risking our current positions.',
-                team: 'Analytics Team, 4 members',
+                team: 'Analytics team, 4 members',
               },
               {
                 quote: 'Our collective negotiation secured better terms than any of us could individually.',
-                team: 'Design Team, 5 members',
+                team: 'Design team, 5 members',
               },
             ].map((item) => (
               <div
                 key={item.team}
               >
-                <blockquote className="font-body text-navy-200 text-sm leading-relaxed mb-3 italic">
-                  &ldquo;{item.quote}&rdquo;
+                <blockquote className="font-body text-white/80 text-sm leading-relaxed mb-3 italic">
+                  "{item.quote}"
                 </blockquote>
-                <p className="text-navy-400 text-xs">{item.team}</p>
+                <p className="text-white/60 text-xs">{item.team}</p>
               </div>
             ))}
           </div>
