@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
-
-// Using text-based logo to avoid hydration issues with Image component
 
 export function LandingHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,15 +28,20 @@ export function LandingHeader() {
         isScrolled ? 'py-3' : 'py-5'
       }`}>
         <div className="flex items-center justify-between">
-          {/* Logo - text-based for reliable hydration */}
+          {/* Logo */}
           <Link
             href="/"
             className="flex items-center gap-3 group min-h-[44px] min-w-[44px]"
             aria-label="Liftout Home"
           >
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center transition-transform duration-fast ease-out-quart group-hover:scale-105">
-              <span className="text-gold font-heading font-bold text-xl leading-none">L</span>
-            </div>
+            <Image
+              src="/logo-icon.png"
+              alt=""
+              width={40}
+              height={40}
+              className="w-10 h-10 transition-transform duration-fast ease-out-quart group-hover:scale-105"
+              priority
+            />
             <span className="font-heading font-bold text-2xl text-navy tracking-tight leading-none">Liftout</span>
           </Link>
 

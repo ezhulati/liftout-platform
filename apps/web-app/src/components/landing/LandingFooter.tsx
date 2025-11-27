@@ -1,6 +1,5 @@
 import Link from 'next/link';
-
-// Using text-based logo to avoid hydration issues with Image component
+import Image from 'next/image';
 
 export function LandingFooter() {
   const currentYear = new Date().getFullYear();
@@ -13,15 +12,19 @@ export function LandingFooter() {
 
           {/* Brand column - spans 2 cols on large screens */}
           <div className="lg:col-span-2">
-            {/* Logo - text-based for reliable hydration */}
+            {/* Logo */}
             <Link
               href="/"
               className="inline-flex items-center gap-4 mb-6 group"
               aria-label="Liftout Home"
             >
-              <div className="w-16 h-16 rounded-xl bg-gold flex items-center justify-center transition-transform duration-fast group-hover:scale-[1.02]">
-                <span className="text-navy font-heading font-bold text-3xl leading-none">L</span>
-              </div>
+              <Image
+                src="/logo-icon.png"
+                alt=""
+                width={64}
+                height={64}
+                className="w-16 h-16 brightness-0 invert transition-transform duration-fast group-hover:scale-[1.02]"
+              />
               <span className="font-heading font-bold text-4xl text-white tracking-tight leading-none">Liftout</span>
             </Link>
 
