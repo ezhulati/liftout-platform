@@ -1,10 +1,11 @@
 [build]
-  command = "cd apps/web-app && npm install --legacy-peer-deps && npm run build"
+  command = "pnpm install && pnpm --filter @liftout/web-app run build"
   publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
+  NETLIFY_USE_PNPM = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
