@@ -33,7 +33,10 @@ const inviteMemberSchema = z.object({
 
 // GET /api/teams
 router.get('/', async (req, res) => {
-  const { page, limit, skip, take } = getPaginationParams(req.query.page, req.query.limit);
+  const { page, limit, skip, take } = getPaginationParams(
+    req.query.page as string | undefined,
+    req.query.limit as string | undefined
+  );
   
   const where: any = {
     visibility: 'public',

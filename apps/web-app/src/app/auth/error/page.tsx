@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { ExclamationTriangleIcon, ArrowLeftIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();
@@ -23,38 +24,50 @@ function AuthErrorContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-bg py-12 px-6">
+      <div className="max-w-md w-full">
+        {/* Logo */}
+        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
+          <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
+            <span className="text-gold font-heading font-bold text-xl">L</span>
+          </div>
+          <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
+        </Link>
+
         <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-error-light mb-6">
+            <ExclamationTriangleIcon className="h-7 w-7 text-error" />
+          </div>
+          <h2 className="font-heading text-3xl font-bold text-text-primary mb-3">
             Authentication Error
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="text-text-secondary mb-8">
             {getErrorMessage(error)}
           </p>
         </div>
 
-        <div className="mt-8 space-y-4">
+        <div className="space-y-3">
           <Link
             href="/auth/signin"
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="btn-primary w-full flex items-center justify-center gap-2 py-3"
           >
+            <ArrowLeftIcon className="w-4 h-4" />
             Try Again
           </Link>
-          
+
           <Link
             href="/"
-            className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="btn-outline w-full flex items-center justify-center gap-2 py-3"
           >
+            <HomeIcon className="w-4 h-4" />
             Go Home
           </Link>
         </div>
-        
+
         {error && (
-          <div className="mt-4 text-xs text-gray-500 text-center">
+          <p className="mt-6 text-xs text-text-tertiary text-center">
             Error code: {error}
-          </div>
+          </p>
         )}
       </div>
     </div>
@@ -64,8 +77,8 @@ function AuthErrorContent() {
 export default function AuthErrorPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loading-spinner"></div>
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="loading-spinner" />
       </div>
     }>
       <AuthErrorContent />

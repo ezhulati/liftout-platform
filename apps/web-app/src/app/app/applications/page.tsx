@@ -56,7 +56,8 @@ function getStatusIcon(status: string) {
 
 export default function ApplicationsPage() {
   const { data: session } = useSession();
-  const { data: applications = [], isLoading, error } = useApplications();
+  const { data: applicationsData, isLoading, error } = useApplications();
+  const applications = applicationsData?.data || [];
 
   if (!session) {
     return null;
@@ -149,12 +150,11 @@ export default function ApplicationsPage() {
                     {getStatusIcon(application.status)}
                   </div>
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-3 mb-2">
                     <h3 className="text-lg font-medium text-gray-900">
-                      {/* In a real app, we'd fetch opportunity details */}
-                      Strategic FinTech Analytics Team
+                      {application.opportunity?.title || 'Opportunity'}
                     </h3>
                     <span className={classNames(
                       'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
@@ -163,9 +163,9 @@ export default function ApplicationsPage() {
                       {application.status.replace('_', ' ')}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center text-sm text-gray-500 mb-3 space-x-4">
-                    <span className="font-medium">Goldman Sachs Technology</span>
+                    <span className="font-medium">{application.opportunity?.company?.name || 'Company'}</span>
                     <div className="flex items-center">
                       <ClockIcon className="h-4 w-4 mr-1" />
                       Applied {formatDistanceToNow(new Date(application.submittedAt), { addSuffix: true })}
@@ -174,31 +174,22 @@ export default function ApplicationsPage() {
 
                   <div className="text-sm text-gray-600">
                     <p className="line-clamp-2">
-                      <span className="font-medium">Team Lead:</span> {application.teamLead.name} ({application.teamLead.role})
+                      <span className="font-medium">Team:</span> {application.team?.name || 'Team'}
                     </p>
-                    <p className="line-clamp-2 mt-1">
-                      <span className="font-medium">Availability:</span> {application.availabilityTimeline}
-                    </p>
+                    {application.coverLetter && (
+                      <p className="line-clamp-2 mt-1">
+                        <span className="font-medium">Cover Letter:</span> {application.coverLetter}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Timeline for submitted applications */}
-                  {application.timeline && application.timeline.length > 0 && (
+                  {/* Interview info if scheduled */}
+                  {application.interviewScheduledAt && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Application Timeline</h4>
-                      <div className="space-y-2">
-                        {application.timeline.slice(0, 3).map((event, index) => (
-                          <div key={index} className="flex items-center text-xs text-gray-500">
-                            <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                            <span>{event.note}</span>
-                            <span className="ml-2">
-                              {formatDistanceToNow(new Date(event.date), { addSuffix: true })}
-                            </span>
-                            {event.actor && (
-                              <span className="ml-2 text-gray-400">by {event.actor}</span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Interview Scheduled</h4>
+                      <p className="text-xs text-gray-500">
+                        {formatDistanceToNow(new Date(application.interviewScheduledAt), { addSuffix: true })}
+                      </p>
                     </div>
                   )}
                 </div>

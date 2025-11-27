@@ -3,12 +3,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSocket } from '@/contexts/SocketContext';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  Conversation,
-  SecureMessage,
-  mockConversations,
-  mockMessages
-} from '@/lib/messaging';
+  useConversations,
+  useConversation,
+  useMessages,
+  useSendMessage,
+  useMarkAsRead,
+  useCreateConversation,
+  Conversation as APIConversation,
+  Message as APIMessage,
+} from '@/hooks/useConversations';
 import {
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
@@ -20,7 +25,6 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ClockIcon,
-  UserIcon,
   WifiIcon,
   SignalIcon,
 } from '@heroicons/react/24/outline';
@@ -33,13 +37,69 @@ interface RealtimeMessageCenterProps {
   userId?: string;
 }
 
+// Transform API conversation to UI format
+function transformConversation(conv: APIConversation) {
+  return {
+    id: conv.id,
+    title: conv.subject || `Conversation with ${conv.participants.map(p => `${p.user.firstName} ${p.user.lastName}`).join(', ')}`,
+    participants: conv.participants.map(p => ({
+      userId: p.userId,
+      name: `${p.user.firstName} ${p.user.lastName}`,
+      email: '',
+      role: p.role as any,
+      title: p.user.profile?.title,
+      profilePhotoUrl: p.user.profile?.profilePhotoUrl,
+    })),
+    securityLevel: 'high' as 'standard' | 'high' | 'maximum',
+    encryptionEnabled: true,
+    auditTrailEnabled: true,
+    isConfidential: conv.isAnonymous,
+    lastActivity: conv.lastMessageAt || conv.updatedAt,
+    messageCount: conv.messageCount,
+    unreadCounts: conv.unreadCounts,
+    status: conv.status,
+    teamId: conv.teamId,
+    companyId: conv.companyId,
+    opportunityId: conv.opportunityId,
+    legalReviewRequired: false,
+    retentionPolicy: 'standard' as 'standard' | 'legal_hold' | 'auto_delete',
+  };
+}
+
+// Transform API message to UI format
+function transformMessage(msg: APIMessage, currentUserId?: string) {
+  return {
+    id: msg.id,
+    conversationId: msg.conversationId,
+    senderId: msg.senderId,
+    senderName: msg.sender ? `${msg.sender.firstName} ${msg.sender.lastName}` : 'Unknown',
+    senderRole: 'team_lead' as const,
+    content: msg.content,
+    messageType: msg.messageType,
+    timestamp: msg.sentAt,
+    status: 'delivered' as 'sent' | 'delivered' | 'read',
+    readBy: [] as any[],
+    reactions: [] as any[],
+    requiresAcknowledgment: false,
+    acknowledgedBy: [] as string[],
+    encryptionLevel: 'high' as 'standard' | 'high' | 'legal',
+    accessLevel: 'parties_only' as const,
+    priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
+    attachments: msg.attachments || [],
+    editedAt: msg.editedAt,
+    deletedAt: msg.deletedAt,
+    replyTo: msg.replyTo,
+    subject: undefined as string | undefined,
+  };
+}
+
 export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
   const {
     socket,
     isConnected,
     onlineUsers,
-    sendMessage,
     joinConversation,
     leaveConversation,
     typingUsers,
@@ -47,49 +107,43 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     stopTyping,
   } = useSocket();
 
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<SecureMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // API hooks
+  const { data: conversationsData, isLoading: conversationsLoading } = useConversations();
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const { data: selectedConversationData } = useConversation(selectedConversationId);
+  const { data: messagesData, isLoading: messagesLoading } = useMessages(selectedConversationId);
+  const sendMessageMutation = useSendMessage();
+  const markAsReadMutation = useMarkAsRead();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Initialize data and socket listeners
-  useEffect(() => {
-    // Load initial data
-    setTimeout(() => {
-      setConversations(mockConversations);
-      setMessages(mockMessages);
-      setSelectedConversation(mockConversations[0]);
-      setIsLoading(false);
-    }, 500);
+  // Transform API data
+  const conversations = conversationsData?.data?.map(transformConversation) || [];
+  const selectedConversation = selectedConversationData ? transformConversation(selectedConversationData) : null;
+  const messages = messagesData?.data?.map(msg => transformMessage(msg, session?.user?.id)) || [];
 
-    // Socket event listeners
+  // Select first conversation on load
+  useEffect(() => {
+    if (conversationsData?.data?.length && !selectedConversationId) {
+      setSelectedConversationId(conversationsData.data[0].id);
+    }
+  }, [conversationsData, selectedConversationId]);
+
+  // Socket event listeners for real-time updates
+  useEffect(() => {
+    // Socket event listeners - invalidate queries on real-time updates
     const handleNewMessage = (event: CustomEvent) => {
-      const message: SecureMessage = event.detail;
-      setMessages(prev => {
-        // Avoid duplicates
-        const exists = prev.some(m => m.id === message.id);
-        if (exists) return prev;
-        return [...prev, message].sort((a, b) => 
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        );
-      });
-      
-      // Update conversation last activity
-      setConversations(prev => 
-        prev.map(conv => 
-          conv.id === message.conversationId
-            ? { ...conv, lastActivity: message.timestamp, messageCount: conv.messageCount + 1 }
-            : conv
-        )
-      );
+      const message = event.detail;
+      // Invalidate queries to refetch data
+      queryClient.invalidateQueries({ queryKey: ['messages', message.conversationId] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
 
       // Play notification sound for messages not from current user
       if (message.senderId !== session?.user?.id) {
@@ -98,48 +152,41 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     };
 
     const handleMessageUpdated = (event: CustomEvent) => {
-      const message: SecureMessage = event.detail;
-      setMessages(prev => 
-        prev.map(m => m.id === message.id ? message : m)
-      );
+      const message = event.detail;
+      queryClient.invalidateQueries({ queryKey: ['messages', message.conversationId] });
     };
 
     const handleMessageDeleted = (event: CustomEvent) => {
-      const { messageId } = event.detail;
-      setMessages(prev => prev.filter(m => m.id !== messageId));
+      if (selectedConversationId) {
+        queryClient.invalidateQueries({ queryKey: ['messages', selectedConversationId] });
+      }
     };
 
-    const handleMessageRead = (event: CustomEvent) => {
-      const { messageId, userId: readByUserId, readAt } = event.detail;
-      setMessages(prev => 
-        prev.map(m => 
-          m.id === messageId
-            ? {
-                ...m,
-                readBy: [...m.readBy.filter(r => r.userId !== readByUserId), {
-                  userId: readByUserId,
-                  readAt,
-                }],
-                status: 'read'
-              }
-            : m
-        )
-      );
+    const handleMessagesRead = (event: CustomEvent) => {
+      const { conversationId } = event.detail;
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['conversation', conversationId] });
+    };
+
+    const handleConversationUpdated = (event: CustomEvent) => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
     };
 
     // Add event listeners
     window.addEventListener('socket:new_message', handleNewMessage as EventListener);
     window.addEventListener('socket:message_updated', handleMessageUpdated as EventListener);
     window.addEventListener('socket:message_deleted', handleMessageDeleted as EventListener);
-    window.addEventListener('socket:message_read', handleMessageRead as EventListener);
+    window.addEventListener('socket:messages_read', handleMessagesRead as EventListener);
+    window.addEventListener('socket:conversation_updated', handleConversationUpdated as EventListener);
 
     return () => {
       window.removeEventListener('socket:new_message', handleNewMessage as EventListener);
       window.removeEventListener('socket:message_updated', handleMessageUpdated as EventListener);
       window.removeEventListener('socket:message_deleted', handleMessageDeleted as EventListener);
-      window.removeEventListener('socket:message_read', handleMessageRead as EventListener);
+      window.removeEventListener('socket:messages_read', handleMessagesRead as EventListener);
+      window.removeEventListener('socket:conversation_updated', handleConversationUpdated as EventListener);
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, selectedConversationId, queryClient]);
 
   // Update connection status
   useEffect(() => {
@@ -153,31 +200,19 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
   // Join conversation room when selected conversation changes
   useEffect(() => {
-    if (selectedConversation) {
-      joinConversation(selectedConversation.id);
-      
-      // Mark messages as read
-      const unreadMessages = conversationMessages.filter(msg => 
-        msg.senderId !== session?.user?.id && 
-        !msg.readBy.some(r => r.userId === session?.user?.id)
-      );
-      
-      unreadMessages.forEach(msg => {
-        if (socket) {
-          socket.emit('mark_message_read', {
-            messageId: msg.id,
-            conversationId: selectedConversation.id,
-          });
-        }
-      });
+    if (selectedConversationId) {
+      joinConversation(selectedConversationId);
+
+      // Mark messages as read via API
+      markAsReadMutation.mutate(selectedConversationId);
     }
 
     return () => {
-      if (selectedConversation) {
-        leaveConversation(selectedConversation.id);
+      if (selectedConversationId) {
+        leaveConversation(selectedConversationId);
       }
     };
-  }, [selectedConversation, joinConversation, leaveConversation, socket, session?.user?.id]);
+  }, [selectedConversationId, joinConversation, leaveConversation]);
 
   const playNotificationSound = () => {
     // Create a subtle notification sound
@@ -200,50 +235,32 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   };
 
   const handleSendMessage = useCallback(() => {
-    if (!newMessage.trim() || !selectedConversation || !session?.user) {
+    if (!newMessage.trim() || !selectedConversationId || !session?.user) {
       return;
     }
 
-    const message: Omit<SecureMessage, 'id' | 'timestamp' | 'status'> = {
-      conversationId: selectedConversation.id,
-      senderId: session.user.id,
-      senderName: session.user.name || 'Unknown User',
-      senderRole: session.user.userType === 'company' ? 'company_rep' : 'team_lead',
-      recipientIds: selectedConversation.participants
-        .filter(p => p.userId !== session.user.id)
-        .map(p => p.userId),
+    sendMessageMutation.mutate({
+      conversationId: selectedConversationId,
       content: newMessage.trim(),
       messageType: 'text',
-      encryptionLevel: selectedConversation.securityLevel === 'maximum' ? 'legal' : 'high',
-      accessLevel: 'parties_only',
-      isAnonymous: false,
-      readBy: [],
-      reactions: [],
-      requiresAcknowledgment: selectedConversation.securityLevel === 'maximum',
-      acknowledgedBy: [],
-      tags: [],
-      priority: 'medium',
-      attachments: [],
-      moderationFlags: [],
-    };
+    });
 
-    sendMessage(message);
     setNewMessage('');
-    stopTyping(selectedConversation.id);
+    stopTyping(selectedConversationId);
     setIsTyping(false);
-    
+
     // Focus back on input
     messageInputRef.current?.focus();
-  }, [newMessage, selectedConversation, session?.user, sendMessage, stopTyping]);
+  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping]);
 
   const handleTyping = useCallback((value: string) => {
     setNewMessage(value);
-    
-    if (!selectedConversation) return;
+
+    if (!selectedConversationId) return;
 
     if (value.trim() && !isTyping) {
       setIsTyping(true);
-      startTyping(selectedConversation.id);
+      startTyping(selectedConversationId);
     }
 
     // Clear existing timeout
@@ -255,10 +272,10 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     typingTimeoutRef.current = setTimeout(() => {
       if (isTyping) {
         setIsTyping(false);
-        stopTyping(selectedConversation.id);
+        stopTyping(selectedConversationId);
       }
     }, 2000);
-  }, [selectedConversation, isTyping, startTyping, stopTyping]);
+  }, [selectedConversationId, isTyping, startTyping, stopTyping]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -267,7 +284,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     }
   };
 
-  if (isLoading) {
+  if (conversationsLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="animate-pulse h-96 bg-gray-200 rounded-lg w-full max-w-4xl"></div>
@@ -295,7 +312,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     return colors[level as keyof typeof colors] || colors.standard;
   };
 
-  const getMessageStatus = (message: SecureMessage) => {
+  const getMessageStatus = (message: ReturnType<typeof transformMessage>) => {
     if (message.status === 'read') return <CheckCircleIconSolid className="h-4 w-4 text-green-500" />;
     if (message.status === 'delivered') return <CheckCircleIcon className="h-4 w-4 text-gray-400" />;
     if (message.requiresAcknowledgment && !message.acknowledgedBy.length) {
@@ -320,13 +337,12 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     conv.participants.some(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const conversationMessages = selectedConversation
-    ? messages.filter(msg => msg.conversationId === selectedConversation.id)
-    : [];
+  // Messages are already filtered by conversation via API
+  const conversationMessages = messages;
 
-  const currentTypingUsers = selectedConversation
-    ? typingUsers.filter(u => 
-        u.conversationId === selectedConversation.id && 
+  const currentTypingUsers = selectedConversationId
+    ? typingUsers.filter(u =>
+        u.conversationId === selectedConversationId &&
         u.userId !== session?.user?.id
       )
     : [];
@@ -406,18 +422,16 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
         <div className="flex-1 overflow-y-auto">
           {filteredConversations.map((conversation) => {
-            const unreadCount = messages.filter(msg => 
-              msg.conversationId === conversation.id &&
-              msg.senderId !== session?.user?.id &&
-              !msg.readBy.some(r => r.userId === session?.user?.id)
-            ).length;
+            const unreadCount = session?.user?.id
+              ? (conversation.unreadCounts?.[session.user.id] || 0)
+              : 0;
 
             return (
               <div
                 key={conversation.id}
-                onClick={() => setSelectedConversation(conversation)}
+                onClick={() => setSelectedConversationId(conversation.id)}
                 className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 relative ${
-                  selectedConversation?.id === conversation.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                  selectedConversationId === conversation.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                 }`}
               >
                 <div className="flex items-start justify-between">

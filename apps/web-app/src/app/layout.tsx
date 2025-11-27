@@ -1,17 +1,31 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import { Providers } from './providers';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+// Heading font - Elegant serif for premium feel
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['700', '900'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+
+// Body font - Clean sans-serif for readability
+const sourceSans = Source_Sans_3({
+  subsets: ['latin'],
+  weight: ['300', '400', '600', '700'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
     template: '%s | Liftout',
-    default: 'Liftout - Team-Based Hiring Marketplace',
+    default: 'Liftout - Strategic Team Acquisition Platform',
   },
-  description: 'The first marketplace for team-based hiring. Connect companies seeking intact teams with teams looking to move together.',
-  keywords: ['team hiring', 'liftout', 'recruitment', 'talent acquisition', 'team placement'],
+  description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
+  keywords: ['team acquisition', 'liftout', 'strategic hiring', 'talent acquisition', 'team placement', 'executive recruitment'],
   authors: [{ name: 'Liftout Team' }],
   creator: 'Liftout',
   publisher: 'Liftout',
@@ -22,8 +36,8 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'Liftout - Team-Based Hiring Marketplace',
-    description: 'The first marketplace for team-based hiring. Connect companies seeking intact teams with teams looking to move together.',
+    title: 'Liftout - Strategic Team Acquisition Platform',
+    description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
     url: '/',
     siteName: 'Liftout',
     images: [
@@ -31,7 +45,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Liftout - Team-Based Hiring Marketplace',
+        alt: 'Liftout - Strategic Team Acquisition Platform',
       },
     ],
     locale: 'en_US',
@@ -39,8 +53,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Liftout - Team-Based Hiring Marketplace',
-    description: 'The first marketplace for team-based hiring. Connect companies seeking intact teams with teams looking to move together.',
+    title: 'Liftout - Strategic Team Acquisition Platform',
+    description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
     images: ['/og-image.png'],
     creator: '@liftout',
   },
@@ -66,8 +80,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${playfair.variable} ${sourceSans.variable}`}
+    >
+      <body className="font-body antialiased">
         <Providers>
           {children}
         </Providers>

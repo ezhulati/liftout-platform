@@ -1,13 +1,19 @@
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
 import { LandingCTA } from '@/components/landing/LandingCTA';
+import { LandingHeader } from '@/components/landing/LandingHeader';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-white">
-      <LandingHero />
-      <LandingFeatures />
-      <LandingCTA />
-    </main>
+    <>
+      <LandingHeader />
+      <main className="bg-bg">
+        <LandingHero />
+        <LandingFeatures />
+        <LandingCTA />
+      </main>
+      <LandingFooter />
+    </>
   );
 }

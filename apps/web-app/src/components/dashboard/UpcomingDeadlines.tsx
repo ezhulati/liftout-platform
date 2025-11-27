@@ -71,15 +71,15 @@ const deadlineIcons = {
 };
 
 const priorityColors = {
-  low: 'text-green-500',
-  medium: 'text-yellow-500',
-  high: 'text-red-500',
+  low: 'text-success',
+  medium: 'text-gold-700',
+  high: 'text-error',
 };
 
 const priorityBgColors = {
-  low: 'bg-green-50 border-green-200',
-  medium: 'bg-yellow-50 border-yellow-200',
-  high: 'bg-red-50 border-red-200',
+  low: 'bg-success-light border-success/20',
+  medium: 'bg-gold-50 border-gold/20',
+  high: 'bg-error-light border-error/20',
 };
 
 export function UpcomingDeadlines() {
@@ -94,21 +94,19 @@ export function UpcomingDeadlines() {
   if (isLoading) {
     return (
       <div className="card">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Upcoming Deadlines</h3>
-          <div className="space-y-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="animate-pulse border rounded-lg p-3">
-                <div className="flex items-start space-x-3">
-                  <div className="h-5 w-5 bg-gray-200 rounded"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-32"></div>
-                  </div>
+        <h3 className="text-lg font-semibold text-text-primary mb-5 font-heading">Upcoming Deadlines</h3>
+        <div className="space-y-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="animate-pulse border border-border rounded-xl p-3">
+              <div className="flex items-start space-x-3">
+                <div className="h-5 w-5 skeleton rounded"></div>
+                <div className="flex-1">
+                  <div className="h-4 skeleton rounded w-48 mb-2"></div>
+                  <div className="h-3 skeleton rounded w-32"></div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -121,105 +119,103 @@ export function UpcomingDeadlines() {
 
   return (
     <div className="card">
-      <div className="px-4 py-5 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Upcoming Deadlines</h3>
-          <Link
-            href="/app/deadlines"
-            className="text-sm font-medium text-primary-600 hover:text-primary-500"
-          >
-            View all
-          </Link>
-        </div>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-semibold text-text-primary font-heading">Upcoming Deadlines</h3>
+        <Link
+          href="/app/deadlines"
+          className="text-sm font-medium text-navy hover:text-gold transition-colors duration-fast"
+        >
+          View all
+        </Link>
+      </div>
 
-        {urgentDeadlines.length > 0 && (
-          <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-            <div className="flex">
-              <ExclamationTriangleIcon className="h-5 w-5 text-amber-400" />
-              <div className="ml-2">
-                <p className="text-sm font-medium text-amber-800">
-                  {urgentDeadlines.length} urgent deadline{urgentDeadlines.length > 1 ? 's' : ''} approaching
-                </p>
-                <p className="text-xs text-amber-700 mt-1">
-                  Don't miss these important dates!
-                </p>
-              </div>
+      {urgentDeadlines.length > 0 && (
+        <div className="mb-4 p-3 bg-gold-50 border border-gold/20 rounded-xl">
+          <div className="flex">
+            <ExclamationTriangleIcon className="h-5 w-5 text-gold-700" />
+            <div className="ml-2">
+              <p className="text-sm font-semibold text-gold-800">
+                {urgentDeadlines.length} urgent deadline{urgentDeadlines.length > 1 ? 's' : ''} approaching
+              </p>
+              <p className="text-xs text-gold-700 mt-0.5">
+                Don't miss these important dates!
+              </p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <div className="space-y-3">
-          {deadlines?.slice(0, 5).map((deadline) => {
-            const Icon = deadlineIcons[deadline.type];
-            const isUrgent = urgentDeadlines.includes(deadline);
-            
-            return (
-              <div
-                key={deadline.id}
-                className={`relative border rounded-lg p-3 transition-all duration-200 hover:shadow-sm ${
-                  isUrgent ? priorityBgColors[deadline.priority] : 'border-gray-200 hover:border-primary-300'
-                }`}
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <Icon className={`h-5 w-5 ${priorityColors[deadline.priority]}`} />
+      <div className="space-y-3">
+        {deadlines?.slice(0, 5).map((deadline) => {
+          const Icon = deadlineIcons[deadline.type];
+          const isUrgent = urgentDeadlines.includes(deadline);
+
+          return (
+            <div
+              key={deadline.id}
+              className={`relative border rounded-xl p-3 transition-all duration-base hover:shadow-sm ${
+                isUrgent ? priorityBgColors[deadline.priority] : 'border-border hover:border-gold/30'
+              }`}
+            >
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0">
+                  <Icon className={`h-5 w-5 ${priorityColors[deadline.priority]}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold text-text-primary truncate">
+                      {deadline.title}
+                    </h4>
+                    <span className={`badge text-xs ${
+                      deadline.priority === 'high'
+                        ? 'badge-error'
+                        : deadline.priority === 'medium'
+                        ? 'badge-warning'
+                        : 'badge-success'
+                    }`}>
+                      {deadline.priority}
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium text-gray-900 truncate">
-                        {deadline.title}
-                      </h4>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                        deadline.priority === 'high' 
-                          ? 'bg-red-100 text-red-800'
-                          : deadline.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {deadline.priority}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">{deadline.description}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-xs text-gray-500">
-                        Due {format(new Date(deadline.dueDate), 'MMM d, yyyy')}
-                      </p>
-                      <p className={`text-xs font-medium ${
-                        isUrgent ? 'text-red-600' : 'text-gray-500'
-                      }`}>
-                        {formatDistanceToNow(new Date(deadline.dueDate), { addSuffix: true })}
-                      </p>
-                    </div>
+                  <p className="text-sm text-text-secondary mt-1">{deadline.description}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs text-text-tertiary">
+                      Due {format(new Date(deadline.dueDate), 'MMM d, yyyy')}
+                    </p>
+                    <p className={`text-xs font-medium ${
+                      isUrgent ? 'text-error' : 'text-text-tertiary'
+                    }`}>
+                      {formatDistanceToNow(new Date(deadline.dueDate), { addSuffix: true })}
+                    </p>
                   </div>
                 </div>
-                {deadline.href && (
-                  <Link href={deadline.href} className="absolute inset-0">
-                    <span className="sr-only">View {deadline.title}</span>
-                  </Link>
-                )}
               </div>
-            );
-          })}
-        </div>
-
-        {(!deadlines || deadlines.length === 0) && (
-          <div className="text-center py-6">
-            <CheckCircleIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No upcoming deadlines</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              You're all caught up! Check back later for new liftout opportunities and important deadlines.
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/app/opportunities"
-                className="btn-primary"
-              >
-                Browse Liftout Opportunities
-              </Link>
+              {deadline.href && (
+                <Link href={deadline.href} className="absolute inset-0">
+                  <span className="sr-only">View {deadline.title}</span>
+                </Link>
+              )}
             </div>
-          </div>
-        )}
+          );
+        })}
       </div>
+
+      {(!deadlines || deadlines.length === 0) && (
+        <div className="text-center py-8">
+          <div className="w-14 h-14 mx-auto rounded-full bg-success-light flex items-center justify-center mb-4">
+            <CheckCircleIcon className="h-7 w-7 text-success" />
+          </div>
+          <h4 className="text-sm font-semibold text-text-primary mb-1">No upcoming deadlines</h4>
+          <p className="text-sm text-text-secondary mb-6">
+            You're all caught up! Check back later for new liftout opportunities and important deadlines.
+          </p>
+          <Link
+            href="/app/opportunities"
+            className="btn-primary"
+          >
+            Browse Liftout Opportunities
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

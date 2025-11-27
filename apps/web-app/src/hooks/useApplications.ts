@@ -1,163 +1,440 @@
+'use client';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
-interface Application {
+// Types matching the API server response
+export interface TeamApplication {
   id: string;
-  opportunityId: string;
   teamId: string;
-  applicantUserId: string;
-  coverLetter: string;
-  whyInterested: string;
-  questionsForCompany?: string;
-  availabilityTimeline: string;
-  compensationExpectations?: string;
-  teamLead: {
-    name: string;
-    role: string;
-    email: string;
-    phone?: string;
-  };
-  status: 'submitted' | 'under_review' | 'interview_scheduled' | 'offer_made' | 'accepted' | 'rejected';
+  opportunityId: string;
+  submittedById: string;
+  coverLetter: string | null;
+  status: 'submitted' | 'reviewing' | 'interviewing' | 'accepted' | 'rejected' | 'withdrawn';
   submittedAt: string;
+  reviewedAt: string | null;
+  reviewedById: string | null;
+  interviewScheduledAt: string | null;
+  interviewNotes: string | null;
+  internalNotes: string | null;
+  rejectionReason: string | null;
+  createdAt: string;
   updatedAt: string;
-  timeline: Array<{
-    status: string;
-    date: string;
-    note: string;
-    actor?: string;
-  }>;
-  metadata?: {
-    userAgent?: string;
-    ipAddress?: string;
-  };
-}
-
-interface CreateApplicationData {
-  opportunityId: string;
-  teamId: string;
-  coverLetter: string;
-  whyInterested: string;
-  questionsForCompany?: string;
-  availabilityTimeline: string;
-  compensationExpectations?: string;
-  teamLead: {
+  team?: {
+    id: string;
     name: string;
-    role: string;
+    description: string | null;
+    size: number;
+    isAnonymous: boolean;
+  };
+  opportunity?: {
+    id: string;
+    title: string;
+    company?: {
+      id: string;
+      name: string;
+    };
+  };
+  submittedBy?: {
+    id: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    phone?: string;
   };
 }
 
-interface ApplicationsFilters {
-  opportunityId?: string;
-  teamId?: string;
-  status?: string;
+export interface ExpressionOfInterest {
+  id: string;
+  companyId: string;
+  teamId: string;
+  submittedById: string;
+  message: string | null;
+  status: 'pending' | 'accepted' | 'rejected' | 'expired';
+  expiresAt: string | null;
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  company?: {
+    id: string;
+    name: string;
+  };
+  team?: {
+    id: string;
+    name: string;
+  };
 }
 
-export function useApplications(filters?: ApplicationsFilters) {
+export interface CreateApplicationInput {
+  teamId: string;
+  opportunityId: string;
+  coverLetter?: string;
+}
+
+export interface UpdateApplicationStatusInput {
+  status: 'reviewing' | 'interviewing' | 'accepted' | 'rejected' | 'withdrawn';
+  internalNotes?: string;
+  rejectionReason?: string;
+}
+
+export interface ScheduleInterviewInput {
+  scheduledAt: string;
+  notes?: string;
+}
+
+export interface ApplicationFeedbackInput {
+  feedback: string;
+  rating?: number;
+}
+
+interface ApplicationFilters {
+  status?: string;
+  teamId?: string;
+  opportunityId?: string;
+  page?: number;
+  limit?: number;
+}
+
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+}
+
+// API base
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(error.error || 'Request failed');
+  }
+
+  return response.json();
+};
+
+/**
+ * Hook to fetch team applications
+ */
+export function useApplications(filters?: ApplicationFilters) {
   const { data: session } = useSession();
 
   return useQuery({
     queryKey: ['applications', filters],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (filters?.opportunityId) params.append('opportunityId', filters.opportunityId);
-      if (filters?.teamId) params.append('teamId', filters.teamId);
       if (filters?.status) params.append('status', filters.status);
+      if (filters?.teamId) params.append('teamId', filters.teamId);
+      if (filters?.opportunityId) params.append('opportunityId', filters.opportunityId);
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
 
-      const response = await fetch(`/api/applications?${params}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch applications');
-      }
-
-      const data = await response.json();
-      return data.applications as Application[];
+      const data = await fetchWithAuth(`/api/applications?${params}`);
+      return data.data as PaginatedResponse<TeamApplication>;
     },
     enabled: !!session,
   });
 }
 
+/**
+ * Hook to fetch a single application
+ */
+export function useApplication(id: string | null) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['application', id],
+    queryFn: async () => {
+      if (!id) throw new Error('Application ID required');
+      const data = await fetchWithAuth(`/api/applications/${id}`);
+      return data.data as TeamApplication;
+    },
+    enabled: !!session && !!id,
+  });
+}
+
+/**
+ * Hook to fetch applications for a specific team
+ */
+export function useTeamApplications(teamId: string | null) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['teamApplications', teamId],
+    queryFn: async () => {
+      if (!teamId) throw new Error('Team ID required');
+      const data = await fetchWithAuth(`/api/applications/team/${teamId}`);
+      return data.data as TeamApplication[];
+    },
+    enabled: !!session && !!teamId,
+  });
+}
+
+/**
+ * Hook to fetch applications for a specific opportunity
+ */
+export function useOpportunityApplications(opportunityId: string | null) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['opportunityApplications', opportunityId],
+    queryFn: async () => {
+      if (!opportunityId) throw new Error('Opportunity ID required');
+      const data = await fetchWithAuth(`/api/applications/opportunity/${opportunityId}`);
+      return data.data as TeamApplication[];
+    },
+    enabled: !!session && !!opportunityId,
+  });
+}
+
+/**
+ * Hook to create a new application
+ */
 export function useCreateApplication() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (applicationData: CreateApplicationData) => {
-      const response = await fetch('/api/applications', {
+    mutationFn: async (input: CreateApplicationInput) => {
+      const data = await fetchWithAuth('/api/applications', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(applicationData),
+        body: JSON.stringify(input),
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create application');
-      }
-
-      const data = await response.json();
-      return data.application as Application;
+      return data.data as TeamApplication;
     },
-    onSuccess: () => {
-      // Invalidate and refetch applications
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
-      // Also invalidate opportunities to update application counts
+      queryClient.invalidateQueries({ queryKey: ['teamApplications', variables.teamId] });
+      queryClient.invalidateQueries({ queryKey: ['opportunityApplications', variables.opportunityId] });
       queryClient.invalidateQueries({ queryKey: ['opportunities'] });
     },
   });
 }
 
-export function useUpdateApplication() {
+/**
+ * Hook to update application status
+ */
+export function useUpdateApplicationStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<Application> & { id: string }) => {
-      const response = await fetch(`/api/applications/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updates),
+    mutationFn: async ({
+      applicationId,
+      ...input
+    }: UpdateApplicationStatusInput & { applicationId: string }) => {
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify(input),
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update application');
-      }
-
-      const data = await response.json();
-      return data.application as Application;
+      return data.data as TeamApplication;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
+      queryClient.invalidateQueries({ queryKey: ['application', result.id] });
+      queryClient.invalidateQueries({ queryKey: ['teamApplications', result.teamId] });
+      queryClient.invalidateQueries({ queryKey: ['opportunityApplications', result.opportunityId] });
     },
   });
 }
 
-export function useDeleteApplication() {
+/**
+ * Hook to schedule an interview
+ */
+export function useScheduleInterview() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      applicationId,
+      ...input
+    }: ScheduleInterviewInput & { applicationId: string }) => {
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/interview`, {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
+      return data.data as TeamApplication;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+      queryClient.invalidateQueries({ queryKey: ['application', result.id] });
+    },
+  });
+}
+
+/**
+ * Hook to add feedback to an application
+ */
+export function useAddApplicationFeedback() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      applicationId,
+      ...input
+    }: ApplicationFeedbackInput & { applicationId: string }) => {
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/feedback`, {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
+      return data.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['application', variables.applicationId] });
+    },
+  });
+}
+
+/**
+ * Hook to withdraw an application
+ */
+export function useWithdrawApplication() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (applicationId: string) => {
-      const response = await fetch(`/api/applications/${applicationId}`, {
-        method: 'DELETE',
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/withdraw`, {
+        method: 'POST',
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete application');
-      }
-
-      return { id: applicationId };
+      return data.data as TeamApplication;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
-      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      queryClient.invalidateQueries({ queryKey: ['application', result.id] });
+      queryClient.invalidateQueries({ queryKey: ['teamApplications', result.teamId] });
     },
   });
+}
+
+/**
+ * Hook to make an offer to an application
+ */
+export function useMakeOffer() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      applicationId,
+      ...offerDetails
+    }: {
+      applicationId: string;
+      terms: string;
+      compensation?: string;
+      startDate?: string;
+      expiresAt?: string;
+    }) => {
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/offer`, {
+        method: 'POST',
+        body: JSON.stringify(offerDetails),
+      });
+      return data.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['application', variables.applicationId] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+    },
+  });
+}
+
+// ============================================
+// Expression of Interest Hooks
+// ============================================
+
+/**
+ * Hook to fetch expressions of interest for a team
+ */
+export function useTeamEOIs(teamId: string | null) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['teamEOIs', teamId],
+    queryFn: async () => {
+      if (!teamId) throw new Error('Team ID required');
+      const data = await fetchWithAuth(`/api/applications/eoi/team/${teamId}`);
+      return data.data as ExpressionOfInterest[];
+    },
+    enabled: !!session && !!teamId,
+  });
+}
+
+/**
+ * Hook to fetch expressions of interest from a company
+ */
+export function useCompanyEOIs(companyId: string | null) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['companyEOIs', companyId],
+    queryFn: async () => {
+      if (!companyId) throw new Error('Company ID required');
+      const data = await fetchWithAuth(`/api/applications/eoi/company/${companyId}`);
+      return data.data as ExpressionOfInterest[];
+    },
+    enabled: !!session && !!companyId,
+  });
+}
+
+/**
+ * Hook to create an expression of interest
+ */
+export function useCreateEOI() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: { teamId: string; message?: string }) => {
+      const data = await fetchWithAuth('/api/applications/eoi', {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
+      return data.data as ExpressionOfInterest;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['teamEOIs', result.teamId] });
+      queryClient.invalidateQueries({ queryKey: ['companyEOIs', result.companyId] });
+    },
+  });
+}
+
+/**
+ * Hook to respond to an expression of interest
+ */
+export function useRespondToEOI() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      eoiId,
+      accept,
+    }: {
+      eoiId: string;
+      accept: boolean;
+    }) => {
+      const data = await fetchWithAuth(`/api/applications/eoi/${eoiId}/respond`, {
+        method: 'POST',
+        body: JSON.stringify({ accept }),
+      });
+      return data.data as ExpressionOfInterest;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['teamEOIs', result.teamId] });
+      queryClient.invalidateQueries({ queryKey: ['companyEOIs', result.companyId] });
+    },
+  });
+}
+
+// Legacy exports for backward compatibility
+export function useUpdateApplication() {
+  return useUpdateApplicationStatus();
+}
+
+export function useDeleteApplication() {
+  return useWithdrawApplication();
 }

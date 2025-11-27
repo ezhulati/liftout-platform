@@ -70,10 +70,10 @@ const activityIcons = {
 };
 
 const activityColors = {
-  liftout_interest: 'text-green-500',
-  team_profile_view: 'text-blue-500',
-  message: 'text-purple-500',
-  liftout_opportunity: 'text-orange-500',
+  liftout_interest: 'text-success',
+  team_profile_view: 'text-navy',
+  message: 'text-gold-700',
+  liftout_opportunity: 'text-gold',
 };
 
 export function RecentActivity() {
@@ -88,21 +88,19 @@ export function RecentActivity() {
   if (isLoading) {
     return (
       <div className="card">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-          <div className="space-y-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex animate-pulse">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
-                </div>
-                <div className="ml-4 flex-1">
-                  <div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-32"></div>
-                </div>
+        <h3 className="text-lg font-semibold text-text-primary mb-5 font-heading">Recent Activity</h3>
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex animate-pulse">
+              <div className="flex-shrink-0">
+                <div className="h-8 w-8 skeleton rounded-full"></div>
               </div>
-            ))}
-          </div>
+              <div className="ml-4 flex-1">
+                <div className="h-4 skeleton rounded w-48 mb-2"></div>
+                <div className="h-3 skeleton rounded w-32"></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -110,76 +108,76 @@ export function RecentActivity() {
 
   return (
     <div className="card">
-      <div className="px-4 py-5 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
-          <Link
-            href="/app/activity"
-            className="text-sm font-medium text-primary-600 hover:text-primary-500"
-          >
-            View all
-          </Link>
-        </div>
-        
-        <div className="flow-root">
-          <ul className="-mb-8">
-            {activities?.map((activity, activityIdx) => {
-              const Icon = activityIcons[activity.type];
-              const colorClass = activityColors[activity.type];
-              
-              return (
-                <li key={activity.id}>
-                  <div className="relative pb-8">
-                    {activityIdx !== activities.length - 1 ? (
-                      <span
-                        className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <div className="relative flex space-x-3">
-                      <div>
-                        <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white bg-gray-100`}>
-                          <Icon className={`h-4 w-4 ${colorClass}`} aria-hidden="true" />
-                        </span>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-semibold text-text-primary font-heading">Recent Activity</h3>
+        <Link
+          href="/app/activity"
+          className="text-sm font-medium text-navy hover:text-gold transition-colors duration-fast"
+        >
+          View all
+        </Link>
+      </div>
+
+      <div className="flow-root">
+        <ul className="-mb-8">
+          {activities?.map((activity, activityIdx) => {
+            const Icon = activityIcons[activity.type];
+            const colorClass = activityColors[activity.type];
+
+            return (
+              <li key={activity.id}>
+                <div className="relative pb-8">
+                  {activityIdx !== activities.length - 1 ? (
+                    <span
+                      className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-border"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  <div className="relative flex space-x-3">
+                    <div>
+                      <span className="h-8 w-8 rounded-full flex items-center justify-center ring-4 ring-bg-surface bg-bg-elevated">
+                        <Icon className={`h-4 w-4 ${colorClass}`} aria-hidden="true" />
+                      </span>
+                    </div>
+                    <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                      <div className="min-w-0 flex-1">
+                        {activity.href ? (
+                          <Link href={activity.href} className="group">
+                            <p className="text-sm font-medium text-text-primary group-hover:text-navy transition-colors duration-fast">
+                              {activity.title}
+                            </p>
+                            <p className="text-sm text-text-secondary group-hover:text-text-primary transition-colors duration-fast">
+                              {activity.description}
+                            </p>
+                          </Link>
+                        ) : (
+                          <>
+                            <p className="text-sm font-medium text-text-primary">
+                              {activity.title}
+                            </p>
+                            <p className="text-sm text-text-secondary">
+                              {activity.description}
+                            </p>
+                          </>
+                        )}
                       </div>
-                      <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                        <div className="min-w-0 flex-1">
-                          {activity.href ? (
-                            <Link href={activity.href} className="group">
-                              <p className="text-sm font-medium text-gray-900 group-hover:text-primary-600">
-                                {activity.title}
-                              </p>
-                              <p className="text-sm text-gray-500 group-hover:text-gray-600">
-                                {activity.description}
-                              </p>
-                            </Link>
-                          ) : (
-                            <>
-                              <p className="text-sm font-medium text-gray-900">
-                                {activity.title}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {activity.description}
-                              </p>
-                            </>
-                          )}
-                        </div>
-                        <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                          {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
-                        </div>
+                      <div className="whitespace-nowrap text-right text-sm text-text-tertiary">
+                        {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
                       </div>
                     </div>
                   </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        
-        {(!activities || activities.length === 0) && (
-          <div className="text-center py-6">
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {(!activities || activities.length === 0) && (
+        <div className="text-center py-8">
+          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="h-7 w-7 text-text-tertiary"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -192,13 +190,13 @@ export function RecentActivity() {
                 d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No recent activity</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Get started by updating your team profile or browsing liftout opportunities.
-            </p>
           </div>
-        )}
-      </div>
+          <h4 className="text-sm font-semibold text-text-primary mb-1">No recent activity</h4>
+          <p className="text-sm text-text-secondary">
+            Get started by updating your team profile or browsing liftout opportunities.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

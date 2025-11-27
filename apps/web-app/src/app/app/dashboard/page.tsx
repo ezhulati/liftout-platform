@@ -14,7 +14,7 @@ export default function DashboardPage() {
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }

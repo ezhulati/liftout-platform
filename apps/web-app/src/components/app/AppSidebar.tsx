@@ -23,48 +23,45 @@ import {
   ScaleIcon,
   AcademicCapIcon,
   GlobeAltIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
 // Navigation items that show for team users
 const teamNavigation = [
-  { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon, current: false },
-  { name: 'My Team Profile', href: '/app/teams', icon: UserGroupIcon, current: false },
-  { name: 'Liftout Opportunities', href: '/app/opportunities', icon: BriefcaseIcon, current: false },
-  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon, current: false },
-  { name: 'My Applications', href: '/app/applications', icon: DocumentTextIcon, current: false },
-  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, current: false },
+  { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
+  { name: 'My Team Profile', href: '/app/teams', icon: UserGroupIcon },
+  { name: 'Liftout Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
+  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
+  { name: 'My Applications', href: '/app/applications', icon: DocumentTextIcon },
+  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
 ];
 
 // Navigation items that show for company users
 const companyNavigation = [
-  { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon, current: false },
-  { name: 'Browse Teams', href: '/app/teams', icon: UserGroupIcon, current: false },
-  { name: 'My Opportunities', href: '/app/opportunities', icon: BriefcaseIcon, current: false },
-  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon, current: false },
-  { name: 'Team Applications', href: '/app/applications', icon: DocumentTextIcon, current: false },
-  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, current: false },
-  { name: 'Advanced Search', href: '/app/search', icon: MagnifyingGlassIcon, current: false },
+  { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
+  { name: 'Browse Teams', href: '/app/teams', icon: UserGroupIcon },
+  { name: 'My Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
+  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
+  { name: 'Team Applications', href: '/app/applications', icon: DocumentTextIcon },
+  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
+  { name: 'Advanced Search', href: '/app/search', icon: MagnifyingGlassIcon },
 ];
 
 const companyExtendedNavigation = [
-  { name: 'Market Intelligence', href: '/app/market-intelligence', icon: GlobeAltIcon, current: false },
-  { name: 'Team Discovery', href: '/app/discovery', icon: EyeIcon, current: false },
-  { name: 'Culture Assessment', href: '/app/culture', icon: AcademicCapIcon, current: false },
-  { name: 'Due Diligence', href: '/app/due-diligence', icon: ShieldCheckIcon, current: false },
-  { name: 'Negotiations', href: '/app/negotiations', icon: DocumentCheckIcon, current: false },
-  { name: 'Legal & Compliance', href: '/app/legal', icon: ScaleIcon, current: false },
-  { name: 'Integration Tracking', href: '/app/integration', icon: RocketLaunchIcon, current: false },
-  { name: 'Liftout Analytics', href: '/app/analytics', icon: ChartBarIcon, current: false },
-  { name: 'Company Profile', href: '/app/company', icon: BuildingOfficeIcon, current: false },
+  { name: 'Market Intelligence', href: '/app/market-intelligence', icon: GlobeAltIcon },
+  { name: 'Team Discovery', href: '/app/discovery', icon: EyeIcon },
+  { name: 'Culture Assessment', href: '/app/culture', icon: AcademicCapIcon },
+  { name: 'Due Diligence', href: '/app/due-diligence', icon: ShieldCheckIcon },
+  { name: 'Negotiations', href: '/app/negotiations', icon: DocumentCheckIcon },
+  { name: 'Legal & Compliance', href: '/app/legal', icon: ScaleIcon },
+  { name: 'Integration Tracking', href: '/app/integration', icon: RocketLaunchIcon },
+  { name: 'Liftout Analytics', href: '/app/analytics', icon: ChartBarIcon },
+  { name: 'Company Profile', href: '/app/company', icon: BuildingOfficeIcon },
 ];
 
 const secondaryNavigation = [
   { name: 'Settings', href: '/app/settings', icon: CogIcon },
 ];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -75,219 +72,161 @@ export function AppSidebar() {
   const user = session?.user;
   const demoData = user?.email ? getDemoDataForUser(user.email) : null;
   const userType = user?.userType || demoData?.userType || 'individual';
-  
+
   const isCompanyUser = userType === 'company';
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
-  const navigationWithCurrent = currentNavigation.map((item) => ({
-    ...item,
-    current: pathname === item.href,
-  }));
 
-  const companyExtendedNavigationWithCurrent = companyExtendedNavigation.map((item) => ({
-    ...item,
-    current: pathname === item.href,
-  }));
+  const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }> } }) => {
+    const isActive = pathname === item.href;
+    return (
+      <Link
+        href={item.href}
+        className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-fast ${
+          isActive
+            ? 'bg-navy text-white'
+            : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+        }`}
+      >
+        <item.icon
+          className={`mr-3 flex-shrink-0 h-5 w-5 transition-colors duration-fast ${
+            isActive ? 'text-gold' : 'text-text-tertiary group-hover:text-navy'
+          }`}
+          aria-hidden="true"
+        />
+        {item.name}
+      </Link>
+    );
+  };
 
   return (
     <>
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-navy-900/50 backdrop-blur-sm"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Mobile sidebar */}
-      <div className="lg:hidden">
-        <div className="fixed inset-0 z-50 flex" style={{ display: sidebarOpen ? 'flex' : 'none' }}>
-          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white pb-4 pt-5">
-            <div className="absolute top-0 right-0 -mr-12 pt-2">
-              <button
-                type="button"
-                className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <span className="sr-only">Close sidebar</span>
-                <svg
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="flex flex-shrink-0 items-center justify-between px-4">
-              <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
-              {user && (
-                <div className="flex items-center">
-                  {isCompanyUser ? (
-                    <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
-                  ) : (
-                    <UserGroupIcon className="h-4 w-4 text-green-500 mr-1" />
-                  )}
-                  <span className="text-xs text-gray-500 font-medium">
-                    {isCompanyUser ? 'Company' : 'Team'}
-                  </span>
-                </div>
-              )}
-            </div>
-            <nav className="mt-5 flex-shrink-0 h-full divide-y divide-gray-200 overflow-y-auto">
-              <div className="px-2 space-y-1">
-                {navigationWithCurrent.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-primary-50 border-primary-500 text-primary-700'
-                        : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex items-center px-2 py-2 text-sm font-medium border-l-4'
-                    )}
-                  >
-                    <item.icon
-                      className={classNames(
-                        item.current ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500',
-                        'mr-3 flex-shrink-0 h-6 w-6'
-                      )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </Link>
-                ))}
+      <div className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-base ease-out-quart ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="flex h-full flex-col bg-bg-surface border-r border-border">
+          {/* Header */}
+          <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+            <Link href="/app/dashboard" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
+                <span className="text-gold font-heading font-bold text-lg">L</span>
               </div>
-              {isCompanyUser && (
-                <div className="mt-6 pt-6">
-                  <div className="px-2 space-y-1">
-                    {companyExtendedNavigationWithCurrent.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-primary-50 border-primary-500 text-primary-700'
-                            : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                          'group flex items-center px-2 py-2 text-sm font-medium border-l-4'
-                        )}
-                      >
-                        <item.icon
-                          className={classNames(
-                            item.current ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 flex-shrink-0 h-6 w-6'
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="mt-6 pt-6">
-                <div className="px-2 space-y-1">
-                  {secondaryNavigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="group flex items-center px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    >
-                      <item.icon
-                        className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </nav>
+              <span className="font-heading font-bold text-xl text-text-primary">Liftout</span>
+            </Link>
+            <button
+              type="button"
+              className="p-2 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-fast"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <span className="sr-only">Close sidebar</span>
+              <XMarkIcon className="h-5 w-5" />
+            </button>
           </div>
-          <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
+
+          {/* User type badge */}
+          {user && (
+            <div className="px-4 py-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                {isCompanyUser ? (
+                  <BuildingOfficeIcon className="h-4 w-4 text-navy" />
+                ) : (
+                  <UserGroupIcon className="h-4 w-4 text-gold" />
+                )}
+                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                  {isCompanyUser ? 'Company Account' : 'Team Account'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+            {currentNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+
+            {isCompanyUser && (
+              <>
+                <div className="pt-6 pb-2">
+                  <h3 className="px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+                    Company Tools
+                  </h3>
+                </div>
+                {companyExtendedNavigation.map((item) => (
+                  <NavLink key={item.name} item={item} />
+                ))}
+              </>
+            )}
+
+            <div className="pt-6 border-t border-border mt-6">
+              {secondaryNavigation.map((item) => (
+                <NavLink key={item.name} item={item} />
+              ))}
+            </div>
+          </nav>
         </div>
       </div>
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow bg-white pt-5 pb-4 overflow-y-auto border-r border-gray-200">
-          <div className="flex items-center justify-between flex-shrink-0 px-4">
-            <h1 className="text-xl font-bold text-gray-900">Liftout</h1>
-            {user && (
-              <div className="flex items-center">
+        <div className="flex flex-col flex-grow bg-bg-surface border-r border-border">
+          {/* Header */}
+          <div className="flex items-center h-16 px-4 border-b border-border">
+            <Link href="/app/dashboard" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
+                <span className="text-gold font-heading font-bold text-lg">L</span>
+              </div>
+              <span className="font-heading font-bold text-xl text-text-primary">Liftout</span>
+            </Link>
+          </div>
+
+          {/* User type badge */}
+          {user && (
+            <div className="px-4 py-3 border-b border-border">
+              <div className="flex items-center gap-2">
                 {isCompanyUser ? (
-                  <BuildingOfficeIcon className="h-4 w-4 text-blue-500 mr-1" />
+                  <BuildingOfficeIcon className="h-4 w-4 text-navy" />
                 ) : (
-                  <UserGroupIcon className="h-4 w-4 text-green-500 mr-1" />
+                  <UserGroupIcon className="h-4 w-4 text-gold" />
                 )}
-                <span className="text-xs text-gray-500 font-medium">
-                  {isCompanyUser ? 'Company' : 'Team'}
+                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                  {isCompanyUser ? 'Company Account' : 'Team Account'}
                 </span>
               </div>
-            )}
-          </div>
-          <nav className="mt-5 flex-1 px-2 space-y-1">
-            {navigationWithCurrent.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={classNames(
-                  item.current
-                    ? 'bg-primary-50 border-primary-500 text-primary-700'
-                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex items-center px-2 py-2 text-sm font-medium border-l-4'
-                )}
-              >
-                <item.icon
-                  className={classNames(
-                    item.current ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500',
-                    'mr-3 flex-shrink-0 h-6 w-6'
-                  )}
-                  aria-hidden="true"
-                />
-                {item.name}
-              </Link>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+            {currentNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
             ))}
+
             {isCompanyUser && (
               <>
-                <div className="border-t border-gray-200 mt-6 pt-6">
-                  <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <div className="pt-6 pb-2">
+                  <h3 className="px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wider">
                     Company Tools
                   </h3>
-                  <div className="mt-2 space-y-1">
-                    {companyExtendedNavigationWithCurrent.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-primary-50 border-primary-500 text-primary-700'
-                            : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                          'group flex items-center px-2 py-2 text-sm font-medium border-l-4'
-                        )}
-                      >
-                        <item.icon
-                          className={classNames(
-                            item.current ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 flex-shrink-0 h-6 w-6'
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
                 </div>
+                {companyExtendedNavigation.map((item) => (
+                  <NavLink key={item.name} item={item} />
+                ))}
               </>
             )}
-            <div className="border-t border-gray-200 mt-6 pt-6">
+
+            <div className="pt-6 border-t border-border mt-6">
               {secondaryNavigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="group flex items-center px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                >
-                  <item.icon
-                    className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                    aria-hidden="true"
-                  />
-                  {item.name}
-                </Link>
+                <NavLink key={item.name} item={item} />
               ))}
             </div>
           </nav>

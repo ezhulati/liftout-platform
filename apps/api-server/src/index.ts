@@ -13,6 +13,8 @@ import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
 import { authMiddleware } from './middleware/auth';
+import { socketAuthMiddleware } from './socket/middleware';
+import { registerSocketHandlers } from './socket/handlers';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -108,24 +110,9 @@ app.use('/api/search', authMiddleware, searchRoutes);
 app.use('/api/analytics', authMiddleware, analyticsRoutes);
 app.use('/api/subscriptions', authMiddleware, subscriptionRoutes);
 
-// Socket.IO connection handling
-io.on('connection', (socket) => {
-  logger.info(`Socket connected: ${socket.id}`);
-  
-  socket.on('join-conversation', (conversationId: string) => {
-    socket.join(`conversation:${conversationId}`);
-    logger.info(`Socket ${socket.id} joined conversation ${conversationId}`);
-  });
-  
-  socket.on('leave-conversation', (conversationId: string) => {
-    socket.leave(`conversation:${conversationId}`);
-    logger.info(`Socket ${socket.id} left conversation ${conversationId}`);
-  });
-  
-  socket.on('disconnect', (reason) => {
-    logger.info(`Socket disconnected: ${socket.id}, reason: ${reason}`);
-  });
-});
+// Socket.IO authentication and handlers
+io.use(socketAuthMiddleware);
+registerSocketHandlers(io);
 
 // Make io available to other modules
 app.set('io', io);

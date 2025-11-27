@@ -59,14 +59,18 @@ export function SocketProvider({ children }: SocketProviderProps) {
 
   useEffect(() => {
     if (session?.user) {
-      // Initialize Socket.io connection
-      const newSocket = io('/api/socket', {
+      // Get API server URL (default to localhost:8000 in development)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+      // Initialize Socket.io connection to API server
+      const newSocket = io(apiUrl, {
         auth: {
-          userId: session.user.id,
-          userName: session.user.name,
-          userType: session.user.userType,
+          token: (session as any).accessToken, // JWT token for authentication
         },
         transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
       });
 
       // Connection event handlers
@@ -146,9 +150,9 @@ export function SocketProvider({ children }: SocketProviderProps) {
       });
 
       // Read receipts
-      newSocket.on('message_read', (data: { messageId: string; userId: string; readAt: string }) => {
-        console.log('👁️ Message read:', data);
-        window.dispatchEvent(new CustomEvent('socket:message_read', { detail: data }));
+      newSocket.on('messages_read', (data: { conversationId: string; userId: string; readAt: string }) => {
+        console.log('👁️ Messages read:', data);
+        window.dispatchEvent(new CustomEvent('socket:messages_read', { detail: data }));
       });
 
       // Error handling
