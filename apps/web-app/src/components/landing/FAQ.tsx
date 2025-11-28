@@ -75,21 +75,21 @@ export function FAQ() {
 
               {/* Support options (#12, #62) */}
               <div className="space-y-4">
-                <a
-                  href="mailto:hello@liftout.io"
+                <Link
+                  href="/contact"
                   className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-navy/10 flex items-center justify-center group-hover:bg-navy transition-colors">
                     <EnvelopeIcon className="w-5 h-5 text-navy group-hover:text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-text-primary text-sm">Email us</p>
-                    <p className="text-text-secondary text-sm">hello@liftout.io</p>
+                    <p className="font-semibold text-text-primary text-sm">Contact us</p>
+                    <p className="text-text-secondary text-sm">Send us a message</p>
                   </div>
-                </a>
+                </Link>
 
-                <a
-                  href="tel:+1-888-LIFTOUT"
+                <Link
+                  href="/contact"
                   className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-navy/10 flex items-center justify-center group-hover:bg-navy transition-colors">
@@ -99,7 +99,7 @@ export function FAQ() {
                     <p className="font-semibold text-text-primary text-sm">Schedule a call</p>
                     <p className="text-text-secondary text-sm">Talk to our team</p>
                   </div>
-                </a>
+                </Link>
 
                 <div className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border">
                   <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
