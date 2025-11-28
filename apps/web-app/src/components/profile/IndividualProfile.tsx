@@ -172,25 +172,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
   });
 
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Check if this is a demo user (no Firestore user available)
   const isDemoUser = !user && !!session;
   const userEmail = user?.email || sessionUser?.email || '';
-
-  // Load saved profile data from localStorage for demo users
-  const loadDemoProfile = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}`);
-        if (saved) {
-          return JSON.parse(saved) as IndividualProfileData;
-        }
-      } catch (e) {
-        console.error('Error loading demo profile:', e);
-      }
-    }
-    return null;
-  }, [userEmail]);
 
   // Save profile data to localStorage for demo users
   const saveDemoProfile = useCallback((data: IndividualProfileData, photoUrl: string | null) => {
@@ -206,21 +192,35 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
     }
   }, [userEmail]);
 
-  // Initialize profile data from session first, then user, then localStorage
+  // Initialize profile data - only runs once when we have an email
   useEffect(() => {
-    // Try to load from localStorage for demo users
-    const savedProfile = loadDemoProfile();
-    const savedPhoto = typeof window !== 'undefined'
-      ? localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}_photo`)
-      : null;
+    // Don't re-initialize if already done
+    if (isInitialized || !userEmail) return;
+
+    // Try to load from localStorage first
+    let savedProfile: IndividualProfileData | null = null;
+    let savedPhoto: string | null = null;
+
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}`);
+        if (saved) {
+          savedProfile = JSON.parse(saved) as IndividualProfileData;
+        }
+        savedPhoto = localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}_photo`);
+      } catch (e) {
+        console.error('Error loading demo profile:', e);
+      }
+    }
 
     if (savedProfile) {
       setProfileData(savedProfile);
       setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || null);
+      setIsInitialized(true);
       return;
     }
 
-    // Use session data as initial fallback
+    // Use session/user data as initial fallback
     const name = user?.name || sessionUser?.name || '';
     const nameParts = name.split(' ');
 
@@ -237,7 +237,8 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
     // Set current photo URL
     setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || null);
-  }, [user, sessionUser, loadDemoProfile, userEmail]);
+    setIsInitialized(true);
+  }, [userEmail, user, sessionUser, isInitialized]);
 
   const handleSave = async () => {
     setIsSaving(true);
