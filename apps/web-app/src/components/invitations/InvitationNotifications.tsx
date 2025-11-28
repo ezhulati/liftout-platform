@@ -158,13 +158,13 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
                 <button
                   onClick={() => handleAcceptInvitation(invitation.id!)}
                   disabled={actionLoading === invitation.id}
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-success hover:bg-success-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-success disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-primary min-h-12 inline-flex items-center bg-success hover:bg-success-dark focus:ring-success"
                 >
                   {actionLoading === invitation.id ? (
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
                   ) : (
                     <>
-                      <CheckIcon className="h-4 w-4 mr-1" />
+                      <CheckIcon className="h-5 w-5 mr-2" />
                       Accept
                     </>
                   )}
@@ -173,9 +173,9 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
                 <button
                   onClick={() => handleDeclineInvitation(invitation.id!)}
                   disabled={actionLoading === invitation.id}
-                  className="inline-flex items-center px-3 py-1.5 border border-border text-sm font-medium rounded-md text-text-secondary bg-bg-surface hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-outline min-h-12 inline-flex items-center"
                 >
-                  <XMarkIcon className="h-4 w-4 mr-1" />
+                  <XMarkIcon className="h-5 w-5 mr-2" />
                   Decline
                 </button>
               </div>

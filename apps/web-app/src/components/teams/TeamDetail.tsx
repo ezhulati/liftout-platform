@@ -301,12 +301,18 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                           </p>
                         </div>
                         {isTeamOwner && (
-                          <div className="flex space-x-2">
-                            <button className="text-sm text-navy hover:text-navy-hover touch-target">
-                              <PencilSquareIcon className="h-4 w-4" />
+                          <div className="flex space-x-1">
+                            <button
+                              className="min-w-12 min-h-12 p-3 text-navy hover:text-navy-hover hover:bg-navy-50 rounded-lg transition-colors"
+                              aria-label="Edit member"
+                            >
+                              <PencilSquareIcon className="h-5 w-5" />
                             </button>
-                            <button className="text-sm text-error hover:text-error-dark touch-target">
-                              <TrashIcon className="h-4 w-4" />
+                            <button
+                              className="min-w-12 min-h-12 p-3 text-error hover:text-error-dark hover:bg-error-light rounded-lg transition-colors"
+                              aria-label="Remove member"
+                            >
+                              <TrashIcon className="h-5 w-5" />
                             </button>
                           </div>
                         )}

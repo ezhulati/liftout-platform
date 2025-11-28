@@ -198,9 +198,9 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
             <h3 className="text-lg font-medium text-text-primary">Team Invitations</h3>
             <button
               onClick={loadInvitations}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-text-secondary bg-bg-surface border border-border rounded-md hover:bg-bg-elevated focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
+              className="btn-outline min-h-12 inline-flex items-center"
             >
-              <ArrowPathIcon className="h-4 w-4 mr-1" />
+              <ArrowPathIcon className="h-5 w-5 mr-2" />
               Refresh
             </button>
           </div>
@@ -251,10 +251,11 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                         <button
                           onClick={() => handleSendReminder(invitation.id!)}
                           disabled={actionLoading === invitation.id}
-                          className="p-1 text-text-tertiary hover:text-navy transition-colors disabled:opacity-50"
+                          className="min-w-12 min-h-12 p-3 text-text-tertiary hover:text-navy hover:bg-bg-alt rounded-lg transition-colors disabled:opacity-50"
                           title="Send reminder"
+                          aria-label="Send reminder"
                         >
-                          <PaperAirplaneIcon className="h-4 w-4" />
+                          <PaperAirplaneIcon className="h-5 w-5" />
                         </button>
                       )}
 
@@ -262,10 +263,11 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                         <button
                           onClick={() => handleRevokeInvitation(invitation.id!)}
                           disabled={actionLoading === invitation.id}
-                          className="p-1 text-text-tertiary hover:text-error transition-colors disabled:opacity-50"
+                          className="min-w-12 min-h-12 p-3 text-text-tertiary hover:text-error hover:bg-error-light rounded-lg transition-colors disabled:opacity-50"
                           title="Revoke invitation"
+                          aria-label="Revoke invitation"
                         >
-                          <TrashIcon className="h-4 w-4" />
+                          <TrashIcon className="h-5 w-5" />
                         </button>
                       )}
                     </div>

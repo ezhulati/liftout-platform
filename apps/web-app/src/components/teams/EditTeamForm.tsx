@@ -270,7 +270,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-medium text-text-primary">Team members</h3>
             <TextLink onClick={() => append({ name: '', role: '', experience: 0, skills: [] })}>
-              <PlusIcon className="h-4 w-4 mr-1 inline" />
+              <PlusIcon className="h-5 w-5 mr-1 inline" />
               Add member
             </TextLink>
           </div>
@@ -381,10 +381,10 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
                 <button
                   type="button"
                   onClick={() => removeAchievement(index)}
-                  className="text-error hover:text-error-dark transition-colors duration-fast touch-target"
+                  className="min-w-12 min-h-12 p-3 text-error hover:text-error-dark hover:bg-error-light rounded-lg transition-colors"
                   aria-label="Remove achievement"
                 >
-                  <XMarkIcon className="h-4 w-4" />
+                  <XMarkIcon className="h-5 w-5" />
                 </button>
               </div>
             ))}
