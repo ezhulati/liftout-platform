@@ -41,7 +41,7 @@ export default async function ApplyToOpportunityPage({ params }: ApplyToOpportun
         </Link>
         <h1 className="page-title">Apply for Liftout Opportunity</h1>
         <p className="page-subtitle">
-          Submit your team's expression of interest for this strategic liftout opportunity
+          Submit your team&apos;s expression of interest for this strategic liftout opportunity
         </p>
       </div>
 

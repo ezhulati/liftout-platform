@@ -296,7 +296,7 @@ export default function TeamManagePage() {
                         Expires {formatDistanceToNow(invitation.expiresAt.toDate(), { addSuffix: true })}
                       </p>
                       {invitation.message && (
-                        <p className="text-sm text-text-secondary mt-1 italic">"{invitation.message}"</p>
+                        <p className="text-sm text-text-secondary mt-1 italic">&ldquo;{invitation.message}&rdquo;</p>
                       )}
                     </div>
                   </div>
@@ -328,7 +328,7 @@ export default function TeamManagePage() {
       {teamData.requiredSkills && teamData.requiredSkills.length > 0 && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary">Skills We're Looking For</h2>
+            <h2 className="text-lg font-medium text-text-primary">Skills We&apos;re Looking For</h2>
           </div>
           <div className="px-6 py-6">
             <div className="flex flex-wrap gap-2">

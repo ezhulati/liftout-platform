@@ -228,7 +228,7 @@ export default function AIMatchingPage() {
                   Recommended Teams
                 </h2>
                 <p className="text-sm text-text-secondary mt-1">
-                  Teams that match your company's hiring patterns
+                  Teams that match your company&apos;s hiring patterns
                 </p>
               </div>
               <div className="px-6 py-4">

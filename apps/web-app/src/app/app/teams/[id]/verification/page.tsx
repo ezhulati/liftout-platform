@@ -155,7 +155,7 @@ export default async function TeamVerificationPage({ params }: TeamVerificationP
         </Link>
         <h1 className="page-title">Team Verification</h1>
         <p className="page-subtitle">
-          Manage verification documents, references, and background checks to enhance your team's credibility
+          Manage verification documents, references, and background checks to enhance your team&apos;s credibility
         </p>
       </div>
 

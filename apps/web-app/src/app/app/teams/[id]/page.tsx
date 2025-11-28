@@ -92,7 +92,7 @@ export default function TeamProfilePage() {
       <div className="text-center py-12">
         <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-text-tertiary" />
         <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
-        <p className="mt-1 text-sm text-text-tertiary">The team profile you're looking for doesn't exist.</p>
+        <p className="mt-1 text-sm text-text-tertiary">The team profile you&apos;re looking for doesn&apos;t exist.</p>
       </div>
     );
   }
@@ -315,7 +315,7 @@ export default function TeamProfilePage() {
                   {team.testimonials.map((testimonial) => (
                     <div key={testimonial.id} className="border-l-4 border-navy pl-4 py-2">
                       <blockquote className="text-text-secondary italic mb-2">
-                        "{testimonial.content}"
+                        &ldquo;{testimonial.content}&rdquo;
                       </blockquote>
                       <div className="flex items-center justify-between">
                         <div>

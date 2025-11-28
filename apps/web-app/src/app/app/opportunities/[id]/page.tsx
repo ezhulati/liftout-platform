@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -73,13 +73,7 @@ export default function OpportunityDetailPage() {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
 
-  useEffect(() => {
-    if (params?.id) {
-      fetchOpportunity();
-    }
-  }, [params?.id]);
-
-  const fetchOpportunity = async () => {
+  const fetchOpportunity = useCallback(async () => {
     if (!params?.id) return;
     try {
       const response = await fetch(`/api/opportunities/${params.id}`);
@@ -94,7 +88,13 @@ export default function OpportunityDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params?.id]);
+
+  useEffect(() => {
+    if (params?.id) {
+      fetchOpportunity();
+    }
+  }, [params?.id, fetchOpportunity]);
 
   const handleApply = async () => {
     if (!opportunity) return;
@@ -174,7 +174,7 @@ export default function OpportunityDetailPage() {
         <div className="max-w-4xl mx-auto text-center py-12">
           <h1 className="text-2xl font-bold text-text-primary mb-4">Opportunity Not Found</h1>
           <p className="text-text-secondary mb-6">
-            The opportunity you're looking for doesn't exist or has been removed.
+            The opportunity you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <Link
             href="/app/opportunities"
