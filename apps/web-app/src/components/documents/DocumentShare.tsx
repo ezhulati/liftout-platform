@@ -209,19 +209,19 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                 />
                 <button
                   onClick={copyShareUrl}
-                  className="btn-primary min-h-12 rounded-l-none px-4"
+                  className="btn-primary min-h-12 rounded-l-none px-4 transition-colors duration-fast"
                   aria-label="Copy URL"
                 >
-                  <ClipboardDocumentIcon className="h-5 w-5" />
+                  <ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
-                <LinkIcon className="h-5 w-5 text-navy mt-0.5" />
+            <div className="bg-navy-50 border border-navy-200 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <LinkIcon className="h-5 w-5 text-navy mt-0.5" aria-hidden="true" />
                 <div>
-                  <h4 className="font-medium text-navy-900">Security notice</h4>
+                  <h4 className="font-bold text-navy-900">Security notice</h4>
                   <p className="text-sm text-navy-700">
                     This link provides access according to your sharing settings.
                     {document.accessControl.expiresAt && (
@@ -237,7 +237,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
             <ButtonGroup>
               <button
                 onClick={onCancel || (() => router.back())}
-                className="btn-primary min-h-12"
+                className="btn-primary min-h-12 transition-colors duration-fast"
               >
                 Done
               </button>
@@ -250,16 +250,16 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Current Access Level */}
-          <div className="bg-bg-alt border border-border rounded-lg p-4">
-            <h3 className="font-medium text-text-primary mb-2">Current access level</h3>
-            <div className="flex items-center space-x-2">
+          <div className="bg-bg-alt border border-border rounded-xl p-4">
+            <h3 className="font-bold text-text-primary mb-2">Current access level</h3>
+            <div className="flex items-center gap-2">
               {(() => {
                 const currentAccess = accessTypes.find(t => t.value === document.accessControl.type);
                 const Icon = currentAccess?.icon || LockClosedIcon;
                 return (
                   <>
-                    <Icon className={`h-5 w-5 ${currentAccess?.color}`} />
-                    <span className="font-medium text-text-primary">{currentAccess?.label}</span>
+                    <Icon className={`h-5 w-5 ${currentAccess?.color}`} aria-hidden="true" />
+                    <span className="font-bold text-text-primary">{currentAccess?.label}</span>
                     <span className="text-text-secondary">- {currentAccess?.description}</span>
                   </>
                 );
@@ -269,14 +269,14 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
 
           {/* Access Control */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text-primary">Who can access this document?</h3>
+            <h3 className="text-lg font-bold text-text-primary">Who can access this document?</h3>
             <div className="space-y-3">
               {accessTypes.map((type) => {
                 const Icon = type.icon;
                 return (
                   <label
                     key={type.value}
-                    className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-colors ${
+                    className={`flex items-start gap-3 p-4 border rounded-xl cursor-pointer transition-colors duration-fast ${
                       accessType === type.value ? type.bgColor : 'border-border hover:bg-bg-alt'
                     }`}
                   >
@@ -287,9 +287,9 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                       className="mt-1 h-5 w-5 text-navy focus:ring-navy"
                     />
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Icon className={`h-5 w-5 ${type.color}`} />
-                        <span className="text-sm font-medium text-text-primary">{type.label}</span>
+                      <div className="flex items-center gap-2">
+                        <Icon className={`h-5 w-5 ${type.color}`} aria-hidden="true" />
+                        <span className="text-sm font-bold text-text-primary">{type.label}</span>
                       </div>
                       <p className="text-sm text-text-tertiary mt-1">{type.description}</p>
                     </div>
@@ -370,7 +370,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
               <button
                 type="submit"
                 disabled={shareDocumentMutation.isPending}
-                className="btn-primary min-h-12"
+                className="btn-primary min-h-12 transition-colors duration-fast"
               >
                 {shareDocumentMutation.isPending ? 'Updating...' : 'Update sharing'}
               </button>

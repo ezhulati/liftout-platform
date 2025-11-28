@@ -262,6 +262,18 @@ This is typically caused by pnpm/corepack version conflicts. The fix:
 1. For Neon: ensure `?sslmode=require` in connection string
 2. For local: ensure PostgreSQL is running on port 5432
 
+**Netlify CLI fails with Node.js 25 (TypeError: Cannot read properties of undefined):**
+The Netlify CLI has a compatibility issue with Node.js 25. The error looks like:
+```
+TypeError: Cannot read properties of undefined (reading 'prototype')
+at .../buffer-equal-constant-time/index.js:37:35
+```
+
+Workarounds:
+1. **Preferred**: Use git push to trigger auto-deploy (commits to main auto-deploy to Netlify)
+2. Use an older Node.js version: `nvm use 20 && netlify deploy --build --prod`
+3. Wait for Netlify CLI update to support Node.js 25
+
 ### Git Workflow
 
 - Main branch: `main`
