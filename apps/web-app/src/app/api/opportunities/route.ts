@@ -2,7 +2,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
-import { getMockOpportunities, createMockOpportunity } from '@/lib/mock-data';
+import { getMockOpportunities, createMockOpportunity, MockOpportunity } from '@/lib/mock-data';
+
+// Transform mock opportunity to match frontend expected structure
+function transformMockOpportunity(opp: MockOpportunity) {
+  return {
+    id: opp.id,
+    title: opp.title,
+    company: opp.company,
+    description: opp.description,
+    teamSize: `${opp.teamSize} people`,
+    location: opp.location,
+    industry: opp.industry,
+    type: opp.type,
+    compensation: opp.compensation.range,
+    timeline: `Deadline: ${new Date(opp.deadline).toLocaleDateString()}`,
+    requirements: opp.requirements,
+    whatWeOffer: opp.responsibilities,
+    integrationPlan: opp.integrationPlan,
+    confidential: opp.isConfidential || false,
+    urgent: false,
+    createdAt: opp.postedAt,
+    updatedAt: opp.postedAt,
+    status: opp.status === 'open' ? 'active' : opp.status === 'in_review' ? 'in_progress' : 'closed',
+    applications: []
+  };
+}
 
 // GET /api/opportunities - List opportunities
 export async function GET(request: NextRequest) {
@@ -74,8 +99,11 @@ function returnMockOpportunities(request: NextRequest) {
 
   const result = getMockOpportunities(filters);
 
+  // Transform mock opportunities to match frontend expected structure
+  const transformedOpportunities = result.opportunities.map(transformMockOpportunity);
+
   return NextResponse.json({
-    opportunities: result.opportunities,
+    opportunities: transformedOpportunities,
     total: result.total,
     filters: {
       industries: ['Financial Services', 'Healthcare Technology', 'Enterprise Software', 'Developer Tools', 'Private Equity'],
@@ -125,7 +153,7 @@ export async function POST(request: NextRequest) {
           // Fall back to mock creation on error
           console.warn('API server returned error, falling back to mock creation');
           const mockOpp = createMockOpportunity(body);
-          return NextResponse.json({ opportunity: mockOpp, _mock: true }, { status: 201 });
+          return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
         }
 
         // Transform response to match existing frontend expectations
@@ -138,13 +166,13 @@ export async function POST(request: NextRequest) {
         console.error('Error proxying to API server:', error);
         // Fall back to mock creation
         const mockOpp = createMockOpportunity(body);
-        return NextResponse.json({ opportunity: mockOpp, _mock: true }, { status: 201 });
+        return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
       }
     }
 
     // API server not available, use mock data
     const mockOpp = createMockOpportunity(body);
-    return NextResponse.json({ opportunity: mockOpp, _mock: true }, { status: 201 });
+    return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
   } catch (error) {
     console.error('Error creating opportunity:', error);
     return NextResponse.json(

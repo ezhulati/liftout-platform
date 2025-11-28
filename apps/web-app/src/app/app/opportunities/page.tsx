@@ -7,10 +7,10 @@ import { Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 
-export default function OpportunitiesPage() {
+function OpportunitiesContent() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
-  
+
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
@@ -35,7 +35,7 @@ export default function OpportunitiesPage() {
             {isCompanyUser ? 'Liftout Opportunities' : 'Browse Liftout Opportunities'}
           </h1>
           <p className="page-subtitle">
-            {isCompanyUser 
+            {isCompanyUser
               ? 'Post strategic team acquisition opportunities and manage incoming team expressions of interest'
               : 'Discover strategic opportunities for your team to join new organizations and accelerate growth'
             }
@@ -101,12 +101,22 @@ export default function OpportunitiesPage() {
       )}
 
       {/* Opportunities list */}
-      <Suspense fallback={<div className="loading-spinner mx-auto"></div>}>
-        <OpportunitiesList 
-          userType={session.user.userType} 
-          activeTab={activeTab}
-        />
-      </Suspense>
+      <OpportunitiesList
+        userType={session.user.userType}
+        activeTab={activeTab}
+      />
     </div>
+  );
+}
+
+export default function OpportunitiesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="loading-spinner w-12 h-12"></div>
+      </div>
+    }>
+      <OpportunitiesContent />
+    </Suspense>
   );
 }
