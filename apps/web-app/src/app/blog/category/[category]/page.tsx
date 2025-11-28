@@ -41,9 +41,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const description = categoryDescriptions[category.toLowerCase()] || `Articles about ${normalizedCategory}`;
+
   return {
     title: `${normalizedCategory} - Insights | Liftout`,
-    description: categoryDescriptions[category.toLowerCase()] || `Articles about ${normalizedCategory}`,
+    description,
+    openGraph: {
+      title: `${normalizedCategory} - Insights | Liftout`,
+      description,
+      type: 'website',
+      url: `/blog/category/${category.toLowerCase()}`,
+      images: [
+        {
+          url: '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `Liftout ${normalizedCategory} Articles`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${normalizedCategory} - Insights | Liftout`,
+      description,
+      images: ['/og-image.png'],
+    },
   };
 }
 

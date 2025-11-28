@@ -39,10 +39,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: article.title,
       description: article.metaDescription,
       type: 'article',
+      url: `/blog/${slug}`,
       publishedTime: article.publishDate,
       modifiedTime: article.modifiedDate,
       authors: [article.author.name],
       tags: article.tags,
+      images: [
+        {
+          url: article.featuredImage,
+          width: 1024,
+          height: 768,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.metaDescription,
+      images: [article.featuredImage],
     },
   };
 }

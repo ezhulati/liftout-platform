@@ -15,7 +15,7 @@ export function LandingFooter() {
                 Questions before signing up?
               </p>
               <p className="text-white/70 text-lg">
-                Our team responds within 2 hours during business hours.
+                Our team responds within 24 hours.
               </p>
             </div>
             {/* Practical UI: Primary first, tertiary second */}

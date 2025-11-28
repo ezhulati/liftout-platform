@@ -13,6 +13,28 @@ export const metadata: Metadata = {
   title: 'Insights - Team Hiring & Liftout Resources | Liftout',
   description:
     'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams. Stay informed with the latest trends in team-based recruitment.',
+  openGraph: {
+    title: 'Insights - Team Hiring & Liftout Resources | Liftout',
+    description:
+      'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams. Stay informed with the latest trends in team-based recruitment.',
+    type: 'website',
+    url: '/blog',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Liftout Insights - Team Hiring & Liftout Resources',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Insights - Team Hiring & Liftout Resources | Liftout',
+    description:
+      'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams.',
+    images: ['/og-image.png'],
+  },
 };
 
 // Practical UI: Article card with proper spacing, typography, and visual hierarchy

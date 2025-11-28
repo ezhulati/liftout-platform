@@ -152,7 +152,7 @@ export function FAQTabs() {
                 </div>
                 <div>
                   <p className="font-semibold text-text-primary text-base">Still have questions?</p>
-                  <p className="text-text-secondary text-base">We respond within 2 hours</p>
+                  <p className="text-text-secondary text-base">We respond within 24 hours</p>
                 </div>
               </Link>
             </div>

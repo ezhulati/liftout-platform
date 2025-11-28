@@ -9,6 +9,28 @@ export const metadata: Metadata = {
   title: 'Nick Acimovic - Co-Founder | Liftout',
   description:
     'Nick Acimovic is co-founder of Liftout and Managing Partner at Jovian Capital Management. Learn more about his background in finance and his vision for team-based hiring.',
+  openGraph: {
+    title: 'Nick Acimovic - Co-Founder | Liftout',
+    description:
+      'Nick Acimovic is co-founder of Liftout and Managing Partner at Jovian Capital Management. Learn more about his background in finance and his vision for team-based hiring.',
+    type: 'profile',
+    url: '/blog/author/nick-acimovic',
+    images: [
+      {
+        url: '/images/blog/Nick-Acimovic.png',
+        width: 400,
+        height: 400,
+        alt: 'Nick Acimovic - Co-Founder of Liftout',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nick Acimovic - Co-Founder | Liftout',
+    description:
+      'Nick Acimovic is co-founder of Liftout and Managing Partner at Jovian Capital Management. Learn more about his background in finance and his vision for team-based hiring.',
+    images: ['/images/blog/Nick-Acimovic.png'],
+  },
 };
 
 // Practical UI: Article card with proper spacing, typography, and visual hierarchy

@@ -1,0 +1,180 @@
+
+> @liftout/api-server@1.0.0 dev /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server
+> lsof -ti:8000 | xargs kill -9 2>/dev/null || true; tsx watch src/index.ts
+
+1:29:46 PM [tsx] rerunning
+c2025-11-28 13:29:47 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+(node:19150) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+2025-11-28 13:29:47 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 13:29:47 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 13:29:47 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 13:40:12 [[33MWARN[39M]: Socket connection rejected: User not found (socket: TA1g7XdF4R8EsUuQAAAB) {"service":"liftout-api"}
+2025-11-28 13:40:12 [[33MWARN[39M]: Socket connection rejected: User not found (socket: F0D7maBrOsf9MS9nAAAF) {"service":"liftout-api"}
+2025-11-28 13:40:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: x6x0msHtGr1U-DecAAAI) {"service":"liftout-api"}
+2025-11-28 13:40:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: iSUXnn_1cxoxkTbJAAAM) {"service":"liftout-api"}
+2025-11-28 13:40:17 [[33MWARN[39M]: Socket connection rejected: User not found (socket: QKOaTxOzrM9HhzBgAAAP) {"service":"liftout-api"}
+2025-11-28 13:40:17 [[33MWARN[39M]: Socket connection rejected: User not found (socket: VvQzTIUGQZI6yPlFAAAT) {"service":"liftout-api"}
+prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
+prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
+2025-11-28 14:00:03 [[33MWARN[39M]: Socket connection rejected: User not found (socket: YZFT8TG41KLs5ThMAAAW) {"service":"liftout-api"}
+2025-11-28 14:00:03 [[33MWARN[39M]: Socket connection rejected: User not found (socket: EbGGHZLjcFHG7c2KAAAa) {"service":"liftout-api"}
+2025-11-28 14:00:05 [[33MWARN[39M]: Socket connection rejected: User not found (socket: gOpz0PBhuYX3D204AAAd) {"service":"liftout-api"}
+2025-11-28 14:00:05 [[33MWARN[39M]: Socket connection rejected: User not found (socket: w1VW077xt5twsEYrAAAh) {"service":"liftout-api"}
+2025-11-28 14:00:09 [[33MWARN[39M]: Socket connection rejected: User not found (socket: XAfKe-eATKIFdY_DAAAk) {"service":"liftout-api"}
+2025-11-28 14:00:09 [[33MWARN[39M]: Socket connection rejected: User not found (socket: GLmAIAGefhx_RK52AAAo) {"service":"liftout-api"}
+2025-11-28 14:02:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: doYWc9pobF0N8bJxAAAr) {"service":"liftout-api"}
+2025-11-28 14:02:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: zC-YgrnGCvKqhhxKAAAu) {"service":"liftout-api"}
+2025-11-28 14:02:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: JVYnNbB55Ckzz1FTAAAx) {"service":"liftout-api"}
+2025-11-28 14:02:14 [[33MWARN[39M]: Socket connection rejected: User not found (socket: eif-XE2xU597iIXeAAA0) {"service":"liftout-api"}
+2025-11-28 14:02:15 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LWyGwYMRyKqvsor-AAA4) {"service":"liftout-api"}
+2025-11-28 14:02:16 [[33MWARN[39M]: Socket connection rejected: User not found (socket: pfhYF9Rdi2jcIQmrAAA7) {"service":"liftout-api"}
+2025-11-28 14:02:16 [[33MWARN[39M]: Socket connection rejected: User not found (socket: JC2jPZJ9EjnGnKHaAAA-) {"service":"liftout-a2:04:20 PM [tsx] rerunning
+c2025-11-28 14:04:21 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+(node:25186) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+2025-11-28 14:04:21 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 14:04:21 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 14:04:21 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 14:04:30 [[33MWARN[39M]: Socket connection rejected: User not found (socket: GJDv-sCrjFOExh3pAAAD) {"service":"liftout-api"}
+2025-11-28 14:04:41 [[33MWARN[39M]: Socket connection rejected: User not found (socket: NrhcaUnE1XuQRnHIAAAH) {"service":"liftout-api"}
+2025-11-28 14:04:51 [[33MWARN[39M]: Socket connection rejected: User not found (socket: D4UaxEfL3Ji0kKuKAAAM) {"service":"liftout-api"}
+2025-11-28 14:05:02 [[33MWARN[39M]: Socket connection rejected: User not found (socket: ex4b3_Oh_NatkI68AAAR) {"service":"liftout-api"}
+2025-11-28 14:05:13 [[33MWARN[39M]: Socket connection rejected: User not found (socket: NDhpQIXr-WAQnqWrAAAW) {"service":"liftout-api"}
+2025-11-28 14:05:22 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:22 +0000] "GET /health HTTP/1.1" 200 126 "-" "curl/8.7.1" {"service":"liftout-api"}
+2025-11-28 14:05:30 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 9TtldvyaHPR6aNxfAAAZ) {"service":"liftout-api"}
+2025-11-28 14:05:30 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 1hNkF-2_P5W-QExxAAAd) {"service":"liftout-api"}
+2025-11-28 14:05:32 [[33MWARN[39M]: Socket connection rejected: User not found (socket: WCOlsoaabHtxwFJOAAAi) {"service":"liftout-api"}
+2025-11-28 14:05:36 [[33MWARN[39M]: Socket connection rejected: User not found (socket: k40IU8tRSaBYS5ohAAAl) {"service":"liftout-api"}
+2025-11-28 14:05:36 [[33MWARN[39M]: Socket connection rejected: User not found (socket: hc4v1AIY8VKz0HZpAAAp) {"service":"liftout-api"}
+2025-11-28 14:05:40 [[33MWARN[39M]: Socket connection rejected: User not found (socket: BZ7wxWdTWXEF7jU7AAAt) {"service":"liftout-api"}
+2025-11-28 14:05:40 [[33MWARN[39M]: Socket connection rejected: User not found (socket: U4U6Zvinhfuib93lAAAx) {"service":"liftout-api"}
+2025-11-28 14:05:41 [[33MWARN[39M]: Socket connection rejected: User not found (socket: R4TbEaa7Uo-0nNYpAAA1) {"service":"liftout-api"}
+2025-11-28 14:05:42 [[33MWARN[39M]: Socket connection rejected: User not found (socket: xMrEVIvwH75KvWNuAAA5) {"service":"liftout-api"}
+2025-11-28 14:05:42 [[33MWARN[39M]: Socket connection rejected: User not found (socket: KMIRjuKjpTrAW8r9AAA8) {"service":"liftout-api"}
+2025-11-28 14:05:42 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:42 +0000] "GET /health HTTP/1.1" 200 127 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:42 [[33MWARN[39M]: Socket connection rejected: User not found (socket: -1ymmyYW4r1HFtlEAABA) {"service":"liftout-api"}
+2025-11-28 14:05:42 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:42 +0000] "GET /api/opportunities HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:43 [[33MWARN[39M]: Socket connection rejected: User not found (socket: IhuudksMmxszyicGAABF) {"service":"liftout-api"}
+2025-11-28 14:05:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:43 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:43 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:43 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:43 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:44 [[33MWARN[39M]: Socket connection rejected: User not found (socket: JI_GMmD_PKfPez7eAABN) {"service":"liftout-api"}
+2025-11-28 14:05:44 [[33MWARN[39M]: Socket connection rejected: User not found (socket: yrtMZnqPAD5TQraBAABS) {"service":"liftout-api"}
+2025-11-28 14:05:45 [[33MWARN[39M]: Socket connection rejected: User not found (socket: sDEoalCpI-N6pT5sAABW) {"service":"liftout-api"}
+2025-11-28 14:05:45 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 7l0WQvf1VpucV3SbAABZ) {"service":"liftout-api"}
+2025-11-28 14:05:45 [[33MWARN[39M]: Socket connection rejected: User not found (socket: fNcBVeyNzJU5Hg1CAABc) {"service":"liftout-api"}
+2025-11-28 14:05:46 [[33MWARN[39M]: Socket connection rejected: User not found (socket: fwzAVW-8ivetKP_kAABg) {"service":"liftout-api"}
+2025-11-28 14:05:47 [[33MWARN[39M]: Socket connection rejected: User not found (socket: zGSJqqN2d8AIUoWiAABj) {"service":"liftout-api"}
+2025-11-28 14:05:47 [[33MWARN[39M]: Socket connection rejected: User not found (socket: E3Vc5cUJjwF41lOUAABm) {"service":"liftout-api"}
+2025-11-28 14:05:47 [[33MWARN[39M]: Socket connection rejected: User not found (socket: aCBRRQggh_NDnn4dAABq) {"service":"liftout-api"}
+2025-11-28 14:05:47 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 4xYfCttAUrNFv9hYAABt) {"service":"liftout-api"}
+2025-11-28 14:05:47 [[33MWARN[39M]: Socket connection rejected: User not found (socket: hre6DVicWViDJacKAABx) {"service":"liftout-api"}
+2025-11-28 14:05:48 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 2mOV_1ds9v3d4mT_AAB2) {"service":"liftout-api"}
+2025-11-28 14:05:48 [[33MWARN[39M]: Socket connection rejected: User not found (socket: UXeB1PvyxfmhnVlaAAB5) {"service":"liftout-api"}
+2025-11-28 14:05:48 [[33MWARN[39M]: Socket connection rejected: User not found (socket: kqSttIde23ND0mTrAAB9) {"service":"liftout-api"}
+2025-11-28 14:05:49 [[33MWARN[39M]: Socket connection rejected: User not found (socket: cWCJZqelmcbYh6BeAACC) {"service":"liftout-api"}
+2025-11-28 14:05:49 [[33MWARN[39M]: Socket connection rejected: User not found (socket: a8IKGPyMKhCS17R7AACH) {"service":"liftout-api"}
+2025-11-28 14:05:50 [[33MWARN[39M]: Socket connection rejected: User not found (socket: S62MqEP1QWVbcnNbAACK) {"service":"liftout-api"}
+2025-11-28 14:05:50 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 6pszGyKW8smM9yyvAACO) {"service":"liftout-api"}
+2025-11-28 14:05:51 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 4d2_a6g8b79VW_27AACS) {"service":"liftout-api"}
+2025-11-28 14:05:54 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:54 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:54 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:54 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:54 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:54 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:54 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:54 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:54 [[33MWARN[39M]: Socket connection rejected: User not found (socket: NhpdoCqX6DKnxFVKAACV) {"service":"liftout-api"}
+2025-11-28 14:05:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:55 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:57 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:57 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:57 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:57 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:05:58 [[33MWARN[39M]: Socket connection rejected: User not found (socket: xh5dbD_-A-_DmcxHAACY) {"service":"liftout-api"}
+2025-11-28 14:05:58 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:05:58 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:00 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:00 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:00 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:00 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:00 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:00 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:00 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:00 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:00 [[33MWARN[39M]: Socket connection rejected: User not found (socket: G0fo__Q41EntYn2zAACb) {"service":"liftout-api"}
+2025-11-28 14:06:01 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:01 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:01 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:01 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:01 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:01 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:02 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:06:02 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:06:03 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Z2gLjj_fCj7XrB0YAACf) {"service":"liftout-api"}
+2025-11-28 14:06:10 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 8Zy3PN3AqXbK6uJgAACi) {"service":"liftout-api"}
+2025-11-28 14:06:10 [[33MWARN[39M]: Socket connection rejected: User not found (socket: kYt8qYxoFg1DPlIwAACm) {"service":"liftout-api"}
+2025-11-28 14:06:16 [[33MWARN[39M]: Socket connection rejected: User not found (socket: uoYg6-RuQ1_DFZbFAACr) {"service":"liftout-api"}
+2025-11-28 14:06:22 [[33MWARN[39M]: Socket connection rejected: User not found (socket: JsdBlQaaBwMqkd-CAACu) {"service":"liftout-api"}
+2025-11-28 14:06:23 [[33MWARN[39M]: Socket connection rejected: User not found (socket: DkEhBJflY9kAYfPOAACy) {"service":"liftout-api"}
+MWARN[39M]: Socket connection rejected: User not found (socket: OHXOdwVgc1ROcD1CAAEI) {"service":"liftout-api"}
+2025-11-28 14:03:23 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 5NxgRC9o52Em5YuqAAEM) {"service":"liftout-api"}
+2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
+2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
+2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Zpcj68phglU3MKmdAAEW) {"service":"liftout-api"}
+2025-11-28 14:03:25 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:25 +0000] "GET /health HTTP/1.1" 200 129 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:25 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:25 +0000] "GET /api/opportunities HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: jliIXu_D8DAgntPhAAEb) {"service":"liftout-api"}
+2025-11-28 14:03:26 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Z5WpSdNquR1CVaJ4AAEg) {"service":"liftout-api"}
+2025-11-28 14:03:26 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:26 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:26 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:26 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:26 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:26 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:26 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:26 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:27 [[33MWARN[39M]: Socket connection rejected: User not found (socket: DiyNGaV3PBy9eDVSAAEo) {"service":"liftout-api"}
+2025-11-28 14:03:27 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 1bf20y1f9kBNOlgGAAEt) {"service":"liftout-api"}
+2025-11-28 14:03:27 [[33MWARN[39M]: Socket connection rejected: User not found (socket: bO4lkeBhXyNm4UroAAEx) {"service":"liftout-api"}
+2025-11-28 14:03:28 [[33MWARN[39M]: Socket connection rejected: User not found (socket: aKW4Ke9Jjnm4tcggAAE1) {"service":"liftout-api"}
+2025-11-28 14:03:29 [[33MWARN[39M]: Socket connection rejected: User not found (socket: IHYrr-0p5oRPs1PtAAE5) {"service":"liftout-api"}
+2025-11-28 14:03:30 [[33MWARN[39M]: Socket connection rejected: User not found (socket: rDfQ9ey2MSV6eFpNAAE-) {"service":"liftout-api"}
+2025-11-28 14:03:30 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 0FUS2DXOqEuWMRDoAAFE) {"service":"liftout-api"}
+2025-11-28 14:03:31 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 6CnV_6HxPPAomP1eAAFH) {"service":"liftout-api"}
+2025-11-28 14:03:31 [[33MWARN[39M]: Socket connection rejected: User not found (socket: FwlZPS75UXQjmRTFAAFL) {"service":"liftout-api"}
+2025-11-28 14:03:31 [[33MWARN[39M]: Socket connection rejected: User not found (socket: fTONinXPF-G6kfcAAAFQ) {"service":"liftout-api"}
+2025-11-28 14:03:32 [[33MWARN[39M]: Socket connection rejected: User not found (socket: y-2BWb4EAHcKR-aDAAFT) {"service":"liftout-api"}
+2025-11-28 14:03:32 [[33MWARN[39M]: Socket connection rejected: User not found (socket: bcmBdNsfap5wz7MaAAFX) {"service":"liftout-api"}
+2025-11-28 14:03:32 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 1w1mZeA9_GSX4C5FAAFa) {"service":"liftout-api"}
+2025-11-28 14:03:32 [[33MWARN[39M]: Socket connection rejected: User not found (socket: WaATe7AfNuYO1U6jAAFe) {"service":"liftout-api"}
+2025-11-28 14:03:33 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Et3iOnc4SZd7yQIvAAFh) {"service":"liftout-api"}
+2025-11-28 14:03:33 [[33MWARN[39M]: Socket connection rejected: User not found (socket: bnnSZPKiyCVEVnGyAAFl) {"service":"liftout-api"}
+2025-11-28 14:03:34 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 9At0jTkV4M9leh11AAFp) {"service":"liftout-api"}
+2025-11-28 14:03:37 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:37 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:37 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:37 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:37 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:37 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:37 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:37 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:37 [[33MWARN[39M]: Socket connection rejected: User not found (socket: TW7r_zDyihbCxzcGAAFs) {"service":"liftout-api"}
+2025-11-28 14:03:38 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:38 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:38 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:38 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:38 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:38 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:39 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:39 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:39 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:39 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:40 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:40 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:40 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:40 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:41 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:41 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:41 [[33MWARN[39M]: Socket connection rejected: User not found (socket: vXjRZKh18_65Ie7_AAFv) {"service":"liftout-api"}
+2025-11-28 14:03:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:43 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:43 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:43 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:43 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:43 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:43 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 3-NgKZ3Sl3CzxSChAAFy) {"service":"liftout-api"}
+2025-11-28 14:03:44 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:44 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:44 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:44 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:44 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:44 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:45 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:45 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
+2025-11-28 14:03:46 [[33MWARN[39M]: Socket connection rejected: User not found (socket: IwL4JK5zxpfC7LtLAAF3) {"service":"liftout-api"}
+2025-11-28 14:03:57 [[33MWARN[39M]: Socket connection rejected: User not found (socket: tapMxWeyP9rX2tdJAAF8) {"service":"liftout-api"}
+2025-11-28 14:04:08 [[33MWARN[39M]: Socket connection rejected: User not found (socket: ugshFgxlUHueZNg1AAGB) {"service":"liftout-api"}
+2025-11-28 14:04:19 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 9FbzSaIpVGirkUL5AAGE) {"service":"liftout-api"}
+2025-11-28 14:04:19 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Hc4Fok8h1yOR__jwAAGI) {"service":"liftout-api"}
+2:04:20 PM [tsx] restarting
+2025-11-28 14:04:20 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 14:04:20 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 14:04:21 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+(node:25187) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at startServer (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/index.ts:208:10)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)

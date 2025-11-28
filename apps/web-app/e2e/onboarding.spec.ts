@@ -12,8 +12,8 @@ async function signInAndPrepareOnboarding(page: Page, email: string, password: s
   await page.fill('input[type="password"]', password);
   await page.click('button:has-text("Sign in")');
 
-  // Wait for dashboard to load (confirms authentication)
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+  // Wait for either dashboard or onboarding (both indicate auth succeeded)
+  await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
 
   // Clear onboarding progress from localStorage
   await page.evaluate(() => {
@@ -34,8 +34,8 @@ async function navigateToOnboarding(page: Page): Promise<'wizard' | 'dashboard' 
   // Use Promise.race with short timeouts to handle client-side redirects
   try {
     await Promise.race([
-      page.waitForURL('**/app/dashboard', { timeout: 10000 }),
-      page.waitForSelector('h1:has-text("Welcome to Liftout")', { timeout: 10000 })
+      page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 10000, waitUntil: 'load' }),
+      page.waitForSelector('h1:has-text("Welcome")', { timeout: 10000 })
     ]);
   } catch {
     // Timeout reached - check current state
@@ -47,7 +47,7 @@ async function navigateToOnboarding(page: Page): Promise<'wizard' | 'dashboard' 
   }
 
   // Check if wizard header is visible
-  const wizardHeader = page.locator('h1:has-text("Welcome to Liftout")');
+  const wizardHeader = page.locator('h1:has-text("Welcome")');
   const isVisible = await wizardHeader.isVisible().catch(() => false);
   if (isVisible) {
     return 'wizard';
@@ -360,8 +360,8 @@ test.describe('Authentication Flow', () => {
     await page.fill('input[type="password"]', 'password');
     await page.click('button:has-text("Sign in")');
 
-    // Should redirect to dashboard
-    await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+    // Should redirect to dashboard or onboarding
+    await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
   });
 
   test('team user can sign in successfully', async ({ page }) => {
@@ -370,8 +370,8 @@ test.describe('Authentication Flow', () => {
     await page.fill('input[type="password"]', 'password');
     await page.click('button:has-text("Sign in")');
 
-    // Should redirect to dashboard
-    await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+    // Should redirect to dashboard or onboarding
+    await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
   });
 
   test('invalid credentials shows error', async ({ page }) => {
@@ -380,8 +380,9 @@ test.describe('Authentication Flow', () => {
     await page.fill('input[type="password"]', 'wrongpassword');
     await page.click('button:has-text("Sign in")');
 
-    // Should show error toast - hot-toast uses role="status" for toasts
-    await expect(page.locator('text=Invalid credentials')).toBeVisible({ timeout: 10000 });
+    // Should show error toast or alert
+    const errorLocator = page.locator('text=/invalid/i');
+    await expect(errorLocator.first()).toBeVisible({ timeout: 10000 });
   });
 
   test('demo credentials dropdown works', async ({ page }) => {

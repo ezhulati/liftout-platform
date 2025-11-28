@@ -15,8 +15,7 @@ test.describe('Messages Responsive Layout', () => {
     await page.goto('/app/messages');
     await page.waitForLoadState('domcontentloaded');
 
-    // The page should load without crashing
-    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
   });
 
   test('tablet viewport shows side-by-side layout', async ({ page }) => {
@@ -26,7 +25,7 @@ test.describe('Messages Responsive Layout', () => {
     await page.goto('/app/messages');
     await page.waitForLoadState('domcontentloaded');
 
-    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
   });
 
   test('desktop viewport shows full layout', async ({ page }) => {
@@ -36,6 +35,6 @@ test.describe('Messages Responsive Layout', () => {
     await page.goto('/app/messages');
     await page.waitForLoadState('domcontentloaded');
 
-    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
   });
 });

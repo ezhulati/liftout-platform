@@ -42,7 +42,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-text-primary text-sm">Fast response guaranteed</p>
-                  <p className="text-success text-sm">Usually within 2 hours during business hours</p>
+                  <p className="text-success text-sm">Usually within 24 hours</p>
                 </div>
               </div>
             </div>

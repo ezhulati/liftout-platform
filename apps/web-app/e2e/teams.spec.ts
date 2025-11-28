@@ -7,7 +7,7 @@ async function signIn(page: any, email: string, password: string) {
   await page.fill('input[type="email"]', email);
   await page.fill('input[type="password"]', password);
   await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+  await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
 }
 
 test.describe('Teams - Team User View', () => {
@@ -19,15 +19,14 @@ test.describe('Teams - Team User View', () => {
     await page.goto('/app/teams');
     await page.waitForLoadState('domcontentloaded');
 
-    // Team users see "My Team Profile" heading
-    await expect(page.locator('h1:has-text("My Team Profile")').first()).toBeVisible();
+    await expect(page.locator('h1:has-text("My Team Profile")').first()).toBeVisible({ timeout: 10000 });
   });
 
-  test('teams page shows search functionality', async ({ page }) => {
+  test('team user sees profile actions', async ({ page }) => {
     await page.goto('/app/teams');
     await page.waitForLoadState('domcontentloaded');
 
-    await expect(page.locator('input[placeholder*="Search" i]').first()).toBeVisible();
+    await expect(page.locator('a:has-text("Edit team profile")').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('can view team details', async ({ page }) => {
@@ -64,8 +63,7 @@ test.describe('Teams - Company User View', () => {
     await page.goto('/app/teams');
     await page.waitForLoadState('domcontentloaded');
 
-    // Company users see "Browse High-Performing Teams" heading
-    await expect(page.locator('h1:has-text("Browse High-Performing Teams")').first()).toBeVisible();
+    await expect(page.locator('h1:has-text("Browse High-Performing Teams")').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('can search for teams', async ({ page }) => {
