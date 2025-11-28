@@ -1,13 +1,12 @@
 import { NextAuthOptions } from 'next-auth';
-// import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import LinkedInProvider from 'next-auth/providers/linkedin';
-// import { prisma } from '@liftout/database';
-// import bcrypt from 'bcryptjs';
+import { prisma } from '@liftout/database';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-// Mock prisma for demo
-const prisma = null as any;
+const JWT_SECRET = process.env.JWT_SECRET || 'liftout-dev-jwt-secret-key-2024';
 
 // Build providers array conditionally based on available environment variables
 const providers: any[] = [
@@ -22,34 +21,53 @@ const providers: any[] = [
         return null;
       }
 
-      // Mock user for demo purposes
-      if (credentials.email === 'demo@example.com' && credentials.password === 'demo123') {
-        return {
-          id: '1',
-          email: 'demo@example.com',
-          name: 'Alex Chen',
-          firstName: 'Alex',
-          lastName: 'Chen',
-          userType: 'individual',
-          emailVerified: new Date(),
-          image: null,
-        };
-      }
+      try {
+        // Look up user in the database
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+          include: {
+            profile: true,
+            companyMemberships: {
+              include: { company: true },
+            },
+          },
+        });
 
-      if (credentials.email === 'company@example.com' && credentials.password === 'demo123') {
-        return {
-          id: '2',
-          email: 'company@example.com',
-          name: 'Sarah Rodriguez',
-          firstName: 'Sarah',
-          lastName: 'Rodriguez',
-          userType: 'company',
-          emailVerified: new Date(),
-          image: null,
-        };
-      }
+        if (!user) {
+          console.log('User not found:', credentials.email);
+          return null;
+        }
 
-      return null;
+        // Check password (for seeded demo users, password is hashed)
+        const isValidPassword = await bcrypt.compare(credentials.password, user.passwordHash || '');
+
+        if (!isValidPassword) {
+          console.log('Invalid password for:', credentials.email);
+          return null;
+        }
+
+        // Generate an access token for the API server
+        const accessToken = jwt.sign(
+          { userId: user.id, email: user.email, userType: user.userType },
+          JWT_SECRET,
+          { expiresIn: '30d' }
+        );
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: `${user.firstName} ${user.lastName}`,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          userType: user.userType,
+          emailVerified: user.emailVerified ? new Date() : null,
+          image: user.profile?.profilePhotoUrl || null,
+          accessToken,
+        };
+      } catch (error) {
+        console.error('Auth error:', error);
+        return null;
+      }
     },
   }),
 ];
@@ -87,7 +105,6 @@ if (process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET) {
 }
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma), // Commented out for demo
   providers,
   secret: process.env.NEXTAUTH_SECRET || 'secure-production-secret-key-for-liftout-platform-2024',
   session: {
@@ -97,32 +114,16 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  // Enable debug mode in production to help diagnose issues
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.userType = user.userType;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
         token.emailVerified = user.emailVerified;
+        token.accessToken = user.accessToken;
       }
-
-      // Handle OAuth providers (commented out for demo)
-      // if (account?.provider === 'google' || account?.provider === 'linkedin') {
-      //   // Update user info from OAuth provider
-      //   if (user?.email) {
-      //     const dbUser = await prisma.user.findUnique({
-      //       where: { email: user.email },
-      //     });
-      //     if (dbUser) {
-      //       token.userType = dbUser.userType;
-      //       token.firstName = dbUser.firstName;
-      //       token.lastName = dbUser.lastName;
-      //     }
-      //   }
-      // }
-
       return token;
     },
     async session({ session, token }) {
@@ -133,32 +134,28 @@ export const authOptions: NextAuthOptions = {
         session.user.lastName = token.lastName as string;
         session.user.emailVerified = token.emailVerified as Date | null;
       }
+      // Add accessToken to session for API calls
+      (session as any).accessToken = token.accessToken;
       return session;
     },
-    async signIn({ user, account, profile }) {
-      // OAuth sign-ins commented out for demo
-      return true;
+    async signIn({ user }) {
+      return !!user;
     },
     async redirect({ url, baseUrl }) {
-      // Handle production domain
-      const prodBaseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://liftout.netlify.app' 
+      const prodBaseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://liftout.netlify.app'
         : baseUrl;
-      
-      // Prevent infinite redirects on error pages
+
       if (url.includes('/auth/error') || url.includes('/api/auth/error')) {
         return url;
       }
-      
-      // Redirect to dashboard after successful login
+
       if (url.includes('/auth/signin') || url === baseUrl || url === prodBaseUrl) {
         return `${prodBaseUrl}/app/dashboard`;
       }
-      
-      // Allows relative callback URLs
+
       if (url.startsWith('/')) return `${prodBaseUrl}${url}`;
-      
-      // Allows callback URLs on the same origin
+
       try {
         const urlObj = new URL(url);
         const baseUrlObj = new URL(prodBaseUrl);
@@ -166,7 +163,7 @@ export const authOptions: NextAuthOptions = {
       } catch (e) {
         // Invalid URL, return base
       }
-      
+
       return prodBaseUrl;
     },
   },
@@ -175,17 +172,21 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
     verifyRequest: '/auth/verify-request',
   },
-  // events: {
-  //   async signIn({ user, account, isNewUser }) {
-  //     // Update last active timestamp
-  //     if (user.email) {
-  //       await prisma.user.update({
-  //         where: { email: user.email },
-  //         data: { lastActive: new Date() },
-  //       });
-  //     }
-  //   },
-  // },
+  events: {
+    async signIn({ user }) {
+      // Update last active timestamp
+      if (user?.id) {
+        try {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastActive: new Date() },
+          });
+        } catch (error) {
+          console.error('Failed to update lastActive:', error);
+        }
+      }
+    },
+  },
 };
 
 // Extend the built-in session types
@@ -201,6 +202,7 @@ declare module 'next-auth' {
       emailVerified: Date | null;
       image?: string | null;
     };
+    accessToken?: string;
   }
 
   interface User {
@@ -208,5 +210,16 @@ declare module 'next-auth' {
     lastName: string;
     userType: string;
     emailVerified: Date | null;
+    accessToken?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken?: string;
+    userType?: string;
+    firstName?: string;
+    lastName?: string;
+    emailVerified?: Date | null;
   }
 }

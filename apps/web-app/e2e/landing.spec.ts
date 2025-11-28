@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Landing Pages', () => {
   test('homepage shows hero content correctly', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Verify main headline
     await expect(page.locator('h1:has-text("Acquire teams that deliver from day one")')).toBeVisible();
@@ -18,7 +18,7 @@ test.describe('Landing Pages', () => {
 
   test('for-companies page loads correctly', async ({ page }) => {
     await page.goto('/for-companies');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check page loads with company-focused content
     await expect(page.locator('h1').first()).toBeVisible();
@@ -28,7 +28,7 @@ test.describe('Landing Pages', () => {
 
   test('for-teams page loads correctly', async ({ page }) => {
     await page.goto('/for-teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check page loads with team-focused content
     await expect(page.locator('h1').first()).toBeVisible();
@@ -38,7 +38,7 @@ test.describe('Landing Pages', () => {
 
   test('homepage has working navigation', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check header navigation links exist
     await expect(page.locator('a[href="/for-companies"]').first()).toBeVisible();
@@ -47,7 +47,7 @@ test.describe('Landing Pages', () => {
 
   test('homepage has working sign in links', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check sign in and sign up links
     await expect(page.locator('a[href="/auth/signin"]').first()).toBeVisible();

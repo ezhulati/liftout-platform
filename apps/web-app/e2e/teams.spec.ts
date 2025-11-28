@@ -3,21 +3,21 @@ import { test, expect } from '@playwright/test';
 // Helper to sign in
 async function signIn(page: any, email: string, password: string) {
   await page.goto('/auth/signin');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.fill('input[type="email"]', email);
   await page.fill('input[type="password"]', password);
   await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/dashboard', { timeout: 15000 });
+  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
 }
 
 test.describe('Teams - Team User View', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'demo123');
+    await signIn(page, 'demo@example.com', 'password');
   });
 
   test('can view teams list page', async ({ page }) => {
     await page.goto('/app/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Team users see "My Team Profile" heading
     await expect(page.locator('h1:has-text("My Team Profile")').first()).toBeVisible();
@@ -25,14 +25,14 @@ test.describe('Teams - Team User View', () => {
 
   test('teams page shows search functionality', async ({ page }) => {
     await page.goto('/app/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page.locator('input[placeholder*="Search" i]').first()).toBeVisible();
   });
 
   test('can view team details', async ({ page }) => {
     await page.goto('/app/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(2000);
 
     // Click on first team link if available
@@ -48,7 +48,7 @@ test.describe('Teams - Team User View', () => {
 
   test('can access create team page', async ({ page }) => {
     await page.goto('/app/teams/create');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check for form elements
     await expect(page.locator('body')).toContainText(/create|team|new/i, { timeout: 10000 });
@@ -57,12 +57,12 @@ test.describe('Teams - Team User View', () => {
 
 test.describe('Teams - Company User View', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'company@example.com', 'demo123');
+    await signIn(page, 'company@example.com', 'password');
   });
 
   test('can browse teams', async ({ page }) => {
     await page.goto('/app/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Company users see "Browse High-Performing Teams" heading
     await expect(page.locator('h1:has-text("Browse High-Performing Teams")').first()).toBeVisible();
@@ -70,7 +70,7 @@ test.describe('Teams - Company User View', () => {
 
   test('can search for teams', async ({ page }) => {
     await page.goto('/app/teams');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const searchInput = page.locator('input[placeholder*="Search" i]').first();
     if (await searchInput.isVisible()) {
@@ -82,12 +82,12 @@ test.describe('Teams - Company User View', () => {
 
 test.describe('Team Management', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'demo123');
+    await signIn(page, 'demo@example.com', 'password');
   });
 
   test('can access team management page', async ({ page }) => {
     await page.goto('/app/teams/manage');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page.locator('body')).toContainText(/manage|team|settings/i);
   });

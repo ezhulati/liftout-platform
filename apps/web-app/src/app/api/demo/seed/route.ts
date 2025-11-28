@@ -133,13 +133,13 @@ export async function GET(request: NextRequest) {
       {
         type: 'individual',
         email: 'demo@example.com',
-        password: 'demo123',
+        password: 'password',
         name: 'Alex Chen - Data Science Team Lead'
       },
       {
         type: 'company', 
         email: 'company@example.com',
-        password: 'demo123',
+        password: 'password',
         name: 'Sarah Rodriguez - VP Talent Acquisition'
       }
     ]

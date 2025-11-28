@@ -3,7 +3,7 @@ export const DEMO_ACCOUNTS = {
   // Individual/Team Lead Demo Account
   individual: {
     email: 'demo@example.com',
-    password: 'demo123',
+    password: 'password',
     profile: {
       name: 'Alex Chen',
       title: 'Senior Data Scientist & Team Lead',
@@ -44,7 +44,7 @@ export const DEMO_ACCOUNTS = {
   // Company Demo Account  
   company: {
     email: 'company@example.com',
-    password: 'demo123',
+    password: 'password',
     profile: {
       name: 'Sarah Rodriguez',
       title: 'VP of Talent Acquisition',

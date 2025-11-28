@@ -90,7 +90,7 @@ export class AuthService {
   // Sign in with email and password
   async signIn(data: SignInData): Promise<{ user: FirebaseUser; userData: User }> {
     // Handle demo accounts
-    if (data.email === 'demo@example.com' && data.password === 'demo123') {
+    if (data.email === 'demo@example.com' && data.password === 'password') {
       // Return mock data for Alex Chen (team user)
       const mockFirebaseUser = {
         uid: 'demo@example.com',
@@ -119,7 +119,7 @@ export class AuthService {
       return { user: mockFirebaseUser, userData: mockUserData };
     }
 
-    if (data.email === 'company@example.com' && data.password === 'demo123') {
+    if (data.email === 'company@example.com' && data.password === 'password') {
       // Return mock data for Sarah Rodriguez (company user)
       const mockFirebaseUser = {
         uid: 'company@example.com',
