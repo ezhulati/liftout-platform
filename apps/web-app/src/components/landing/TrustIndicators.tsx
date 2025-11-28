@@ -38,30 +38,30 @@ export function TrustIndicators() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <h2 id="trust-heading" className="sr-only">Why choose Liftout</h2>
 
-        {/* Simple 4-column grid */}
+        {/* Practical UI: Left-align text, 18px body, proper icon sizing */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className={`text-center transition-all duration-500 ${
+              className={`transition-all duration-500 ${
                 isVisible
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-4'
               }`}
               style={{ transitionDelay: isVisible ? `${index * 100}ms` : '0ms' }}
             >
-              {/* Icon */}
-              <div className="flex justify-center mb-4">
+              {/* Icon - with label nearby per Practical UI */}
+              <div className="mb-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
                   <feature.icon className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               {/* Title */}
-              <h3 className="font-semibold text-white text-lg mb-2">
+              <h3 className="font-semibold text-white text-xl mb-2">
                 {feature.title}
               </h3>
-              {/* Description */}
-              <p className="text-white/70 text-base leading-relaxed">
+              {/* Description - 18px minimum */}
+              <p className="text-white/80 text-lg leading-relaxed">
                 {feature.description}
               </p>
             </div>

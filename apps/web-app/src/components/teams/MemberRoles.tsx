@@ -205,7 +205,7 @@ function RoleChangeModal({
                       onChange={(e) => setReason(e.target.value)}
                       rows={3}
                       className="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-navy focus:border-navy"
-                      placeholder="Why are you changing this person's role?"
+                      placeholder="Why are you changing this member&apos;s role?"
                     />
                   </div>
 

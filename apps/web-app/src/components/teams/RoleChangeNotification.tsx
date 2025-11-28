@@ -196,7 +196,7 @@ export function RoleChangeNotification({
                   {change.reason && (
                     <div className="bg-bg-alt rounded-md p-2 mb-2">
                       <p className="text-sm text-text-secondary">
-                        <span className="font-medium">Reason:</span> "{change.reason}"
+                        <span className="font-medium">Reason:</span> &ldquo;{change.reason}&rdquo;
                       </p>
                     </div>
                   )}

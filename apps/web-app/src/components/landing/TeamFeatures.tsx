@@ -119,8 +119,8 @@ export function TeamFeatures() {
                 {feature.name}
               </h3>
 
-              {/* Feature description */}
-              <p className="font-body text-text-secondary leading-relaxed text-base">
+              {/* Feature description - Practical UI: 18px body text */}
+              <p className="font-body text-text-secondary leading-relaxed text-lg">
                 {feature.description}
               </p>
 
@@ -167,8 +167,8 @@ export function TeamFeatures() {
                 <h4 className="font-heading text-lg font-bold text-text-primary mb-2">
                   {item.title}
                 </h4>
-                {/* Description */}
-                <p className="font-body text-text-secondary text-base leading-relaxed">
+                {/* Description - Practical UI: 18px body text */}
+                <p className="font-body text-text-secondary text-lg leading-relaxed">
                   {item.description}
                 </p>
               </div>

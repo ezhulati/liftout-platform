@@ -166,7 +166,7 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
         <UsersIcon className="mx-auto h-12 w-12 text-text-tertiary" />
         <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
         <p className="mt-1 text-sm text-text-secondary">
-          The team you're looking for doesn't exist or you don't have permission to manage it.
+          The team you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to manage it.
         </p>
       </div>
     );

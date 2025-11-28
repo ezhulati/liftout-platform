@@ -135,7 +135,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
         <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
         <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
         <p className="mt-1 text-sm text-text-tertiary">
-          The team profile you're looking for doesn't exist or you don't have permission to view it.
+          The team profile you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
         </p>
         <div className="mt-6">
           <Link href="/app/teams" className="btn-primary">
