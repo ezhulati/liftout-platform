@@ -1,9 +1,10 @@
 [build]
-  command = "corepack enable && pnpm install && pnpm --filter @liftout/web-app run build"
+  command = "cd packages/database && npx prisma generate && cd ../.. && pnpm run build --filter=@liftout/web-app"
   publish = "apps/web-app/.next"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "20.18.0"
+  PNPM_VERSION = "8.15.0"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
