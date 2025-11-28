@@ -105,7 +105,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
             <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold ${getGradeColor(performanceGrade)}`}>
               {performanceGrade}
             </div>
-            <p className="text-sm text-text-tertiary mt-2">Performance grade</p>
+            <p className="text-base text-text-tertiary mt-2">Performance grade</p>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
               <CurrencyDollarIcon className="h-8 w-8 text-success" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Total ROI</p>
+              <p className="text-base font-medium text-text-tertiary">Total ROI</p>
               <p className="text-2xl font-semibold text-text-primary">{formatPercentage(overallROI)}</p>
               <p className="text-xs text-text-tertiary">vs {formatPercentage(analytics.roiAnalysis.totalROI)} target</p>
             </div>
@@ -131,7 +131,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
               <CheckCircleIcon className="h-8 w-8 text-navy" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Success rate</p>
+              <p className="text-base font-medium text-text-tertiary">Success rate</p>
               <p className="text-2xl font-semibold text-text-primary">{formatPercentage(analytics.platformMetrics.successfulLiftouts.successRate)}</p>
               <p className="text-xs text-text-tertiary">{analytics.platformMetrics.successfulLiftouts.completed} of {analytics.platformMetrics.successfulLiftouts.total} completed</p>
             </div>
@@ -144,7 +144,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
               <UserGroupIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Retention (12mo)</p>
+              <p className="text-base font-medium text-text-tertiary">Retention (12mo)</p>
               <p className="text-2xl font-semibold text-text-primary">{formatPercentage(analytics.platformMetrics.retentionRates.month12)}</p>
               <p className="text-xs text-text-tertiary">+{formatPercentage(analytics.platformMetrics.retentionRates.industryComparison)} vs industry</p>
             </div>
@@ -157,7 +157,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
               <ClockIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Time to hire</p>
+              <p className="text-base font-medium text-text-tertiary">Time to hire</p>
               <p className="text-2xl font-semibold text-text-primary">{analytics.platformMetrics.timeToHire.average}d</p>
               <p className="text-xs text-text-tertiary">{formatPercentage(analytics.platformMetrics.timeToHire.benchmarkComparison)} vs benchmark</p>
             </div>
@@ -344,18 +344,18 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
       </div>
 
       {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button className="btn-primary">
-          Export Full Report
+      <div className="flex flex-wrap gap-4">
+        <button className="btn-primary min-h-12">
+          Export full report
         </button>
-        <button className="btn-secondary">
-          Schedule Review Meeting
+        <button className="btn-outline min-h-12">
+          Schedule review meeting
         </button>
-        <button className="btn-secondary">
-          Configure Alerts
+        <button className="btn-outline min-h-12">
+          Configure alerts
         </button>
-        <button className="btn-secondary">
-          Historical Trends
+        <button className="btn-outline min-h-12">
+          Historical trends
         </button>
       </div>
     </div>
