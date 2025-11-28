@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: 'Nick Acimovic - Co-Founder | Liftout',
   description:
     'Nick Acimovic is co-founder of Liftout and Managing Partner at Jovian Capital Management. Learn more about his background in finance and his vision for team-based hiring.',
+  alternates: {
+    canonical: '/blog/author/nick-acimovic',
+  },
   openGraph: {
     title: 'Nick Acimovic - Co-Founder | Liftout',
     description:
@@ -83,8 +86,42 @@ export default function NickAcimovicPage() {
     (article) => article.author.name === 'Nick Acimovic'
   );
 
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://liftout.com';
+
+  // JSON-LD structured data for Person
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Nick Acimovic',
+    url: `${baseUrl}/blog/author/nick-acimovic`,
+    image: `${baseUrl}/images/blog/Nick-Acimovic.png`,
+    jobTitle: 'Co-Founder',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Liftout',
+      url: baseUrl,
+    },
+    description: 'Co-founder of Liftout and Managing Partner at Jovian Capital Management.',
+    sameAs: [
+      author.social?.linkedin,
+      author.social?.twitter,
+      author.social?.instagram,
+    ].filter(Boolean),
+    alumniOf: [
+      {
+        '@type': 'CollegeOrUniversity',
+        name: 'Florida State University',
+      },
+    ],
+    knowsAbout: ['Finance', 'Investment Management', 'Team Acquisition', 'Private Credit', 'Portfolio Management'],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}

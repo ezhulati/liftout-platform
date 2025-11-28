@@ -35,6 +35,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${article.title} | Liftout Insights`,
     description: article.metaDescription,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.metaDescription,
@@ -109,8 +112,44 @@ export default async function BlogArticlePage({ params }: PageProps) {
     day: 'numeric',
   });
 
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://liftout.com';
+
+  // JSON-LD structured data for Article
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.metaDescription,
+    image: `${baseUrl}${article.featuredImage}`,
+    datePublished: article.publishDate,
+    dateModified: article.modifiedDate || article.publishDate,
+    author: {
+      '@type': 'Person',
+      name: article.author.name,
+      url: `${baseUrl}/blog/author/nick-acimovic`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Liftout',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/Liftout-logo-dark.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${baseUrl}/blog/${slug}`,
+    },
+    keywords: article.tags.join(', '),
+    articleSection: article.category,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Dark with proper contrast */}
