@@ -141,3 +141,8 @@ prisma/migrations/
 # Local Netlify folder
 .netlify
 practical-ui-skill-extracted/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
