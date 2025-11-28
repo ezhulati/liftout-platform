@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSocket } from '@/contexts/SocketContext';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   useConversations,
   useConversation,
@@ -14,6 +15,11 @@ import {
   Conversation as APIConversation,
   Message as APIMessage,
 } from '@/hooks/useConversations';
+import {
+  demoConversations,
+  getMessagesWithSession,
+  addDemoMessage,
+} from '@/lib/demo-conversations';
 import {
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
@@ -95,6 +101,7 @@ function transformMessage(msg: APIMessage, currentUserId?: string) {
 
 export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const { data: session } = useSession();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const {
     socket,
@@ -107,8 +114,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     stopTyping,
   } = useSocket();
 
+  // Check if this is a demo user (no Firestore user)
+  const isDemoUser = !user && !!session;
+
   // API hooks
-  const { data: conversationsData, isLoading: conversationsLoading } = useConversations();
+  const { data: conversationsData, isLoading: conversationsLoading, error: conversationsError } = useConversations();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const { data: selectedConversationData } = useConversation(selectedConversationId);
   const { data: messagesData, isLoading: messagesLoading } = useMessages(selectedConversationId);
@@ -118,23 +128,43 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'demo'>('connecting');
+  const [demoMessages, setDemoMessages] = useState<APIMessage[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Transform API data
-  const conversations = conversationsData?.data?.map(transformConversation) || [];
-  const selectedConversation = selectedConversationData ? transformConversation(selectedConversationData) : null;
-  const messages = messagesData?.data?.map(msg => transformMessage(msg, session?.user?.id)) || [];
+  // Use demo mode if API failed or user is demo user
+  const useDemoMode = isDemoUser || !!conversationsError || (!conversationsLoading && !conversationsData?.data?.length);
+
+  // Transform API data or use demo data
+  const conversations = useDemoMode
+    ? demoConversations.map(transformConversation)
+    : (conversationsData?.data?.map(transformConversation) || []);
+
+  const selectedConversation = useDemoMode
+    ? (selectedConversationId ? transformConversation(demoConversations.find(c => c.id === selectedConversationId)!) : null)
+    : (selectedConversationData ? transformConversation(selectedConversationData) : null);
+
+  // Use demoMessages state to trigger re-render when messages change in demo mode
+  const messages = useDemoMode
+    ? (selectedConversationId ? getMessagesWithSession(selectedConversationId).map(msg => transformMessage(msg, session?.user?.id)) : [])
+    : (messagesData?.data?.map(msg => transformMessage(msg, session?.user?.id)) || []);
+
+  // Simulated connection for demo mode (always "connected")
+  const effectiveIsConnected = useDemoMode ? true : isConnected;
 
   // Select first conversation on load
   useEffect(() => {
-    if (conversationsData?.data?.length && !selectedConversationId) {
-      setSelectedConversationId(conversationsData.data[0].id);
+    if (!selectedConversationId) {
+      if (useDemoMode && demoConversations.length > 0) {
+        setSelectedConversationId(demoConversations[0].id);
+      } else if (conversationsData?.data?.length) {
+        setSelectedConversationId(conversationsData.data[0].id);
+      }
     }
-  }, [conversationsData, selectedConversationId]);
+  }, [conversationsData, selectedConversationId, useDemoMode]);
 
   // Socket event listeners for real-time updates
   useEffect(() => {
@@ -190,8 +220,12 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
   // Update connection status
   useEffect(() => {
-    setConnectionStatus(isConnected ? 'connected' : 'disconnected');
-  }, [isConnected]);
+    if (useDemoMode) {
+      setConnectionStatus('connected'); // Demo mode shows as connected
+    } else {
+      setConnectionStatus(isConnected ? 'connected' : 'disconnected');
+    }
+  }, [isConnected, useDemoMode]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -241,6 +275,31 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
       return;
     }
 
+    // In demo mode, add message to local state
+    if (useDemoMode) {
+      const sessionUser = session?.user as any;
+      addDemoMessage(selectedConversationId, {
+        conversationId: selectedConversationId,
+        senderId: sessionUser?.id || 'demo-team-user',
+        content: newMessage.trim(),
+        messageType: 'text',
+        attachments: [],
+        editedAt: null,
+        deletedAt: null,
+        sender: {
+          id: sessionUser?.id || 'demo-team-user',
+          firstName: sessionUser?.name?.split(' ')[0] || 'Demo',
+          lastName: sessionUser?.name?.split(' ').slice(1).join(' ') || 'User',
+        },
+      });
+
+      // Force re-render by updating a state
+      setDemoMessages(getMessagesWithSession(selectedConversationId));
+      setNewMessage('');
+      messageInputRef.current?.focus();
+      return;
+    }
+
     sendMessageMutation.mutate({
       conversationId: selectedConversationId,
       content: newMessage.trim(),
@@ -253,7 +312,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
     // Focus back on input
     messageInputRef.current?.focus();
-  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping]);
+  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping, useDemoMode]);
 
   const handleTyping = useCallback((value: string) => {
     setNewMessage(value);
@@ -515,10 +574,10 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                       {selectedConversation.participants.length} participants
                     </span>
 
-                    {isConnected && (
+                    {effectiveIsConnected && (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
                         <div className="w-2 h-2 bg-success rounded-full mr-1 animate-pulse"></div>
-                        REAL-TIME
+                        {useDemoMode ? 'DEMO' : 'REAL-TIME'}
                       </span>
                     )}
                   </div>

@@ -64,9 +64,51 @@ function returnMockApplications(request: NextRequest) {
 
   const result = getAllMockApplications(filters);
 
+  // Transform mock data to match expected format with proper field names
+  const transformedApplications = result.applications.map(app => ({
+    id: app.id,
+    teamId: app.teamId,
+    opportunityId: app.opportunityId,
+    submittedById: 'user_demo_001',
+    coverLetter: app.coverLetter || null,
+    status: app.status === 'pending' ? 'submitted' :
+            app.status === 'under_review' ? 'reviewing' :
+            app.status === 'interview' ? 'interviewing' :
+            app.status,
+    submittedAt: app.appliedAt,
+    reviewedAt: null,
+    reviewedById: null,
+    interviewScheduledAt: app.interviewDate || null,
+    interviewNotes: app.notes || null,
+    internalNotes: null,
+    rejectionReason: null,
+    createdAt: app.appliedAt,
+    updatedAt: app.updatedAt,
+    team: {
+      id: app.teamId,
+      name: app.teamName,
+      description: null,
+      size: 5,
+      isAnonymous: false,
+    },
+    opportunity: {
+      id: app.opportunityId,
+      title: app.opportunityTitle,
+      company: {
+        id: 'company_mock_001',
+        name: app.company,
+      },
+    },
+  }));
+
   return NextResponse.json({
-    applications: result.applications,
-    total: result.total,
+    data: transformedApplications,
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: result.total,
+      pages: Math.ceil(result.total / 10),
+    },
     _mock: true
   });
 }

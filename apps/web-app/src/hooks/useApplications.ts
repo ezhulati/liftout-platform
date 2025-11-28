@@ -139,8 +139,12 @@ export function useApplications(filters?: ApplicationFilters) {
       if (filters?.page) params.append('page', filters.page.toString());
       if (filters?.limit) params.append('limit', filters.limit.toString());
 
-      const data = await fetchWithAuth(`/api/applications?${params}`);
-      return data.data as PaginatedResponse<TeamApplication>;
+      const response = await fetchWithAuth(`/api/applications?${params}`);
+      // Return the response with data array for consistency
+      return {
+        data: response.data || response.applications || [],
+        pagination: response.pagination,
+      } as PaginatedResponse<TeamApplication>;
     },
     enabled: !!session,
   });
