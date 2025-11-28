@@ -37,14 +37,14 @@ export function QuickActions({ userType }: QuickActionsProps) {
       description: 'Submit to liftout opportunities',
       href: '/app/applications',
       icon: DocumentTextIcon,
-      color: 'bg-navy-500',
+      color: 'bg-navy',
     },
     {
       name: 'Connect with Companies',
       description: 'Build strategic relationships',
       href: '/app/messages',
       icon: ChatBubbleLeftRightIcon,
-      color: 'bg-gold-600',
+      color: 'bg-gold',
     },
   ];
 
@@ -68,14 +68,14 @@ export function QuickActions({ userType }: QuickActionsProps) {
       description: 'Evaluate expressions of interest',
       href: '/app/opportunities?tab=applications',
       icon: DocumentTextIcon,
-      color: 'bg-navy-500',
+      color: 'bg-navy',
     },
     {
       name: 'Liftout Analytics',
       description: 'Track acquisition metrics',
       href: '/app/analytics',
       icon: BriefcaseIcon,
-      color: 'bg-gold-600',
+      color: 'bg-gold',
     },
   ];
 
