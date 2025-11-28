@@ -207,13 +207,13 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-medium text-text-primary">Documents</h2>
-          <p className="text-sm text-text-secondary">
+          <p className="text-base text-text-secondary">
             Secure document sharing for liftout transactions
           </p>
         </div>
         {showUpload && (
-          <Link href="/app/documents/upload" className="btn-primary flex items-center">
-            <PlusIcon className="h-4 w-4 mr-2" />
+          <Link href="/app/documents/upload" className="btn-primary min-h-12 flex items-center">
+            <PlusIcon className="h-5 w-5 mr-2" />
             Upload document
           </Link>
         )}
@@ -236,15 +236,15 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
         {documents.length === 0 ? (
           <div className="text-center py-12">
             <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-            <h3 className="mt-2 text-sm font-medium text-text-primary">No documents found</h3>
-            <p className="mt-1 text-sm text-text-secondary">
+            <h3 className="mt-2 text-base font-medium text-text-primary">No documents found</h3>
+            <p className="mt-1 text-base text-text-secondary">
               {searchValue || Object.keys(activeFilters).length > 0
                 ? 'Try adjusting your search criteria or filters.'
                 : 'Upload your first document to get started.'}
             </p>
             {showUpload && (!searchValue && Object.keys(activeFilters).length === 0) && (
               <div className="mt-6">
-                <Link href="/app/documents/upload" className="btn-primary">
+                <Link href="/app/documents/upload" className="btn-primary min-h-12 inline-flex items-center">
                   Upload document
                 </Link>
               </div>

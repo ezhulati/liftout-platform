@@ -196,18 +196,18 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
               <button
                 onClick={handleDownload}
                 disabled={downloadMutation.isPending || isExpired}
-                className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary min-h-12 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
+                <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
                 {downloadMutation.isPending ? 'Downloading...' : 'Download'}
               </button>
 
               {isOwner && (
                 <Link
                   href={`/app/documents/${document.id}/share`}
-                  className="btn-outline flex items-center"
+                  className="btn-outline min-h-12 flex items-center"
                 >
-                  <ShareIcon className="h-4 w-4 mr-2" />
+                  <ShareIcon className="h-5 w-5 mr-2" />
                   Share
                 </Link>
               )}
@@ -262,7 +262,7 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
             <button
               onClick={handleDownload}
               disabled={downloadMutation.isPending || isExpired}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary min-h-12 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Download to view
             </button>

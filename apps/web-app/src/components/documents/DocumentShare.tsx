@@ -209,7 +209,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
                 />
                 <button
                   onClick={copyShareUrl}
-                  className="btn-primary rounded-l-none px-4"
+                  className="btn-primary min-h-12 rounded-l-none px-4"
                   aria-label="Copy URL"
                 >
                   <ClipboardDocumentIcon className="h-5 w-5" />
