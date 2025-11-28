@@ -19,7 +19,8 @@ test.describe('Teams - Team User View', () => {
     await page.goto('/app/teams');
     await page.waitForLoadState('networkidle');
 
-    await expect(page.locator('text=Teams').first()).toBeVisible();
+    // Team users see "My Team Profile" heading
+    await expect(page.locator('h1:has-text("My Team Profile")').first()).toBeVisible();
   });
 
   test('teams page shows search functionality', async ({ page }) => {
@@ -63,7 +64,8 @@ test.describe('Teams - Company User View', () => {
     await page.goto('/app/teams');
     await page.waitForLoadState('networkidle');
 
-    await expect(page.locator('text=Teams').first()).toBeVisible();
+    // Company users see "Browse High-Performing Teams" heading
+    await expect(page.locator('h1:has-text("Browse High-Performing Teams")').first()).toBeVisible();
   });
 
   test('can search for teams', async ({ page }) => {

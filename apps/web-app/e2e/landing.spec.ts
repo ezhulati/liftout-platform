@@ -22,7 +22,8 @@ test.describe('Landing Pages', () => {
 
     // Check page loads with company-focused content
     await expect(page.locator('h1').first()).toBeVisible();
-    await expect(page.locator('text=Browse teams').first()).toBeVisible();
+    // CTA says "Browse verified teams"
+    await expect(page.locator('text=Browse verified teams').first()).toBeVisible();
   });
 
   test('for-teams page loads correctly', async ({ page }) => {
@@ -31,7 +32,8 @@ test.describe('Landing Pages', () => {
 
     // Check page loads with team-focused content
     await expect(page.locator('h1').first()).toBeVisible();
-    await expect(page.locator('text=Register team').first()).toBeVisible();
+    // CTA says "Register your team"
+    await expect(page.locator('text=Register your team').first()).toBeVisible();
   });
 
   test('homepage has working navigation', async ({ page }) => {

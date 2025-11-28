@@ -43,9 +43,10 @@ test.describe('Documents', () => {
     await page.goto('/app/documents/upload');
     await page.waitForLoadState('networkidle');
 
-    // Check for file input or drag-drop zone
-    const fileInput = page.locator('input[type="file"], [class*="dropzone"], [class*="upload"]').first();
-    await expect(fileInput).toBeVisible({ timeout: 10000 });
+    // The file input is hidden, but the drag-drop zone with "Click to upload" text is visible
+    await expect(page.locator('text=Click to upload')).toBeVisible({ timeout: 10000 });
+    // The hidden file input should exist in the DOM
+    await expect(page.locator('input[type="file"]')).toBeAttached({ timeout: 10000 });
   });
 
   test('documents list page loads', async ({ page }) => {

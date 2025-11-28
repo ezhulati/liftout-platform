@@ -19,8 +19,8 @@ test.describe('Opportunities - Team User View', () => {
     await page.goto('/app/opportunities');
     await page.waitForLoadState('networkidle');
 
-    // Should show opportunities
-    await expect(page.locator('text=Opportunities').first()).toBeVisible();
+    // Team users see "Browse Liftout Opportunities" heading
+    await expect(page.locator('h1:has-text("Liftout Opportunities")').first()).toBeVisible();
   });
 
   test('opportunities list shows search', async ({ page }) => {
@@ -81,7 +81,8 @@ test.describe('Opportunities - Company User View', () => {
     await page.goto('/app/opportunities');
     await page.waitForLoadState('networkidle');
 
-    await expect(page.locator('text=Opportunities').first()).toBeVisible();
+    // Company users see "Liftout Opportunities" heading
+    await expect(page.locator('h1:has-text("Liftout Opportunities")').first()).toBeVisible();
   });
 
   test('can access create opportunity page', async ({ page }) => {
