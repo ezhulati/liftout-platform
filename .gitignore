@@ -140,3 +140,4 @@ prisma/migrations/
 .astro/
 # Local Netlify folder
 .netlify
+practical-ui-skill-extracted/
