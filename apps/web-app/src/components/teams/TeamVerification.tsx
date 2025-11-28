@@ -160,7 +160,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
             {team.verification.status === 'pending' && team.verification.documents.length > 0 && (
               <button
                 onClick={handleSubmitForVerification}
-                className="btn-primary"
+                className="btn-primary min-h-12"
               >
                 Submit for verification
               </button>
@@ -370,7 +370,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
               <button
                 onClick={handleAddReference}
                 disabled={addingReference}
-                className="btn-primary"
+                className="btn-primary min-h-12"
               >
                 {addingReference ? 'Adding...' : 'Add reference'}
               </button>

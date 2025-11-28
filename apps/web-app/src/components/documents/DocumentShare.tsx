@@ -237,7 +237,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
             <ButtonGroup>
               <button
                 onClick={onCancel || (() => router.back())}
-                className="btn-primary"
+                className="btn-primary min-h-12"
               >
                 Done
               </button>
@@ -370,7 +370,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
               <button
                 type="submit"
                 disabled={shareDocumentMutation.isPending}
-                className="btn-primary"
+                className="btn-primary min-h-12"
               >
                 {shareDocumentMutation.isPending ? 'Updating...' : 'Update sharing'}
               </button>

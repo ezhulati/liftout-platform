@@ -359,7 +359,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
                   <button
                     type="button"
                     onClick={() => addSkill(index, skillInput[index] || '')}
-                    className="btn-outline"
+                    className="btn-outline min-h-12"
                     disabled={!skillInput[index]?.trim()}
                   >
                     Add
@@ -407,7 +407,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
             <button
               type="button"
               onClick={addAchievement}
-              className="btn-outline"
+              className="btn-outline min-h-12"
               disabled={!achievementInput.trim()}
             >
               Add

@@ -244,7 +244,7 @@ export function InviteMember({
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="btn-primary inline-flex items-center"
+                        className="btn-primary min-h-12 inline-flex items-center"
                       >
                         {isSubmitting ? (
                           <>

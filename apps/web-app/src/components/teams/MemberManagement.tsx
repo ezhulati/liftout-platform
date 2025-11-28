@@ -266,10 +266,10 @@ export function MemberManagement({
             {isEditable && (
               <button
                 onClick={addMember}
-                className="btn-sm btn-primary flex items-center"
+                className="btn-primary min-h-12 flex items-center"
               >
-                <PlusIcon className="h-4 w-4 mr-1" />
-                Add Member
+                <PlusIcon className="h-5 w-5 mr-1" />
+                Add member
               </button>
             )}
           </div>
