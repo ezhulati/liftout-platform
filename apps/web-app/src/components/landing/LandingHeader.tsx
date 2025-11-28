@@ -261,8 +261,8 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               href="/auth/signup"
               className={`group relative min-h-12 px-6 text-lg hidden sm:inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 overflow-hidden ${
                 useTransparentStyle
-                  ? 'bg-white text-navy-800 hover:bg-gray-50 shadow-lg shadow-black/10'
-                  : 'bg-navy-800 text-white shadow-lg shadow-navy-800/30 hover:shadow-xl hover:shadow-navy-800/40 hover:-translate-y-0.5 hover:bg-navy-700'
+                  ? 'bg-white text-[hsl(220,60%,20%)] hover:bg-gray-50 shadow-lg shadow-black/10'
+                  : 'bg-[hsl(220,60%,20%)] text-white shadow-lg shadow-navy/30 hover:shadow-xl hover:shadow-navy/40 hover:-translate-y-0.5 hover:bg-[hsl(220,60%,25%)]'
               }`}
             >
               {/* Inner highlight for depth */}
@@ -356,7 +356,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Primary button first on mobile (stacked vertically) */}
             <Link
               href="/auth/signup"
-              className="group relative flex items-center justify-center w-full px-4 py-4 bg-navy-800 text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-navy-800/30 overflow-hidden hover:bg-navy-700"
+              className="group relative flex items-center justify-center w-full px-4 py-4 bg-[hsl(220,60%,20%)] text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-navy/30 overflow-hidden hover:bg-[hsl(220,60%,25%)]"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />

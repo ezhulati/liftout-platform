@@ -6,6 +6,24 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  // Safelist ensures these classes are always generated even when in template literals
+  safelist: [
+    'bg-navy-800',
+    'bg-navy-700',
+    'bg-navy-600',
+    'bg-navy-darkest',
+    'bg-navy-dark',
+    'text-navy-800',
+    'text-navy-200',
+    'shadow-navy-800/30',
+    'shadow-navy-800/40',
+    'hover:bg-navy-700',
+    'hover:bg-navy-dark',
+    'border-navy-600',
+    'ring-navy-600/30',
+    'bg-gold-600',
+    'text-gold-200',
+  ],
   darkMode: 'class', // Disabled - only activates with explicit .dark class
   theme: {
     extend: {
