@@ -327,3 +327,11 @@ AuthorizationError: You do not have access to this conversation
 2025-11-28 15:41:39 [[32MINFO[39M]: Socket authenticated: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:41:39 [[32MINFO[39M]: Socket connected: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:41:39 [[32MINFO[39M]: Socket disconnected: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:55 [[32MINFO[39M]: Socket authenticated: RnT3AZ5lBbUnX_7wAAB6 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:56 [[32MINFO[39M]: Socket authenticated: IS33syGP6vLIjFx9AAB9 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:56 [[32MINFO[39M]: Socket authenticated: uwIXB0dxtdJ1xZlNAACB (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:56 [[32MINFO[39M]: Socket connected: uwIXB0dxtdJ1xZlNAACB (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:57 [[32MINFO[39M]: Socket disconnected: uwIXB0dxtdJ1xZlNAACB (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:59 [[32MINFO[39M]: Socket authenticated: QUq0TsGyMus3m3T9AACE (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:59 [[32MINFO[39M]: Socket authenticated: 1u2euuum-Y_yHHghAACI (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:59 [[32MINFO[39M]: Socket connected: 1u2euuum-Y_yHHghAACI (user: demo@example.com) {"service":"liftout-api"}
