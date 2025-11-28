@@ -110,7 +110,30 @@ async function main() {
     }
   });
 
-  console.log('✅ Created admin user');
+  // Create super admin user (Enriz)
+  const superAdminPassword = await hashPassword('liftoutadmin2025');
+  const superAdminUser = await prisma.user.upsert({
+    where: { email: 'enrizhulati@gmail.com' },
+    update: {
+      passwordHash: superAdminPassword,
+      userType: 'admin',
+      emailVerified: true,
+      profileCompleted: true,
+      twoFactorEnabled: false, // Allow initial login without 2FA
+    },
+    create: {
+      email: 'enrizhulati@gmail.com',
+      passwordHash: superAdminPassword,
+      firstName: 'Enriz',
+      lastName: 'Hulati',
+      userType: 'admin',
+      emailVerified: true,
+      profileCompleted: true,
+      twoFactorEnabled: false, // Will be set up on first admin login
+    }
+  });
+
+  console.log('✅ Created admin users');
 
   // Create sample individual users
   const password = await hashPassword('password123!');
