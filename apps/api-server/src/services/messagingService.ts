@@ -1,6 +1,6 @@
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { Conversation, Message, ConversationParticipant, MessageType, ConversationStatus } from '@prisma/client';
-import { getPaginationParams } from '@liftout/database/src/utils';
+import { getPaginationParams } from '../lib/utils';
 import { NotFoundError, AuthorizationError, ValidationError } from '../middleware/errorHandler';
 
 // Types

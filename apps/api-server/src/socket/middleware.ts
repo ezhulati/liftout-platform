@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Socket } from 'socket.io';
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 
 export interface AuthenticatedSocket extends Socket {

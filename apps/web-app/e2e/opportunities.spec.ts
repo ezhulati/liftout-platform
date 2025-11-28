@@ -4,10 +4,13 @@ import { test, expect } from '@playwright/test';
 async function signIn(page: any, email: string, password: string) {
   await page.goto('/auth/signin');
   await page.waitForLoadState('domcontentloaded');
-  await page.fill('input[type="email"]', email);
-  await page.fill('input[type="password"]', password);
+  if (page.url().includes('/app/dashboard')) {
+    return;
+  }
+  await page.locator('input[type="email"]').fill(email);
+  await page.locator('input[type="password"]').fill(password);
   await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
+  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
 }
 
 test.describe('Opportunities - Team User View', () => {

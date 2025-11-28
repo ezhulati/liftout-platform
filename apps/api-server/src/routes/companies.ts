@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { AuthenticatedRequest, requireCompanyUser } from '../middleware/auth';
 
 const router = Router();

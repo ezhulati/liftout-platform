@@ -259,7 +259,7 @@ export default function SignUpPage() {
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'individual' }))}
                   className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'individual'
-                      ? 'border-navy-600 bg-navy-800 ring-2 ring-navy-600/30 ring-offset-2 shadow-lg'
+                      ? 'border-navy bg-navy ring-2 ring-navy/30 ring-offset-2 shadow-lg'
                       : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
@@ -273,7 +273,7 @@ export default function SignUpPage() {
                     formData.userType === 'individual' ? 'text-white' : 'text-text-primary'
                   }`}>Individual / Team</div>
                   <div className={`text-sm mt-1 ${
-                    formData.userType === 'individual' ? 'text-navy-200' : 'text-text-tertiary'
+                    formData.userType === 'individual' ? 'text-white/80' : 'text-text-tertiary'
                   }`}>Looking for opportunities</div>
                 </button>
                 <button
@@ -281,7 +281,7 @@ export default function SignUpPage() {
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'company' }))}
                   className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'company'
-                      ? 'border-gold-600 bg-gold-600 ring-2 ring-gold-600/30 ring-offset-2 shadow-lg'
+                      ? 'border-gold bg-gold ring-2 ring-gold/30 ring-offset-2 shadow-lg'
                       : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
@@ -295,7 +295,7 @@ export default function SignUpPage() {
                     formData.userType === 'company' ? 'text-white' : 'text-text-primary'
                   }`}>Company</div>
                   <div className={`text-sm mt-1 ${
-                    formData.userType === 'company' ? 'text-gold-100' : 'text-text-tertiary'
+                    formData.userType === 'company' ? 'text-white/80' : 'text-text-tertiary'
                   }`}>Hiring teams</div>
                 </button>
               </div>

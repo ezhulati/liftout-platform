@@ -43,12 +43,6 @@ importers:
 
   apps/api-server:
     dependencies:
-      '@liftout/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@liftout/email':
-        specifier: workspace:*
-        version: link:../../packages/email
       '@prisma/client':
         specifier: ^5.5.0
         version: 5.22.0(prisma@5.22.0)

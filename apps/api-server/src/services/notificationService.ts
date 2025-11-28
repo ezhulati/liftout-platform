@@ -1,4 +1,4 @@
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { Notification } from '@prisma/client';
 
 class NotificationService {

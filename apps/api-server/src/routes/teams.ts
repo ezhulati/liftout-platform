@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { NotFoundError, ValidationError, AuthorizationError } from '../middleware/errorHandler';
-import { getPaginationParams } from '@liftout/database/src/utils';
-import { sendTeamInvitationEmail } from '@liftout/email';
+import { getPaginationParams } from '../lib/utils';
+import { sendTeamInvitationEmail } from '../lib/email';
 import { logger } from '../utils/logger';
 
 const router = Router();

@@ -108,8 +108,13 @@ prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
 2025-11-28 14:06:16 [[33MWARN[39M]: Socket connection rejected: User not found (socket: uoYg6-RuQ1_DFZbFAACr) {"service":"liftout-api"}
 2025-11-28 14:06:22 [[33MWARN[39M]: Socket connection rejected: User not found (socket: JsdBlQaaBwMqkd-CAACu) {"service":"liftout-api"}
 2025-11-28 14:06:23 [[33MWARN[39M]: Socket connection rejected: User not found (socket: DkEhBJflY9kAYfPOAACy) {"service":"liftout-api"}
-MWARN[39M]: Socket connection rejected: User not found (socket: OHXOdwVgc1ROcD1CAAEI) {"service":"liftout-api"}
-2025-11-28 14:03:23 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 5NxgRC9o52Em5YuqAAEM) {"service":"liftout-api"}
+3:26:25 PM [tsx] restarting
+3:26:26 PM [tsx] forcing restart
+3:26:26 PM [tsx] forcing restart
+3:26:56 PM [tsx] forcing restart
+3:27:32 PM [tsx] forcing restart
+3:27:40 PM [tsx] forcing restart
+ (socket: 5NxgRC9o52Em5YuqAAEM) {"service":"liftout-api"}
 2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
 2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Zpcj68phglU3MKmdAAEW) {"service":"liftout-api"}
@@ -178,3 +183,50 @@ Error: listen EADDRINUSE: address already in use :::8000
     at Server.listen (node:net:2102:7)
     at startServer (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/index.ts:208:10)
     at processTicksAndRejections (node:internal/process/task_queues:103:5)
+3:26:25 PM [tsx] rerunning
+c3:26:26 PM [tsx] restarting
+2025-11-28 15:26:26 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:26:26 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:26:26 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+3:26:56 PM [tsx] restarting
+2025-11-28 15:26:56 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:26:56 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:26:56 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:26:57 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:26:57 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:26:57 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+3:27:24 PM [tsx] restarting
+2025-11-28 15:27:24 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:27:24 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c3:27:25 PM [tsx] restarting
+2025-11-28 15:27:25 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:27:25 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:27:25 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+3:27:32 PM [tsx] restarting
+2025-11-28 15:27:32 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:27:32 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:27:33 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:27:33 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:27:33 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:27:33 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+3:27:40 PM [tsx] restarting
+2025-11-28 15:27:40 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:27:40 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:27:40 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:27:40 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:27:40 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:27:40 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}

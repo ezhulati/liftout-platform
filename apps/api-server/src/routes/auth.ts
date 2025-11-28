@@ -3,14 +3,14 @@ import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { ValidationError, AuthenticationError } from '../middleware/errorHandler';
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendWelcomeEmail,
-} from '@liftout/email';
+} from '../lib/email';
 
 const router = Router();
 

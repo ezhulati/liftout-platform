@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 
 export interface AuthenticatedRequest extends Request {

@@ -1,8 +1,8 @@
-import { prisma } from '@liftout/database';
+import { prisma } from '../lib/prisma';
 import { TeamApplication, ExpressionOfInterest, ApplicationStatus, InterestStatus } from '@prisma/client';
-import { getPaginationParams } from '@liftout/database/src/utils';
+import { getPaginationParams } from '../lib/utils';
 import { NotFoundError, AuthorizationError, ValidationError } from '../middleware/errorHandler';
-import { sendApplicationStatusEmail } from '@liftout/email';
+import { sendApplicationStatusEmail } from '../lib/email';
 import { logger } from '../utils/logger';
 
 // Types

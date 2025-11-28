@@ -1,7 +1,5 @@
 [build]
-builder = "dockerfile"
-dockerfilePath = "../../Dockerfile.api-server"
-watchPatterns = ["apps/api-server/**", "packages/database/**", "packages/email/**"]
+builder = "nixpacks"
 
 [deploy]
 startCommand = "node dist/index.js"
