@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -24,10 +24,14 @@ import {
   CurrencyDollarIcon,
   AcademicCapIcon,
   CodeBracketIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
   StarIcon as StarSolidIcon,
 } from '@heroicons/react/24/solid';
+
+// Local storage key for demo user profile data
+const DEMO_PROFILE_STORAGE_KEY = 'liftout_demo_profile';
 
 interface Skill {
   name: string;
@@ -139,6 +143,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
   // Use session data as fallback
   const sessionUser = session?.user as any;
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'experience' | 'skills' | 'portfolio' | 'preferences'>('overview');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [profileData, setProfileData] = useState<IndividualProfileData>({
@@ -168,8 +173,53 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
 
-  // Initialize profile data from session first, then user
+  // Check if this is a demo user (no Firestore user available)
+  const isDemoUser = !user && !!session;
+  const userEmail = user?.email || sessionUser?.email || '';
+
+  // Load saved profile data from localStorage for demo users
+  const loadDemoProfile = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}`);
+        if (saved) {
+          return JSON.parse(saved) as IndividualProfileData;
+        }
+      } catch (e) {
+        console.error('Error loading demo profile:', e);
+      }
+    }
+    return null;
+  }, [userEmail]);
+
+  // Save profile data to localStorage for demo users
+  const saveDemoProfile = useCallback((data: IndividualProfileData, photoUrl: string | null) => {
+    if (typeof window !== 'undefined' && userEmail) {
+      try {
+        localStorage.setItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}`, JSON.stringify(data));
+        if (photoUrl !== undefined) {
+          localStorage.setItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}_photo`, photoUrl || '');
+        }
+      } catch (e) {
+        console.error('Error saving demo profile:', e);
+      }
+    }
+  }, [userEmail]);
+
+  // Initialize profile data from session first, then user, then localStorage
   useEffect(() => {
+    // Try to load from localStorage for demo users
+    const savedProfile = loadDemoProfile();
+    const savedPhoto = typeof window !== 'undefined'
+      ? localStorage.getItem(`${DEMO_PROFILE_STORAGE_KEY}_${userEmail}_photo`)
+      : null;
+
+    if (savedProfile) {
+      setProfileData(savedProfile);
+      setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || null);
+      return;
+    }
+
     // Use session data as initial fallback
     const name = user?.name || sessionUser?.name || '';
     const nameParts = name.split(' ');
@@ -187,43 +237,68 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
     // Set current photo URL
     setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || null);
-  }, [user, sessionUser]);
+  }, [user, sessionUser, loadDemoProfile, userEmail]);
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
-      // Update basic user fields
-      await updateProfile({
-        name: `${profileData.firstName} ${profileData.lastName}`,
-        location: profileData.location,
-        phone: profileData.phone,
-        companyName: profileData.currentCompany,
-        position: profileData.currentPosition,
-        industry: profileData.industry,
-        photoURL: currentPhotoUrl || undefined,
-        // Store extended profile data in a separate field
-        profileData,
-      });
-      
+      // For demo users without Firestore, save to localStorage
+      if (isDemoUser) {
+        saveDemoProfile(profileData, currentPhotoUrl);
+        setIsEditing(false);
+        toast.success('Profile updated successfully');
+        return;
+      }
+
+      // For real users with Firestore, update via API
+      if (user) {
+        await updateProfile({
+          name: `${profileData.firstName} ${profileData.lastName}`,
+          location: profileData.location,
+          phone: profileData.phone,
+          companyName: profileData.currentCompany,
+          position: profileData.currentPosition,
+          industry: profileData.industry,
+          photoURL: currentPhotoUrl || undefined,
+          // Store extended profile data in a separate field
+          profileData,
+        });
+      }
+
       setIsEditing(false);
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');
       console.error('Error updating profile:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   // Handle photo upload/delete
   const handlePhotoUpdate = async (photoUrl: string | null) => {
     setCurrentPhotoUrl(photoUrl);
-    
+
+    // For demo users, save to localStorage
+    if (isDemoUser) {
+      saveDemoProfile(profileData, photoUrl);
+      toast.success('Photo updated');
+      return;
+    }
+
     // Auto-save photo URL to user profile
     try {
-      await updateProfile({ photoURL: photoUrl || undefined });
+      if (user) {
+        await updateProfile({ photoURL: photoUrl || undefined });
+      }
     } catch (error) {
       console.error('Failed to save photo URL:', error);
       toast.error('Failed to save photo');
     }
   };
+
+  // Determine if editing is allowed (for both demo and real users)
+  const canEdit = !readonly && (!!user || !!session);
 
   const addSkill = () => {
     setProfileData(prev => ({
@@ -348,11 +423,12 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               {/* Profile Photo Upload */}
               <PhotoUpload
                 currentPhotoUrl={currentPhotoUrl || undefined}
-                userId={user?.id || sessionUser?.id || 'temp'}
+                userId={user?.id || sessionUser?.id || 'demo-user'}
                 type="profile"
                 onPhotoUpdate={handlePhotoUpdate}
                 size="xl"
-                disabled={readonly || !user}
+                disabled={!canEdit}
+                useLocalStorage={isDemoUser}
               />
               
               <div>
@@ -375,7 +451,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               </div>
             </div>
             
-            {!readonly && (
+            {canEdit && (
               <div className="flex space-x-3">
                 {!isEditing ? (
                   <button
@@ -388,12 +464,14 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                   <>
                     <button
                       onClick={handleSave}
+                      disabled={isSaving}
                       className="btn-primary min-h-12"
                     >
-                      Save changes
+                      {isSaving ? 'Saving...' : 'Save changes'}
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
+                      disabled={isSaving}
                       className="text-link min-h-12 flex items-center"
                     >
                       Cancel
@@ -487,89 +565,206 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* First name field - Practical UI: error above, label on top */}
                   <div>
+                    {validationErrors.firstName && isEditing && (
+                      <div className="flex items-center gap-1.5 mb-1 text-sm text-error">
+                        <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" />
+                        <span>{validationErrors.firstName}</span>
+                      </div>
+                    )}
                     <label className="label-text mb-1">
-                      First name
+                      First name {isEditing && <span className="text-error">*</span>}
                     </label>
                     {isEditing ? (
-                      <div>
-                        {validationErrors.firstName && (
-                          <p className="mb-1 text-sm text-error">{validationErrors.firstName}</p>
-                        )}
-                        <input
-                          type="text"
-                          value={profileData.firstName}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setProfileData(prev => ({ ...prev, firstName: value }));
-                            validateProfileField('firstName', value);
-                          }}
-                          className={`input-field ${validationErrors.firstName ? 'border-error' : ''}`}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        value={profileData.firstName}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setProfileData(prev => ({ ...prev, firstName: value }));
+                          validateProfileField('firstName', value);
+                        }}
+                        className={`input-field min-h-12 ${validationErrors.firstName ? 'border-error focus:ring-error' : ''}`}
+                        placeholder="Enter your first name"
+                      />
                     ) : (
-                      <p className="text-text-primary">{profileData.firstName || 'Not set'}</p>
+                      <p className="text-text-primary py-3">{profileData.firstName || 'Not set'}</p>
                     )}
                   </div>
 
+                  {/* Last name field - Practical UI: error above, label on top */}
                   <div>
+                    {validationErrors.lastName && isEditing && (
+                      <div className="flex items-center gap-1.5 mb-1 text-sm text-error">
+                        <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" />
+                        <span>{validationErrors.lastName}</span>
+                      </div>
+                    )}
                     <label className="label-text mb-1">
-                      Last name
+                      Last name {isEditing && <span className="text-error">*</span>}
                     </label>
                     {isEditing ? (
-                      <div>
-                        {validationErrors.lastName && (
-                          <p className="mb-1 text-sm text-error">{validationErrors.lastName}</p>
-                        )}
-                        <input
-                          type="text"
-                          value={profileData.lastName}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setProfileData(prev => ({ ...prev, lastName: value }));
-                            validateProfileField('lastName', value);
-                          }}
-                          className={`input-field ${validationErrors.lastName ? 'border-error' : ''}`}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        value={profileData.lastName}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setProfileData(prev => ({ ...prev, lastName: value }));
+                          validateProfileField('lastName', value);
+                        }}
+                        className={`input-field min-h-12 ${validationErrors.lastName ? 'border-error focus:ring-error' : ''}`}
+                        placeholder="Enter your last name"
+                      />
                     ) : (
-                      <p className="text-text-primary">{profileData.lastName || 'Not set'}</p>
+                      <p className="text-text-primary py-3">{profileData.lastName || 'Not set'}</p>
                     )}
                   </div>
                 </div>
                 
+                {/* Professional headline - Practical UI: hint text before field */}
                 <div>
                   <label className="label-text mb-1">
                     Professional headline
                   </label>
+                  {isEditing && (
+                    <p className="text-xs text-text-tertiary mb-1">
+                      A brief tagline that describes your role and expertise
+                    </p>
+                  )}
                   {isEditing ? (
                     <input
                       type="text"
                       value={profileData.headline}
                       onChange={(e) => setProfileData(prev => ({ ...prev, headline: e.target.value }))}
-                      className="input-field"
+                      className="input-field min-h-12"
                       placeholder="Senior Software Engineer | Full-Stack Developer"
+                      maxLength={120}
                     />
                   ) : (
-                    <p className="text-text-primary">{profileData.headline || 'Not set'}</p>
+                    <p className="text-text-primary py-3">{profileData.headline || 'Not set'}</p>
+                  )}
+                  {isEditing && (
+                    <p className="text-xs text-text-tertiary mt-1 text-right">
+                      {profileData.headline.length}/120 characters
+                    </p>
                   )}
                 </div>
 
+                {/* Bio field - Practical UI: hint above field */}
                 <div>
                   <label className="label-text mb-1">
                     Bio
                   </label>
+                  {isEditing && (
+                    <p className="text-xs text-text-tertiary mb-1">
+                      Tell us about yourself, your experience, and what drives you professionally
+                    </p>
+                  )}
                   {isEditing ? (
                     <textarea
                       value={profileData.bio}
                       onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                      className="input-field"
+                      className="input-field min-h-[120px]"
                       rows={4}
-                      placeholder="Tell us about yourself, your experience, and what drives you professionally..."
+                      placeholder="Write a brief summary of your professional background..."
+                      maxLength={2000}
                     />
                   ) : (
-                    <p className="text-text-primary">{profileData.bio || 'Not set'}</p>
+                    <p className="text-text-primary py-3">{profileData.bio || 'Not set'}</p>
                   )}
+                  {isEditing && (
+                    <p className="text-xs text-text-tertiary mt-1 text-right">
+                      {profileData.bio.length}/2000 characters
+                    </p>
+                  )}
+                </div>
+
+                {/* Professional info - company and position */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-border">
+                  <div>
+                    <label className="label-text mb-1 flex items-center gap-2">
+                      <BuildingOfficeIcon className="h-4 w-4 text-text-tertiary" />
+                      Current company
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.currentCompany}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, currentCompany: e.target.value }))}
+                        className="input-field min-h-12"
+                        placeholder="Acme Inc."
+                      />
+                    ) : (
+                      <p className="text-text-primary py-3">{profileData.currentCompany || 'Not set'}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="label-text mb-1 flex items-center gap-2">
+                      <BriefcaseIcon className="h-4 w-4 text-text-tertiary" />
+                      Current position
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.currentPosition}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, currentPosition: e.target.value }))}
+                        className="input-field min-h-12"
+                        placeholder="Software Engineer"
+                      />
+                    ) : (
+                      <p className="text-text-primary py-3">{profileData.currentPosition || 'Not set'}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Industry and years of experience */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="label-text mb-1">
+                      Industry
+                    </label>
+                    {isEditing ? (
+                      <select
+                        value={profileData.industry}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, industry: e.target.value }))}
+                        className="input-field min-h-12"
+                      >
+                        <option value="">Select industry</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Consulting">Consulting</option>
+                        <option value="Legal">Legal</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Education">Education</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    ) : (
+                      <p className="text-text-primary py-3">{profileData.industry || 'Not set'}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="label-text mb-1">
+                      Years of experience
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        value={profileData.yearsExperience}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, yearsExperience: parseInt(e.target.value) || 0 }))}
+                        className="input-field min-h-12"
+                        min="0"
+                        max="50"
+                        placeholder="5"
+                      />
+                    ) : (
+                      <p className="text-text-primary py-3">{profileData.yearsExperience} years</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -582,19 +777,61 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                 <h3 className="text-lg font-medium text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
-                <div className="flex items-center space-x-3">
-                  <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
-                  <span className="text-text-primary">{displayUser?.email || 'Email not set'}</span>
+                {/* Email - read only */}
+                <div>
+                  <label className="label-text mb-1 flex items-center gap-2">
+                    <EnvelopeIcon className="h-4 w-4 text-text-tertiary" />
+                    Email
+                  </label>
+                  <p className="text-text-primary py-2">{displayUser?.email || 'Email not set'}</p>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <PhoneIcon className="h-5 w-5 text-text-tertiary" />
-                  <span className="text-text-primary">{profileData.phone || 'Not set'}</span>
+                {/* Phone - editable */}
+                <div>
+                  <label className="label-text mb-1 flex items-center gap-2">
+                    <PhoneIcon className="h-4 w-4 text-text-tertiary" />
+                    Phone
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      value={profileData.phone}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                      className="input-field min-h-12"
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  ) : (
+                    <p className="text-text-primary py-2">{profileData.phone || 'Not set'}</p>
+                  )}
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <MapPinIcon className="h-5 w-5 text-text-tertiary" />
-                  <span className="text-text-primary">{profileData.location || 'Not set'}</span>
+                {/* Location - editable */}
+                <div>
+                  {validationErrors.location && isEditing && (
+                    <div className="flex items-center gap-1.5 mb-1 text-sm text-error">
+                      <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" />
+                      <span>{validationErrors.location}</span>
+                    </div>
+                  )}
+                  <label className="label-text mb-1 flex items-center gap-2">
+                    <MapPinIcon className="h-4 w-4 text-text-tertiary" />
+                    Location {isEditing && <span className="text-error">*</span>}
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={profileData.location}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setProfileData(prev => ({ ...prev, location: value }));
+                        validateProfileField('location', value);
+                      }}
+                      className={`input-field min-h-12 ${validationErrors.location ? 'border-error focus:ring-error' : ''}`}
+                      placeholder="San Francisco, CA"
+                    />
+                  ) : (
+                    <p className="text-text-primary py-2">{profileData.location || 'Not set'}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -664,7 +901,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                                 newSkills[index] = { ...skill, name: e.target.value };
                                 setProfileData(prev => ({ ...prev, skills: newSkills }));
                               }}
-                              className="input-field"
+                              className="input-field min-h-12"
                               placeholder="React, Python, Project Management..."
                             />
                           ) : (
@@ -684,7 +921,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                                 newSkills[index] = { ...skill, level: e.target.value as any };
                                 setProfileData(prev => ({ ...prev, skills: newSkills }));
                               }}
-                              className="input-field"
+                              className="input-field min-h-12"
                             >
                               <option value="Beginner">Beginner</option>
                               <option value="Intermediate">Intermediate</option>
@@ -716,7 +953,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                                 newSkills[index] = { ...skill, yearsExperience: parseInt(e.target.value) || 0 };
                                 setProfileData(prev => ({ ...prev, skills: newSkills }));
                               }}
-                              className="input-field"
+                              className="input-field min-h-12"
                               min="0"
                               max="50"
                             />

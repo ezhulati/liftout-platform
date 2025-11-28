@@ -30,6 +30,18 @@ interface PhotoUploadProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   disabled?: boolean;
+  /** Use local storage (data URL) instead of Firebase - for demo users */
+  useLocalStorage?: boolean;
+}
+
+// Convert file to data URL for local storage
+async function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
 }
 
 const sizeClasses = {
@@ -47,6 +59,7 @@ export default function PhotoUpload({
   className = '',
   size = 'lg',
   disabled = false,
+  useLocalStorage = false,
 }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
@@ -116,10 +129,43 @@ export default function PhotoUpload({
     if (!selectedFile) return;
 
     setIsUploading(true);
-    
+
     try {
+      // For demo users or local storage mode, convert to data URL
+      if (useLocalStorage) {
+        // Simulate progress
+        setUploadProgress({
+          bytesTransferred: 0,
+          totalBytes: selectedFile.size,
+          state: 'running',
+          progress: 50,
+        });
+
+        const dataUrl = await fileToDataUrl(selectedFile);
+
+        setUploadProgress({
+          bytesTransferred: selectedFile.size,
+          totalBytes: selectedFile.size,
+          state: 'success',
+          progress: 100,
+        });
+
+        onPhotoUpdate(dataUrl);
+        toast.success('Photo updated successfully!');
+
+        // Cleanup
+        setShowCropModal(false);
+        setSelectedFile(null);
+        if (previewUrl) {
+          cleanupImagePreview(previewUrl);
+          setPreviewUrl(null);
+        }
+        return;
+      }
+
+      // For real users, use Firebase Storage
       const uploadFunction = type === 'profile' ? uploadProfilePhoto : uploadCompanyLogo;
-      
+
       const downloadURL = await uploadFunction(userId, selectedFile, {
         onProgress: (progress) => {
           setUploadProgress(progress);
@@ -130,8 +176,8 @@ export default function PhotoUpload({
         },
       });
 
-      // Delete old photo if exists
-      if (currentPhotoUrl) {
+      // Delete old photo if exists (only for Firebase URLs)
+      if (currentPhotoUrl && currentPhotoUrl.startsWith('https://firebasestorage')) {
         try {
           await deleteProfilePhoto(currentPhotoUrl);
         } catch (error) {
@@ -141,7 +187,7 @@ export default function PhotoUpload({
 
       onPhotoUpdate(downloadURL);
       toast.success('Photo uploaded successfully!');
-      
+
       // Cleanup
       setShowCropModal(false);
       setSelectedFile(null);
@@ -149,7 +195,7 @@ export default function PhotoUpload({
         cleanupImagePreview(previewUrl);
         setPreviewUrl(null);
       }
-      
+
     } catch (error) {
       console.error('Upload failed:', error);
       toast.error('Upload failed. Please try again.');
@@ -157,21 +203,32 @@ export default function PhotoUpload({
       setIsUploading(false);
       setUploadProgress(null);
     }
-  }, [selectedFile, userId, type, currentPhotoUrl, onPhotoUpdate, previewUrl]);
+  }, [selectedFile, userId, type, currentPhotoUrl, onPhotoUpdate, previewUrl, useLocalStorage]);
 
   // Delete photo
   const deletePhoto = useCallback(async () => {
     if (!currentPhotoUrl) return;
 
     try {
-      await deleteProfilePhoto(currentPhotoUrl);
+      // For local storage or data URLs, just clear the reference
+      if (useLocalStorage || currentPhotoUrl.startsWith('data:')) {
+        onPhotoUpdate(null);
+        toast.success('Photo removed');
+        return;
+      }
+
+      // For Firebase URLs, delete from storage
+      if (currentPhotoUrl.startsWith('https://firebasestorage')) {
+        await deleteProfilePhoto(currentPhotoUrl);
+      }
+
       onPhotoUpdate(null);
       toast.success('Photo deleted successfully');
     } catch (error) {
       console.error('Delete failed:', error);
       toast.error('Failed to delete photo');
     }
-  }, [currentPhotoUrl, onPhotoUpdate]);
+  }, [currentPhotoUrl, onPhotoUpdate, useLocalStorage]);
 
   // Cancel upload
   const cancelUpload = useCallback(() => {
