@@ -299,7 +299,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
               ) : (
                 <>
                   <Link
-                    href={`/app/opportunities/${opportunity.id}/applications`}
+                    href={`/app/opportunities/${opportunity.id}`}
                     className="btn-outline min-h-12 flex items-center"
                   >
                     <DocumentTextIcon className="h-5 w-5 mr-2" aria-hidden="true" />
@@ -324,21 +324,23 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
-                            <Link
-                              href={`/app/opportunities/${opportunity.id}/edit`}
+                            <button
+                              onClick={() => {
+                                toast.success('Edit feature coming soon!');
+                              }}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'flex items-center px-4 py-3 min-h-12 text-base font-normal text-text-secondary transition-colors duration-fast'
+                                'flex items-center w-full text-left px-4 py-3 min-h-12 text-base font-normal text-text-secondary transition-colors duration-fast'
                               )}
                             >
                               Edit opportunity
-                            </Link>
+                            </button>
                           )}
                         </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
                             <Link
-                              href={`/app/opportunities/${opportunity.id}/analytics`}
+                              href="/app/analytics"
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
                                 'flex items-center px-4 py-3 min-h-12 text-base font-normal text-text-secondary transition-colors duration-fast'

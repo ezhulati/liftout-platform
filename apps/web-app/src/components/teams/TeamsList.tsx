@@ -152,7 +152,7 @@ export function TeamsList({ userType }: TeamsListProps) {
 
               {isCompanyUser && team.openToLiftout && (
                 <Link
-                  href={`/app/teams/${team.id}/contact`}
+                  href={`/app/messages?team=${team.id}`}
                   className="btn-primary min-h-12"
                 >
                   Initiate contact
@@ -203,7 +203,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                       <Menu.Item>
                         {({ active }) => (
                           <Link
-                            href={`/app/teams/${team.id}/opportunities`}
+                            href="/app/opportunities"
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
                               'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
@@ -216,7 +216,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                       <Menu.Item>
                         {({ active }) => (
                           <Link
-                            href={`/app/teams/${team.id}/settings`}
+                            href={`/app/teams/${team.id}/edit`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
                               'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'

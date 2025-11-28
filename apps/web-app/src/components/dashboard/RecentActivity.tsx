@@ -113,7 +113,7 @@ export function RecentActivity() {
         <h3 className="text-lg font-bold text-text-primary font-heading">Recent Activity</h3>
         {/* Tertiary action - underlined link style */}
         <Link
-          href="/app/activity"
+          href="/app/applications"
           className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
         >
           View all
