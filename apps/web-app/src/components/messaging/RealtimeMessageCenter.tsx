@@ -148,6 +148,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     : (selectedConversationData ? transformConversation(selectedConversationData) : null);
 
   // Use demoMessages state to trigger re-render when messages change in demo mode
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _demoMessagesTrigger = demoMessages; // This triggers re-render when demo messages change
   const messages = useDemoMode
     ? (selectedConversationId ? getMessagesWithSession(selectedConversationId).map(msg => transformMessage(msg, session?.user?.id)) : [])
     : (messagesData?.data?.map(msg => transformMessage(msg, session?.user?.id)) || []);
@@ -345,7 +347,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     }
   };
 
-  if (conversationsLoading) {
+  // In demo mode, skip loading state since we have static data
+  if (conversationsLoading && !useDemoMode) {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="animate-pulse h-96 bg-bg-alt rounded-lg w-full max-w-4xl"></div>
@@ -699,20 +702,20 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                     value={newMessage}
                     onChange={(e) => handleTyping(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={isConnected ? "Type your secure message..." : "Connecting..."}
+                    placeholder={effectiveIsConnected ? "Type your secure message..." : "Connecting..."}
                     rows={3}
-                    disabled={!isConnected}
+                    disabled={!effectiveIsConnected}
                     className="input-field resize-none disabled:bg-bg-alt disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast disabled:cursor-not-allowed" disabled={!isConnected}>
+                  <button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast disabled:cursor-not-allowed" disabled={!effectiveIsConnected}>
                     <PaperClipIcon className="h-5 w-5" />
                   </button>
                   <button
                     onClick={handleSendMessage}
                     className="btn-primary px-4 py-3 min-h-12 disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
-                    disabled={!newMessage.trim() || !isConnected}
+                    disabled={!newMessage.trim() || !effectiveIsConnected}
                   >
                     Send
                   </button>
@@ -728,10 +731,10 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   {selectedConversation.auditTrailEnabled && (
                     <span>Audit trail enabled</span>
                   )}
-                  {isConnected && (
+                  {effectiveIsConnected && (
                     <span className="text-success flex items-center space-x-1">
                       <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                      <span>Real-time messaging active</span>
+                      <span>{useDemoMode ? 'Demo mode active' : 'Real-time messaging active'}</span>
                     </span>
                   )}
                 </div>
