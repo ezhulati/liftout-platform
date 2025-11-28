@@ -82,21 +82,21 @@ export function TeamCTA() {
           ))}
         </div>
 
-        {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          {/* Primary CTA */}
+        {/* CTA buttons - left aligned per Practical UI, primary first */}
+        <div className="flex flex-col sm:flex-row gap-4 sm:justify-start justify-center mb-8">
+          {/* Primary CTA - solid gold on dark bg */}
           <Link
             href="/auth/signup?type=team"
-            className="group btn-secondary min-h-[52px] px-10 py-4 text-lg font-semibold inline-flex items-center justify-center gap-3"
+            className="group inline-flex items-center justify-center gap-3 min-h-[52px] px-8 py-3 rounded-md bg-gold text-navy-900 font-semibold text-lg hover:bg-gold-400 transition-all duration-fast"
           >
             Register your team
-            <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
+            <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
-          {/* Secondary CTA */}
+          {/* Secondary CTA - outline on dark bg */}
           <Link
             href="/for-companies"
-            className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
+            className="group min-h-[52px] px-8 py-3 rounded-md text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast"
           >
             Browse teams
           </Link>

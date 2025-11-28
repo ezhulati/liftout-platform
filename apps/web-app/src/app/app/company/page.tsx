@@ -28,8 +28,8 @@ export default function CompanyProfilePage() {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Access Denied</h1>
-          <p className="mt-2 text-gray-600">This page is only available to company users.</p>
+          <h1 className="text-2xl font-bold text-text-primary">Access Denied</h1>
+          <p className="mt-2 text-text-secondary">This page is only available to company users.</p>
         </div>
       </div>
     );
@@ -40,15 +40,15 @@ export default function CompanyProfilePage() {
       <div className="mb-8">
         <div className="md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-gray-900">Company Profile</h1>
-            <p className="mt-2 text-sm text-gray-600">
+            <h1 className="text-2xl font-bold text-text-primary">Company Profile</h1>
+            <p className="mt-2 text-sm text-text-secondary">
               Manage your company information and liftout requirements
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium text-text-secondary bg-white hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               {isEditing ? 'Cancel' : 'Edit Profile'}
             </button>
@@ -67,12 +67,12 @@ export default function CompanyProfilePage() {
                 className={`${
                   activeTab === tab.id
                     ? 'bg-primary-50 border-primary-500 text-primary-700'
-                    : 'border-transparent text-gray-900 hover:bg-gray-50'
+                    : 'border-transparent text-text-primary hover:bg-bg-alt'
                 } group border-l-4 px-3 py-2 flex items-center text-sm font-medium w-full`}
               >
                 <tab.icon
                   className={`${
-                    activeTab === tab.id ? 'text-primary-500' : 'text-gray-400'
+                    activeTab === tab.id ? 'text-primary-500' : 'text-text-tertiary'
                   } flex-shrink-0 -ml-1 mr-3 h-6 w-6`}
                   aria-hidden="true"
                 />
@@ -122,30 +122,30 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               <BuildingOfficeIcon className="h-8 w-8 text-primary-600" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{formData.name}</h2>
-              <p className="text-gray-600">{formData.industry}</p>
+              <h2 className="text-xl font-bold text-text-primary">{formData.name}</h2>
+              <p className="text-text-secondary">{formData.industry}</p>
             </div>
           </div>
           
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex items-center space-x-3">
-              <UsersIcon className="h-5 w-5 text-gray-400" />
+              <UsersIcon className="h-5 w-5 text-text-tertiary" />
               <div>
-                <p className="text-sm font-medium text-gray-900">Company Size</p>
-                <p className="text-sm text-gray-600">{formData.size} employees</p>
+                <p className="text-sm font-medium text-text-primary">Company Size</p>
+                <p className="text-sm text-text-secondary">{formData.size} employees</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <MapPinIcon className="h-5 w-5 text-gray-400" />
+              <MapPinIcon className="h-5 w-5 text-text-tertiary" />
               <div>
-                <p className="text-sm font-medium text-gray-900">Headquarters</p>
-                <p className="text-sm text-gray-600">{formData.headquarters}</p>
+                <p className="text-sm font-medium text-text-primary">Headquarters</p>
+                <p className="text-sm text-text-secondary">{formData.headquarters}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <GlobeAltIcon className="h-5 w-5 text-gray-400" />
+              <GlobeAltIcon className="h-5 w-5 text-text-tertiary" />
               <div>
-                <p className="text-sm font-medium text-gray-900">Website</p>
+                <p className="text-sm font-medium text-text-primary">Website</p>
                 <a href={formData.website} className="text-sm text-primary-600 hover:text-primary-500">
                   {formData.website}
                 </a>
@@ -154,34 +154,34 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div className="mt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">About</h3>
-            <p className="text-gray-600">{formData.description}</p>
+            <h3 className="text-lg font-medium text-text-primary mb-2">About</h3>
+            <p className="text-text-secondary">{formData.description}</p>
           </div>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Company Metrics</h3>
+          <h3 className="text-lg font-medium text-text-primary mb-4">Company Metrics</h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full mb-2">
-                <CurrencyDollarIcon className="h-6 w-6 text-green-600" />
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-success-light rounded-full mb-2">
+                <CurrencyDollarIcon className="h-6 w-6 text-success" />
               </div>
-              <p className="text-sm font-medium text-gray-900">Annual Revenue</p>
-              <p className="text-lg font-bold text-gray-900">{formData.revenue}</p>
+              <p className="text-sm font-medium text-text-primary">Annual Revenue</p>
+              <p className="text-lg font-bold text-text-primary">{formData.revenue}</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-blue-100 rounded-full mb-2">
-                <ChartBarIcon className="h-6 w-6 text-blue-600" />
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-full mb-2">
+                <ChartBarIcon className="h-6 w-6 text-navy" />
               </div>
-              <p className="text-sm font-medium text-gray-900">Funding Stage</p>
-              <p className="text-lg font-bold text-gray-900">{formData.funding}</p>
+              <p className="text-sm font-medium text-text-primary">Funding Stage</p>
+              <p className="text-lg font-bold text-text-primary">{formData.funding}</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 mx-auto bg-purple-100 rounded-full mb-2">
                 <BuildingOfficeIcon className="h-6 w-6 text-purple-600" />
               </div>
-              <p className="text-sm font-medium text-gray-900">Company Stage</p>
-              <p className="text-lg font-bold text-gray-900">{formData.stage}</p>
+              <p className="text-sm font-medium text-text-primary">Company Stage</p>
+              <p className="text-lg font-bold text-text-primary">{formData.stage}</p>
             </div>
           </div>
         </div>
@@ -192,33 +192,33 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Basic Information</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company Name</label>
+            <label className="block text-sm font-medium text-text-secondary">Company Name</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Industry</label>
+            <label className="block text-sm font-medium text-text-secondary">Industry</label>
             <input
               type="text"
               value={formData.industry}
               onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company Size</label>
+            <label className="block text-sm font-medium text-text-secondary">Company Size</label>
             <select
               value={formData.size}
               onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             >
               <option value="1-10">1-10 employees</option>
               <option value="11-50">11-50 employees</option>
@@ -229,41 +229,41 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Founded</label>
+            <label className="block text-sm font-medium text-text-secondary">Founded</label>
             <input
               type="text"
               value={formData.founded}
               onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Headquarters</label>
+            <label className="block text-sm font-medium text-text-secondary">Headquarters</label>
             <input
               type="text"
               value={formData.headquarters}
               onChange={(e) => setFormData({ ...formData, headquarters: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Website</label>
+            <label className="block text-sm font-medium text-text-secondary">Website</label>
             <input
               type="url"
               value={formData.website}
               onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
             />
           </div>
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700">Company Description</label>
+          <label className="block text-sm font-medium text-text-secondary">Company Description</label>
           <textarea
             rows={4}
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
           />
         </div>
 
@@ -292,12 +292,12 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
     return (
       <div className="space-y-6">
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Company Culture</h3>
-          <p className="text-gray-600 mb-6">{cultureData.cultureDescription}</p>
+          <h3 className="text-lg font-medium text-text-primary mb-4">Company Culture</h3>
+          <p className="text-text-secondary mb-6">{cultureData.cultureDescription}</p>
           
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <h4 className="text-base font-medium text-gray-900 mb-2">Core Values</h4>
+              <h4 className="text-base font-medium text-text-primary mb-2">Core Values</h4>
               <div className="flex flex-wrap gap-2">
                 {cultureData.values.map((value, index) => (
                   <span
@@ -310,20 +310,20 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
               </div>
             </div>
             <div>
-              <h4 className="text-base font-medium text-gray-900 mb-2">Work Style</h4>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              <h4 className="text-base font-medium text-text-primary mb-2">Work Style</h4>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
                 {cultureData.workStyle}
               </span>
             </div>
           </div>
 
           <div className="mt-6">
-            <h4 className="text-base font-medium text-gray-900 mb-2">Benefits & Perks</h4>
+            <h4 className="text-base font-medium text-text-primary mb-2">Benefits & Perks</h4>
             <div className="grid grid-cols-2 gap-2">
               {cultureData.benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center">
                   <div className="h-2 w-2 bg-primary-500 rounded-full mr-2"></div>
-                  <span className="text-sm text-gray-600">{benefit}</span>
+                  <span className="text-sm text-text-secondary">{benefit}</span>
                 </div>
               ))}
             </div>
@@ -371,45 +371,45 @@ function LiftoutHistory() {
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout History</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Liftout History</h3>
         
         <div className="space-y-4">
           {liftoutHistory.map((liftout) => (
-            <div key={liftout.id} className="border border-gray-200 rounded-lg p-4">
+            <div key={liftout.id} className="border border-border rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-base font-medium text-gray-900">{liftout.team}</h4>
+                <h4 className="text-base font-medium text-text-primary">{liftout.team}</h4>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   liftout.outcome === 'Successful' 
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-yellow-100 text-yellow-800'
+                    ? 'bg-success-light text-success-dark'
+                    : 'bg-gold-100 text-yellow-800'
                 }`}>
                   {liftout.outcome}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-text-secondary mb-2">
                 From {liftout.fromCompany} • {liftout.size} team members • {liftout.date}
               </p>
-              <p className="text-sm text-gray-800">{liftout.impact}</p>
+              <p className="text-sm text-text-primary">{liftout.impact}</p>
             </div>
           ))}
         </div>
       </div>
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout Success Metrics</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Liftout Success Metrics</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="text-center">
-            <p className="text-3xl font-bold text-gray-900">19</p>
-            <p className="text-sm text-gray-600">Total Liftouts</p>
+            <p className="text-3xl font-bold text-text-primary">19</p>
+            <p className="text-sm text-text-secondary">Total Liftouts</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-green-600">89%</p>
-            <p className="text-sm text-gray-600">Success Rate</p>
+            <p className="text-3xl font-bold text-success">89%</p>
+            <p className="text-sm text-text-secondary">Success Rate</p>
           </div>
           <div className="text-center">
             <p className="text-3xl font-bold text-primary-600">156</p>
-            <p className="text-sm text-gray-600">Team Members Acquired</p>
+            <p className="text-sm text-text-secondary">Team Members Acquired</p>
           </div>
         </div>
       </div>
@@ -431,16 +431,16 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Ideal Team Profile</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Ideal Team Profile</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Target Industries</h4>
+            <h4 className="text-base font-medium text-text-primary mb-2">Target Industries</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.targetIndustries.map((industry, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800"
                 >
                   {industry}
                 </span>
@@ -449,12 +449,12 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Preferred Team Sizes</h4>
+            <h4 className="text-base font-medium text-text-primary mb-2">Preferred Team Sizes</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.teamSizes.map((size, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark"
                 >
                   {size}
                 </span>
@@ -463,17 +463,17 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Geographic Preference</h4>
-            <p className="text-sm text-gray-600">{requirements.geographicPreference}</p>
+            <h4 className="text-base font-medium text-text-primary mb-2">Geographic Preference</h4>
+            <p className="text-sm text-text-secondary">{requirements.geographicPreference}</p>
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Experience Level</h4>
-            <p className="text-sm text-gray-600">{requirements.experienceLevel}</p>
+            <h4 className="text-base font-medium text-text-primary mb-2">Experience Level</h4>
+            <p className="text-sm text-text-secondary">{requirements.experienceLevel}</p>
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Key Specializations</h4>
+            <h4 className="text-base font-medium text-text-primary mb-2">Key Specializations</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.specializations.map((spec, index) => (
                 <span
@@ -487,22 +487,22 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-gray-900 mb-2">Budget Range</h4>
-            <p className="text-sm text-gray-600">{requirements.budget}</p>
+            <h4 className="text-base font-medium text-text-primary mb-2">Budget Range</h4>
+            <p className="text-sm text-text-secondary">{requirements.budget}</p>
           </div>
         </div>
       </div>
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Integration Approach</h3>
+        <h3 className="text-lg font-medium text-text-primary mb-4">Integration Approach</h3>
         <div className="space-y-4">
           <div>
-            <h4 className="text-base font-medium text-gray-900">Onboarding Timeline</h4>
-            <p className="text-sm text-gray-600">{requirements.timeline}</p>
+            <h4 className="text-base font-medium text-text-primary">Onboarding Timeline</h4>
+            <p className="text-sm text-text-secondary">{requirements.timeline}</p>
           </div>
           <div>
-            <h4 className="text-base font-medium text-gray-900">Integration Philosophy</h4>
-            <p className="text-sm text-gray-600">
+            <h4 className="text-base font-medium text-text-primary">Integration Philosophy</h4>
+            <p className="text-sm text-text-secondary">
               Preserve team dynamics while providing resources for accelerated growth. 
               Maintain team autonomy with strategic alignment to company objectives.
             </p>

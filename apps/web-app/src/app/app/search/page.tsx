@@ -152,10 +152,10 @@ export default function SearchPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-text-primary">
           {isCompanyUser ? 'Search Teams' : 'Search Opportunities'}
         </h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-text-secondary">
           {isCompanyUser 
             ? 'Find high-performing teams ready for liftout opportunities'
             : 'Discover liftout opportunities that match your team\'s expertise'
@@ -167,19 +167,19 @@ export default function SearchPage() {
       <form onSubmit={handleSearch} className="mb-8">
         <div className="flex gap-4 mb-4">
           <div className="flex-1 relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-tertiary" />
             <input
               type="text"
               placeholder={isCompanyUser ? "Search teams by expertise, industry, or company..." : "Search opportunities by title, company, or description..."}
               value={filters.query}
               onChange={(e) => setFilters({ ...filters, query: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            className="flex items-center px-4 py-3 border border-border rounded-lg text-text-secondary hover:bg-bg-alt"
           >
             <FunnelIcon className="h-5 w-5 mr-2" />
             Filters
@@ -194,16 +194,16 @@ export default function SearchPage() {
 
         {/* Advanced Filters */}
         {showFilters && (
-          <div className="bg-gray-50 p-6 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-bg-alt p-6 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {!isCompanyUser && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Search Type
                 </label>
                 <select
                   value={filters.type}
                   onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                  className="w-full border border-border rounded-md shadow-sm py-2 px-3"
                 >
                   <option value="both">Teams & Opportunities</option>
                   <option value="teams">Teams Only</option>
@@ -213,13 +213,13 @@ export default function SearchPage() {
             )}
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Industry
               </label>
               <select
                 value={filters.industry}
                 onChange={(e) => setFilters({ ...filters, industry: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                className="w-full border border-border rounded-md shadow-sm py-2 px-3"
               >
                 <option value="">All Industries</option>
                 <option value="Investment Banking">Investment Banking</option>
@@ -231,7 +231,7 @@ export default function SearchPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Location
               </label>
               <input
@@ -239,19 +239,19 @@ export default function SearchPage() {
                 placeholder="City, State or Country"
                 value={filters.location}
                 onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                className="w-full border border-border rounded-md shadow-sm py-2 px-3"
               />
             </div>
 
             {isCompanyUser && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Team Size
                 </label>
                 <select
                   value={filters.teamSize}
                   onChange={(e) => setFilters({ ...filters, teamSize: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                  className="w-full border border-border rounded-md shadow-sm py-2 px-3"
                 >
                   <option value="">Any Size</option>
                   <option value="2-5">2-5 members</option>
@@ -263,13 +263,13 @@ export default function SearchPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Experience Level
               </label>
               <select
                 value={filters.experience}
                 onChange={(e) => setFilters({ ...filters, experience: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                className="w-full border border-border rounded-md shadow-sm py-2 px-3"
               >
                 <option value="">Any Experience</option>
                 <option value="3-5 years">3-5 years</option>
@@ -286,7 +286,7 @@ export default function SearchPage() {
       <div className="space-y-6">
         {(filters.type === 'teams' || filters.type === 'both') && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">
               Teams ({filteredTeams.length})
             </h2>
             <div className="grid gap-6">
@@ -299,7 +299,7 @@ export default function SearchPage() {
 
         {(filters.type === 'opportunities' || filters.type === 'both') && !isCompanyUser && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">
               Opportunities ({filteredOpportunities.length})
             </h2>
             <div className="grid gap-6">
@@ -316,39 +316,39 @@ export default function SearchPage() {
 
 function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{team.name}</h3>
-          <p className="text-gray-600">{team.company}</p>
+          <h3 className="text-lg font-semibold text-text-primary">{team.name}</h3>
+          <p className="text-text-secondary">{team.company}</p>
         </div>
         <div className="flex items-center space-x-1">
           <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
-          <span className="text-sm font-medium text-gray-700">{team.rating}</span>
+          <span className="text-sm font-medium text-text-secondary">{team.rating}</span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <UserGroupIcon className="h-4 w-4 mr-2" />
           {team.size} members
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <MapPinIcon className="h-4 w-4 mr-2" />
           {team.location}
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <ClockIcon className="h-4 w-4 mr-2" />
           {team.yearsWorking}y together
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <BriefcaseIcon className="h-4 w-4 mr-2" />
           {team.industry}
         </div>
       </div>
 
       <div className="mb-4">
-        <p className="text-sm font-medium text-gray-700 mb-2">Specialties:</p>
+        <p className="text-sm font-medium text-text-secondary mb-2">Specialties:</p>
         <div className="flex flex-wrap gap-2">
           {team.specialties.map((specialty: string, index: number) => (
             <span
@@ -365,10 +365,10 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
         <div>
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
             team.availability === 'Open to Opportunities' 
-              ? 'bg-green-100 text-green-800'
+              ? 'bg-success-light text-success-dark'
               : team.availability === 'Selective'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-gray-100 text-gray-800'
+              ? 'bg-gold-100 text-yellow-800'
+              : 'bg-bg-alt text-text-primary'
           }`}>
             {team.availability}
           </span>
@@ -386,39 +386,39 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
 
 function OpportunityCard({ opportunity }: { opportunity: any }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{opportunity.title}</h3>
-          <p className="text-gray-600">{opportunity.company}</p>
+          <h3 className="text-lg font-semibold text-text-primary">{opportunity.title}</h3>
+          <p className="text-text-secondary">{opportunity.company}</p>
         </div>
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
           opportunity.urgency === 'High' 
             ? 'bg-red-100 text-red-800'
             : opportunity.urgency === 'Medium'
-            ? 'bg-yellow-100 text-yellow-800'
-            : 'bg-green-100 text-green-800'
+            ? 'bg-gold-100 text-yellow-800'
+            : 'bg-success-light text-success-dark'
         }`}>
           {opportunity.urgency} Priority
         </span>
       </div>
 
-      <p className="text-gray-700 mb-4">{opportunity.description}</p>
+      <p className="text-text-secondary mb-4">{opportunity.description}</p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <CurrencyDollarIcon className="h-4 w-4 mr-2" />
           {opportunity.compensation}
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <MapPinIcon className="h-4 w-4 mr-2" />
           {opportunity.location}
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <UserGroupIcon className="h-4 w-4 mr-2" />
           {opportunity.teamSize}
         </div>
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-text-secondary">
           <ClockIcon className="h-4 w-4 mr-2" />
           {opportunity.posted}
         </div>
@@ -426,7 +426,7 @@ function OpportunityCard({ opportunity }: { opportunity: any }) {
 
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-text-secondary">
             {opportunity.applicants} teams applied
           </span>
         </div>

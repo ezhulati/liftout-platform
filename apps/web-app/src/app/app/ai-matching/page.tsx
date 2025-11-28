@@ -71,9 +71,9 @@ export default function AIMatchingPage() {
   if (!user) {
     return (
       <div className="text-center py-12">
-        <CpuChipIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Authentication Required</h3>
-        <p className="mt-1 text-sm text-gray-500">Please log in to access AI matching features.</p>
+        <CpuChipIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Authentication Required</h3>
+        <p className="mt-1 text-sm text-text-tertiary">Please log in to access AI matching features.</p>
       </div>
     );
   }
@@ -100,29 +100,29 @@ export default function AIMatchingPage() {
 
       {/* Entity Selection */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Select Analysis Focus</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Select Analysis Focus</h2>
         </div>
         <div className="px-6 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Entity Type Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-text-secondary mb-3">
                 What would you like to analyze?
               </label>
               <div className="space-y-2">
                 {isTeamUser && (
-                  <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-bg-alt">
                     <input
                       type="radio"
                       value="team"
                       checked={selectedEntityType === 'team'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'team')}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-border"
                     />
                     <div className="ml-3 flex items-center">
-                      <UserGroupIcon className="h-5 w-5 text-gray-400 mr-2" />
-                      <span className="text-sm font-medium text-gray-900">
+                      <UserGroupIcon className="h-5 w-5 text-text-tertiary mr-2" />
+                      <span className="text-sm font-medium text-text-primary">
                         Find opportunities for my team
                       </span>
                     </div>
@@ -130,17 +130,17 @@ export default function AIMatchingPage() {
                 )}
                 
                 {isCompanyUser && (
-                  <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-bg-alt">
                     <input
                       type="radio"
                       value="opportunity"
                       checked={selectedEntityType === 'opportunity'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'opportunity')}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-border"
                     />
                     <div className="ml-3 flex items-center">
-                      <BriefcaseIcon className="h-5 w-5 text-gray-400 mr-2" />
-                      <span className="text-sm font-medium text-gray-900">
+                      <BriefcaseIcon className="h-5 w-5 text-text-tertiary mr-2" />
+                      <span className="text-sm font-medium text-text-primary">
                         Find teams for my opportunity
                       </span>
                     </div>
@@ -151,7 +151,7 @@ export default function AIMatchingPage() {
 
             {/* Entity Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-text-secondary mb-3">
                 {selectedEntityType === 'team' ? 'Select your team' : 'Select your opportunity'}
               </label>
               
@@ -187,8 +187,8 @@ export default function AIMatchingPage() {
               
               {((selectedEntityType === 'team' && !userTeams?.length) || 
                 (selectedEntityType === 'opportunity' && !userOpportunities?.opportunities.length)) && (
-                <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                  <div className="text-gray-500">
+                <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                  <div className="text-text-tertiary">
                     {selectedEntityType === 'team' ? (
                       <>
                         <UserGroupIcon className="mx-auto h-8 w-8 mb-2" />
@@ -222,25 +222,25 @@ export default function AIMatchingPage() {
           {/* Recommended Teams (for company users) */}
           {isCompanyUser && recommendedTeams && recommendedTeams.length > 0 && (
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900 flex items-center">
+              <div className="px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-medium text-text-primary flex items-center">
                   <SparklesIcon className="h-5 w-5 mr-2 text-purple-500" />
                   Recommended Teams
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Teams that match your company's hiring patterns
                 </p>
               </div>
               <div className="px-6 py-4">
                 <div className="space-y-4">
                   {recommendedTeams.slice(0, 3).map((team) => (
-                    <div key={team.id} className="flex items-center space-x-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <UserGroupIcon className="h-5 w-5 text-blue-600" />
+                    <div key={team.id} className="flex items-center space-x-4 p-3 border border-border rounded-lg hover:bg-bg-alt">
+                      <div className="h-10 w-10 rounded-full bg-navy-50 flex items-center justify-center">
+                        <UserGroupIcon className="h-5 w-5 text-navy" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-gray-900">{team.name}</h3>
-                        <p className="text-sm text-gray-600">
+                        <h3 className="font-medium text-text-primary">{team.name}</h3>
+                        <p className="text-sm text-text-secondary">
                           {team.size} members • {team.industry.join(', ')}
                         </p>
                       </div>
@@ -265,9 +265,9 @@ export default function AIMatchingPage() {
 
           {/* AI Insights */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center">
-                <LightBulbIcon className="h-5 w-5 mr-2 text-yellow-500" />
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary flex items-center">
+                <LightBulbIcon className="h-5 w-5 mr-2 text-gold" />
                 AI Insights
               </h2>
             </div>
@@ -276,28 +276,28 @@ export default function AIMatchingPage() {
                 <div className="flex items-start space-x-3">
                   <div className="h-2 w-2 bg-purple-500 rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Smart Compatibility Scoring</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-medium text-text-primary">Smart Compatibility Scoring</h4>
+                    <p className="text-sm text-text-secondary">
                       Our AI analyzes 7 key dimensions including skills, industry experience, team dynamics, and compensation alignment.
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="h-2 w-2 bg-navy-500 rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Predictive Analysis</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-medium text-text-primary">Predictive Analysis</h4>
+                    <p className="text-sm text-text-secondary">
                       Machine learning models trained on successful liftout outcomes to identify the highest-potential matches.
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-green-500 rounded-full mt-2"></div>
+                  <div className="h-2 w-2 bg-success-light0 rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Risk Assessment</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-medium text-text-primary">Risk Assessment</h4>
+                    <p className="text-sm text-text-secondary">
                       Identifies potential challenges and provides actionable recommendations to improve match success.
                     </p>
                   </div>
@@ -322,9 +322,9 @@ export default function AIMatchingPage() {
       {!selectedEntityId && (isTeamUser && !userTeams?.length || isCompanyUser && !userOpportunities?.opportunities.length) && (
         <div className="card">
           <div className="px-6 py-8 text-center">
-            <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-4 text-lg font-medium text-gray-900">Get Started with AI Matching</h3>
-            <p className="mt-2 text-sm text-gray-600 max-w-2xl mx-auto">
+            <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+            <h3 className="mt-4 text-lg font-medium text-text-primary">Get Started with AI Matching</h3>
+            <p className="mt-2 text-sm text-text-secondary max-w-2xl mx-auto">
               {isTeamUser 
                 ? 'Create a comprehensive team profile to discover opportunities that perfectly match your skills and experience.'
                 : 'Post liftout opportunities to find teams with exactly the expertise you need.'

@@ -54,7 +54,7 @@ export default function TeamsPage() {
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }
@@ -195,17 +195,17 @@ export default function TeamsPage() {
           <div className="px-6 py-6">
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center space-x-4">
-                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center">
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">TechFlow Data Science Team</h2>
-                  <p className="text-gray-600">Led by Alex Chen • 4 Members • 3.5 Years Together</p>
+                  <h2 className="text-2xl font-bold text-text-primary">TechFlow Data Science Team</h2>
+                  <p className="text-text-secondary">Led by Alex Chen • 4 Members • 3.5 Years Together</p>
                   <div className="flex items-center mt-2 space-x-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
                       Available for Liftout
                     </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
                       Verified Team
                     </span>
                   </div>
@@ -214,64 +214,64 @@ export default function TeamsPage() {
             </div>
 
             <div className="prose max-w-none mb-6">
-              <p className="text-gray-700">
-                Elite data science team with proven track record in fintech analytics and machine learning solutions. 
+              <p className="text-text-secondary">
+                Elite data science team with proven track record in fintech analytics and machine learning solutions.
                 We've successfully delivered $2M+ in value through predictive modeling and risk assessment systems.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">23</div>
-                <div className="text-sm text-gray-600">Successful Projects</div>
+              <div className="text-center p-4 bg-bg-alt rounded-lg">
+                <div className="text-2xl font-bold text-navy">23</div>
+                <div className="text-sm text-text-secondary">Successful Projects</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">96%</div>
-                <div className="text-sm text-gray-600">Client Satisfaction</div>
+              <div className="text-center p-4 bg-bg-alt rounded-lg">
+                <div className="text-2xl font-bold text-success">96%</div>
+                <div className="text-sm text-text-secondary">Client Satisfaction</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">$2.1M</div>
-                <div className="text-sm text-gray-600">Annual Value Generated</div>
+              <div className="text-center p-4 bg-bg-alt rounded-lg">
+                <div className="text-2xl font-bold text-gold-600">$2.1M</div>
+                <div className="text-sm text-text-secondary">Annual Value Generated</div>
               </div>
             </div>
 
             <div className="mb-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Key Achievements</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-3">Key Achievements</h3>
               <ul className="space-y-2">
                 <li className="flex items-start">
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-                  <span className="text-gray-700">Reduced fraud detection false positives by 35%</span>
+                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 mr-2 flex-shrink-0" />
+                  <span className="text-text-secondary">Reduced fraud detection false positives by 35%</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-                  <span className="text-gray-700">Built predictive models generating $2.1M annual savings</span>
+                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 mr-2 flex-shrink-0" />
+                  <span className="text-text-secondary">Built predictive models generating $2.1M annual savings</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-                  <span className="text-gray-700">Mentored 12+ junior data scientists across 3 years</span>
+                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 mr-2 flex-shrink-0" />
+                  <span className="text-text-secondary">Mentored 12+ junior data scientists across 3 years</span>
                 </li>
               </ul>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
               {['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling', 'Risk Assessment'].map((skill) => (
-                <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
                   {skill}
                 </span>
               ))}
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t border-border pt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Profile Views</h4>
-                  <p className="text-2xl font-bold text-blue-600">847</p>
-                  <p className="text-sm text-gray-500">↑ 23% this month</p>
+                  <h4 className="font-medium text-text-primary mb-2">Profile Views</h4>
+                  <p className="text-2xl font-bold text-navy">847</p>
+                  <p className="text-sm text-text-tertiary">↑ 23% this month</p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Liftout Inquiries</h4>
-                  <p className="text-2xl font-bold text-green-600">12</p>
-                  <p className="text-sm text-gray-500">3 active discussions</p>
+                  <h4 className="font-medium text-text-primary mb-2">Liftout Inquiries</h4>
+                  <p className="text-2xl font-bold text-success">12</p>
+                  <p className="text-sm text-text-tertiary">3 active discussions</p>
                 </div>
               </div>
             </div>
@@ -280,32 +280,32 @@ export default function TeamsPage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/app/applications" className="card hover:shadow-md transition-shadow">
+          <Link href="/app/applications" className="card hover:shadow-md transition-shadow duration-fast">
             <div className="px-6 py-4 flex items-center">
-              <DocumentTextIcon className="h-8 w-8 text-blue-500 mr-4" />
+              <DocumentTextIcon className="h-8 w-8 text-navy mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">My Applications</h3>
-                <p className="text-sm text-gray-500">Track application status</p>
+                <h3 className="font-medium text-text-primary">My Applications</h3>
+                <p className="text-sm text-text-tertiary">Track application status</p>
               </div>
             </div>
           </Link>
 
-          <Link href="/app/opportunities" className="card hover:shadow-md transition-shadow">
+          <Link href="/app/opportunities" className="card hover:shadow-md transition-shadow duration-fast">
             <div className="px-6 py-4 flex items-center">
-              <BriefcaseIcon className="h-8 w-8 text-green-500 mr-4" />
+              <BriefcaseIcon className="h-8 w-8 text-success mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">Browse Opportunities</h3>
-                <p className="text-sm text-gray-500">Find new liftout opportunities</p>
+                <h3 className="font-medium text-text-primary">Browse Opportunities</h3>
+                <p className="text-sm text-text-tertiary">Find new liftout opportunities</p>
               </div>
             </div>
           </Link>
 
-          <Link href="/app/messages" className="card hover:shadow-md transition-shadow">
+          <Link href="/app/messages" className="card hover:shadow-md transition-shadow duration-fast">
             <div className="px-6 py-4 flex items-center">
-              <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-500 mr-4" />
+              <ChatBubbleLeftRightIcon className="h-8 w-8 text-gold mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">Messages</h3>
-                <p className="text-sm text-gray-500">Company communications</p>
+                <h3 className="font-medium text-text-primary">Messages</h3>
+                <p className="text-sm text-text-tertiary">Company communications</p>
               </div>
             </div>
           </Link>
@@ -349,24 +349,24 @@ export default function TeamsPage() {
               <div key={i} className="card animate-pulse">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="h-6 bg-gray-200 rounded w-64 mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-32 mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-6 bg-bg-elevated rounded w-64 mb-2"></div>
+                    <div className="h-4 bg-bg-elevated rounded w-32 mb-4"></div>
+                    <div className="h-4 bg-bg-elevated rounded w-full mb-2"></div>
+                    <div className="h-4 bg-bg-elevated rounded w-3/4"></div>
                   </div>
-                  <div className="h-8 w-24 bg-gray-200 rounded"></div>
+                  <div className="h-8 w-24 bg-bg-elevated rounded"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : teams.length === 0 ? (
           <div className="text-center py-12">
-            <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <UserGroupIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+            <h3 className="mt-2 text-sm font-medium text-text-primary">
               {isCompanyUser ? 'No teams found' : 'No teams available'}
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {isCompanyUser 
+            <p className="mt-1 text-sm text-text-tertiary">
+              {isCompanyUser
                 ? 'Try adjusting your search criteria or filters.'
                 : 'Check back later for new teams or adjust your search criteria.'
               }
@@ -392,26 +392,26 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
 
   return (
     <div className={classNames(
-      "card hover:shadow-md transition-shadow",
-      featured ? 'ring-2 ring-yellow-200' : ''
+      "card hover:shadow-md transition-shadow duration-fast",
+      featured ? 'ring-2 ring-gold-200' : ''
     )}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-3 mb-2">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center">
               <UserGroupIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Link href={`/app/teams/${team.id}`} className="hover:text-blue-600">
+              <h3 className="text-lg font-medium text-text-primary flex items-center">
+                <Link href={`/app/teams/${team.id}`} className="hover:text-navy transition-colors duration-fast">
                   {team.name}
                 </Link>
-                <CheckBadgeIconSolid className="h-5 w-5 text-blue-500 ml-2" />
+                <CheckBadgeIconSolid className="h-5 w-5 text-navy ml-2" />
                 {featured && (
-                  <StarIcon className="h-5 w-5 text-yellow-500 ml-2 fill-current" />
+                  <StarIcon className="h-5 w-5 text-gold ml-2 fill-current" />
                 )}
               </h3>
-              <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
+              <div className="flex items-center space-x-4 mt-1 text-sm text-text-tertiary">
                 <span className="flex items-center">
                   <UserGroupIcon className="h-4 w-4 mr-1" />
                   {team.size} members
@@ -427,31 +427,31 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
               </div>
             </div>
           </div>
-          
-          <p className="text-gray-700 mb-4 line-clamp-2">{team.description}</p>
+
+          <p className="text-text-secondary mb-4 line-clamp-2">{team.description}</p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <div className="flex items-center text-sm text-gray-600">
-              <StarIcon className="h-4 w-4 mr-2 text-yellow-500" />
+            <div className="flex items-center text-sm text-text-secondary">
+              <StarIcon className="h-4 w-4 mr-2 text-gold" />
               <span>Cohesion: {team.cohesionScore}/100</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <CheckCircleIcon className="h-4 w-4 mr-2 text-green-500" />
+            <div className="flex items-center text-sm text-text-secondary">
+              <CheckCircleIcon className="h-4 w-4 mr-2 text-success" />
               <span>{team.successfulProjects} projects</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <CurrencyDollarIcon className="h-4 w-4 mr-2 text-blue-500" />
+            <div className="flex items-center text-sm text-text-secondary">
+              <CurrencyDollarIcon className="h-4 w-4 mr-2 text-navy" />
               <span>{team.compensation.range}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <MapPinIcon className="h-4 w-4 mr-2 text-purple-500" />
+            <div className="flex items-center text-sm text-text-secondary">
+              <MapPinIcon className="h-4 w-4 mr-2 text-gold-600" />
               <span>{team.location}</span>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
             {team.members.slice(0, 5).flatMap((member: any) => member.skills.slice(0, 2)).slice(0, 6).map((skill: string, index: number) => (
-              <span key={`${skill}-${index}`} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <span key={`${skill}-${index}`} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
                 {skill}
               </span>
             ))}
@@ -460,12 +460,12 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex flex-wrap gap-2">
               {team.achievements.slice(0, 2).map((achievement: string, index: number) => (
-                <span key={index} className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                <span key={index} className="text-xs text-text-secondary bg-bg-alt px-2 py-1 rounded">
                   {achievement.length > 50 ? `${achievement.substring(0, 50)}...` : achievement}
                 </span>
               ))}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-text-tertiary">
               Industry: {team.industry}
             </div>
           </div>
@@ -473,7 +473,7 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
 
         <div className="flex items-center space-x-3 ml-6">
           {team.openToLiftout && (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
               Available
             </span>
           )}

@@ -23,7 +23,7 @@ export default async function CreateOpportunityPage() {
       <div className="page-header">
         <Link
           href="/app/opportunities"
-          className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 mb-4"
+          className="inline-flex items-center text-sm font-medium text-text-tertiary hover:text-text-secondary mb-4"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Opportunities

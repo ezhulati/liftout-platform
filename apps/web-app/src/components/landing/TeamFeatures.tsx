@@ -77,26 +77,21 @@ export function TeamFeatures() {
       aria-labelledby="team-features-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
+        {/* Section header - left aligned per Practical UI */}
         <div
           ref={featuresRef as React.RefObject<HTMLDivElement>}
-          className={`text-center max-w-3xl mx-auto mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          {/* Eyebrow */}
-          <p className="text-gold-700 font-semibold tracking-wider uppercase text-sm mb-4">
+          <p className="text-gold-700 font-semibold text-base mb-3">
             Platform features
           </p>
-
-          {/* Headline */}
           <h2
             id="team-features-heading"
-            className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-6"
+            className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
             Everything you need to move together
           </h2>
-
-          {/* Description */}
-          <p className="font-body text-lg lg:text-xl text-text-secondary leading-relaxed">
+          <p className="text-text-secondary text-lg leading-relaxed">
             From showcasing your team to securing your next opportunity, we support every step
             of your collective journey.
           </p>
@@ -143,11 +138,11 @@ export function TeamFeatures() {
           ref={stepsRef as React.RefObject<HTMLDivElement>}
           className="mt-20 lg:mt-28"
         >
-          <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-500 ${stepsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className={`max-w-2xl mb-12 transition-all duration-500 ${stepsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
               Your journey to the next chapter
             </h3>
-            <p className="font-body text-text-secondary leading-relaxed">
+            <p className="text-text-secondary text-lg leading-relaxed">
               A confidential, team-first process designed for high-performing groups.
             </p>
           </div>

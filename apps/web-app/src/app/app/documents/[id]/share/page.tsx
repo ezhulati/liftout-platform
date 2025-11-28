@@ -17,7 +17,7 @@ export default function DocumentSharePage({ params }: DocumentSharePageProps) {
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-navy"></div>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export default function DocumentSharePage({ params }: DocumentSharePageProps) {
       <div className="page-header">
         <Link
           href="/app/documents"
-          className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 mb-4"
+          className="inline-flex items-center text-sm font-medium text-text-tertiary hover:text-text-secondary mb-4"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Documents

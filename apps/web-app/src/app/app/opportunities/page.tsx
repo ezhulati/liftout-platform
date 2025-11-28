@@ -14,7 +14,7 @@ export default function OpportunitiesPage() {
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }
@@ -54,44 +54,44 @@ Post Liftout Opportunity
 
       {/* Tabs for company users */}
       {isCompanyUser && (
-        <div className="border-b border-gray-200">
+        <div className="border-b border-border">
           <nav className="-mb-px flex space-x-8">
             <Link
               href="/app/opportunities"
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
                 activeTab === 'all'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
-All Liftout Opportunities
+              All Liftout Opportunities
             </Link>
             <Link
               href="/app/opportunities?tab=active"
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
                 activeTab === 'active'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
               Active
             </Link>
             <Link
               href="/app/opportunities?tab=applications"
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
                 activeTab === 'applications'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
-Team Interest
+              Team Interest
             </Link>
             <Link
               href="/app/opportunities?tab=closed"
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
                 activeTab === 'closed'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
               Closed

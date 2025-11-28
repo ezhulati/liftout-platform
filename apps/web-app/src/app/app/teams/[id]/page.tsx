@@ -32,16 +32,16 @@ import {
 } from '@heroicons/react/24/solid';
 
 const verificationStatusColors = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  in_progress: 'bg-blue-100 text-blue-800',
-  verified: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
+  pending: 'bg-gold-100 text-gold-800',
+  in_progress: 'bg-navy-50 text-navy-800',
+  verified: 'bg-success-light text-success-dark',
+  rejected: 'bg-error-light text-error-dark',
 };
 
 const availabilityColors = {
-  available: 'bg-green-100 text-green-800',
-  selective: 'bg-yellow-100 text-yellow-800',
-  not_available: 'bg-red-100 text-red-800',
+  available: 'bg-success-light text-success-dark',
+  selective: 'bg-gold-100 text-gold-800',
+  not_available: 'bg-error-light text-error-dark',
 };
 
 export default function TeamProfilePage() {
@@ -82,7 +82,7 @@ export default function TeamProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }
@@ -90,9 +90,9 @@ export default function TeamProfilePage() {
   if (!team) {
     return (
       <div className="text-center py-12">
-        <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Team not found</h3>
-        <p className="mt-1 text-sm text-gray-500">The team profile you're looking for doesn't exist.</p>
+        <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
+        <p className="mt-1 text-sm text-text-tertiary">The team profile you're looking for doesn't exist.</p>
       </div>
     );
   }
@@ -112,10 +112,10 @@ export default function TeamProfilePage() {
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+                  <h1 className="text-2xl font-bold text-text-primary flex items-center">
                     {team.name}
                     {team.verification.status === 'verified' && (
-                      <CheckBadgeIconSolid className="h-6 w-6 text-blue-500 ml-2" />
+                      <CheckBadgeIconSolid className="h-6 w-6 text-navy ml-2" />
                     )}
                   </h1>
                   <div className="flex items-center space-x-4 mt-1">
@@ -129,9 +129,9 @@ export default function TeamProfilePage() {
                 </div>
               </div>
               
-              <p className="text-gray-700 text-lg mb-4">{team.description}</p>
+              <p className="text-text-secondary text-lg mb-4">{team.description}</p>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-text-secondary">
                 <div className="flex items-center">
                   <UserGroupIcon className="h-4 w-4 mr-2" />
                   <span>{team.size} members</span>
@@ -180,38 +180,38 @@ export default function TeamProfilePage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Team Members */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Team Members</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
             </div>
             <div className="px-6 py-4">
               <div className="space-y-4">
                 {team.members.map((member) => (
-                  <div key={member.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-sm font-medium text-gray-600">
+                  <div key={member.id} className="flex items-start space-x-4 p-4 border border-border rounded-lg">
+                    <div className="h-12 w-12 rounded-full bg-bg-elevated flex items-center justify-center">
+                      <span className="text-sm font-medium text-text-secondary">
                         {member.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <h3 className="font-medium text-gray-900">{member.name}</h3>
+                        <h3 className="font-medium text-text-primary">{member.name}</h3>
                         {member.verified && (
-                          <CheckBadgeIconSolid className="h-4 w-4 text-blue-500" />
+                          <CheckBadgeIconSolid className="h-4 w-4 text-navy" />
                         )}
                         {member.role === 'lead' && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy-50 text-blue-800">
                             Team Lead
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">{member.title}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-sm text-text-secondary">{member.title}</p>
+                      <p className="text-xs text-text-tertiary mt-1">
                         {member.yearsExperience} years experience • 
                         Joined team {formatDistanceToNow(member.joinedTeamDate, { addSuffix: true })}
                       </p>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {member.specializations.slice(0, 3).map((spec) => (
-                          <span key={spec} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          <span key={spec} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-primary">
                             {spec}
                           </span>
                         ))}
@@ -225,8 +225,8 @@ export default function TeamProfilePage() {
 
           {/* Performance Metrics */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary flex items-center">
                 <ChartBarIcon className="h-5 w-5 mr-2" />
                 Performance Metrics
               </h2>
@@ -234,28 +234,28 @@ export default function TeamProfilePage() {
             <div className="px-6 py-4">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{team.performanceMetrics.projectsCompleted}</div>
-                  <div className="text-sm text-gray-600">Projects Completed</div>
+                  <div className="text-2xl font-bold text-navy">{team.performanceMetrics.projectsCompleted}</div>
+                  <div className="text-sm text-text-secondary">Projects Completed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{team.performanceMetrics.successRate}%</div>
-                  <div className="text-sm text-gray-600">Success Rate</div>
+                  <div className="text-2xl font-bold text-success">{team.performanceMetrics.successRate}%</div>
+                  <div className="text-sm text-text-secondary">Success Rate</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-purple-600">{team.performanceMetrics.clientSatisfactionScore}/10</div>
-                  <div className="text-sm text-gray-600">Client Satisfaction</div>
+                  <div className="text-sm text-text-secondary">Client Satisfaction</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">{team.performanceMetrics.clientRetentionRate}%</div>
-                  <div className="text-sm text-gray-600">Client Retention</div>
+                  <div className="text-sm text-text-secondary">Client Retention</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-red-600">{team.performanceMetrics.timeToDelivery}</div>
-                  <div className="text-sm text-gray-600">Avg. Delivery (days)</div>
+                  <div className="text-2xl font-bold text-error">{team.performanceMetrics.timeToDelivery}</div>
+                  <div className="text-sm text-text-secondary">Avg. Delivery (days)</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-indigo-600">${team.performanceMetrics.averageProjectValue.toLocaleString()}</div>
-                  <div className="text-sm text-gray-600">Avg. Project Value</div>
+                  <div className="text-sm text-text-secondary">Avg. Project Value</div>
                 </div>
               </div>
             </div>
@@ -264,8 +264,8 @@ export default function TeamProfilePage() {
           {/* Portfolio */}
           {team.portfolioItems.length > 0 && (
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900 flex items-center">
+              <div className="px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-medium text-text-primary flex items-center">
                   <BriefcaseIcon className="h-5 w-5 mr-2" />
                   Portfolio & Case Studies
                 </h2>
@@ -273,24 +273,24 @@ export default function TeamProfilePage() {
               <div className="px-6 py-4">
                 <div className="space-y-4">
                   {team.portfolioItems.map((item, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <h3 className="font-medium text-gray-900">{item.title}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                    <div key={index} className="border border-border rounded-lg p-4">
+                      <h3 className="font-medium text-text-primary">{item.title}</h3>
+                      <p className="text-sm text-text-secondary mt-1">{item.description}</p>
                       {item.client && (
-                        <p className="text-xs text-gray-500 mt-2">Client: {item.client}</p>
+                        <p className="text-xs text-text-tertiary mt-2">Client: {item.client}</p>
                       )}
                       <div className="flex items-center justify-between mt-3">
-                        <span className="text-sm text-gray-500">{item.duration}</span>
+                        <span className="text-sm text-text-tertiary">{item.duration}</span>
                         {item.value && (
-                          <span className="text-sm font-medium text-green-600">
+                          <span className="text-sm font-medium text-success">
                             ${item.value.toLocaleString()}
                           </span>
                         )}
                       </div>
                       {item.outcomes.length > 0 && (
                         <div className="mt-3">
-                          <p className="text-xs font-medium text-gray-700 mb-1">Key Outcomes:</p>
-                          <ul className="text-xs text-gray-600 space-y-1">
+                          <p className="text-xs font-medium text-text-secondary mb-1">Key Outcomes:</p>
+                          <ul className="text-xs text-text-secondary space-y-1">
                             {item.outcomes.map((outcome, idx) => (
                               <li key={idx}>• {outcome}</li>
                             ))}
@@ -307,22 +307,22 @@ export default function TeamProfilePage() {
           {/* Testimonials */}
           {team.testimonials.length > 0 && (
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900">Client Testimonials</h2>
+              <div className="px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-medium text-text-primary">Client Testimonials</h2>
               </div>
               <div className="px-6 py-4">
                 <div className="space-y-4">
                   {team.testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="border-l-4 border-blue-500 pl-4 py-2">
-                      <blockquote className="text-gray-700 italic mb-2">
+                    <div key={testimonial.id} className="border-l-4 border-navy pl-4 py-2">
+                      <blockquote className="text-text-secondary italic mb-2">
                         "{testimonial.content}"
                       </blockquote>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-text-primary">
                             {testimonial.clientName}
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-text-secondary">
                             {testimonial.clientTitle} at {testimonial.clientCompany}
                           </p>
                         </div>
@@ -349,24 +349,24 @@ export default function TeamProfilePage() {
         <div className="space-y-6">
           {/* Quick Stats */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Quick Stats</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Quick Stats</h2>
             </div>
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Profile Views</span>
+                <span className="text-sm text-text-secondary">Profile Views</span>
                 <span className="text-sm font-medium">{team.viewCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Interest Expressions</span>
+                <span className="text-sm text-text-secondary">Interest Expressions</span>
                 <span className="text-sm font-medium">{team.expressionsOfInterest}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Active Opportunities</span>
+                <span className="text-sm text-text-secondary">Active Opportunities</span>
                 <span className="text-sm font-medium">{team.activeOpportunities}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Team Cohesion</span>
+                <span className="text-sm text-text-secondary">Team Cohesion</span>
                 <span className="text-sm font-medium">{team.dynamics.cohesionScore}/10</span>
               </div>
             </div>
@@ -374,13 +374,13 @@ export default function TeamProfilePage() {
 
           {/* Specializations */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Specializations</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Specializations</h2>
             </div>
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
                 {team.specializations.map((spec) => (
-                  <span key={spec} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                  <span key={spec} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800">
                     {spec}
                   </span>
                 ))}
@@ -390,13 +390,13 @@ export default function TeamProfilePage() {
 
           {/* Industries */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Industries</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Industries</h2>
             </div>
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
                 {team.industry.map((ind) => (
-                  <span key={ind} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  <span key={ind} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
                     {ind}
                   </span>
                 ))}
@@ -407,25 +407,25 @@ export default function TeamProfilePage() {
           {/* Compensation */}
           {isCompanyUser && (
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900 flex items-center">
+              <div className="px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-medium text-text-primary flex items-center">
                   <CurrencyDollarIcon className="h-5 w-5 mr-2" />
                   Compensation Expectations
                 </h2>
               </div>
               <div className="px-6 py-4 space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Total Team Range</span>
+                  <span className="text-sm text-text-secondary">Total Team Range</span>
                   <span className="text-sm font-medium">
                     {team.compensationExpectations.currency} {team.compensationExpectations.totalTeamValue.min.toLocaleString()} - {team.compensationExpectations.totalTeamValue.max.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Structure</span>
+                  <span className="text-sm text-text-secondary">Structure</span>
                   <span className="text-sm font-medium">{team.compensationExpectations.structure.replace('_', ' ')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Negotiable</span>
+                  <span className="text-sm text-text-secondary">Negotiable</span>
                   <span className="text-sm font-medium">{team.compensationExpectations.negotiable ? 'Yes' : 'No'}</span>
                 </div>
               </div>
@@ -434,29 +434,29 @@ export default function TeamProfilePage() {
 
           {/* Verification Status */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary flex items-center">
                 <ShieldCheckIcon className="h-5 w-5 mr-2" />
                 Verification
               </h2>
             </div>
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Status</span>
+                <span className="text-sm text-text-secondary">Status</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${verificationStatusColors[team.verification.status]}`}>
                   {team.verification.status}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Documents</span>
+                <span className="text-sm text-text-secondary">Documents</span>
                 <span className="text-sm font-medium">{team.verification.documents.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">References</span>
+                <span className="text-sm text-text-secondary">References</span>
                 <span className="text-sm font-medium">{team.verification.references.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Background Checks</span>
+                <span className="text-sm text-text-secondary">Background Checks</span>
                 <span className="text-sm font-medium">{team.verification.backgroundChecks.length}</span>
               </div>
             </div>
@@ -464,25 +464,25 @@ export default function TeamProfilePage() {
 
           {/* Availability */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary flex items-center">
                 <ClockIcon className="h-5 w-5 mr-2" />
                 Availability
               </h2>
             </div>
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Status</span>
+                <span className="text-sm text-text-secondary">Status</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${availabilityColors[team.availability.status]}`}>
                   {team.availability.status.replace('_', ' ')}
                 </span>
               </div>
               <div>
-                <span className="text-sm text-gray-600">Timeline</span>
+                <span className="text-sm text-text-secondary">Timeline</span>
                 <p className="text-sm font-medium mt-1">{team.availability.timeline}</p>
               </div>
               <div>
-                <span className="text-sm text-gray-600">Liftout Readiness</span>
+                <span className="text-sm text-text-secondary">Liftout Readiness</span>
                 <p className="text-sm font-medium mt-1">{team.liftoutHistory.liftoutReadiness.replace('_', ' ')}</p>
               </div>
             </div>

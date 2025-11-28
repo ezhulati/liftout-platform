@@ -6,13 +6,13 @@ export default function NegotiationsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-text-primary">
           Team Acquisition Negotiations
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <p className="mt-2 text-lg text-text-secondary">
           Structured negotiation workflow for strategic team liftout deals
         </p>
-        <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="mt-4 bg-success-light border border-green-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -30,14 +30,14 @@ export default function NegotiationsPage() {
 
       <div className="space-y-8">
         {/* Deal Overview */}
-        <Suspense fallback={<div className="animate-pulse h-64 bg-gray-200 rounded-lg"></div>}>
+        <Suspense fallback={<div className="animate-pulse h-64 bg-bg-elevated rounded-lg"></div>}>
           <NegotiationDashboard />
         </Suspense>
 
         {/* Term Sheet Management */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Term Sheet Details</h2>
-          <Suspense fallback={<div className="animate-pulse h-96 bg-gray-200 rounded-lg"></div>}>
+          <h2 className="text-2xl font-bold text-text-primary mb-6">Term Sheet Details</h2>
+          <Suspense fallback={<div className="animate-pulse h-96 bg-bg-elevated rounded-lg"></div>}>
             <TermSheetManager />
           </Suspense>
         </div>

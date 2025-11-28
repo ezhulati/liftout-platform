@@ -130,7 +130,7 @@ export default function EditTeamPage() {
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center text-text-secondary hover:text-text-primary mb-4"
         >
           <ArrowLeftIcon className="h-5 w-5 mr-2" />
           Back to Team Profile
@@ -141,8 +141,8 @@ export default function EditTeamPage() {
             <UserGroupIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Edit Team Profile</h1>
-            <p className="text-gray-600">Update your team information and liftout availability</p>
+            <h1 className="text-3xl font-bold text-text-primary">Edit Team Profile</h1>
+            <p className="text-text-secondary">Update your team information and liftout availability</p>
           </div>
         </div>
       </div>
@@ -150,13 +150,13 @@ export default function EditTeamPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Basic Information */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Basic Information</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Basic Information</h2>
           </div>
           <div className="px-6 py-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="teamName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="teamName" className="block text-sm font-medium text-text-secondary mb-2">
                   Team Name *
                 </label>
                 <input
@@ -171,7 +171,7 @@ export default function EditTeamPage() {
               </div>
               
               <div>
-                <label htmlFor="currentCompany" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="currentCompany" className="block text-sm font-medium text-text-secondary mb-2">
                   Current Company *
                 </label>
                 <input
@@ -187,7 +187,7 @@ export default function EditTeamPage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-text-secondary mb-2">
                 Team Description *
               </label>
               <textarea
@@ -204,7 +204,7 @@ export default function EditTeamPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="teamSize" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="teamSize" className="block text-sm font-medium text-text-secondary mb-2">
                   Team Size *
                 </label>
                 <input
@@ -221,7 +221,7 @@ export default function EditTeamPage() {
               </div>
 
               <div>
-                <label htmlFor="yearsWorkingTogether" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="yearsWorkingTogether" className="block text-sm font-medium text-text-secondary mb-2">
                   Years Working Together *
                 </label>
                 <input
@@ -239,7 +239,7 @@ export default function EditTeamPage() {
               </div>
 
               <div>
-                <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="industry" className="block text-sm font-medium text-text-secondary mb-2">
                   Primary Industry *
                 </label>
                 <select
@@ -264,8 +264,8 @@ export default function EditTeamPage() {
 
         {/* Specializations */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Specializations & Skills</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Specializations & Skills</h2>
           </div>
           <div className="px-6 py-6">
             <div className="mb-4">
@@ -292,13 +292,13 @@ export default function EditTeamPage() {
               {formData.specializations.map((spec, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800"
                 >
                   {spec}
                   <button
                     type="button"
                     onClick={() => removeSpecialization(index)}
-                    className="ml-2 text-blue-600 hover:text-blue-800"
+                    className="ml-2 text-navy hover:text-blue-800"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>
@@ -310,8 +310,8 @@ export default function EditTeamPage() {
 
         {/* Achievements */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Key Achievements</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Key Achievements</h2>
           </div>
           <div className="px-6 py-6">
             <div className="mb-4">
@@ -338,14 +338,14 @@ export default function EditTeamPage() {
               {formData.achievements.map((achievement, index) => (
                 <div
                   key={index}
-                  className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
+                  className="flex items-start space-x-3 p-3 bg-bg-alt rounded-lg"
                 >
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span className="flex-1 text-gray-700">{achievement}</span>
+                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
+                  <span className="flex-1 text-text-secondary">{achievement}</span>
                   <button
                     type="button"
                     onClick={() => removeAchievement(index)}
-                    className="text-gray-400 hover:text-red-500"
+                    className="text-text-tertiary hover:text-error"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>
@@ -357,13 +357,13 @@ export default function EditTeamPage() {
 
         {/* Location & Availability */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Location & Availability</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Location & Availability</h2>
           </div>
           <div className="px-6 py-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="location" className="block text-sm font-medium text-text-secondary mb-2">
                   Primary Location *
                 </label>
                 <input
@@ -379,7 +379,7 @@ export default function EditTeamPage() {
               </div>
 
               <div>
-                <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="availability" className="block text-sm font-medium text-text-secondary mb-2">
                   Liftout Availability *
                 </label>
                 <select
@@ -399,7 +399,7 @@ export default function EditTeamPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="noticeRequired" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="noticeRequired" className="block text-sm font-medium text-text-secondary mb-2">
                   Notice Required
                 </label>
                 <input
@@ -420,9 +420,9 @@ export default function EditTeamPage() {
                   name="remoteWork"
                   checked={formData.remoteWork}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-navy focus:ring-blue-500 border-border rounded"
                 />
-                <label htmlFor="remoteWork" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remoteWork" className="ml-2 block text-sm text-text-primary">
                   Open to remote/hybrid opportunities
                 </label>
               </div>
@@ -432,13 +432,13 @@ export default function EditTeamPage() {
 
         {/* Compensation */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Compensation Expectations</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Compensation Expectations</h2>
           </div>
           <div className="px-6 py-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="compensationExpectations.min" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="compensationExpectations.min" className="block text-sm font-medium text-text-secondary mb-2">
                   Minimum (Total Team)
                 </label>
                 <input
@@ -453,7 +453,7 @@ export default function EditTeamPage() {
               </div>
 
               <div>
-                <label htmlFor="compensationExpectations.max" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="compensationExpectations.max" className="block text-sm font-medium text-text-secondary mb-2">
                   Maximum (Total Team)
                 </label>
                 <input
@@ -468,7 +468,7 @@ export default function EditTeamPage() {
               </div>
 
               <div>
-                <label htmlFor="compensationExpectations.currency" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="compensationExpectations.currency" className="block text-sm font-medium text-text-secondary mb-2">
                   Currency
                 </label>
                 <select
@@ -489,8 +489,8 @@ export default function EditTeamPage() {
 
         {/* Privacy */}
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Privacy Settings</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Privacy Settings</h2>
           </div>
           <div className="px-6 py-6">
             <div className="flex items-center">
@@ -500,9 +500,9 @@ export default function EditTeamPage() {
                 name="confidentialProfile"
                 checked={formData.confidentialProfile}
                 onChange={handleInputChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-navy focus:ring-blue-500 border-border rounded"
               />
-              <label htmlFor="confidentialProfile" className="ml-2 block text-sm text-gray-900">
+              <label htmlFor="confidentialProfile" className="ml-2 block text-sm text-text-primary">
                 Make profile confidential (only visible to verified companies)
               </label>
             </div>

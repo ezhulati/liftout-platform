@@ -7,13 +7,13 @@ export default function DueDiligencePage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-text-primary">
           Due Diligence Management
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <p className="mt-2 text-lg text-text-secondary">
           Comprehensive evaluation and risk assessment for strategic team acquisition
         </p>
-        <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-4 bg-navy-50 border border-blue-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -31,22 +31,22 @@ export default function DueDiligencePage() {
 
       <div className="space-y-8">
         {/* Overview Section */}
-        <Suspense fallback={<div className="animate-pulse h-64 bg-gray-200 rounded-lg"></div>}>
+        <Suspense fallback={<div className="animate-pulse h-64 bg-bg-elevated rounded-lg"></div>}>
           <DueDiligenceOverview />
         </Suspense>
 
         {/* Reference Management */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Reference Validation</h2>
-          <Suspense fallback={<div className="animate-pulse h-64 bg-gray-200 rounded-lg"></div>}>
+          <h2 className="text-2xl font-bold text-text-primary mb-6">Reference Validation</h2>
+          <Suspense fallback={<div className="animate-pulse h-64 bg-bg-elevated rounded-lg"></div>}>
             <ReferenceManager teamId="team-goldman-analytics" />
           </Suspense>
         </div>
 
         {/* Detailed Checklist */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Detailed Evaluation Checklist</h2>
-          <Suspense fallback={<div className="animate-pulse space-y-4">{[...Array(5)].map((_, i) => <div key={i} className="h-24 bg-gray-200 rounded"></div>)}</div>}>
+          <h2 className="text-2xl font-bold text-text-primary mb-6">Detailed Evaluation Checklist</h2>
+          <Suspense fallback={<div className="animate-pulse space-y-4">{[...Array(5)].map((_, i) => <div key={i} className="h-24 bg-bg-elevated rounded"></div>)}</div>}>
             <DueDiligenceChecklist />
           </Suspense>
         </div>

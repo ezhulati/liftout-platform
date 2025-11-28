@@ -11,7 +11,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }
@@ -19,8 +19,8 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="text-center py-12">
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Authentication Required</h3>
-        <p className="mt-1 text-sm text-gray-500">Please log in to access your profile.</p>
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Authentication Required</h3>
+        <p className="mt-1 text-sm text-text-tertiary">Please log in to access your profile.</p>
       </div>
     );
   }
@@ -34,8 +34,8 @@ export default function ProfilePage() {
 
   return (
     <div className="text-center py-12">
-      <h3 className="mt-2 text-sm font-medium text-gray-900">Profile Setup Required</h3>
-      <p className="mt-1 text-sm text-gray-500">Please complete your onboarding to set up your profile.</p>
+      <h3 className="mt-2 text-sm font-medium text-text-primary">Profile Setup Required</h3>
+      <p className="mt-1 text-sm text-text-tertiary">Please complete your onboarding to set up your profile.</p>
     </div>
   );
 }

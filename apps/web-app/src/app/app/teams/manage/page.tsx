@@ -133,7 +133,7 @@ export default function TeamManagePage() {
   if (isLoading) {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-navy"></div>
       </div>
     );
   }
@@ -142,8 +142,8 @@ export default function TeamManagePage() {
     return (
       <div className="text-center py-12">
         <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-red-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Unable to load team data</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Unable to load team data</h3>
+        <p className="mt-1 text-sm text-text-tertiary">
           {error?.message || 'Please try again later.'}
         </p>
       </div>
@@ -159,7 +159,7 @@ export default function TeamManagePage() {
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center text-text-secondary hover:text-text-primary mb-4"
         >
           <ArrowLeftIcon className="h-5 w-5 mr-2" />
           Back to Team Profile
@@ -171,8 +171,8 @@ export default function TeamManagePage() {
               <UserGroupIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Team Management</h1>
-              <p className="text-gray-600">{teamData.teamName}</p>
+              <h1 className="text-3xl font-bold text-text-primary">Team Management</h1>
+              <p className="text-text-secondary">{teamData.teamName}</p>
             </div>
           </div>
 
@@ -190,28 +190,28 @@ export default function TeamManagePage() {
 
       {/* Team Overview */}
       <div className="card mb-6">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Team Overview</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Team Overview</h2>
         </div>
         <div className="px-6 py-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{teamData.teamSize}</div>
-              <div className="text-sm text-gray-600">Current Members</div>
+              <div className="text-2xl font-bold text-navy">{teamData.teamSize}</div>
+              <div className="text-sm text-text-secondary">Current Members</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{teamData.pendingInvitations.length}</div>
-              <div className="text-sm text-gray-600">Pending Invitations</div>
+              <div className="text-2xl font-bold text-success">{teamData.pendingInvitations.length}</div>
+              <div className="text-sm text-text-secondary">Pending Invitations</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{teamData.maxTeamSize}</div>
-              <div className="text-sm text-gray-600">Max Team Size</div>
+              <div className="text-sm text-text-secondary">Max Team Size</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {teamData.maxTeamSize - teamData.teamSize}
               </div>
-              <div className="text-sm text-gray-600">Available Spots</div>
+              <div className="text-sm text-text-secondary">Available Spots</div>
             </div>
           </div>
         </div>
@@ -219,13 +219,13 @@ export default function TeamManagePage() {
 
       {/* Current Members */}
       <div className="card mb-6">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Team Members ({allMembers.length})</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Team Members ({allMembers.length})</h2>
         </div>
         <div className="px-6 py-6">
           <div className="space-y-4">
             {allMembers.map((member) => (
-              <div key={member.userId} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div key={member.userId} className="flex items-center justify-between p-4 border border-border rounded-lg">
                 <div className="flex items-center space-x-4">
                   <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
                     <span className="text-sm font-medium text-white">
@@ -234,13 +234,13 @@ export default function TeamManagePage() {
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-medium text-gray-900">{member.name}</h3>
+                      <h3 className="font-medium text-text-primary">{member.name}</h3>
                       {member.role === 'leader' && (
-                        <CheckBadgeIcon className="h-5 w-5 text-blue-500" />
+                        <CheckBadgeIcon className="h-5 w-5 text-navy" />
                       )}
                     </div>
-                    <p className="text-sm text-gray-600">{member.title}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm text-text-secondary">{member.title}</p>
+                    <p className="text-xs text-text-tertiary">
                       Joined {formatDistanceToNow(member.joinedAt.toDate(), { addSuffix: true })}
                     </p>
                   </div>
@@ -249,8 +249,8 @@ export default function TeamManagePage() {
                 <div className="flex items-center space-x-2">
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                     member.role === 'leader' 
-                      ? 'bg-blue-100 text-blue-800' 
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-navy-50 text-blue-800' 
+                      : 'bg-bg-alt text-text-primary'
                   }`}>
                     {member.role === 'leader' ? 'Team Leader' : 'Member'}
                   </span>
@@ -258,7 +258,7 @@ export default function TeamManagePage() {
                   {isLeader && member.role !== 'leader' && (
                     <button
                       onClick={() => handleRemoveMember(member.userId, member.name)}
-                      className="text-gray-400 hover:text-red-500 p-1"
+                      className="text-text-tertiary hover:text-error p-1"
                       title="Remove member"
                     >
                       <UserMinusIcon className="h-4 w-4" />
@@ -274,35 +274,35 @@ export default function TeamManagePage() {
       {/* Pending Invitations */}
       {teamData.pendingInvitations.length > 0 && (
         <div className="card mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">
               Pending Invitations ({teamData.pendingInvitations.length})
             </h2>
           </div>
           <div className="px-6 py-6">
             <div className="space-y-4">
               {teamData.pendingInvitations.map((invitation) => (
-                <div key={invitation.id} className="flex items-center justify-between p-4 border border-yellow-200 bg-yellow-50 rounded-lg">
+                <div key={invitation.id} className="flex items-center justify-between p-4 border border-yellow-200 bg-gold-50 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="h-10 w-10 rounded-full bg-yellow-200 flex items-center justify-center">
-                      <EnvelopeIcon className="h-5 w-5 text-yellow-600" />
+                      <EnvelopeIcon className="h-5 w-5 text-gold" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900">{invitation.invitedEmail}</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="font-medium text-text-primary">{invitation.invitedEmail}</h3>
+                      <p className="text-sm text-text-secondary">
                         Invited {formatDistanceToNow(invitation.invitedAt.toDate(), { addSuffix: true })}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-text-tertiary">
                         Expires {formatDistanceToNow(invitation.expiresAt.toDate(), { addSuffix: true })}
                       </p>
                       {invitation.message && (
-                        <p className="text-sm text-gray-700 mt-1 italic">"{invitation.message}"</p>
+                        <p className="text-sm text-text-secondary mt-1 italic">"{invitation.message}"</p>
                       )}
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <span className="flex items-center px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+                    <span className="flex items-center px-2 py-1 text-xs font-medium bg-gold-100 text-yellow-800 rounded-full">
                       <ClockIcon className="h-3 w-3 mr-1" />
                       Pending
                     </span>
@@ -310,7 +310,7 @@ export default function TeamManagePage() {
                     {isLeader && (
                       <button
                         onClick={() => handleCancelInvitation(invitation.id, invitation.invitedEmail)}
-                        className="text-gray-400 hover:text-red-500 p-1"
+                        className="text-text-tertiary hover:text-error p-1"
                         title="Cancel invitation"
                       >
                         <XMarkIcon className="h-4 w-4" />
@@ -327,13 +327,13 @@ export default function TeamManagePage() {
       {/* Required Skills */}
       {teamData.requiredSkills && teamData.requiredSkills.length > 0 && (
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Skills We're Looking For</h2>
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary">Skills We're Looking For</h2>
           </div>
           <div className="px-6 py-6">
             <div className="flex flex-wrap gap-2">
               {teamData.requiredSkills.map((skill) => (
-                <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
                   {skill}
                 </span>
               ))}
@@ -344,13 +344,13 @@ export default function TeamManagePage() {
 
       {/* Invite Form Modal */}
       {showInviteForm && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-bg-alt0 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Invite Team Member</h3>
+              <h3 className="text-lg font-medium text-text-primary">Invite Team Member</h3>
               <button
                 onClick={() => setShowInviteForm(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-text-tertiary hover:text-text-secondary"
               >
                 <XMarkIcon className="h-6 w-6" />
               </button>
@@ -358,7 +358,7 @@ export default function TeamManagePage() {
 
             <form onSubmit={handleInvite} className="space-y-4">
               <div>
-                <label htmlFor="inviteEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="inviteEmail" className="block text-sm font-medium text-text-secondary mb-1">
                   Email Address *
                 </label>
                 <input
@@ -373,7 +373,7 @@ export default function TeamManagePage() {
               </div>
 
               <div>
-                <label htmlFor="inviteMessage" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="inviteMessage" className="block text-sm font-medium text-text-secondary mb-1">
                   Personal Message (Optional)
                 </label>
                 <textarea

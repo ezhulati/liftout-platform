@@ -20,19 +20,19 @@ function classNames(...classes: string[]) {
 function getStatusColor(status: string) {
   switch (status) {
     case 'submitted':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-navy-50 text-blue-800';
     case 'under_review':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-gold-100 text-yellow-800';
     case 'interview_scheduled':
       return 'bg-purple-100 text-purple-800';
     case 'offer_made':
-      return 'bg-green-100 text-green-800';
+      return 'bg-success-light text-success-dark';
     case 'accepted':
-      return 'bg-green-100 text-green-800';
+      return 'bg-success-light text-success-dark';
     case 'rejected':
       return 'bg-red-100 text-red-800';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-bg-alt text-text-primary';
   }
 }
 
@@ -71,11 +71,11 @@ export default function ApplicationsPage() {
         {[1, 2, 3].map((i) => (
           <div key={i} className="card animate-pulse">
             <div className="flex items-center space-x-4">
-              <div className="h-16 w-16 bg-gray-200 rounded-lg"></div>
+              <div className="h-16 w-16 bg-bg-elevated rounded-lg"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-64 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-32"></div>
+                <div className="h-4 bg-bg-elevated rounded w-48 mb-2"></div>
+                <div className="h-3 bg-bg-elevated rounded w-64 mb-2"></div>
+                <div className="h-3 bg-bg-elevated rounded w-32"></div>
               </div>
             </div>
           </div>
@@ -101,11 +101,11 @@ export default function ApplicationsPage() {
         </div>
 
         <div className="text-center py-12">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+          <h3 className="mt-2 text-sm font-medium text-text-primary">
             {isCompanyUser ? 'No applications yet' : 'No applications submitted'}
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-text-tertiary">
             {isCompanyUser 
               ? 'Teams will appear here when they express interest in your liftout opportunities.'
               : 'Start by browsing liftout opportunities and expressing interest in ones that match your team.'
@@ -153,7 +153,7 @@ export default function ApplicationsPage() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className="text-lg font-medium text-text-primary">
                       {application.opportunity?.title || 'Opportunity'}
                     </h3>
                     <span className={classNames(
@@ -164,7 +164,7 @@ export default function ApplicationsPage() {
                     </span>
                   </div>
 
-                  <div className="flex items-center text-sm text-gray-500 mb-3 space-x-4">
+                  <div className="flex items-center text-sm text-text-tertiary mb-3 space-x-4">
                     <span className="font-medium">{application.opportunity?.company?.name || 'Company'}</span>
                     <div className="flex items-center">
                       <ClockIcon className="h-4 w-4 mr-1" />
@@ -172,7 +172,7 @@ export default function ApplicationsPage() {
                     </div>
                   </div>
 
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-text-secondary">
                     <p className="line-clamp-2">
                       <span className="font-medium">Team:</span> {application.team?.name || 'Team'}
                     </p>
@@ -185,9 +185,9 @@ export default function ApplicationsPage() {
 
                   {/* Interview info if scheduled */}
                   {application.interviewScheduledAt && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Interview Scheduled</h4>
-                      <p className="text-xs text-gray-500">
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <h4 className="text-sm font-medium text-text-primary mb-2">Interview Scheduled</h4>
+                      <p className="text-xs text-text-tertiary">
                         {formatDistanceToNow(new Date(application.interviewScheduledAt), { addSuffix: true })}
                       </p>
                     </div>
@@ -206,10 +206,10 @@ export default function ApplicationsPage() {
                 
                 {isCompanyUser && application.status === 'submitted' && (
                   <div className="flex space-x-2">
-                    <button className="btn-secondary text-green-600 hover:text-green-700">
+                    <button className="btn-secondary text-success hover:text-green-700">
                       Review
                     </button>
-                    <button className="btn-secondary text-red-600 hover:text-red-700">
+                    <button className="btn-secondary text-error hover:text-red-700">
                       Decline
                     </button>
                   </div>
