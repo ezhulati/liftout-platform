@@ -180,7 +180,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
   return (
     <div className="card max-w-2xl">
       <div className="px-6 py-4 border-b border-border">
-        <h2 className="text-lg font-medium text-text-primary">Share document</h2>
+        <h2 className="text-lg font-bold text-text-primary">Share document</h2>
         <p className="text-sm text-text-secondary">
           Control who can access "{document.name}"
         </p>
@@ -189,7 +189,7 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
       {showShareUrl ? (
         <div className="p-6">
           <div className="mb-6">
-            <h3 className="text-lg font-medium text-text-primary mb-2">Document shared successfully</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-2">Document shared successfully</h3>
             <p className="text-sm text-text-secondary">
               Your document sharing settings have been updated. Use the link below to share the document.
             </p>

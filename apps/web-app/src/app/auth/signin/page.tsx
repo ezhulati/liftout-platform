@@ -140,29 +140,28 @@ export default function SignInPage() {
           {/* Demo Credentials - Less prominent, below main form conceptually */}
           <details className="mb-6 group">
             <summary className="cursor-pointer text-sm text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
-              <span className="text-gold">▸</span>
+              <span className="text-gold group-open:rotate-90 transition-transform">▸</span>
               <span className="group-open:hidden">Try demo credentials</span>
               <span className="hidden group-open:inline">Hide demo credentials</span>
             </summary>
-            <div className="mt-3 bg-bg-alt border border-border-decorative rounded-lg p-4">
-              <p className="text-text-tertiary text-sm mb-3">
-                Click to fill credentials:
+            <div className="mt-3 bg-bg-alt border border-border rounded-lg p-4">
+              <p className="text-text-secondary text-sm mb-3">
+                Click to auto-fill credentials:
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('individual')}
-                  className="text-link text-sm"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-navy bg-white border border-navy/20 rounded-lg hover:bg-navy-50 hover:border-navy/40 transition-colors"
                 >
-                  Team lead demo
+                  Team lead
                 </button>
-                <span className="text-text-tertiary">|</span>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('company')}
-                  className="text-link text-sm"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-navy bg-white border border-navy/20 rounded-lg hover:bg-navy-50 hover:border-navy/40 transition-colors"
                 >
-                  Company demo
+                  Company
                 </button>
               </div>
             </div>
