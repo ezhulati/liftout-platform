@@ -106,3 +106,28 @@ export function getAllTeams(): Team[] {
 export function addTeam(team: Team): void {
   teams.push(team);
 }
+
+export function updateTeam(id: string, updates: Partial<Team>): Team | undefined {
+  const index = teams.findIndex(team => team.id === id);
+  if (index === -1) {
+    return undefined;
+  }
+
+  teams[index] = {
+    ...teams[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  return teams[index];
+}
+
+export function deleteTeam(id: string): boolean {
+  const index = teams.findIndex(team => team.id === id);
+  if (index === -1) {
+    return false;
+  }
+
+  teams.splice(index, 1);
+  return true;
+}

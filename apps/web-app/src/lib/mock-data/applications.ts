@@ -205,6 +205,46 @@ export function addMockApplicationFeedback(
 }
 
 /**
+ * Make an offer on an application
+ */
+export function makeMockOffer(
+  id: string,
+  offerDetails?: {
+    compensation?: string;
+    startDate?: string;
+    terms?: string;
+  }
+): MockApplication | null {
+  const appIndex = applications.findIndex(app => app.id === id);
+  if (appIndex === -1) return null;
+
+  applications[appIndex] = {
+    ...applications[appIndex],
+    status: 'offer',
+    notes: offerDetails ? `Offer: ${offerDetails.compensation || 'Competitive'}, Start: ${offerDetails.startDate || 'TBD'}` : applications[appIndex].notes,
+    updatedAt: new Date().toISOString()
+  };
+
+  return applications[appIndex];
+}
+
+/**
+ * Withdraw an application
+ */
+export function withdrawMockApplication(id: string): MockApplication | null {
+  const appIndex = applications.findIndex(app => app.id === id);
+  if (appIndex === -1) return null;
+
+  applications[appIndex] = {
+    ...applications[appIndex],
+    status: 'withdrawn',
+    updatedAt: new Date().toISOString()
+  };
+
+  return applications[appIndex];
+}
+
+/**
  * Reset applications to initial mock data
  */
 export function resetMockApplications(): void {

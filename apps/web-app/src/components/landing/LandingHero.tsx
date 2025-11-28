@@ -4,6 +4,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
+/**
+ * Practical UI Hero Section
+ *
+ * Typography Scale (1.25 Major Third):
+ * - H1: 44px bold (text-4xl sm:text-5xl)
+ * - Body: 18px (text-lg)
+ * - Small: 15-16px (text-base)
+ *
+ * Spacing (8pt grid):
+ * - Section: XXL (80pt) padding
+ * - Between elements: M (24pt) to L (32pt)
+ *
+ * Touch targets: 48pt minimum
+ * Buttons: Verb + Noun labels
+ */
+
 export function LandingHero() {
   const scrollToContent = () => {
     const howItWorks = document.getElementById('how-it-works');
@@ -37,18 +53,22 @@ export function LandingHero() {
                 a proven track record together.
               </p>
 
-              {/* CTAs - Primary + tertiary per Practical UI */}
+              {/* CTAs - Practical UI: Primary (solid) + Tertiary (underlined text) */}
+              {/* Left-aligned, Primary first, 16pt gap, 48pt touch targets */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                {/* Primary button - ONE per screen, solid fill, Verb+Noun */}
                 <Link
                   href="/auth/signup"
-                  className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 group"
+                  className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-navy text-white font-semibold rounded-lg shadow-lg shadow-navy/25 hover:shadow-xl hover:shadow-navy/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                 >
-                  Browse verified teams
-                  <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  <span className="relative">Browse verified teams</span>
+                  <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
+                {/* Tertiary button - underlined text, for secondary action */}
                 <Link
                   href="/for-teams"
-                  className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center"
+                  className="min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center text-navy font-medium underline underline-offset-4 decoration-navy/30 hover:decoration-navy transition-colors"
                 >
                   List your team
                 </Link>

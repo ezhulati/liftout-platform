@@ -4,7 +4,7 @@ import { TeamHero } from '@/components/landing/TeamHero';
 import { HowItWorksTeams } from '@/components/landing/HowItWorksTeams';
 import { TeamFeatures } from '@/components/landing/TeamFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
-import { FAQ } from '@/components/landing/FAQ';
+import { FAQTeams } from '@/components/landing/FAQTeams';
 import { TeamCTA } from '@/components/landing/TeamCTA';
 
 export const metadata = {
@@ -21,7 +21,7 @@ export default function ForTeamsPage() {
         <HowItWorksTeams />
         <TeamFeatures />
         <TrustIndicators />
-        <FAQ />
+        <FAQTeams />
         <TeamCTA />
       </main>
       <LandingFooter />

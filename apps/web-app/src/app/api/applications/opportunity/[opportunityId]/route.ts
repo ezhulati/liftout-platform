@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { isApiServerAvailable } from '@/lib/api-helpers';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
 
 export async function GET(
   request: NextRequest,
@@ -16,8 +17,16 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const apiAvailable = await isApiServerAvailable();
+    if (!apiAvailable) {
+      return NextResponse.json(
+        { error: 'API server unavailable. Please start the API service.' },
+        { status: 503 }
+      );
+    }
+
     const response = await fetch(
-      `${API_BASE}/api/applications/opportunity/${opportunityId}`,
+      `${API_BASE}/api/applications?opportunityId=${opportunityId}`,
       {
         headers: {
           'Content-Type': 'application/json',

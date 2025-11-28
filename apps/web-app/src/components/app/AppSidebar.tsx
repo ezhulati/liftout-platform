@@ -118,14 +118,18 @@ export function AppSidebar() {
         <div className="flex h-full flex-col bg-bg-surface border-r border-border">
           {/* Header */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center">
-              <Image
-                src="/Liftout-logo-dark.png"
-                alt="Liftout"
-                width={220}
-                height={60}
-                className="h-12 w-auto"
-              />
+            <Link href="/app/dashboard" className="flex items-center group">
+              {/* Premium badge - app variant */}
+              <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-lg px-3 py-1.5 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/60 via-transparent to-transparent" />
+                <Image
+                  src="/Liftout-logo-dark.png"
+                  alt="Liftout"
+                  width={160}
+                  height={44}
+                  className="h-9 w-auto relative"
+                />
+              </div>
             </Link>
             <button
               type="button"
@@ -186,14 +190,18 @@ export function AppSidebar() {
         <div className="flex flex-col flex-grow bg-bg-surface border-r border-border">
           {/* Header */}
           <div className="flex items-center h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center">
-              <Image
-                src="/Liftout-logo-dark.png"
-                alt="Liftout"
-                width={220}
-                height={60}
-                className="h-12 w-auto"
-              />
+            <Link href="/app/dashboard" className="flex items-center group">
+              {/* Premium badge - app variant */}
+              <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-lg px-3 py-1.5 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/60 via-transparent to-transparent" />
+                <Image
+                  src="/Liftout-logo-dark.png"
+                  alt="Liftout"
+                  width={160}
+                  height={44}
+                  className="h-9 w-auto relative"
+                />
+              </div>
             </Link>
           </div>
 

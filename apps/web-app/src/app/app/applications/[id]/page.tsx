@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow, format, addDays } from 'date-fns';
 import {
   ArrowLeftIcon,
   BuildingOffice2Icon,
@@ -17,6 +17,7 @@ import {
   UserGroupIcon,
   BriefcaseIcon,
   ExclamationTriangleIcon,
+  CurrencyDollarIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
@@ -108,6 +109,13 @@ export default function ApplicationDetailPage() {
   const [loading, setLoading] = useState(true);
   const [withdrawing, setWithdrawing] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [interviewDate, setInterviewDate] = useState(format(addDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm"));
+  const [interviewNotes, setInterviewNotes] = useState('');
+  const [offerCompensation, setOfferCompensation] = useState('');
+  const [offerStartDate, setOfferStartDate] = useState(format(addDays(new Date(), 30), 'yyyy-MM-dd'));
 
   const isCompanyUser = session?.user?.userType === 'company';
 
@@ -158,6 +166,91 @@ export default function ApplicationDetailPage() {
       toast.error('Failed to withdraw application');
     } finally {
       setWithdrawing(false);
+    }
+  };
+
+  const handleStartReview = async () => {
+    if (!application) return;
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/applications/${application.id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'under_review', notes: 'Application review started' }),
+      });
+      if (!response.ok) throw new Error('Failed to start review');
+      const data = await response.json();
+      setApplication(data.application);
+      toast.success('Review started');
+    } catch (error) {
+      toast.error('Failed to start review');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDecline = async () => {
+    if (!application) return;
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/applications/${application.id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'rejected', notes: 'Application declined' }),
+      });
+      if (!response.ok) throw new Error('Failed to decline');
+      const data = await response.json();
+      setApplication(data.application);
+      toast.success('Application declined');
+    } catch (error) {
+      toast.error('Failed to decline application');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleScheduleInterview = async () => {
+    if (!application || !interviewDate) return;
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/applications/${application.id}/interview`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interviewDate, notes: interviewNotes }),
+      });
+      if (!response.ok) throw new Error('Failed to schedule interview');
+      const data = await response.json();
+      setApplication(data.application);
+      setShowInterviewModal(false);
+      toast.success('Interview scheduled');
+    } catch (error) {
+      toast.error('Failed to schedule interview');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleMakeOffer = async () => {
+    if (!application) return;
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/applications/${application.id}/offer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          compensation: offerCompensation,
+          startDate: offerStartDate,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to make offer');
+      const data = await response.json();
+      setApplication(data.application);
+      setShowOfferModal(false);
+      toast.success('Offer extended successfully');
+    } catch (error) {
+      toast.error('Failed to make offer');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -368,13 +461,15 @@ export default function ApplicationDetailPage() {
                 {isCompanyUser && application.status === 'pending' && (
                   <>
                     <button
-                      onClick={() => toast.success('Review feature coming soon!')}
+                      onClick={handleStartReview}
+                      disabled={actionLoading}
                       className="btn-primary min-h-12 w-full"
                     >
-                      Start Review
+                      {actionLoading ? 'Processing...' : 'Start Review'}
                     </button>
                     <button
-                      onClick={() => toast.success('Decline feature coming soon!')}
+                      onClick={handleDecline}
+                      disabled={actionLoading}
                       className="btn-outline min-h-12 w-full text-error hover:bg-error-light"
                     >
                       Decline
@@ -385,13 +480,15 @@ export default function ApplicationDetailPage() {
                 {isCompanyUser && ['under_review', 'reviewing'].includes(application.status) && (
                   <>
                     <button
-                      onClick={() => toast.success('Interview scheduling coming soon!')}
+                      onClick={() => setShowInterviewModal(true)}
+                      disabled={actionLoading}
                       className="btn-primary min-h-12 w-full"
                     >
                       Schedule Interview
                     </button>
                     <button
-                      onClick={() => toast.success('Decline feature coming soon!')}
+                      onClick={handleDecline}
+                      disabled={actionLoading}
                       className="btn-outline min-h-12 w-full text-error hover:bg-error-light"
                     >
                       Decline
@@ -401,7 +498,8 @@ export default function ApplicationDetailPage() {
 
                 {isCompanyUser && application.status === 'interview' && (
                   <button
-                    onClick={() => toast.success('Offer feature coming soon!')}
+                    onClick={() => setShowOfferModal(true)}
+                    disabled={actionLoading}
                     className="btn-primary min-h-12 w-full"
                   >
                     Make Offer
@@ -469,6 +567,119 @@ export default function ApplicationDetailPage() {
                 className="btn-primary min-h-12 bg-error hover:bg-error/90 disabled:opacity-50"
               >
                 {withdrawing ? 'Withdrawing...' : 'Withdraw Application'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Schedule Interview Modal */}
+      {showInterviewModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-elevated rounded-lg max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-navy-50 flex items-center justify-center">
+                <CalendarIcon className="w-6 h-6 text-navy" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary">Schedule Interview</h2>
+                <p className="text-text-secondary text-sm">Set interview date and time</p>
+              </div>
+            </div>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Interview Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="input-field w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Notes (optional)
+                </label>
+                <textarea
+                  value={interviewNotes}
+                  onChange={(e) => setInterviewNotes(e.target.value)}
+                  placeholder="Interview details, location, or call link..."
+                  className="input-field w-full min-h-[100px]"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowInterviewModal(false)}
+                className="btn-outline min-h-12"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleScheduleInterview}
+                disabled={actionLoading || !interviewDate}
+                className="btn-primary min-h-12 disabled:opacity-50"
+              >
+                {actionLoading ? 'Scheduling...' : 'Schedule Interview'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Make Offer Modal */}
+      {showOfferModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-elevated rounded-lg max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-success-light flex items-center justify-center">
+                <CurrencyDollarIcon className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-text-primary">Make Offer</h2>
+                <p className="text-text-secondary text-sm">Extend an offer to this team</p>
+              </div>
+            </div>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Compensation Package
+                </label>
+                <input
+                  type="text"
+                  value={offerCompensation}
+                  onChange={(e) => setOfferCompensation(e.target.value)}
+                  placeholder="e.g., $200,000 - $250,000 + equity"
+                  className="input-field w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Proposed Start Date
+                </label>
+                <input
+                  type="date"
+                  value={offerStartDate}
+                  onChange={(e) => setOfferStartDate(e.target.value)}
+                  className="input-field w-full"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowOfferModal(false)}
+                className="btn-outline min-h-12"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleMakeOffer}
+                disabled={actionLoading}
+                className="btn-primary min-h-12 disabled:opacity-50"
+              >
+                {actionLoading ? 'Sending Offer...' : 'Send Offer'}
               </button>
             </div>
           </div>

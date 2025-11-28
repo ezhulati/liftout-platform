@@ -83,7 +83,7 @@ const DEMO_TEAM_MANAGEMENT: TeamManagementData = {
       status: 'pending',
       invitedAt: Timestamp.fromDate(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)),
       expiresAt: Timestamp.fromDate(new Date(Date.now() + 4 * 24 * 60 * 60 * 1000)),
-      message: 'Hi David! We\'d love to have you join our data science team at TechFlow. Your expertise in NLP would be a perfect fit for our upcoming projects.',
+      message: "Hi David! We'd love to have you join our data science team at TechFlow. Your expertise in NLP would be a perfect fit for our upcoming projects.",
       role: 'member'
     }
   ],

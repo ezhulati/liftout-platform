@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
 import { FormField, RequiredFieldsNote } from '@/components/ui';
@@ -75,6 +76,7 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
+      // First, create the account
       await signUp({
         email: formData.email,
         password: formData.password,
@@ -86,7 +88,21 @@ export default function SignUpPage() {
         location: formData.location,
       });
 
-      toast.success('Account created successfully!');
+      toast.success('Account created! Signing you in...');
+
+      // Then sign in with the new credentials
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error('Account created but sign in failed. Please sign in manually.');
+        router.push('/auth/signin');
+        return;
+      }
+
       router.push('/app/onboarding');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Sign up failed';
@@ -122,15 +138,19 @@ export default function SignUpPage() {
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
-          {/* Logo */}
-          <Link href="/" className="group">
-            <Image
-              src="/Liftout-logo-white.png"
-              alt="Liftout"
-              width={240}
-              height={66}
-              className="h-[66px] w-auto transition-opacity duration-fast group-hover:opacity-80"
-            />
+          {/* Logo - Premium badge dark variant */}
+          <Link href="/" className="group inline-flex">
+            <div className="relative bg-gradient-to-b from-white/[0.08] to-white/[0.03] rounded-xl px-5 py-2.5 border border-white/10 group-hover:border-white/20 transition-all duration-300">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.05] via-transparent to-transparent" />
+              <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <Image
+                src="/Liftout-logo-white.png"
+                alt="Liftout"
+                width={200}
+                height={52}
+                className="h-[52px] w-auto relative"
+              />
+            </div>
           </Link>
 
           {/* Content */}
@@ -175,15 +195,19 @@ export default function SignUpPage() {
       {/* Right side - Form */}
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
-          {/* Mobile logo */}
-          <Link href="/" className="lg:hidden flex items-center mb-8">
-            <Image
-              src="/Liftout-logo-dark.png"
-              alt="Liftout"
-              width={180}
-              height={50}
-              className="h-12 w-auto"
-            />
+          {/* Mobile logo - Premium badge light variant */}
+          <Link href="/" className="lg:hidden inline-flex mb-8 group">
+            <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-xl px-4 py-2 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/60 via-transparent to-transparent" />
+              <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
+              <Image
+                src="/Liftout-logo-dark.png"
+                alt="Liftout"
+                width={160}
+                height={44}
+                className="h-10 w-auto relative"
+              />
+            </div>
           </Link>
 
           <div className="mb-8">

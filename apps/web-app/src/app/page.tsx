@@ -3,7 +3,7 @@ import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { Testimonials } from '@/components/landing/Testimonials';
-import { FAQ } from '@/components/landing/FAQ';
+import { FAQTabs } from '@/components/landing/FAQTabs';
 import { LandingCTA } from '@/components/landing/LandingCTA';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -18,7 +18,7 @@ export default function HomePage() {
         <LandingFeatures />
         <TrustIndicators />
         <Testimonials />
-        <FAQ />
+        <FAQTabs />
         <LandingCTA />
       </main>
       <LandingFooter />

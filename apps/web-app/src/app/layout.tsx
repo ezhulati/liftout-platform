@@ -3,6 +3,9 @@ import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import { Providers } from './providers';
 import './globals.css';
 
+// Force dynamic rendering to avoid SSG issues with SessionProvider
+export const dynamic = 'force-dynamic';
+
 // Heading font - Elegant serif for premium feel
 const playfair = Playfair_Display({
   subsets: ['latin'],

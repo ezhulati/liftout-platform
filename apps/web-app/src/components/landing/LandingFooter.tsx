@@ -51,16 +51,23 @@ export function LandingFooter() {
           <div className="lg:col-span-2">
             <Link
               href="/"
-              className="inline-flex items-center mb-6"
+              className="inline-flex items-center mb-6 group"
               aria-label="Liftout Home"
             >
-              <Image
-                src="/Liftout-logo-white.png"
-                alt="Liftout"
-                width={320}
-                height={88}
-                className="h-20 w-auto"
-              />
+              {/* Premium badge - dark variant with glass effect */}
+              <div className="relative bg-gradient-to-b from-white/[0.08] to-white/[0.03] rounded-xl px-5 py-3 border border-white/10 group-hover:border-white/20 transition-all duration-300">
+                {/* Inner glow effect */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.05] via-transparent to-transparent" />
+                {/* Subtle bottom highlight */}
+                <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <Image
+                  src="/Liftout-logo-white.png"
+                  alt="Liftout"
+                  width={280}
+                  height={72}
+                  className="h-16 w-auto relative"
+                />
+              </div>
             </Link>
 
             {/* Practical UI: 18px body text */}
@@ -69,13 +76,13 @@ export function LandingFooter() {
               Connect with proven teams ready for new challenges.
             </p>
 
-            {/* Social links */}
-            <div className="flex gap-4">
+            {/* Social links - Practical UI: 48pt touch targets */}
+            <div className="flex gap-3">
               <a
                 href="https://linkedin.com/company/liftout"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-colors duration-200"
+                className="w-12 h-12 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
                 aria-label="LinkedIn"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -86,7 +93,7 @@ export function LandingFooter() {
                 href="https://twitter.com/liftouthq"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-colors duration-200"
+                className="w-12 h-12 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
                 aria-label="Twitter"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

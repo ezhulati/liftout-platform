@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
-import { getMockOpportunityById } from '@/lib/mock-data';
 
-// GET /api/opportunities/[id] - Get opportunity details
+// GET /api/opportunities/[id] - Get opportunity details (API only)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -16,60 +15,42 @@ export async function GET(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Check if API server is available
   const apiAvailable = await isApiServerAvailable();
+  if (!apiAvailable) {
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
+  }
 
-  if (apiAvailable) {
-    try {
-      const response = await proxyToApiServer(
-        `/api/opportunities/${id}`,
-        { method: 'GET' },
-        session
-      );
+  try {
+    const response = await proxyToApiServer(
+      `/api/opportunities/${id}`,
+      { method: 'GET' },
+      session
+    );
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok) {
-        // Fall back to mock data
-        const mockOpp = getMockOpportunityById(id);
-        if (mockOpp) {
-          return NextResponse.json({ opportunity: mockOpp, _mock: true });
-        }
-        return NextResponse.json(data, { status: response.status });
-      }
-
-      // Transform response to match frontend expectations
-      if (data.success && data.data) {
-        return NextResponse.json({ opportunity: data.data });
-      }
-
-      return NextResponse.json(data);
-    } catch (error) {
-      console.error('Error fetching opportunity:', error);
-      // Fall back to mock data
-      const mockOpp = getMockOpportunityById(id);
-      if (mockOpp) {
-        return NextResponse.json({ opportunity: mockOpp, _mock: true });
-      }
-      return NextResponse.json(
-        { error: 'Failed to fetch opportunity' },
-        { status: 500 }
-      );
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
     }
-  }
 
-  // API server not available, use mock data
-  const mockOpp = getMockOpportunityById(id);
-  if (mockOpp) {
-    return NextResponse.json({ opportunity: mockOpp, _mock: true });
+    if (data.success && data.data) {
+      return NextResponse.json({ opportunity: data.data });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error fetching opportunity from API:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch opportunity' },
+      { status: 500 }
+    );
   }
-  return NextResponse.json(
-    { error: 'Opportunity not found' },
-    { status: 404 }
-  );
 }
 
-// PUT /api/opportunities/[id] - Update opportunity
+// PUT /api/opportunities/[id] - Update opportunity (company only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -88,18 +69,16 @@ export async function PUT(
     );
   }
 
+  const apiAvailable = await isApiServerAvailable();
+  if (!apiAvailable) {
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
-
-    const apiAvailable = await isApiServerAvailable();
-    if (!apiAvailable) {
-      // For mock mode, just return success with the updated data
-      return NextResponse.json({
-        opportunity: { id, ...body },
-        _mock: true,
-        message: 'Update simulated (mock mode)'
-      });
-    }
 
     const response = await proxyToApiServer(
       `/api/opportunities/${id}`,
@@ -122,7 +101,7 @@ export async function PUT(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error updating opportunity:', error);
+    console.error('Error updating opportunity via API:', error);
     return NextResponse.json(
       { error: 'Failed to update opportunity' },
       { status: 500 }
@@ -130,7 +109,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/opportunities/[id] - Delete opportunity
+// DELETE /api/opportunities/[id] - Delete opportunity (company only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -151,11 +130,10 @@ export async function DELETE(
 
   const apiAvailable = await isApiServerAvailable();
   if (!apiAvailable) {
-    return NextResponse.json({
-      success: true,
-      message: 'Delete simulated (mock mode)',
-      _mock: true
-    });
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
   }
 
   try {
@@ -173,7 +151,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, message: 'Opportunity deleted' });
   } catch (error) {
-    console.error('Error deleting opportunity:', error);
+    console.error('Error deleting opportunity via API:', error);
     return NextResponse.json(
       { error: 'Failed to delete opportunity' },
       { status: 500 }
@@ -181,7 +159,7 @@ export async function DELETE(
   }
 }
 
-// PATCH /api/opportunities/[id] - Update opportunity status
+// PATCH /api/opportunities/[id] - Update opportunity status (company only)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -200,20 +178,19 @@ export async function PATCH(
     );
   }
 
+  const apiAvailable = await isApiServerAvailable();
+  if (!apiAvailable) {
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
 
-    const apiAvailable = await isApiServerAvailable();
-    if (!apiAvailable) {
-      return NextResponse.json({
-        opportunity: { id, status: body.status },
-        _mock: true,
-        message: 'Status update simulated (mock mode)'
-      });
-    }
-
     const response = await proxyToApiServer(
-      `/api/opportunities/${id}/status`,
+      `/api/opportunities/${id}`,
       {
         method: 'PATCH',
         body: JSON.stringify(body),
@@ -233,7 +210,7 @@ export async function PATCH(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error updating opportunity status:', error);
+    console.error('Error updating opportunity status via API:', error);
     return NextResponse.json(
       { error: 'Failed to update opportunity status' },
       { status: 500 }

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { teamManagementService } from '@/lib/services/teamManagementService';
 import { toast } from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -32,33 +31,29 @@ export default function TeamManagePage() {
   const [isInviting, setIsInviting] = useState(false);
 
   const { data: teamData, isLoading, error } = useQuery({
-    queryKey: ['team-management', userData?.id],
-    queryFn: async () => {
-      if (!userData?.id) return null;
-      return await teamManagementService.getTeamManagement(userData.id);
-    },
-    enabled: !!userData?.id,
+    queryKey: ['my-team'],
+    queryFn: () => fetch('/api/teams/my-team').then(res => res.json()),
+    enabled: !!userData,
   });
 
   const inviteMutation = useMutation({
-    mutationFn: async (data: { email: string; message?: string }) => {
-      if (!userData?.id || !teamData?.teamId) {
-        throw new Error('User or team not found');
-      }
-      return await teamManagementService.inviteToTeam(
-        teamData.teamId,
-        data.email,
-        userData.id,
-        userData.name,
-        data.message
-      );
+    mutationFn: async (data: { teamId: string, email: string; message?: string }) => {
+        const response = await fetch(`/api/teams/${data.teamId}/members`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: data.email, message: data.message }),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to send invitation');
+        }
+        return response.json();
     },
     onSuccess: () => {
       toast.success('Invitation sent successfully!');
       setInviteEmail('');
       setInviteMessage('');
       setShowInviteForm(false);
-      queryClient.invalidateQueries({ queryKey: ['team-management'] });
+      queryClient.invalidateQueries({ queryKey: ['my-team'] });
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to send invitation');
@@ -66,30 +61,20 @@ export default function TeamManagePage() {
   });
 
   const removeMemberMutation = useMutation({
-    mutationFn: async (memberUserId: string) => {
-      if (!userData?.id) throw new Error('User not found');
-      return await teamManagementService.removeMember(userData.id, memberUserId);
+    mutationFn: async (data: { teamId: string, memberId: string }) => {
+        const response = await fetch(`/api/teams/${data.teamId}/members/${data.memberId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to remove member');
+        }
     },
     onSuccess: () => {
       toast.success('Member removed from team');
-      queryClient.invalidateQueries({ queryKey: ['team-management'] });
+      queryClient.invalidateQueries({ queryKey: ['my-team'] });
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to remove member');
-    },
-  });
-
-  const cancelInvitationMutation = useMutation({
-    mutationFn: async (invitationId: string) => {
-      if (!userData?.id) throw new Error('User not found');
-      return await teamManagementService.cancelInvitation(invitationId, userData.id);
-    },
-    onSuccess: () => {
-      toast.success('Invitation cancelled');
-      queryClient.invalidateQueries({ queryKey: ['team-management'] });
-    },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to cancel invitation');
     },
   });
 
@@ -110,6 +95,7 @@ export default function TeamManagePage() {
     setIsInviting(true);
     try {
       await inviteMutation.mutateAsync({
+        teamId: teamData.id,
         email: inviteEmail.trim(),
         message: inviteMessage.trim() || undefined
       });
@@ -120,13 +106,7 @@ export default function TeamManagePage() {
 
   const handleRemoveMember = async (memberUserId: string, memberName: string) => {
     if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
-      await removeMemberMutation.mutateAsync(memberUserId);
-    }
-  };
-
-  const handleCancelInvitation = async (invitationId: string, email: string) => {
-    if (confirm(`Cancel invitation to ${email}?`)) {
-      await cancelInvitationMutation.mutateAsync(invitationId);
+      await removeMemberMutation.mutateAsync({ teamId: teamData.id, memberId: memberUserId });
     }
   };
 
@@ -150,8 +130,8 @@ export default function TeamManagePage() {
     );
   }
 
-  const isLeader = teamData.leader.userId === userData?.id;
-  const allMembers = [teamData.leader, ...teamData.members];
+  const isLeader = teamData.members.find((m:any) => m.userId === userData?.id)?.isAdmin;
+  const allMembers = teamData.members;
 
   return (
     <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -172,7 +152,7 @@ export default function TeamManagePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Team Management</h1>
-              <p className="text-base font-normal text-text-secondary mt-1">{teamData.teamName}</p>
+              <p className="text-base font-normal text-text-secondary mt-1">{teamData.name}</p>
             </div>
           </div>
 
@@ -188,35 +168,6 @@ export default function TeamManagePage() {
         </div>
       </div>
 
-      {/* Team Overview - Practical UI: bold section headings, consistent typography */}
-      <div className="card mb-6">
-        <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-bold text-text-primary">Team Overview</h2>
-        </div>
-        <div className="px-6 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center p-4 bg-bg-alt rounded-xl">
-              <div className="text-2xl font-bold text-navy">{teamData.teamSize}</div>
-              <div className="text-sm font-normal text-text-secondary mt-1">Current members</div>
-            </div>
-            <div className="text-center p-4 bg-bg-alt rounded-xl">
-              <div className="text-2xl font-bold text-gold">{teamData.pendingInvitations.length}</div>
-              <div className="text-sm font-normal text-text-secondary mt-1">Pending invites</div>
-            </div>
-            <div className="text-center p-4 bg-bg-alt rounded-xl">
-              <div className="text-2xl font-bold text-navy">{teamData.maxTeamSize}</div>
-              <div className="text-sm font-normal text-text-secondary mt-1">Max team size</div>
-            </div>
-            <div className="text-center p-4 bg-bg-alt rounded-xl">
-              <div className="text-2xl font-bold text-success">
-                {teamData.maxTeamSize - teamData.teamSize}
-              </div>
-              <div className="text-sm font-normal text-text-secondary mt-1">Available spots</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Current Members - Practical UI: bold section heading, proper typography hierarchy */}
       <div className="card mb-6">
         <div className="px-6 py-4 border-b border-border">
@@ -224,40 +175,40 @@ export default function TeamManagePage() {
         </div>
         <div className="px-6 py-6">
           <div className="space-y-4">
-            {allMembers.map((member) => (
+            {allMembers.map((member:any) => (
               <div key={member.userId} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
                     <span className="text-sm font-bold text-white">
-                      {member.name.split(' ').map(n => n[0]).join('')}
+                      {member.user.firstName.split(' ').map((n:any) => n[0]).join('')}
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-text-primary">{member.name}</h3>
-                      {member.role === 'leader' && (
+                      <h3 className="text-base font-bold text-text-primary">{member.user.firstName} {member.user.lastName}</h3>
+                      {member.isAdmin && (
                         <CheckBadgeIcon className="h-5 w-5 text-navy" aria-hidden="true" />
                       )}
                     </div>
-                    <p className="text-sm font-normal text-text-secondary">{member.title}</p>
+                    <p className="text-sm font-normal text-text-secondary">{member.role}</p>
                     <p className="text-sm font-normal text-text-tertiary">
-                      Joined {formatDistanceToNow(member.joinedAt.toDate(), { addSuffix: true })}
+                      Joined {formatDistanceToNow(new Date(member.joinedAt), { addSuffix: true })}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className={`badge text-xs ${
-                    member.role === 'leader'
+                    member.isAdmin
                       ? 'badge-primary'
                       : 'badge-secondary'
                   }`}>
-                    {member.role === 'leader' ? 'Team leader' : 'Member'}
+                    {member.isAdmin ? 'Team leader' : 'Member'}
                   </span>
 
-                  {isLeader && member.role !== 'leader' && (
+                  {isLeader && !member.isAdmin && (
                     <button
-                      onClick={() => handleRemoveMember(member.userId, member.name)}
+                      onClick={() => handleRemoveMember(member.userId, `${member.user.firstName} ${member.user.lastName}`)}
                       className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
                       title="Remove member"
                     >
@@ -270,77 +221,6 @@ export default function TeamManagePage() {
           </div>
         </div>
       </div>
-
-      {/* Pending Invitations - Practical UI: consistent card styling */}
-      {teamData.pendingInvitations.length > 0 && (
-        <div className="card mb-6">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-bold text-text-primary">
-              Pending invitations ({teamData.pendingInvitations.length})
-            </h2>
-          </div>
-          <div className="px-6 py-6">
-            <div className="space-y-4">
-              {teamData.pendingInvitations.map((invitation) => (
-                <div key={invitation.id} className="flex items-center justify-between p-4 border border-gold/30 bg-gold-50 rounded-xl">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-gold-100 flex items-center justify-center flex-shrink-0">
-                      <EnvelopeIcon className="h-6 w-6 text-gold" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-text-primary">{invitation.invitedEmail}</h3>
-                      <p className="text-sm font-normal text-text-secondary">
-                        Invited {formatDistanceToNow(invitation.invitedAt.toDate(), { addSuffix: true })}
-                      </p>
-                      <p className="text-sm font-normal text-text-tertiary">
-                        Expires {formatDistanceToNow(invitation.expiresAt.toDate(), { addSuffix: true })}
-                      </p>
-                      {invitation.message && (
-                        <p className="text-sm font-normal text-text-secondary mt-1 italic">&ldquo;{invitation.message}&rdquo;</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="badge badge-warning text-xs flex items-center">
-                      <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                      Pending
-                    </span>
-
-                    {isLeader && (
-                      <button
-                        onClick={() => handleCancelInvitation(invitation.id, invitation.invitedEmail)}
-                        className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
-                        title="Cancel invitation"
-                      >
-                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Required Skills - Practical UI: consistent badge styling */}
-      {teamData.requiredSkills && teamData.requiredSkills.length > 0 && (
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-bold text-text-primary">Skills we&apos;re looking for</h2>
-          </div>
-          <div className="px-6 py-6">
-            <div className="flex flex-wrap gap-2">
-              {teamData.requiredSkills.map((skill) => (
-                <span key={skill} className="badge badge-success text-sm">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Invite Form Modal - Practical UI: labels on top, primary button left */}
       {showInviteForm && (

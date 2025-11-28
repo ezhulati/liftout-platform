@@ -2,34 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
-import { getMockOpportunities, createMockOpportunity, MockOpportunity } from '@/lib/mock-data';
 
-// Transform mock opportunity to match frontend expected structure
-function transformMockOpportunity(opp: MockOpportunity) {
-  return {
-    id: opp.id,
-    title: opp.title,
-    company: opp.company,
-    description: opp.description,
-    teamSize: `${opp.teamSize} people`,
-    location: opp.location,
-    industry: opp.industry,
-    type: opp.type,
-    compensation: opp.compensation.range,
-    timeline: `Deadline: ${new Date(opp.deadline).toLocaleDateString()}`,
-    requirements: opp.requirements,
-    whatWeOffer: opp.responsibilities,
-    integrationPlan: opp.integrationPlan,
-    confidential: opp.isConfidential || false,
-    urgent: false,
-    createdAt: opp.postedAt,
-    updatedAt: opp.postedAt,
-    status: opp.status === 'open' ? 'active' : opp.status === 'in_review' ? 'in_progress' : 'closed',
-    applications: []
-  };
-}
-
-// GET /api/opportunities - List opportunities
+// GET /api/opportunities - List opportunities (API only)
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
@@ -37,95 +11,55 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Check if API server is available
   const apiAvailable = await isApiServerAvailable();
-
-  if (apiAvailable) {
-    try {
-      // Forward query parameters to API server
-      const searchParams = request.nextUrl.searchParams.toString();
-      const path = searchParams ? `/api/opportunities?${searchParams}` : '/api/opportunities';
-
-      const response = await proxyToApiServer(path, { method: 'GET' }, session);
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Fall back to mock data on error
-        console.warn('API server returned error, falling back to mock data');
-        return returnMockOpportunities(request);
-      }
-
-      // Transform response to match existing frontend expectations if needed
-      // The API server returns { success: true, data: { opportunities, pagination } }
-      // The frontend expects { opportunities, total, filters }
-      // API server opportunities have company as object, frontend expects string
-      if (data.success && data.data) {
-        const transformedOpportunities = (data.data.opportunities || []).map((opp: any) => ({
-          ...opp,
-          // Transform company object to company name string if it's an object
-          company: typeof opp.company === 'object' && opp.company !== null
-            ? opp.company.name
-            : opp.company,
-          // Extract other company info into separate fields if needed
-          companyData: typeof opp.company === 'object' ? opp.company : undefined
-        }));
-
-        return NextResponse.json({
-          opportunities: transformedOpportunities,
-          total: data.data.pagination?.total || 0,
-          pagination: data.data.pagination,
-          filters: {
-            industries: [],
-            locations: [],
-            types: []
-          }
-        });
-      }
-
-      return NextResponse.json(data);
-    } catch (error) {
-      console.error('Error proxying to API server:', error);
-      // Fall back to mock data
-      return returnMockOpportunities(request);
-    }
+  if (!apiAvailable) {
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
   }
 
-  // API server not available, use mock data
-  return returnMockOpportunities(request);
+  try {
+    const searchParams = request.nextUrl.searchParams.toString();
+    const path = searchParams ? `/api/opportunities?${searchParams}` : '/api/opportunities';
+
+    const response = await proxyToApiServer(path, { method: 'GET' }, session);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
+    }
+
+    if (data.success && data.data) {
+      const transformedOpportunities = (data.data.opportunities || []).map((opp: any) => ({
+        ...opp,
+        company: typeof opp.company === 'object' && opp.company !== null ? opp.company.name : opp.company,
+        companyData: typeof opp.company === 'object' ? opp.company : undefined,
+      }));
+
+      return NextResponse.json({
+        opportunities: transformedOpportunities,
+        total: data.data.pagination?.total || 0,
+        pagination: data.data.pagination,
+        filters: {
+          industries: [],
+          locations: [],
+          types: [],
+        },
+      });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error proxying opportunities to API server:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch opportunities from API' },
+      { status: 500 }
+    );
+  }
 }
 
-// Helper to return mock opportunities
-function returnMockOpportunities(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-
-  const filters = {
-    search: searchParams.get('search') || undefined,
-    industry: searchParams.get('industry') || undefined,
-    location: searchParams.get('location') || undefined,
-    type: searchParams.get('type') || undefined,
-    status: searchParams.get('status') || undefined,
-    minTeamSize: searchParams.get('minTeamSize') ? parseInt(searchParams.get('minTeamSize')!) : undefined,
-    maxTeamSize: searchParams.get('maxTeamSize') ? parseInt(searchParams.get('maxTeamSize')!) : undefined,
-  };
-
-  const result = getMockOpportunities(filters);
-
-  // Transform mock opportunities to match frontend expected structure
-  const transformedOpportunities = result.opportunities.map(transformMockOpportunity);
-
-  return NextResponse.json({
-    opportunities: transformedOpportunities,
-    total: result.total,
-    filters: {
-      industries: ['Financial Services', 'Healthcare Technology', 'Enterprise Software', 'Developer Tools', 'Private Equity'],
-      locations: ['New York, NY', 'Boston, MA', 'London, UK', 'San Francisco, CA', 'Chicago, IL'],
-      types: ['expansion', 'capability', 'market_entry', 'acquisition']
-    },
-    _mock: true // Indicate this is mock data
-  });
-}
-
-// POST /api/opportunities - Create opportunity
+// POST /api/opportunities - Create opportunity (company users only)
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
@@ -133,7 +67,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Only company users can create opportunities
   if (session.user.userType !== 'company') {
     return NextResponse.json(
       { error: 'Only company users can create opportunities' },
@@ -141,51 +74,39 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const apiAvailable = await isApiServerAvailable();
+  if (!apiAvailable) {
+    return NextResponse.json(
+      { error: 'API server unavailable. Please start the API service.' },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
 
-    // Check if API server is available
-    const apiAvailable = await isApiServerAvailable();
+    const response = await proxyToApiServer(
+      '/api/opportunities',
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+      },
+      session
+    );
 
-    if (apiAvailable) {
-      try {
-        const response = await proxyToApiServer(
-          '/api/opportunities',
-          {
-            method: 'POST',
-            body: JSON.stringify(body),
-          },
-          session
-        );
+    const data = await response.json();
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          // Fall back to mock creation on error
-          console.warn('API server returned error, falling back to mock creation');
-          const mockOpp = createMockOpportunity(body);
-          return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
-        }
-
-        // Transform response to match existing frontend expectations
-        if (data.success && data.data) {
-          return NextResponse.json({ opportunity: data.data }, { status: 201 });
-        }
-
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.error('Error proxying to API server:', error);
-        // Fall back to mock creation
-        const mockOpp = createMockOpportunity(body);
-        return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
-      }
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
     }
 
-    // API server not available, use mock data
-    const mockOpp = createMockOpportunity(body);
-    return NextResponse.json({ opportunity: transformMockOpportunity(mockOpp), _mock: true }, { status: 201 });
+    if (data.success && data.data) {
+      return NextResponse.json({ opportunity: data.data }, { status: 201 });
+    }
+
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('Error creating opportunity:', error);
+    console.error('Error creating opportunity via API:', error);
     return NextResponse.json(
       { error: 'Failed to create opportunity' },
       { status: 500 }

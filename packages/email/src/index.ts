@@ -7,8 +7,9 @@ import { WelcomeTemplate } from './templates/welcome';
 import { ApplicationStatusTemplate } from './templates/application-status';
 import { NewMessageTemplate } from './templates/new-message';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend client (no-op if key missing)
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 // Email configuration
 const EMAIL_FROM = process.env.EMAIL_FROM_ADDRESS || 'Liftout <noreply@liftout.com>';
@@ -33,6 +34,11 @@ export interface SendEmailOptions {
 // Base email send function
 export async function sendEmail(options: SendEmailOptions): Promise<EmailResult> {
   try {
+    if (!resend) {
+      console.warn('RESEND_API_KEY not set; skipping email send (noop)');
+      return { success: true, messageId: 'noop' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: options.to,

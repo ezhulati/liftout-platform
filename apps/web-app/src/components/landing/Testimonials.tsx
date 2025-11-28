@@ -4,22 +4,22 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const testimonials = [
   {
-    quote: "We were skeptical about hiring an entire team at once. But the analytics team we acquired had worked together for 4 years - they were productive from week one.",
-    name: "Sarah Chen",
-    title: "VP of Talent Acquisition",
-    company: "Apex Financial",
+    quote: "We'd won awards but couldn't get budget for anything bold. Three weeks on Liftout, we found a startup that wanted us to lead their rebrand. Same team, ten times the creative freedom.",
+    name: "Zoe Alban",
+    title: "Brand Manager",
+    company: "4-person creative team",
   },
   {
-    quote: "The confidentiality was crucial for us. We explored opportunities for 3 months before finding the right fit, and our current employer never knew.",
-    name: "Marcus Johnson",
-    title: "Engineering Team Lead",
-    company: "Series B Startup",
+    quote: "Our whole backend was legacy code and management wouldn't modernize. We moved together to a Series B that let us rebuild their stack from scratch. Best decision we ever made.",
+    name: "Russel Thornton",
+    title: "UX Director",
+    company: "6-person engineering team",
   },
   {
-    quote: "Lower risk than our last M&A, better cultural fit than individual hiring. The due diligence process showed us exactly what we were getting.",
-    name: "Michael Torres",
-    title: "Director of Strategic Growth",
-    company: "HealthTech Innovations",
+    quote: "Leadership kept overriding our roadmap. Now we run product for a company that actually ships what we build. Went from frustrated to energized overnight - and we didn't lose a single teammate.",
+    name: "Mae Bradley",
+    title: "Product Lead",
+    company: "5-person product team",
   },
 ];
 

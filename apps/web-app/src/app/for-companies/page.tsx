@@ -4,7 +4,7 @@ import { CompanyHero } from '@/components/landing/CompanyHero';
 import { HowItWorksCompanies } from '@/components/landing/HowItWorksCompanies';
 import { CompanyFeatures } from '@/components/landing/CompanyFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
-import { FAQ } from '@/components/landing/FAQ';
+import { FAQCompanies } from '@/components/landing/FAQCompanies';
 import { CompanyCTA } from '@/components/landing/CompanyCTA';
 
 export const metadata = {
@@ -21,7 +21,7 @@ export default function ForCompaniesPage() {
         <HowItWorksCompanies />
         <CompanyFeatures />
         <TrustIndicators />
-        <FAQ />
+        <FAQCompanies />
         <CompanyCTA />
       </main>
       <LandingFooter />

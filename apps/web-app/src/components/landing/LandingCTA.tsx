@@ -26,18 +26,21 @@ export function LandingCTA() {
           Join 150+ companies who've discovered a smarter alternative to individual hiring.
         </p>
 
-        {/* Primary + tertiary per Practical UI */}
+        {/* Practical UI: Primary (solid) + Tertiary (underlined), left-aligned on desktop */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+          {/* Primary button - solid fill on dark, Verb+Noun label */}
           <Link
             href="/auth/signup"
-            className="btn-primary-on-dark gap-2 px-8 py-3 text-lg group"
+            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-navy font-semibold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
-            Browse verified teams
-            <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-navy/5 to-transparent" />
+            <span className="relative">Browse verified teams</span>
+            <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
+          {/* Tertiary button - underlined text */}
           <Link
             href="/for-teams"
-            className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 hover:text-white transition-colors min-h-12"
+            className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 decoration-white/30 hover:text-white hover:decoration-white/60 transition-colors min-h-12"
           >
             List your team
           </Link>

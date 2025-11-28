@@ -1,45 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
 import {
   UserGroupIcon,
   ArrowLeftIcon,
   CheckCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { useUpdateTeam } from '@/hooks/useTeams';
 
 export default function EditTeamPage() {
   const { userData } = useAuth();
   const router = useRouter();
-  
-  // Pre-populate with Alex Chen's team data
-  const [formData, setFormData] = useState({
-    teamName: 'TechFlow Data Science Team',
-    description: 'Elite data science team with proven track record in fintech analytics and machine learning solutions. We\'ve successfully delivered $2M+ in value through predictive modeling and risk assessment systems.',
-    industry: 'Financial Services',
-    specializations: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling', 'Risk Assessment'],
-    teamSize: 4,
-    yearsWorkingTogether: 3.5,
-    location: 'San Francisco, CA',
-    remoteWork: true,
-    availability: 'available',
-    currentCompany: 'TechFlow Analytics',
-    achievements: [
-      'Reduced fraud detection false positives by 35%',
-      'Built predictive models generating $2.1M annual savings',
-      'Mentored 12+ junior data scientists across 3 years'
-    ],
-    compensationExpectations: {
-      min: 240000,
-      max: 400000,
-      currency: 'USD'
-    },
-    noticeRequired: '8 weeks',
-    confidentialProfile: false
+  const updateTeamMutation = useUpdateTeam();
+
+  const { data: team, isLoading, isError } = useQuery({
+    queryKey: ['my-team'],
+    queryFn: () => fetch('/api/teams/my-team').then(res => res.json()),
+    enabled: !!userData,
   });
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    industry: '',
+    specialization: '',
+    specializations: [] as string[],
+    achievements: [] as string[],
+    size: 0,
+    yearsWorkingTogether: 0,
+    location: '',
+    remoteStatus: 'hybrid',
+    availabilityStatus: 'available',
+  });
+
+  useEffect(() => {
+    if (team) {
+      setFormData({
+        name: team.name || '',
+        description: team.description || '',
+        industry: team.industry || '',
+        specialization: team.specialization || '',
+        specializations: team.specializations || [],
+        achievements: team.achievements || [],
+        size: team.size || 0,
+        yearsWorkingTogether: team.yearsWorkingTogether || 0,
+        location: team.location || '',
+        remoteStatus: team.remoteStatus || 'hybrid',
+        availabilityStatus: team.availabilityStatus || 'available',
+      });
+    }
+  }, [team]);
 
   const [newAchievement, setNewAchievement] = useState('');
   const [newSpecialization, setNewSpecialization] = useState('');
@@ -47,26 +62,10 @@ export default function EditTeamPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    if (type === 'checkbox') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: (e.target as HTMLInputElement).checked
-      }));
-    } else if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent as keyof typeof prev] as any,
-          [child]: type === 'number' ? parseInt(value) : value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
+    setFormData(prev => ({
         ...prev,
         [name]: type === 'number' ? parseInt(value) : value
-      }));
-    }
+    }));
   };
 
   const addAchievement = () => {
@@ -108,17 +107,23 @@ export default function EditTeamPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await updateTeamMutation.mutateAsync({ id: team.id, ...formData });
       toast.success('Team profile updated successfully!');
-      router.push('/app/teams');
+      router.push(`/app/teams/${team.id}`);
     } catch (error) {
       toast.error('Failed to update team profile. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError || !team) {
+    return <div>Team not found</div>;
+  }
 
   if (!userData) {
     return null;
@@ -156,29 +161,14 @@ export default function EditTeamPage() {
           {/* Single column layout per Practical UI */}
           <div className="px-6 py-6 space-y-5">
             <div>
-              <label htmlFor="teamName" className="label-text label-required">
+              <label htmlFor="name" className="label-text label-required">
                 Team name
               </label>
               <input
                 type="text"
-                id="teamName"
-                name="teamName"
-                value={formData.teamName}
-                onChange={handleInputChange}
-                required
-                className="input-field"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="currentCompany" className="label-text label-required">
-                Current company
-              </label>
-              <input
-                type="text"
-                id="currentCompany"
-                name="currentCompany"
-                value={formData.currentCompany}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
                 required
                 className="input-field"
@@ -202,14 +192,14 @@ export default function EditTeamPage() {
             </div>
 
             <div>
-              <label htmlFor="teamSize" className="label-text label-required">
+              <label htmlFor="size" className="label-text label-required">
                 Team size
               </label>
               <input
                 type="number"
-                id="teamSize"
-                name="teamSize"
-                value={formData.teamSize}
+                id="size"
+                name="size"
+                value={formData.size}
                 onChange={handleInputChange}
                 min="2"
                 max="20"
@@ -259,99 +249,6 @@ export default function EditTeamPage() {
           </div>
         </div>
 
-        {/* Specializations */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary">Specializations & Skills</h2>
-          </div>
-          <div className="px-6 py-6">
-            <div className="mb-4">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={newSpecialization}
-                  onChange={(e) => setNewSpecialization(e.target.value)}
-                  placeholder="Add a specialization..."
-                  className="flex-1 input-field"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSpecialization())}
-                />
-                <button
-                  type="button"
-                  onClick={addSpecialization}
-                  className="btn-outline min-h-12"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {formData.specializations.map((spec, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800"
-                >
-                  {spec}
-                  <button
-                    type="button"
-                    onClick={() => removeSpecialization(index)}
-                    className="ml-2 text-navy hover:text-navy-800"
-                  >
-                    <XMarkIcon className="h-4 w-4" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Achievements */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary">Key Achievements</h2>
-          </div>
-          <div className="px-6 py-6">
-            <div className="mb-4">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={newAchievement}
-                  onChange={(e) => setNewAchievement(e.target.value)}
-                  placeholder="Add an achievement..."
-                  className="flex-1 input-field"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAchievement())}
-                />
-                <button
-                  type="button"
-                  onClick={addAchievement}
-                  className="btn-outline min-h-12"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              {formData.achievements.map((achievement, index) => (
-                <div
-                  key={index}
-                  className="flex items-start space-x-3 p-3 bg-bg-alt rounded-lg"
-                >
-                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-                  <span className="flex-1 text-text-secondary">{achievement}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeAchievement(index)}
-                    className="text-text-tertiary hover:text-error"
-                  >
-                    <XMarkIcon className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Location & Availability - Single column per Practical UI */}
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
@@ -375,13 +272,13 @@ export default function EditTeamPage() {
             </div>
 
             <div>
-              <label htmlFor="availability" className="label-text label-required">
+              <label htmlFor="availabilityStatus" className="label-text label-required">
                 Liftout availability
               </label>
               <select
-                id="availability"
-                name="availability"
-                value={formData.availability}
+                id="availabilityStatus"
+                name="availabilityStatus"
+                value={formData.availabilityStatus}
                 onChange={handleInputChange}
                 required
                 className="input-field"
@@ -392,108 +289,17 @@ export default function EditTeamPage() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="noticeRequired" className="label-text">
-                Notice required
-              </label>
-              <input
-                type="text"
-                id="noticeRequired"
-                name="noticeRequired"
-                value={formData.noticeRequired}
-                onChange={handleInputChange}
-                className="input-field"
-                placeholder="e.g., 4 weeks, 2 months"
-              />
-            </div>
-
             {/* Checkbox with 48px touch target */}
             <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
               <input
                 type="checkbox"
                 id="remoteWork"
                 name="remoteWork"
-                checked={formData.remoteWork}
-                onChange={handleInputChange}
+                checked={formData.remoteStatus === 'remote' || formData.remoteStatus === 'hybrid'}
+                onChange={(e) => setFormData(prev => ({...prev, remoteStatus: e.target.checked ? 'hybrid' : 'onsite'}))}
                 className="h-5 w-5 text-navy focus:ring-navy border-border rounded"
               />
               <span className="text-base text-text-secondary">Open to remote/hybrid opportunities</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Compensation - Single column per Practical UI */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-bold text-text-primary">Compensation expectations</h2>
-          </div>
-          <div className="px-6 py-6 space-y-5">
-            <div>
-              <label htmlFor="compensationExpectations.min" className="label-text">
-                Minimum total team compensation
-              </label>
-              <input
-                type="number"
-                id="compensationExpectations.min"
-                name="compensationExpectations.min"
-                value={formData.compensationExpectations.min}
-                onChange={handleInputChange}
-                className="input-field max-w-48"
-                placeholder="240000"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="compensationExpectations.max" className="label-text">
-                Maximum total team compensation
-              </label>
-              <input
-                type="number"
-                id="compensationExpectations.max"
-                name="compensationExpectations.max"
-                value={formData.compensationExpectations.max}
-                onChange={handleInputChange}
-                className="input-field max-w-48"
-                placeholder="400000"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="compensationExpectations.currency" className="label-text">
-                Currency
-              </label>
-              <select
-                id="compensationExpectations.currency"
-                name="compensationExpectations.currency"
-                value={formData.compensationExpectations.currency}
-                onChange={handleInputChange}
-                className="input-field max-w-32"
-              >
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Privacy */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-bold text-text-primary">Privacy settings</h2>
-          </div>
-          <div className="px-6 py-6">
-            {/* Checkbox with 48px touch target */}
-            <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
-              <input
-                type="checkbox"
-                id="confidentialProfile"
-                name="confidentialProfile"
-                checked={formData.confidentialProfile}
-                onChange={handleInputChange}
-                className="h-5 w-5 text-navy focus:ring-navy border-border rounded"
-              />
-              <span className="text-base text-text-secondary">Make profile confidential (only visible to verified companies)</span>
             </label>
           </div>
         </div>

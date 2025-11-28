@@ -22,7 +22,7 @@ test.describe('Authentication Flows', () => {
 
       // Open demo credentials section
       await page.click('text=Try demo credentials');
-      await page.click('text=Team lead demo');
+      await page.click('button:has-text("Team lead")');
 
       // Verify fields are filled
       const emailInput = page.locator('input[type="email"]');
@@ -38,7 +38,7 @@ test.describe('Authentication Flows', () => {
 
       // Open demo credentials section
       await page.click('text=Try demo credentials');
-      await page.click('text=Company demo');
+      await page.click('button:has-text("Company")');
 
       // Verify fields are filled
       const emailInput = page.locator('input[type="email"]');

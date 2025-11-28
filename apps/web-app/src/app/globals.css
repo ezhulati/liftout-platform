@@ -259,34 +259,40 @@
      - Min 48px touch target
      ============================================ */
 
-  /* Primary Button - Navy solid fill, white text
+  /* Primary Button - Navy gradient fill, white text
      Use for the MOST IMPORTANT action (ONE per screen) */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl relative overflow-hidden;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 1rem;
-    background-color: var(--navy);
+    background: linear-gradient(to bottom, var(--navy), var(--navy-600));
     color: var(--text-on-navy);
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
+    border: 1px solid hsl(220, 50%, 40% / 0.5);
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.25),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.1);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-primary:hover {
-    background-color: var(--navy-hover);
+    background: linear-gradient(to bottom, var(--navy-hover), var(--navy-700));
     color: var(--text-on-navy);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.2);
+    box-shadow: 0 6px 16px hsl(var(--shadow-color) / 0.3),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.15);
   }
 
   .btn-primary:active {
     transform: translateY(0);
     color: var(--text-on-navy);
+    box-shadow: 0 2px 8px hsl(var(--shadow-color) / 0.2),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.1);
   }
 
   .btn-primary:focus-visible {
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--focus-ring), 0 4px 12px hsl(var(--shadow-color) / 0.25);
     color: var(--text-on-navy);
   }
 
@@ -300,26 +306,28 @@
   /* Secondary Button - Outline style per Practical UI
      Use for alternative actions or equal-importance multiple actions */
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 1rem;
-    background-color: transparent;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 97%));
     color: var(--navy);
-    border: 2px solid var(--navy);
+    border: 1px solid hsl(220, 30%, 80%);
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
+    box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.05);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-secondary:hover {
-    background-color: var(--navy);
-    color: var(--text-on-navy);
-    border-color: var(--navy);
+    background: linear-gradient(to bottom, hsl(220, 10%, 97%), hsl(220, 15%, 94%));
+    border-color: hsl(220, 40%, 70%);
+    box-shadow: 0 2px 4px hsl(var(--shadow-color) / 0.1);
   }
 
   .btn-secondary:active {
     transform: translateY(0);
+    box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.05);
   }
 
   .btn-secondary:focus-visible {
@@ -333,22 +341,21 @@
   /* Outline Button - Border only, no fill
      Practical UI "secondary" style for alternative actions */
   .btn-outline {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 1rem;
     background-color: transparent;
     color: var(--navy);
-    border: 2px solid var(--navy);
+    border: 1px solid hsl(220, 30%, 80%);
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-outline:hover {
-    background-color: var(--navy);
-    color: var(--text-on-navy);
-    border-color: var(--navy);
+    background-color: hsl(220, 20%, 97%);
+    border-color: hsl(220, 40%, 70%);
   }
 
   .btn-outline:focus-visible {
@@ -506,14 +513,16 @@
      ============================================ */
 
   .input-field {
-    @apply block w-full rounded-md font-body text-base;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border);
+    @apply block w-full rounded-xl font-body text-base;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 99%));
+    border: 1px solid hsl(220, 20%, 85%);
     color: var(--text-primary);
     padding: 12px 16px;
     min-height: var(--touch-target-min);
+    box-shadow: inset 0 1px 2px hsl(var(--shadow-color) / 0.04);
     transition: border-color var(--duration-fast) var(--ease-out-quart),
-                box-shadow var(--duration-fast) var(--ease-out-quart);
+                box-shadow var(--duration-fast) var(--ease-out-quart),
+                background var(--duration-fast) var(--ease-out-quart);
   }
 
   .input-field::placeholder {
@@ -521,24 +530,28 @@
   }
 
   .input-field:hover {
-    border-color: var(--border-hover);
+    border-color: hsl(220, 30%, 75%);
+    background: hsl(0, 0%, 100%);
   }
 
   .input-field:focus {
     border-color: var(--border-focus);
-    box-shadow: var(--focus-ring);
+    background: hsl(0, 0%, 100%);
+    box-shadow: var(--focus-ring), inset 0 1px 2px hsl(var(--shadow-color) / 0.02);
     outline: none;
   }
 
   .input-field:disabled {
-    background-color: var(--bg-elevated);
+    background: hsl(220, 10%, 96%);
     color: var(--text-tertiary);
     cursor: not-allowed;
+    box-shadow: none;
   }
 
   /* Error state for inputs */
   .input-field-error {
     border-color: var(--error);
+    background: hsl(0, 50%, 99%);
   }
 
   .input-field-error:focus {
@@ -554,6 +567,7 @@
     background-position: right 12px center;
     background-size: 20px;
     padding-right: 44px;
+    cursor: pointer;
   }
 
   select.input-field option {
@@ -651,35 +665,83 @@
   }
 
   /* ============================================
-     CARDS
+     CARDS - Premium glass/badge treatment
      ============================================ */
 
   .card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border);
+    position: relative;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    border: 1px solid hsl(220, 20%, 88%);
     border-radius: 16px;
     padding: 24px;
     transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
+    pointer-events: none;
   }
 
   .card:hover {
-    border-color: var(--border-hover);
-    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08);
+    border-color: hsl(220, 25%, 80%);
+    box-shadow: 0 4px 16px hsl(var(--shadow-color) / 0.1);
   }
 
   .card-elevated {
-    background-color: var(--bg-surface);
+    position: relative;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    border: 1px solid hsl(220, 20%, 90%);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 4px 6px -1px hsl(var(--shadow-color) / 0.1),
-                0 2px 4px -2px hsl(var(--shadow-color) / 0.1);
+    box-shadow: 0 4px 12px -2px hsl(var(--shadow-color) / 0.1),
+                0 2px 4px -2px hsl(var(--shadow-color) / 0.06);
     transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card-elevated::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
+    pointer-events: none;
   }
 
   .card-elevated:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px hsl(var(--shadow-color) / 0.1),
-                0 4px 6px -4px hsl(var(--shadow-color) / 0.1);
+    border-color: hsl(220, 25%, 85%);
+    box-shadow: 0 12px 24px -4px hsl(var(--shadow-color) / 0.12),
+                0 4px 8px -4px hsl(var(--shadow-color) / 0.08);
+  }
+
+  /* Premium glass card variant */
+  .card-glass {
+    position: relative;
+    background: hsl(0, 0%, 100% / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(220, 20%, 90%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08);
+    transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.5), transparent);
+    pointer-events: none;
+  }
+
+  .card-glass:hover {
+    border-color: hsl(220, 25%, 85%);
+    box-shadow: 0 8px 20px hsl(var(--shadow-color) / 0.12);
   }
 
   /* ============================================

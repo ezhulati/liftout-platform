@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       industry: '',
       companyName: '',
       position: '',
-      verified: false,
+      verified: true, // Treat authenticated NextAuth users as verified for onboarding completion
       status: 'active' as const,
       preferences: {
         notifications: true,
@@ -152,17 +152,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Placeholder authentication methods for backward compatibility
-  const signUp = async (userData: any) => {
-    throw new Error('signUp method should use NextAuth.js flow');
+  // User registration - creates user in database
+  const signUp = async (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    userType: 'individual' | 'company';
+    companyName?: string;
+    industry?: string;
+    location?: string;
+  }) => {
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
+    }
+
+    return data;
   };
 
+  // Google sign-in via NextAuth
   const signInWithGoogle = async () => {
-    throw new Error('signInWithGoogle method should use NextAuth.js flow');
+    const { signIn } = await import('next-auth/react');
+    return signIn('google', { callbackUrl: '/app/onboarding' });
   };
 
+  // Password reset request
   const sendPasswordReset = async (email: string) => {
-    throw new Error('sendPasswordReset method should use NextAuth.js flow');
+    const response = await fetch('/api/auth/password-reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send reset email');
+    }
+
+    return data;
   };
 
   const value: AuthContextType = {

@@ -158,13 +158,13 @@ export async function POST(request: NextRequest) {
         }, { status: 400 });
       }
       if (typeof member.experience !== 'number' || member.experience < 0 || member.experience > 50) {
-        return NextResponse.json({ 
-          error: `Member ${i + 1} experience must be between 0 and 50 years` 
+        return NextResponse.json({
+          error: `Member ${i + 1} experience must be between 0 and 50 years`
         }, { status: 400 });
       }
-      if (!member.skills || !Array.isArray(member.skills) || member.skills.length === 0) {
-        return NextResponse.json({ 
-          error: `Member ${i + 1} must have at least one skill` 
+      if (!member.skills || !Array.isArray(member.skills) || member.skills.length < 1) {
+        return NextResponse.json({
+          error: `Member ${i + 1} must have at least 1 skill`
         }, { status: 400 });
       }
     }

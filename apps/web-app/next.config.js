@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@liftout/database'],
+  transpilePackages: ['@liftout/database', 'next-auth'],
   eslint: {
     // Skip ESLint during production builds - linting is done in CI/development
     ignoreDuringBuilds: true,
   },
   experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
+    serverComponentsExternalPackages: ['@prisma/client', '@grpc/grpc-js'],
   },
   webpack: (config) => {
     config.resolve.alias = {

@@ -8,6 +8,8 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { Redis } from 'ioredis';
 
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
@@ -27,17 +29,76 @@ import conversationRoutes from './routes/conversations';
 import searchRoutes from './routes/search';
 import analyticsRoutes from './routes/analytics';
 import subscriptionRoutes from './routes/subscriptions';
+import notificationRoutes from './routes/notifications';
 
 const app = express();
 const server = createServer(app);
 
-// Socket.IO setup
+// Production-ready allowed origins
+const getAllowedOrigins = (): string[] => {
+  const envOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean);
+  if (envOrigins && envOrigins.length > 0) {
+    return envOrigins;
+  }
+  // Default origins for development and production
+  return [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'https://liftout.netlify.app',
+    'https://liftout.com',
+    'https://www.liftout.com',
+  ];
+};
+
+// Socket.IO setup with Redis adapter for horizontal scaling
 const io = new SocketIOServer(server, {
   cors: {
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    origin: getAllowedOrigins(),
     credentials: true,
   },
+  // Connection state recovery for better reliability
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true,
+  },
 });
+
+// Setup Redis adapter if REDIS_URL is provided (for horizontal scaling in production)
+const setupRedisAdapter = async () => {
+  const redisUrl = process.env.REDIS_URL;
+  if (!redisUrl) {
+    logger.info('No REDIS_URL provided, using in-memory adapter (single instance mode)');
+    return;
+  }
+
+  try {
+    const pubClient = new Redis(redisUrl, {
+      maxRetriesPerRequest: 3,
+      retryStrategy: (times) => Math.min(times * 50, 2000),
+    });
+    const subClient = pubClient.duplicate();
+
+    pubClient.on('error', (err) => logger.error('Redis Pub Client Error:', err));
+    subClient.on('error', (err) => logger.error('Redis Sub Client Error:', err));
+
+    await Promise.all([
+      new Promise<void>((resolve, reject) => {
+        pubClient.once('ready', () => resolve());
+        pubClient.once('error', reject);
+      }),
+      new Promise<void>((resolve, reject) => {
+        subClient.once('ready', () => resolve());
+        subClient.once('error', reject);
+      }),
+    ]);
+
+    io.adapter(createAdapter(pubClient, subClient));
+    logger.info('Socket.IO Redis adapter connected - horizontal scaling enabled');
+  } catch (err) {
+    logger.warn('Failed to connect Redis adapter, falling back to in-memory:', err);
+  }
+};
 
 const PORT = process.env.PORT || 8000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -57,7 +118,7 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+  origin: getAllowedOrigins(),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
@@ -95,6 +156,7 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     version: process.env.npm_package_version || '1.0.0',
+    environment: NODE_ENV,
   });
 });
 
@@ -109,6 +171,7 @@ app.use('/api/conversations', authMiddleware, conversationRoutes);
 app.use('/api/search', authMiddleware, searchRoutes);
 app.use('/api/analytics', authMiddleware, analyticsRoutes);
 app.use('/api/subscriptions', authMiddleware, subscriptionRoutes);
+app.use('/api/notifications', authMiddleware, notificationRoutes);
 
 // Socket.IO authentication and handlers
 io.use(socketAuthMiddleware);
@@ -122,27 +185,36 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
+const gracefulShutdown = (signal: string) => {
+  logger.info(`${signal} received, shutting down gracefully`);
   server.close(() => {
     logger.info('Process terminated');
     process.exit(0);
   });
-});
+  // Force close after 10s
+  setTimeout(() => {
+    logger.warn('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
+};
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    process.exit(0);
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Start server with Redis adapter
+const startServer = async () => {
+  await setupRedisAdapter();
+
+  server.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT} in ${NODE_ENV} mode`);
+    logger.info(`Health check: http://localhost:${PORT}/health`);
+    logger.info(`API base URL: http://localhost:${PORT}/api`);
   });
-});
+};
 
-// Start server
-server.listen(PORT, () => {
-  logger.info(`🚀 Server running on port ${PORT} in ${NODE_ENV} mode`);
-  logger.info(`📊 Health check: http://localhost:${PORT}/health`);
-  logger.info(`🔗 API base URL: http://localhost:${PORT}/api`);
+startServer().catch((err) => {
+  logger.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 export default app;

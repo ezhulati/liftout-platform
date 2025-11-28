@@ -99,14 +99,15 @@ export function LandingFeatures() {
           ))}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA - Practical UI: Primary button with shimmer, 48pt target */}
         <div className={`mt-16 transition-all duration-500 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <Link
             href="/auth/signup"
-            className="btn-primary min-h-12 inline-flex items-center gap-2 group"
+            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-lg shadow-lg shadow-navy/25 hover:shadow-xl hover:shadow-navy/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
-            Browse verified teams
-            <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <span className="relative">Browse verified teams</span>
+            <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
         </div>
       </div>

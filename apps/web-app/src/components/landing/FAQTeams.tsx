@@ -5,42 +5,43 @@ import Link from 'next/link';
 import { ChevronDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-// FAQs ordered by popularity/importance - most asked first (#30)
-// Pre-sale questions prioritized (#12)
+// FAQs specifically for teams - ordered by what matters most to them
 const faqs = [
   {
-    question: 'How much does it cost?',
-    answer: 'Browsing and initial exploration is completely free for both companies and teams. We only charge a success fee when an acquisition is completed - you pay nothing until you find the right fit. No credit card required to start.',
-    category: 'pricing',
+    question: 'Is my exploration completely confidential?',
+    answer: 'Yes—confidentiality is core to our platform. Your current employer is automatically blocked and will never see your profile. You control exactly which companies can view you, and all conversations are NDA-protected. We\'ve had zero confidentiality breaches since founding.',
   },
   {
-    question: 'Is my exploration confidential?',
-    answer: 'Absolutely. Confidentiality is core to our platform. Teams can explore opportunities without their current employers knowing. All conversations are NDA-protected, and we never share information without explicit consent. Zero confidentiality breaches since founding.',
-    category: 'trust',
+    question: 'Is Liftout free for teams?',
+    answer: 'Completely free. No sign-up fee, no charges to create a profile, no cost to connect with companies. You pay nothing—ever. The only investment is your talent and time.',
+  },
+  {
+    question: 'How is this different from traditional job sites?',
+    answer: 'Traditional job sites focus on individuals posting resumes and applying one-by-one. Liftout flips this: entire teams showcase their collective strengths and let opportunities come to them. Companies here are specifically seeking proven teams that can hit the ground running—not just individuals.',
+  },
+  {
+    question: 'Who is Liftout for?',
+    answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. This includes partners at law firms, specialized engineering squads, research units, creative teams, analysts within rigid hierarchies, and any group that performs better together than apart. If your team\'s talents add up to more than the sum of your parts, Liftout is for you.',
+  },
+  {
+    question: 'How do I get started?',
+    answer: 'Three simple steps: (1) Create your team profile highlighting your collective skills, experience, and what makes you work well together. (2) Companies searching for teams like yours will discover your profile. (3) When a company sees potential, they\'ll reach out to start a confidential conversation.',
+  },
+  {
+    question: 'Are companies actually looking for teams?',
+    answer: 'Yes. Over 500 registered firms across law, banking, consulting, advertising, and technology—from ambitious startups to Fortune 500 companies—are actively seeking intact teams. They value the immediate productivity and proven chemistry that only an established team can provide.',
+  },
+  {
+    question: 'What opportunities can I expect?',
+    answer: 'Companies post strategic opportunities where team chemistry matters: market expansion, new practice areas, capability building, and transformation initiatives. Rather than the traditional apply-and-hope approach, your team profile puts you in front of companies specifically seeking what you offer.',
   },
   {
     question: 'How are teams verified?',
-    answer: 'Every team goes through a comprehensive verification process: background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements. 100% of teams on our platform are verified.',
-    category: 'trust',
-  },
-  {
-    question: 'What does the acquisition process look like?',
-    answer: 'Three stages: discovery and matching (1-2 weeks), confidential conversations and due diligence (2-4 weeks), and negotiation and integration planning (2-4 weeks). We provide dedicated support throughout the entire process.',
-    category: 'process',
-  },
-  {
-    question: 'What industries do you cover?',
-    answer: 'We focus on professional services and knowledge work: Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is teams with quantifiable track records across 12 industries.',
-    category: 'general',
-  },
-  {
-    question: 'What if an acquisition does not work out?',
-    answer: 'We track integration success for 12 months post-acquisition. While rare (92% retention rate after 2 years), if significant issues arise within the first 90 days, we work with both parties to find solutions and provide integration support.',
-    category: 'trust',
+    answer: 'To protect companies and maintain platform quality, we verify team composition, tenure working together, and documented achievements. This verification process actually helps your team stand out—companies trust that profiles on Liftout are accurate and vetted.',
   },
 ];
 
-export function FAQ() {
+export function FAQTeams() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
@@ -61,20 +62,19 @@ export function FAQ() {
           <div className="lg:col-span-1">
             <div className={`lg:sticky lg:top-32 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <p className="font-semibold text-base mb-3 text-navy">
-                Common questions
+                Questions from teams
               </p>
               <h2
                 id="faq-heading"
                 className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
               >
-                Frequently asked questions
+                Everything you need to know
               </h2>
-              {/* Practical UI: 18px body text minimum */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8">
-                Everything you need to know about team acquisition. Can't find what you're looking for? Our team is here to help.
+                Common questions from teams exploring opportunities together. Can't find your answer? We're here to help.
               </p>
 
-              {/* Support option - Practical UI: 48px touch target, proper text sizes */}
+              {/* Support option */}
               <Link
                 href="/contact"
                 className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-border-hover hover:shadow-sm transition-all group min-h-12"
@@ -126,7 +126,6 @@ export function FAQ() {
                       openIndex === index ? 'max-h-96' : 'max-h-0'
                     }`}
                   >
-                    {/* Practical UI: 18px body text */}
                     <div className="px-6 pb-6 pt-0">
                       <p className="text-text-secondary text-lg leading-relaxed">
                         {faq.answer}
@@ -137,12 +136,11 @@ export function FAQ() {
               ))}
             </div>
 
-            {/* Additional help text - Practical UI: 18px body text */}
+            {/* Additional help text */}
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
-                <span className="font-semibold text-text-primary">Need help with something specific?</span>
-                {' '}Our team has helped 150+ companies and teams navigate the acquisition process.
-                We're happy to answer any questions before you commit.
+                <span className="font-semibold text-text-primary">Ready to explore?</span>
+                {' '}Creating your team profile is free and takes just a few minutes. Your current employer will never know.
               </p>
             </div>
           </div>
