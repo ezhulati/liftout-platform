@@ -2,9 +2,15 @@ import { Router } from 'express';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { prisma } from '@liftout/database';
 import { logger } from '../utils/logger';
 import { ValidationError, AuthenticationError } from '../middleware/errorHandler';
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendWelcomeEmail,
+} from '@liftout/email';
 
 const router = Router();
 
@@ -66,6 +72,9 @@ const getUserResponse = (user: any) => ({
   createdAt: user.createdAt,
 });
 
+// Generate a secure random token
+const generateSecureToken = () => crypto.randomBytes(32).toString('hex');
+
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   const validatedData = registerSchema.parse(req.body);
@@ -81,7 +90,11 @@ router.post('/register', async (req, res) => {
   
   // Hash password
   const passwordHash = await bcrypt.hash(validatedData.password, 12);
-  
+
+  // Generate verification token
+  const verificationToken = generateSecureToken();
+  const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
   // Create user
   const user = await prisma.user.create({
     data: {
@@ -90,14 +103,42 @@ router.post('/register', async (req, res) => {
       firstName: validatedData.firstName,
       lastName: validatedData.lastName,
       userType: validatedData.userType,
+      verificationToken,
+      verificationTokenExpires,
     },
   });
-  
+
   // Generate tokens
   const { accessToken, refreshToken } = generateTokens(user.id);
-  
+
+  // Send verification email (don't await to not block response)
+  sendVerificationEmail({
+    to: user.email,
+    firstName: user.firstName,
+    verificationToken,
+  }).then(result => {
+    if (result.success) {
+      logger.info(`Verification email sent to: ${user.email}`);
+    } else {
+      logger.error(`Failed to send verification email to ${user.email}: ${result.error}`);
+    }
+  });
+
+  // Send welcome email
+  sendWelcomeEmail({
+    to: user.email,
+    firstName: user.firstName,
+    userType: user.userType as 'individual' | 'company',
+  }).then(result => {
+    if (result.success) {
+      logger.info(`Welcome email sent to: ${user.email}`);
+    } else {
+      logger.error(`Failed to send welcome email to ${user.email}: ${result.error}`);
+    }
+  });
+
   logger.info(`User registered: ${user.email}`);
-  
+
   res.status(201).json({
     success: true,
     data: {
@@ -105,8 +146,9 @@ router.post('/register', async (req, res) => {
       accessToken,
       refreshToken,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+      verificationEmailSent: true,
     },
-    message: 'Registration successful',
+    message: 'Registration successful. Please check your email to verify your account.',
   });
 });
 
@@ -202,23 +244,41 @@ router.post('/logout', async (req, res) => {
 // POST /api/auth/forgot-password
 router.post('/forgot-password', async (req, res) => {
   const validatedData = forgotPasswordSchema.parse(req.body);
-  
+
   const user = await prisma.user.findUnique({
     where: { email: validatedData.email },
   });
-  
+
   if (user) {
     // Generate reset token
-    const resetToken = jwt.sign(
-      { userId: user.id, type: 'password_reset' },
-      process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
-    );
-    
-    // TODO: Send email with reset link
+    const resetToken = generateSecureToken();
+    const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    // Store token in database
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordResetToken: resetToken,
+        passwordResetExpires: resetExpires,
+      },
+    });
+
+    // Send password reset email
+    sendPasswordResetEmail({
+      to: user.email,
+      firstName: user.firstName,
+      resetToken,
+    }).then(result => {
+      if (result.success) {
+        logger.info(`Password reset email sent to: ${user.email}`);
+      } else {
+        logger.error(`Failed to send password reset email to ${user.email}: ${result.error}`);
+      }
+    });
+
     logger.info(`Password reset requested for: ${user.email}`);
   }
-  
+
   // Always return success to prevent email enumeration
   res.json({
     success: true,
@@ -229,60 +289,122 @@ router.post('/forgot-password', async (req, res) => {
 // POST /api/auth/reset-password
 router.post('/reset-password', async (req, res) => {
   const validatedData = resetPasswordSchema.parse(req.body);
-  
-  try {
-    const decoded = jwt.verify(validatedData.token, process.env.JWT_SECRET!) as any;
-    
-    if (decoded.type !== 'password_reset') {
-      throw new AuthenticationError('Invalid reset token');
-    }
-    
-    // Hash new password
-    const passwordHash = await bcrypt.hash(validatedData.password, 12);
-    
-    // Update user password
-    await prisma.user.update({
-      where: { id: decoded.userId },
-      data: { passwordHash },
-    });
-    
-    logger.info(`Password reset completed for user: ${decoded.userId}`);
-    
-    res.json({
-      success: true,
-      message: 'Password reset successful',
-    });
-  } catch (error) {
+
+  // Find user with matching reset token
+  const user = await prisma.user.findFirst({
+    where: {
+      passwordResetToken: validatedData.token,
+      passwordResetExpires: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!user) {
     throw new AuthenticationError('Invalid or expired reset token');
   }
+
+  // Hash new password
+  const passwordHash = await bcrypt.hash(validatedData.password, 12);
+
+  // Update user password and clear reset token
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash,
+      passwordResetToken: null,
+      passwordResetExpires: null,
+    },
+  });
+
+  logger.info(`Password reset completed for user: ${user.id}`);
+
+  res.json({
+    success: true,
+    message: 'Password reset successful. You can now log in with your new password.',
+  });
 });
 
 // GET /api/auth/verify-email/:token
 router.get('/verify-email/:token', async (req, res) => {
   const { token } = req.params;
-  
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    
-    if (decoded.type !== 'email_verification') {
-      throw new AuthenticationError('Invalid verification token');
-    }
-    
-    // Update user email verification status
-    await prisma.user.update({
-      where: { id: decoded.userId },
-      data: { emailVerified: true },
-    });
-    
-    logger.info(`Email verified for user: ${decoded.userId}`);
-    
-    res.json({
-      success: true,
-      message: 'Email verification successful',
-    });
-  } catch (error) {
+
+  // Find user with matching verification token
+  const user = await prisma.user.findFirst({
+    where: {
+      verificationToken: token,
+      verificationTokenExpires: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!user) {
     throw new AuthenticationError('Invalid or expired verification token');
   }
+
+  // Update user email verification status and clear token
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      emailVerified: true,
+      verificationToken: null,
+      verificationTokenExpires: null,
+    },
+  });
+
+  logger.info(`Email verified for user: ${user.id}`);
+
+  res.json({
+    success: true,
+    message: 'Email verification successful. Your account is now verified.',
+  });
+});
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ValidationError('Email is required');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (user && !user.emailVerified) {
+    // Generate new verification token
+    const verificationToken = generateSecureToken();
+    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationToken,
+        verificationTokenExpires,
+      },
+    });
+
+    // Send verification email
+    sendVerificationEmail({
+      to: user.email,
+      firstName: user.firstName,
+      verificationToken,
+    }).then(result => {
+      if (result.success) {
+        logger.info(`Verification email resent to: ${user.email}`);
+      } else {
+        logger.error(`Failed to resend verification email to ${user.email}: ${result.error}`);
+      }
+    });
+  }
+
+  // Always return success to prevent email enumeration
+  res.json({
+    success: true,
+    message: 'If your email is registered and not yet verified, we have sent a new verification link.',
+  });
 });
 
 export default router;

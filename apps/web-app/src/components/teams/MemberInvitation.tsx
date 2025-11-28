@@ -182,7 +182,7 @@ export function MemberInvitation({
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">Invite Team Member</h3>
+            <h3 className="text-lg font-bold text-text-primary">Invite team member</h3>
             {!isInviting && (
               <button
                 onClick={() => setIsInviting(true)}
@@ -197,120 +197,107 @@ export function MemberInvitation({
         </div>
 
         {isInviting && (
-          <form onSubmit={handleSubmit(sendInvitation)} className="px-6 py-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
-                  Email Address *
-                </label>
-                <div className="relative">
-                  <EnvelopeIcon className="absolute left-3 top-3 h-4 w-4 text-text-tertiary" />
-                  <input
-                    {...register('email')}
-                    type="email"
-                    className="input-field pl-10"
-                    placeholder="colleague@example.com"
-                  />
-                </div>
-                {errors.email && (
-                  <p className="mt-1 text-sm text-error">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
-                  Role *
-                </label>
+          <form onSubmit={handleSubmit(sendInvitation)} className="px-6 py-6 space-y-5">
+            {/* Single column layout per Practical UI */}
+            <div>
+              <label className="label-text label-required">Email address</label>
+              {errors.email && (
+                <p className="form-field-error">{errors.email.message}</p>
+              )}
+              <div className="relative">
+                <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-text-tertiary" />
                 <input
-                  {...register('role')}
-                  type="text"
-                  className="input-field"
-                  placeholder="e.g., Senior Data Scientist"
+                  {...register('email')}
+                  type="email"
+                  className="input-field min-h-12 pl-10"
+                  placeholder="colleague@example.com"
                 />
-                {errors.role && (
-                  <p className="mt-1 text-sm text-error">{errors.role.message}</p>
-                )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1">
-                Personal Message (Optional)
-              </label>
+              <label className="label-text label-required">Role</label>
+              {errors.role && (
+                <p className="form-field-error">{errors.role.message}</p>
+              )}
+              <input
+                {...register('role')}
+                type="text"
+                className="input-field min-h-12"
+                placeholder="e.g., Senior Data Scientist"
+              />
+            </div>
+
+            <div>
+              <label className="label-text">Personal message (optional)</label>
+              {errors.personalMessage && (
+                <p className="form-field-error">{errors.personalMessage.message}</p>
+              )}
               <textarea
                 {...register('personalMessage')}
                 rows={3}
-                className="input-field"
+                className="input-field min-h-[100px]"
                 placeholder="Add a personal note to your invitation..."
               />
-              {errors.personalMessage && (
-                <p className="mt-1 text-sm text-error">{errors.personalMessage.message}</p>
-              )}
             </div>
 
             {/* Permissions */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-text-secondary">
-                  Member Permissions
-                </label>
+                <label className="label-text">Member permissions</label>
                 <button
                   type="button"
                   onClick={() => setShowPermissions(!showPermissions)}
-                  className="text-sm text-navy hover:text-navy-hover flex items-center"
+                  className="text-link min-h-10 inline-flex items-center"
                 >
                   <EyeIcon className="h-4 w-4 mr-1" />
-                  {showPermissions ? 'Hide' : 'Show'} Permissions
+                  {showPermissions ? 'Hide' : 'Show'} permissions
                 </button>
               </div>
 
               {showPermissions && (
-                <div className="space-y-3 p-4 bg-bg-alt rounded-lg">
-                  <div className="flex items-center">
+                <div className="space-y-2 p-4 bg-bg-alt rounded-xl">
+                  {/* Checkbox with 48px touch target */}
+                  <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-surface transition-colors -mx-2">
                     <input
                       {...register('permissions.canEditTeam')}
                       type="checkbox"
-                      className="rounded border-border text-navy focus:ring-navy"
+                      className="h-5 w-5 rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-text-secondary">
-                      Can edit team profile and settings
-                    </label>
-                  </div>
-                  <div className="flex items-center">
+                    <span className="text-base text-text-secondary">Can edit team profile and settings</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-surface transition-colors -mx-2">
                     <input
                       {...register('permissions.canInviteMembers')}
                       type="checkbox"
-                      className="rounded border-border text-navy focus:ring-navy"
+                      className="h-5 w-5 rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-text-secondary">
-                      Can invite new team members
-                    </label>
-                  </div>
-                  <div className="flex items-center">
+                    <span className="text-base text-text-secondary">Can invite new team members</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-surface transition-colors -mx-2">
                     <input
                       {...register('permissions.canViewAnalytics')}
                       type="checkbox"
-                      className="rounded border-border text-navy focus:ring-navy"
+                      className="h-5 w-5 rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-text-secondary">
-                      Can view team analytics and performance data
-                    </label>
-                  </div>
+                    <span className="text-base text-text-secondary">Can view team analytics and performance data</span>
+                  </label>
                 </div>
               )}
 
               {!showPermissions && (
-                <div className="text-sm text-text-secondary">
+                <div className="text-base text-text-secondary">
                   Permissions: {Object.values(watchedPermissions).filter(Boolean).length} of 3 enabled
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end space-x-3">
+            {/* Practical UI: Left-aligned buttons, primary first */}
+            <div className="flex items-center gap-4 pt-4 border-t border-border">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-primary min-h-12 flex items-center"
+                className="btn-primary min-h-12 inline-flex items-center"
               >
                 <PaperAirplaneIcon className="h-5 w-5 mr-2" />
                 {isSubmitting ? 'Sending...' : 'Send invitation'}
@@ -321,7 +308,7 @@ export function MemberInvitation({
                   setIsInviting(false);
                   reset();
                 }}
-                className="text-link min-h-12 flex items-center"
+                className="text-link min-h-12"
               >
                 Cancel
               </button>
@@ -334,7 +321,7 @@ export function MemberInvitation({
       {existingInvites.length > 0 && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
-            <h3 className="text-lg font-medium text-text-primary">Pending Invitations</h3>
+            <h3 className="text-lg font-bold text-text-primary">Pending invitations</h3>
           </div>
           <div className="px-6 py-4">
             <div className="space-y-4">

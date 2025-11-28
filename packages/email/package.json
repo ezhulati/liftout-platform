@@ -1,0 +1,23 @@
+{
+  "name": "@liftout/email",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "email dev --dir src/templates",
+    "build": "tsc",
+    "preview": "email preview --dir src/templates"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.31",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "resend": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "react-email": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

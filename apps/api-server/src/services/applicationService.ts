@@ -2,6 +2,8 @@ import { prisma } from '@liftout/database';
 import { TeamApplication, ExpressionOfInterest, ApplicationStatus, InterestStatus } from '@prisma/client';
 import { getPaginationParams } from '@liftout/database/src/utils';
 import { NotFoundError, AuthorizationError, ValidationError } from '../middleware/errorHandler';
+import { sendApplicationStatusEmail } from '@liftout/email';
+import { logger } from '../utils/logger';
 
 // Types
 export interface ApplicationFilters {
@@ -108,6 +110,50 @@ class ApplicationService {
   private validateStateTransition(currentStatus: ApplicationStatus, newStatus: ApplicationStatus): boolean {
     const validNextStates = VALID_TRANSITIONS[currentStatus];
     return validNextStates.includes(newStatus);
+  }
+
+  /**
+   * Send application status emails to all team members
+   */
+  private async sendStatusEmailsToTeam(
+    teamId: string,
+    teamName: string,
+    opportunityTitle: string,
+    companyName: string,
+    status: 'reviewing' | 'interviewing' | 'accepted' | 'rejected',
+    message?: string
+  ): Promise<void> {
+    // Get all active team members
+    const teamMembers = await prisma.teamMember.findMany({
+      where: { teamId, status: 'active' },
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+          },
+        },
+      },
+    });
+
+    // Send emails to all team members (fire and forget)
+    for (const member of teamMembers) {
+      sendApplicationStatusEmail({
+        to: member.user.email,
+        firstName: member.user.firstName,
+        teamName,
+        opportunityTitle,
+        companyName,
+        status,
+        message,
+      }).then(result => {
+        if (result.success) {
+          logger.info(`Application status email sent to: ${member.user.email} (status: ${status})`);
+        } else {
+          logger.error(`Failed to send application status email to ${member.user.email}: ${result.error}`);
+        }
+      });
+    }
   }
 
   /**
@@ -611,7 +657,9 @@ class ApplicationService {
           },
         },
         opportunity: {
-          include: {
+          select: {
+            id: true,
+            title: true,
             company: {
               select: {
                 id: true,
@@ -622,6 +670,19 @@ class ApplicationService {
         },
       },
     });
+
+    // Send status update emails to team members
+    const team = updatedApplication.team as { id: string; name: string };
+    const opportunity = updatedApplication.opportunity as { id: string; title: string; company: { id: string; name: string } };
+
+    this.sendStatusEmailsToTeam(
+      team.id,
+      team.name,
+      opportunity.title,
+      opportunity.company.name,
+      data.status as 'reviewing' | 'interviewing' | 'accepted' | 'rejected',
+      data.responseMessage || data.rejectionReason
+    );
 
     return updatedApplication;
   }
@@ -713,7 +774,9 @@ class ApplicationService {
           },
         },
         opportunity: {
-          include: {
+          select: {
+            id: true,
+            title: true,
             company: {
               select: {
                 id: true,
@@ -724,6 +787,27 @@ class ApplicationService {
         },
       },
     });
+
+    // Send interview scheduled emails to team members
+    const team = updatedApplication.team as { id: string; name: string };
+    const opportunity = updatedApplication.opportunity as { id: string; title: string; company: { id: string; name: string } };
+    const interviewDate = data.scheduledAt.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    this.sendStatusEmailsToTeam(
+      team.id,
+      team.name,
+      opportunity.title,
+      opportunity.company.name,
+      'interviewing',
+      `Your interview has been scheduled for ${interviewDate}. Format: ${data.format}${data.meetingLink ? `. Meeting link: ${data.meetingLink}` : ''}`
+    );
 
     return updatedApplication;
   }
@@ -848,7 +932,9 @@ class ApplicationService {
           },
         },
         opportunity: {
-          include: {
+          select: {
+            id: true,
+            title: true,
             company: {
               select: {
                 id: true,
@@ -865,6 +951,24 @@ class ApplicationService {
       where: { id: application.opportunityId },
       data: { status: 'filled' },
     });
+
+    // Send offer notification emails to team members
+    const team = updatedApplication.team as { id: string; name: string };
+    const opportunity = updatedApplication.opportunity as { id: string; title: string; company: { id: string; name: string } };
+    const compensationFormatted = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(offerDetails.compensation);
+
+    this.sendStatusEmailsToTeam(
+      team.id,
+      team.name,
+      opportunity.title,
+      opportunity.company.name,
+      'accepted',
+      `Congratulations! You have received an offer with a compensation of ${compensationFormatted}${offerDetails.equityOffer ? ` plus ${offerDetails.equityOffer} equity` : ''}.${offerDetails.expirationDate ? ` Please respond by ${offerDetails.expirationDate.toLocaleDateString()}.` : ''}`
+    );
 
     return updatedApplication;
   }

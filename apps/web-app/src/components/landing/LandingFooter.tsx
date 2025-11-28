@@ -120,6 +120,14 @@ export function LandingFooter() {
               </li>
               <li>
                 <Link
+                  href="/blog"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
+                >
+                  Insights
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/#features"
                   className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >

@@ -4,6 +4,8 @@ import { prisma } from '@liftout/database';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { NotFoundError, ValidationError, AuthorizationError } from '../middleware/errorHandler';
 import { getPaginationParams } from '@liftout/database/src/utils';
+import { sendTeamInvitationEmail } from '@liftout/email';
+import { logger } from '../utils/logger';
 
 const router = Router();
 
@@ -301,30 +303,40 @@ router.put('/:id', async (req: AuthenticatedRequest, res) => {
 router.post('/:id/members', async (req: AuthenticatedRequest, res) => {
   const { id } = req.params;
   const validatedData = inviteMemberSchema.parse(req.body);
-  
-  // Check if user is team admin
-  const teamMember = await prisma.teamMember.findUnique({
-    where: {
-      teamId_userId: {
-        teamId: id,
-        userId: req.user!.id
+
+  // Get team info and check if user is team admin
+  const [team, teamMember] = await Promise.all([
+    prisma.team.findUnique({
+      where: { id },
+      select: { id: true, name: true }
+    }),
+    prisma.teamMember.findUnique({
+      where: {
+        teamId_userId: {
+          teamId: id,
+          userId: req.user!.id
+        }
       }
-    }
-  });
-  
+    })
+  ]);
+
+  if (!team) {
+    throw new NotFoundError('Team not found');
+  }
+
   if (!teamMember?.isAdmin) {
     throw new AuthorizationError('Only team admins can invite members');
   }
-  
+
   // Check if user exists
   const invitedUser = await prisma.user.findUnique({
     where: { email: validatedData.email }
   });
-  
+
   if (!invitedUser) {
     throw new NotFoundError('User with this email not found');
   }
-  
+
   // Check if user is already a member
   const existingMember = await prisma.teamMember.findUnique({
     where: {
@@ -334,11 +346,11 @@ router.post('/:id/members', async (req: AuthenticatedRequest, res) => {
       }
     }
   });
-  
+
   if (existingMember) {
     throw new ValidationError('User is already a team member');
   }
-  
+
   // Create invitation
   const invitation = await prisma.teamMember.create({
     data: {
@@ -363,9 +375,24 @@ router.post('/:id/members', async (req: AuthenticatedRequest, res) => {
       }
     }
   });
-  
-  // TODO: Send invitation email
-  
+
+  // Send invitation email (don't await to not block response)
+  const inviterName = `${req.user!.firstName} ${req.user!.lastName}`;
+  sendTeamInvitationEmail({
+    to: invitedUser.email,
+    firstName: invitedUser.firstName,
+    teamName: team.name,
+    inviterName,
+    role: validatedData.role,
+    personalMessage: validatedData.personalMessage,
+  }).then(result => {
+    if (result.success) {
+      logger.info(`Team invitation email sent to: ${invitedUser.email} for team: ${team.name}`);
+    } else {
+      logger.error(`Failed to send team invitation email to ${invitedUser.email}: ${result.error}`);
+    }
+  });
+
   res.status(201).json({
     success: true,
     data: invitation,

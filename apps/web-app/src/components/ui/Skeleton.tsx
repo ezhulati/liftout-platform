@@ -49,10 +49,10 @@ export function Skeleton({
   };
 
   // Style for custom dimensions
-  const style: React.CSSProperties = {
+  const style = {
     width: width || (variant === 'text' ? '100%' : undefined),
     height: height || undefined,
-  };
+  } as React.CSSProperties;
 
   if (variant === 'text' && lines > 1) {
     return (
@@ -73,7 +73,7 @@ export function Skeleton({
   return (
     <div
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-      style={style}
+      style={style as any}
     />
   );
 }

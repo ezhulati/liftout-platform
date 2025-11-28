@@ -7,6 +7,8 @@ export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     email: string;
+    firstName: string;
+    lastName: string;
     userType: string;
     companyId?: string;
   };
@@ -65,6 +67,8 @@ export const authMiddleware = async (
     req.user = {
       id: user.id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       userType: user.userType,
       companyId: user.companyMemberships[0]?.company.id,
     };
@@ -143,6 +147,8 @@ export const optionalAuth = async (
           req.user = {
             id: user.id,
             email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
             userType: user.userType,
           };
         }

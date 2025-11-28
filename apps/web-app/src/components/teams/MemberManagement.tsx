@@ -231,44 +231,44 @@ export function MemberManagement({
 
   return (
     <div className="space-y-6">
-      {/* Team Statistics */}
+      {/* Team Statistics - Practical UI: bold headings */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
-          <h3 className="text-lg font-medium text-text-primary">Team Statistics</h3>
+          <h3 className="text-lg font-bold text-text-primary">Team statistics</h3>
         </div>
         <div className="px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-navy">{stats.totalMembers}</div>
-              <div className="text-sm text-text-secondary">Team Members</div>
+              <div className="text-base text-text-secondary">Team members</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-success">{stats.avgExperience}</div>
-              <div className="text-sm text-text-secondary">Avg Experience (years)</div>
+              <div className="text-base text-text-secondary">Avg experience (years)</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-navy">{stats.totalSkills}</div>
-              <div className="text-sm text-text-secondary">Unique Skills</div>
+              <div className="text-base text-text-secondary">Unique skills</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gold-700">{stats.avgRating}</div>
-              <div className="text-sm text-text-secondary">Avg Performance</div>
+              <div className="text-base text-text-secondary">Avg performance</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Members List */}
+      {/* Members List - Practical UI: bold heading */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">Team Members</h3>
+            <h3 className="text-lg font-bold text-text-primary">Team members</h3>
             {isEditable && (
               <button
                 onClick={addMember}
-                className="btn-primary min-h-12 flex items-center"
+                className="btn-primary min-h-12 inline-flex items-center"
               >
-                <PlusIcon className="h-5 w-5 mr-1" />
+                <PlusIcon className="h-5 w-5 mr-2" />
                 Add member
               </button>
             )}
@@ -308,19 +308,19 @@ export function MemberManagement({
                   </div>
 
                   {isEditable && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-1">
                       {isEditing ? (
                         <>
                           <button
                             onClick={() => saveMember(index)}
-                            className="text-success hover:text-success-dark"
+                            className="min-h-10 min-w-10 flex items-center justify-center rounded-lg text-success hover:text-success-dark hover:bg-success-light transition-colors"
                             title="Save changes"
                           >
                             <CheckIconSolid className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => setEditingMember(null)}
-                            className="text-text-secondary hover:text-text-secondary"
+                            className="min-h-10 min-w-10 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
                             title="Cancel"
                           >
                             <XMarkIcon className="h-5 w-5" />
@@ -330,21 +330,21 @@ export function MemberManagement({
                         <>
                           <button
                             onClick={() => setEditingMember(field.id)}
-                            className="text-navy hover:text-navy-hover"
+                            className="min-h-10 min-w-10 flex items-center justify-center rounded-lg text-navy hover:text-navy-hover hover:bg-navy-50 transition-colors"
                             title="Edit member"
                           >
                             <PencilSquareIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => toggleTeamLead(index)}
-                            className={`${member.isLead ? 'text-gold-700' : 'text-text-tertiary'} hover:text-gold-800`}
+                            className={`min-h-10 min-w-10 flex items-center justify-center rounded-lg ${member.isLead ? 'text-gold-700 bg-gold-50' : 'text-text-tertiary'} hover:text-gold-800 hover:bg-gold-50 transition-colors`}
                             title="Toggle team lead"
                           >
                             <StarIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => removeMember(index)}
-                            className="text-error hover:text-error-dark"
+                            className="min-h-10 min-w-10 flex items-center justify-center rounded-lg text-error hover:text-error-dark hover:bg-error-light transition-colors"
                             title="Remove member"
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -355,93 +355,85 @@ export function MemberManagement({
                   )}
                 </div>
 
-                {/* Member Details */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Basic Information */}
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Name *
-                      </label>
-                      {isEditing ? (
+                {/* Member Details - Single column for editing per Practical UI */}
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <label className="label-text label-required">Name</label>
+                    {isEditing ? (
+                      <>
+                        {errors.members?.[index]?.name && (
+                          <p className="form-field-error">{errors.members[index]?.name?.message}</p>
+                        )}
                         <input
                           {...register(`members.${index}.name`)}
-                          className="input-field"
+                          className="input-field min-h-12"
                           placeholder="Full name"
                         />
-                      ) : (
-                        <p className="text-sm text-text-primary">{member.name || 'Not set'}</p>
-                      )}
-                      {errors.members?.[index]?.name && (
-                        <p className="text-xs text-error">{errors.members[index]?.name?.message}</p>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <p className="text-base text-text-primary py-2">{member.name || 'Not set'}</p>
+                    )}
+                  </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Role *
-                      </label>
-                      {isEditing ? (
+                  <div>
+                    <label className="label-text label-required">Role</label>
+                    {isEditing ? (
+                      <>
+                        {errors.members?.[index]?.role && (
+                          <p className="form-field-error">{errors.members[index]?.role?.message}</p>
+                        )}
                         <input
                           {...register(`members.${index}.role`)}
-                          className="input-field"
+                          className="input-field min-h-12"
                           placeholder="e.g., Senior Data Scientist"
                         />
-                      ) : (
-                        <p className="text-sm text-text-primary">{member.role || 'Not set'}</p>
-                      )}
-                      {errors.members?.[index]?.role && (
-                        <p className="text-xs text-error">{errors.members[index]?.role?.message}</p>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <p className="text-base text-text-primary py-2">{member.role || 'Not set'}</p>
+                    )}
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Experience (years) *
-                      </label>
+                      <label className="label-text label-required">Experience (years)</label>
                       {isEditing ? (
                         <input
                           {...register(`members.${index}.experience`, { valueAsNumber: true })}
                           type="number"
                           min="0"
                           max="50"
-                          className="input-field"
+                          className="input-field min-h-12 max-w-32"
                         />
                       ) : (
-                        <div className="flex items-center text-sm text-text-primary">
-                          <ClockIcon className="h-4 w-4 mr-1 text-text-tertiary" />
+                        <div className="flex items-center text-base text-text-primary py-2">
+                          <ClockIcon className="h-4 w-4 mr-2 text-text-tertiary" />
                           {member.experience} years
                         </div>
                       )}
                     </div>
-                  </div>
 
-                  {/* Performance & Contact */}
-                  <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Email
-                      </label>
+                      <label className="label-text">Email</label>
                       {isEditing ? (
                         <input
                           {...register(`members.${index}.email`)}
                           type="email"
-                          className="input-field"
+                          className="input-field min-h-12"
                           placeholder="email@example.com"
                         />
                       ) : (
-                        <p className="text-sm text-text-primary">{member.email || 'Not provided'}</p>
+                        <p className="text-base text-text-primary py-2">{member.email || 'Not provided'}</p>
                       )}
                     </div>
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Performance Rating
-                      </label>
+                      <label className="label-text">Performance rating</label>
                       {isEditing ? (
                         <select
                           {...register(`members.${index}.performance.rating`, { valueAsNumber: true })}
-                          className="input-field"
+                          className="input-field min-h-12"
                         >
                           <option value={0}>Not rated</option>
                           <option value={1}>1 - Needs improvement</option>
@@ -451,18 +443,18 @@ export function MemberManagement({
                           <option value={5}>5 - Outstanding</option>
                         </select>
                       ) : (
-                        <div className="flex items-center">
+                        <div className="flex items-center py-2">
                           {[...Array(5)].map((_, i) => (
                             <StarIcon
                               key={i}
-                              className={`h-4 w-4 ${
-                                i < (member.performance?.rating || 0) 
-                                  ? 'text-gold fill-current' 
+                              className={`h-5 w-5 ${
+                                i < (member.performance?.rating || 0)
+                                  ? 'text-gold fill-current'
                                   : 'text-text-tertiary'
                               }`}
                             />
                           ))}
-                          <span className="ml-2 text-sm text-text-secondary">
+                          <span className="ml-2 text-base text-text-secondary">
                             {member.performance?.rating || 0}/5
                           </span>
                         </div>
@@ -470,19 +462,17 @@ export function MemberManagement({
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Projects Completed
-                      </label>
+                      <label className="label-text">Projects completed</label>
                       {isEditing ? (
                         <input
                           {...register(`members.${index}.performance.projects`, { valueAsNumber: true })}
                           type="number"
                           min="0"
-                          className="input-field"
+                          className="input-field min-h-12 max-w-32"
                           placeholder="0"
                         />
                       ) : (
-                        <p className="text-sm text-text-primary">
+                        <p className="text-base text-text-primary py-2">
                           {member.performance?.projects || 0} projects
                         </p>
                       )}
@@ -490,23 +480,21 @@ export function MemberManagement({
                   </div>
                 </div>
 
-                {/* Skills */}
+                {/* Skills - Practical UI patterns */}
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Skills *
-                  </label>
-                  <div className="flex flex-wrap gap-2 mb-2 min-h-[2rem]">
+                  <label className="label-text label-required">Skills</label>
+                  <div className="flex flex-wrap gap-2 mb-3 min-h-[2rem]">
                     {member.skills?.map((skill, skillIndex) => (
                       <span
                         key={skillIndex}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-100 text-navy-800"
+                        className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
                       >
                         {skill}
                         {isEditing && (
                           <button
                             type="button"
                             onClick={() => removeSkill(index, skillIndex)}
-                            className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-500"
+                            className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 transition-colors"
                           >
                             ×
                           </button>
@@ -514,7 +502,7 @@ export function MemberManagement({
                       </span>
                     ))}
                     {(!member.skills || member.skills.length === 0) && (
-                      <span className="text-sm text-text-tertiary italic">No skills added</span>
+                      <span className="text-base text-text-tertiary italic">No skills added</span>
                     )}
                   </div>
                   {isEditing && (
@@ -523,7 +511,7 @@ export function MemberManagement({
                         type="text"
                         value={skillInputs[index] || ''}
                         onChange={(e) => setSkillInputs({ ...skillInputs, [index]: e.target.value })}
-                        className="input-field flex-1"
+                        className="input-field min-h-12 flex-1"
                         placeholder="Add a skill..."
                         onKeyPress={(e) => {
                           if (e.key === 'Enter') {
@@ -535,7 +523,7 @@ export function MemberManagement({
                       <button
                         type="button"
                         onClick={() => addSkill(index, skillInputs[index] || '')}
-                        className="px-3 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-hover disabled:opacity-50"
+                        className="btn-outline min-h-12"
                         disabled={!skillInputs[index]?.trim()}
                       >
                         Add
@@ -544,29 +532,27 @@ export function MemberManagement({
                   )}
                 </div>
 
-                {/* Achievements */}
+                {/* Achievements - Practical UI patterns */}
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Achievements
-                  </label>
-                  <div className="space-y-2 mb-2">
+                  <label className="label-text">Achievements</label>
+                  <div className="space-y-2 mb-3">
                     {member.performance?.achievements?.map((achievement, achievementIndex) => (
                       <div
                         key={achievementIndex}
-                        className="flex items-center justify-between p-2 bg-bg-alt rounded-md"
+                        className="flex items-center justify-between p-3 bg-bg-alt rounded-lg"
                       >
-                        <span className="text-sm text-text-secondary">{achievement}</span>
+                        <span className="text-base text-text-secondary">{achievement}</span>
                         {isEditing && (
                           <button
                             type="button"
                             onClick={() => removeAchievement(index, achievementIndex)}
-                            className="text-error hover:text-error-dark"
+                            className="min-h-10 min-w-10 flex items-center justify-center rounded-lg text-error hover:text-error-dark hover:bg-error-light transition-colors"
                           >
-                            <XMarkIcon className="h-4 w-4" />
+                            <XMarkIcon className="h-5 w-5" />
                           </button>
                         )}
                       </div>
-                    )) || <span className="text-sm text-text-tertiary italic">No achievements recorded</span>}
+                    )) || <span className="text-base text-text-tertiary italic">No achievements recorded</span>}
                   </div>
                   {isEditing && (
                     <div className="flex gap-2">
@@ -574,7 +560,7 @@ export function MemberManagement({
                         type="text"
                         value={achievementInputs[index] || ''}
                         onChange={(e) => setAchievementInputs({ ...achievementInputs, [index]: e.target.value })}
-                        className="input-field flex-1"
+                        className="input-field min-h-12 flex-1"
                         placeholder="Add an achievement..."
                         onKeyPress={(e) => {
                           if (e.key === 'Enter') {
@@ -586,7 +572,7 @@ export function MemberManagement({
                       <button
                         type="button"
                         onClick={() => addAchievement(index, achievementInputs[index] || '')}
-                        className="px-3 py-2 text-sm bg-text-secondary text-white rounded-md hover:bg-text-primary disabled:opacity-50"
+                        className="btn-outline min-h-12"
                         disabled={!achievementInputs[index]?.trim()}
                       >
                         Add

@@ -487,159 +487,144 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           <div className="lg:col-span-2 space-y-6">
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Company information</h3>
+                <h3 className="text-lg font-bold text-text-primary">Company information</h3>
               </div>
-              <div className="px-6 py-6 space-y-4">
+              {/* Practical UI: Single column layout for forms */}
+              <div className="px-6 py-6 space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-1">
-                    Company name
-                  </label>
+                  <label className="label-text">Company name</label>
                   {isEditing ? (
                     <input
                       type="text"
                       value={profileData.companyName}
                       onChange={(e) => setProfileData(prev => ({ ...prev, companyName: e.target.value }))}
-                      className="input-field"
+                      className="input-field min-h-12"
                     />
                   ) : (
-                    <p className="text-text-primary">{profileData.companyName || 'Not set'}</p>
+                    <p className="text-text-primary py-3">{profileData.companyName || 'Not set'}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-1">
-                    Tagline
-                  </label>
+                  <label className="label-text">Tagline</label>
                   {isEditing ? (
                     <input
                       type="text"
                       value={profileData.tagline}
                       onChange={(e) => setProfileData(prev => ({ ...prev, tagline: e.target.value }))}
-                      className="input-field"
+                      className="input-field min-h-12"
                       placeholder="Transforming the future of work"
                     />
                   ) : (
-                    <p className="text-text-primary">{profileData.tagline || 'Not set'}</p>
+                    <p className="text-text-primary py-3">{profileData.tagline || 'Not set'}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-1">
-                    Company description
-                  </label>
+                  <label className="label-text">Company description</label>
+                  {isEditing && (
+                    <p className="form-field-hint">Describe your company, what you do, and what makes you unique</p>
+                  )}
                   {isEditing ? (
                     <textarea
                       value={profileData.description}
                       onChange={(e) => setProfileData(prev => ({ ...prev, description: e.target.value }))}
-                      className="input-field"
+                      className="input-field min-h-[120px]"
                       rows={4}
-                      placeholder="Describe your company, what you do, and what makes you unique..."
                     />
                   ) : (
-                    <p className="text-text-primary">{profileData.description || 'Not set'}</p>
+                    <p className="text-text-primary py-3">{profileData.description || 'Not set'}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Industry
-                    </label>
-                    {isEditing ? (
-                      <select
-                        value={profileData.industry}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, industry: e.target.value }))}
-                        className="input-field"
-                      >
-                        <option value="">Select Industry</option>
-                        <option value="Financial Services">Financial Services</option>
-                        <option value="Investment Banking">Investment Banking</option>
-                        <option value="Private Equity">Private Equity</option>
-                        <option value="Management Consulting">Management Consulting</option>
-                        <option value="Healthcare Technology">Healthcare Technology</option>
-                        <option value="Enterprise Software">Enterprise Software</option>
-                        <option value="Legal Services">Legal Services</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    ) : (
-                      <p className="text-text-primary">{profileData.industry || 'Not set'}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Company size
-                    </label>
-                    {isEditing ? (
-                      <select
-                        value={profileData.companySize}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, companySize: e.target.value }))}
-                        className="input-field"
-                      >
-                        <option value="">Select Size</option>
-                        <option value="1-10">1-10 employees</option>
-                        <option value="11-50">11-50 employees</option>
-                        <option value="51-200">51-200 employees</option>
-                        <option value="201-500">201-500 employees</option>
-                        <option value="501-1000">501-1000 employees</option>
-                        <option value="1001-5000">1001-5000 employees</option>
-                        <option value="5000+">5000+ employees</option>
-                      </select>
-                    ) : (
-                      <p className="text-text-primary">{profileData.companySize || 'Not set'}</p>
-                    )}
-                  </div>
+                <div>
+                  <label className="label-text">Industry</label>
+                  {isEditing ? (
+                    <select
+                      value={profileData.industry}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, industry: e.target.value }))}
+                      className="input-field min-h-12"
+                    >
+                      <option value="">Select industry</option>
+                      <option value="Financial Services">Financial Services</option>
+                      <option value="Investment Banking">Investment Banking</option>
+                      <option value="Private Equity">Private Equity</option>
+                      <option value="Management Consulting">Management Consulting</option>
+                      <option value="Healthcare Technology">Healthcare Technology</option>
+                      <option value="Enterprise Software">Enterprise Software</option>
+                      <option value="Legal Services">Legal Services</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  ) : (
+                    <p className="text-text-primary py-3">{profileData.industry || 'Not set'}</p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Founded year
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        value={profileData.foundedYear}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, foundedYear: parseInt(e.target.value) || new Date().getFullYear() }))}
-                        className="input-field"
-                        min="1800"
-                        max={new Date().getFullYear()}
-                      />
-                    ) : (
-                      <p className="text-text-primary">{profileData.foundedYear}</p>
-                    )}
-                  </div>
+                <div>
+                  <label className="label-text">Company size</label>
+                  {isEditing ? (
+                    <select
+                      value={profileData.companySize}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, companySize: e.target.value }))}
+                      className="input-field min-h-12"
+                    >
+                      <option value="">Select size</option>
+                      <option value="1-10">1-10 employees</option>
+                      <option value="11-50">11-50 employees</option>
+                      <option value="51-200">51-200 employees</option>
+                      <option value="201-500">201-500 employees</option>
+                      <option value="501-1000">501-1000 employees</option>
+                      <option value="1001-5000">1001-5000 employees</option>
+                      <option value="5000+">5000+ employees</option>
+                    </select>
+                  ) : (
+                    <p className="text-text-primary py-3">{profileData.companySize || 'Not set'}</p>
+                  )}
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-1">
-                      Website
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="url"
-                        value={profileData.website}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
-                        className="input-field"
-                        placeholder="https://company.com"
-                      />
-                    ) : (
-                      <div className="flex items-center space-x-2">
-                        <GlobeAltIcon className="h-4 w-4 text-text-tertiary" />
-                        {profileData.website ? (
-                          <a
-                            href={profileData.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-navy hover:text-navy-800"
-                          >
-                            {profileData.website}
-                          </a>
-                        ) : (
-                          <span className="text-text-tertiary">Not set</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                <div>
+                  <label className="label-text">Founded year</label>
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={profileData.foundedYear}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, foundedYear: parseInt(e.target.value) || new Date().getFullYear() }))}
+                      className="input-field min-h-12 max-w-32"
+                      min="1800"
+                      max={new Date().getFullYear()}
+                    />
+                  ) : (
+                    <p className="text-text-primary py-3">{profileData.foundedYear}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="label-text">Website</label>
+                  {isEditing ? (
+                    <input
+                      type="url"
+                      value={profileData.website}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
+                      className="input-field min-h-12"
+                      placeholder="https://company.com"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2 py-3">
+                      <GlobeAltIcon className="h-4 w-4 text-text-tertiary" />
+                      {profileData.website ? (
+                        <a
+                          href={profileData.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-link hover:underline"
+                        >
+                          {profileData.website}
+                        </a>
+                      ) : (
+                        <span className="text-text-tertiary">Not set</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -649,7 +634,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           <div className="space-y-6">
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Contact information</h3>
+                <h3 className="text-lg font-bold text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex items-center space-x-3">
@@ -672,7 +657,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
             {/* Company Stats */}
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Company stats</h3>
+                <h3 className="text-lg font-bold text-text-primary">Company stats</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex justify-between">
@@ -702,40 +687,40 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
         <div className="space-y-6">
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">Mission & vision</h3>
+              <h3 className="text-lg font-bold text-text-primary">Mission & vision</h3>
             </div>
-            <div className="px-6 py-6 space-y-6">
+            <div className="px-6 py-6 space-y-5">
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-2">
-                  Mission statement
-                </label>
+                <label className="label-text">Mission statement</label>
+                {isEditing && (
+                  <p className="form-field-hint">What is your company's purpose and reason for existing?</p>
+                )}
                 {isEditing ? (
                   <textarea
                     value={profileData.mission}
                     onChange={(e) => setProfileData(prev => ({ ...prev, mission: e.target.value }))}
-                    className="input-field"
+                    className="input-field min-h-[100px]"
                     rows={3}
-                    placeholder="What is your company's purpose and reason for existing?"
                   />
                 ) : (
-                  <p className="text-text-primary">{profileData.mission || 'Not set'}</p>
+                  <p className="text-text-primary py-3">{profileData.mission || 'Not set'}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-2">
-                  Vision statement
-                </label>
+                <label className="label-text">Vision statement</label>
+                {isEditing && (
+                  <p className="form-field-hint">What does your company aspire to become in the future?</p>
+                )}
                 {isEditing ? (
                   <textarea
                     value={profileData.vision}
                     onChange={(e) => setProfileData(prev => ({ ...prev, vision: e.target.value }))}
-                    className="input-field"
+                    className="input-field min-h-[100px]"
                     rows={3}
-                    placeholder="What does your company aspire to become in the future?"
                   />
                 ) : (
-                  <p className="text-text-primary">{profileData.vision || 'Not set'}</p>
+                  <p className="text-text-primary py-3">{profileData.vision || 'Not set'}</p>
                 )}
               </div>
             </div>
@@ -744,11 +729,11 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           {/* Company Values */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-              <h3 className="text-lg font-medium text-text-primary">Company values</h3>
+              <h3 className="text-lg font-bold text-text-primary">Company values</h3>
               {isEditing && (
                 <button
                   onClick={addValue}
-                  className="btn-outline min-h-12 text-base"
+                  className="btn-outline min-h-12"
                 >
                   <PlusIcon className="h-5 w-5 mr-2" />
                   Add value
@@ -757,17 +742,24 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
             </div>
             <div className="px-6 py-6">
               {profileData.values.length === 0 ? (
-                <p className="text-text-tertiary text-center py-8">No values added yet.</p>
+                <div className="text-center py-12">
+                  <StarIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+                  <p className="text-text-tertiary mb-4">No values added yet</p>
+                  {isEditing && (
+                    <button onClick={addValue} className="btn-primary min-h-12">
+                      <PlusIcon className="h-5 w-5 mr-2" />
+                      Add your first value
+                    </button>
+                  )}
+                </div>
               ) : (
                 <div className="space-y-4">
                   {profileData.values.map((value, index) => (
-                    <div key={value.id} className="border border-border rounded-lg p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 space-y-3">
+                    <div key={value.id} className="border border-border rounded-xl p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 space-y-4">
                           <div>
-                            <label className="block text-sm font-medium text-text-secondary mb-1">
-                              Value title
-                            </label>
+                            <label className="label-text">Value title</label>
                             {isEditing ? (
                               <input
                                 type="text"
@@ -777,18 +769,16 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                   newValues[index] = { ...value, title: e.target.value };
                                   setProfileData(prev => ({ ...prev, values: newValues }));
                                 }}
-                                className="input-field"
+                                className="input-field min-h-12"
                                 placeholder="Innovation, Integrity, Collaboration..."
                               />
                             ) : (
-                              <p className="font-medium text-text-primary">{value.title}</p>
+                              <p className="font-bold text-text-primary py-2">{value.title}</p>
                             )}
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-text-secondary mb-1">
-                              Description
-                            </label>
+                            <label className="label-text">Description</label>
                             {isEditing ? (
                               <textarea
                                 value={value.description}
@@ -797,12 +787,12 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                   newValues[index] = { ...value, description: e.target.value };
                                   setProfileData(prev => ({ ...prev, values: newValues }));
                                 }}
-                                className="input-field"
+                                className="input-field min-h-[80px]"
                                 rows={2}
                                 placeholder="Describe what this value means to your company..."
                               />
                             ) : (
-                              <p className="text-text-secondary">{value.description}</p>
+                              <p className="text-text-secondary py-2">{value.description}</p>
                             )}
                           </div>
                         </div>
@@ -815,7 +805,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                 values: prev.values.filter(v => v.id !== value.id)
                               }));
                             }}
-                            className="ml-4 text-error hover:text-error-dark"
+                            className="min-h-12 min-w-12 flex items-center justify-center text-error hover:text-error-dark hover:bg-error-light rounded-lg transition-colors"
                           >
                             <XMarkIcon className="h-5 w-5" />
                           </button>

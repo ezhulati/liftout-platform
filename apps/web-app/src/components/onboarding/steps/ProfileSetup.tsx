@@ -163,7 +163,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
     <div className="space-y-8">
       <div className="text-center">
         <UserIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-medium text-text-primary">
+        <h3 className="mt-2 text-lg font-bold text-text-primary">
           Set up your professional profile
         </h3>
         <p className="mt-1 text-sm text-text-secondary">
@@ -176,7 +176,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
 
         {/* Basic Information - Single column per Practical UI */}
         <div className="space-y-5">
-          <h4 className="text-base font-medium text-text-primary flex items-center">
+          <h4 className="text-base font-bold text-text-primary flex items-center">
             <UserIcon className="h-5 w-5 mr-2 text-text-tertiary" />
             Basic information
           </h4>
@@ -255,7 +255,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
 
         {/* Experience */}
         <div className="space-y-5">
-          <h4 className="text-base font-medium text-text-primary flex items-center">
+          <h4 className="text-base font-bold text-text-primary flex items-center">
             <BriefcaseIcon className="h-5 w-5 mr-2 text-text-tertiary" />
             Experience
           </h4>
@@ -295,7 +295,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
 
         {/* Education */}
         <div className="space-y-5">
-          <h4 className="text-base font-medium text-text-primary flex items-center">
+          <h4 className="text-base font-bold text-text-primary flex items-center">
             <AcademicCapIcon className="h-5 w-5 mr-2 text-text-tertiary" />
             Education (optional)
           </h4>

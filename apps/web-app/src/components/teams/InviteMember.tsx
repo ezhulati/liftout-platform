@@ -157,7 +157,7 @@ export function InviteMember({
                       <UserPlusIcon className="h-6 w-6 text-navy" />
                     </div>
                     <div className="ml-3">
-                      <Dialog.Title as="h3" className="text-lg font-medium text-text-primary">
+                      <Dialog.Title as="h3" className="text-lg font-bold text-text-primary">
                         Invite team member
                       </Dialog.Title>
                       <p className="text-sm text-text-secondary">

@@ -213,10 +213,10 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         <div className="flex-1 px-6 py-8">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-text-primary mb-2">
+              <h2 className="text-xl font-bold text-text-primary mb-2">
                 {currentStep.title}
               </h2>
-              <p className="text-text-secondary">
+              <p className="text-base text-text-secondary">
                 {currentStep.description}
               </p>
             </div>

@@ -74,7 +74,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use('/api', limiter);
+app.use('/api', limiter as express.RequestHandler);
 
 // Body parsing middleware
 app.use(compression());

@@ -728,7 +728,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           <div className="lg:col-span-2 space-y-6">
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Basic information</h3>
+                <h3 className="text-lg font-bold text-text-primary">Basic information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -941,7 +941,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           <div className="space-y-6">
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Contact information</h3>
+                <h3 className="text-lg font-bold text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 {/* Email - read only */}
@@ -1006,7 +1006,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             {/* Quick Stats */}
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Quick stats</h3>
+                <h3 className="text-lg font-bold text-text-primary">Quick stats</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex justify-between">
@@ -1035,7 +1035,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       {activeTab === 'skills' && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">Skills & expertise</h3>
+            <h3 className="text-lg font-bold text-text-primary">Skills & expertise</h3>
             {isEditing && (
               <button
                 onClick={addSkill}
@@ -1160,7 +1160,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       {activeTab === 'experience' && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">Work experience</h3>
+            <h3 className="text-lg font-bold text-text-primary">Work experience</h3>
             {isEditing && (
               <button
                 onClick={addExperience}
@@ -1329,7 +1329,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       {activeTab === 'portfolio' && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">Portfolio & projects</h3>
+            <h3 className="text-lg font-bold text-text-primary">Portfolio & projects</h3>
             {isEditing && (
               <button
                 onClick={addPortfolioItem}
@@ -1481,7 +1481,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           {/* Work Preferences */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">Work preferences</h3>
+              <h3 className="text-lg font-bold text-text-primary">Work preferences</h3>
             </div>
             <div className="px-6 py-6 space-y-6">
               {/* Open to opportunities */}
@@ -1552,7 +1552,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           {/* Compensation */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">Compensation expectations</h3>
+              <h3 className="text-lg font-bold text-text-primary">Compensation expectations</h3>
             </div>
             <div className="px-6 py-6 space-y-6">
               {/* Salary range */}
@@ -1657,7 +1657,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           {/* Social Links */}
           <div className="card lg:col-span-2">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">Social & professional links</h3>
+              <h3 className="text-lg font-bold text-text-primary">Social & professional links</h3>
             </div>
             <div className="px-6 py-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

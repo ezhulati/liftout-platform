@@ -143,7 +143,7 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
     <div className="space-y-8">
       <div className="text-center">
         <BuildingOfficeIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-medium text-text-primary">
+        <h3 className="mt-2 text-lg font-bold text-text-primary">
           Tell us about your company
         </h3>
         <p className="mt-1 text-sm text-text-secondary">

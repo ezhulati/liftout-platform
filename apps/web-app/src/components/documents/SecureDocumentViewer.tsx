@@ -284,7 +284,7 @@ export function SecureDocumentViewer({
     return (
       <div className={`animate-pulse space-y-4 ${className}`}>
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-16 bg-bg-elevated rounded-lg" />
+          <div key={i} className="h-16 bg-bg-elevated rounded-xl" />
         ))}
       </div>
     );
@@ -294,22 +294,22 @@ export function SecureDocumentViewer({
     <div className={`space-y-4 ${className}`}>
       {documents.length === 0 ? (
         <div className="text-center py-8">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-          <h3 className="mt-2 text-sm font-medium text-text-primary">No documents</h3>
+          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" aria-hidden="true" />
+          <h3 className="mt-2 text-sm font-bold text-text-primary">No documents</h3>
           <p className="mt-1 text-sm text-text-tertiary">No documents are available for this conversation.</p>
         </div>
       ) : (
         documents.map((doc) => (
-          <div key={doc.id} className="border border-border rounded-lg">
+          <div key={doc.id} className="border border-border rounded-xl">
             {/* Document Header */}
             <div className="p-4">
               <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3 flex-1">
+                <div className="flex items-start gap-3 flex-1">
                   <div className="text-2xl">{getDocumentTypeIcon(doc.documentType || 'other')}</div>
                   
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <h3 className={`text-sm font-medium truncate ${
+                    <div className="flex items-center gap-2">
+                      <h3 className={`text-sm font-bold truncate ${
                         doc.canView ? 'text-text-primary' : 'text-text-tertiary'
                       }`}>
                         {doc.canView ? doc.originalFilename : 'Restricted Document'}
@@ -318,19 +318,19 @@ export function SecureDocumentViewer({
                       {doc.canView && (
                         <button
                           onClick={() => toggleExpanded(doc.id!)}
-                          className="text-text-tertiary hover:text-text-secondary"
+                          className="p-1 text-text-tertiary hover:text-text-secondary transition-colors duration-fast rounded"
                         >
                           {expandedDocs.has(doc.id!) ? (
-                            <ChevronDownIcon className="h-4 w-4" />
+                            <ChevronDownIcon className="h-4 w-4" aria-hidden="true" />
                           ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
+                            <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
                           )}
                         </button>
                       )}
                     </div>
 
-                    <div className="flex items-center space-x-4 mt-1">
-                      <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-4 mt-1">
+                      <div className="flex items-center gap-2">
                         {getSecurityIcon(doc.accessLevel)}
                         <span className={`text-xs px-2 py-1 rounded-full font-medium ${getSecurityBadgeColor(doc.accessLevel)}`}>
                           {doc.accessLevel.replace('_', ' ').toUpperCase()}
@@ -360,21 +360,21 @@ export function SecureDocumentViewer({
 
                 {/* Action Buttons */}
                 {doc.canView && (
-                  <div className="flex items-center space-x-2 ml-4">
+                  <div className="flex items-center gap-2 ml-4">
                     <button
                       onClick={() => handleDocumentAction(doc, 'view')}
-                      className="btn-sm bg-navy text-white hover:bg-navy-700 inline-flex items-center"
+                      className="btn-sm bg-navy text-white hover:bg-navy-700 inline-flex items-center gap-1 min-h-10 transition-colors duration-fast"
                     >
-                      <EyeIcon className="h-4 w-4 mr-1" />
+                      <EyeIcon className="h-4 w-4" aria-hidden="true" />
                       View
                     </button>
 
                     {doc.canDownload && (
                       <button
                         onClick={() => handleDocumentAction(doc, 'download')}
-                        className="btn-sm bg-navy-600 text-white hover:bg-navy-700 inline-flex items-center"
+                        className="btn-sm bg-navy-600 text-white hover:bg-navy-700 inline-flex items-center gap-1 min-h-10 transition-colors duration-fast"
                       >
-                        <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
+                        <ArrowDownTrayIcon className="h-4 w-4" aria-hidden="true" />
                         Download
                       </button>
                     )}
@@ -382,9 +382,9 @@ export function SecureDocumentViewer({
                     {doc.canShare && (
                       <button
                         onClick={() => handleDocumentAction(doc, 'share')}
-                        className="btn-sm bg-success text-white hover:bg-success/90 inline-flex items-center"
+                        className="btn-sm bg-success text-white hover:bg-success/90 inline-flex items-center gap-1 min-h-10 transition-colors duration-fast"
                       >
-                        <ShareIcon className="h-4 w-4 mr-1" />
+                        <ShareIcon className="h-4 w-4" aria-hidden="true" />
                         Share
                       </button>
                     )}
@@ -394,11 +394,11 @@ export function SecureDocumentViewer({
 
               {/* Legal and Compliance Notices */}
               {doc.canView && doc.isLegalPrivileged && (
-                <div className="mt-3 p-3 bg-error-light border border-error/20 rounded-lg">
-                  <div className="flex">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-error mr-2" />
+                <div className="mt-3 p-3 bg-error-light border border-error/20 rounded-xl">
+                  <div className="flex gap-2">
+                    <ExclamationTriangleIcon className="h-5 w-5 text-error" aria-hidden="true" />
                     <div className="text-sm text-error-dark">
-                      <p className="font-medium">Legally Privileged Document</p>
+                      <p className="font-bold">Legally Privileged Document</p>
                       <p className="mt-1">
                         This document contains legally privileged information. Access and use are restricted and monitored.
                       </p>
@@ -413,7 +413,7 @@ export function SecureDocumentViewer({
               <div className="border-t border-border p-4 bg-bg-alt">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-sm font-medium text-text-primary mb-2">Document Details</h4>
+                    <h4 className="text-sm font-bold text-text-primary mb-2">Document Details</h4>
                     <dl className="space-y-1 text-xs">
                       <div className="flex justify-between">
                         <dt className="text-text-tertiary">Uploaded by:</dt>
@@ -434,8 +434,8 @@ export function SecureDocumentViewer({
                       {doc.expiresAt && (
                         <div className="flex justify-between">
                           <dt className="text-text-tertiary">Expires:</dt>
-                          <dd className="text-text-primary flex items-center">
-                            <ClockIcon className="h-3 w-3 mr-1" />
+                          <dd className="text-text-primary flex items-center gap-1">
+                            <ClockIcon className="h-3 w-3" aria-hidden="true" />
                             {formatDate(doc.expiresAt)}
                           </dd>
                         </div>
@@ -445,7 +445,7 @@ export function SecureDocumentViewer({
 
                   {showAccessControls && doc.sharedWith && doc.sharedWith.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium text-text-primary mb-2">Shared With</h4>
+                      <h4 className="text-sm font-bold text-text-primary mb-2">Shared With</h4>
                       <div className="space-y-1">
                         {doc.sharedWith.slice(0, 3).map((share, index) => (
                           <div key={index} className="flex items-center justify-between text-xs">
@@ -465,7 +465,7 @@ export function SecureDocumentViewer({
 
                 {doc.complianceLabels && doc.complianceLabels.length > 0 && (
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-text-primary mb-2">Compliance Labels</h4>
+                    <h4 className="text-sm font-bold text-text-primary mb-2">Compliance Labels</h4>
                     <div className="flex flex-wrap gap-1">
                       {doc.complianceLabels.map((label, index) => (
                         <span
@@ -487,39 +487,39 @@ export function SecureDocumentViewer({
       {/* Share Modal */}
       {shareModalDoc && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-bg-surface rounded-lg p-6 w-full max-w-md mx-4">
+          <div className="bg-bg-surface rounded-xl p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Share Document</h3>
+              <h3 className="text-lg font-bold">Share Document</h3>
               <button
                 onClick={() => setShareModalDoc(null)}
-                className="text-text-tertiary hover:text-text-secondary"
+                className="p-2 min-h-10 min-w-10 text-text-tertiary hover:text-text-secondary transition-colors duration-fast rounded-lg hover:bg-bg-alt"
               >
-                <XMarkIcon className="h-6 w-6" />
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
+                <label className="block text-sm font-bold text-text-secondary mb-1">
                   Recipient Emails (comma-separated)
                 </label>
                 <textarea
                   value={shareOptions.recipientEmails}
                   onChange={(e) => setShareOptions({ ...shareOptions, recipientEmails: e.target.value })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
+                  className="w-full p-3 border border-border rounded-xl focus:ring-2 focus:ring-navy focus:border-navy"
                   rows={3}
                   placeholder="user1@company.com, user2@company.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
+                <label className="block text-sm font-bold text-text-secondary mb-1">
                   Permission Level
                 </label>
                 <select
                   value={shareOptions.shareType}
                   onChange={(e) => setShareOptions({ ...shareOptions, shareType: e.target.value as any })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
+                  className="w-full p-3 border border-border rounded-xl focus:ring-2 focus:ring-navy focus:border-navy"
                 >
                   <option value="view">View Only</option>
                   <option value="download">View & Download</option>
@@ -528,14 +528,14 @@ export function SecureDocumentViewer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
+                <label className="block text-sm font-bold text-text-secondary mb-1">
                   Expires In (days)
                 </label>
                 <input
                   type="number"
                   value={shareOptions.expiresInDays}
                   onChange={(e) => setShareOptions({ ...shareOptions, expiresInDays: parseInt(e.target.value) })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
+                  className="w-full p-3 border border-border rounded-xl focus:ring-2 focus:ring-navy focus:border-navy"
                   min="1"
                   max="365"
                 />
@@ -564,20 +564,21 @@ export function SecureDocumentViewer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-secondary mb-1">
+                <label className="block text-sm font-bold text-text-secondary mb-1">
                   Custom Message (optional)
                 </label>
                 <textarea
                   value={shareOptions.customMessage}
                   onChange={(e) => setShareOptions({ ...shareOptions, customMessage: e.target.value })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
+                  className="w-full p-3 border border-border rounded-xl focus:ring-2 focus:ring-navy focus:border-navy"
                   rows={2}
                   placeholder="Add a message for recipients..."
                 />
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 mt-6">
+            {/* Practical UI: LEFT aligned button group, primary first */}
+            <div className="flex items-center gap-4 mt-6">
               <button
                 onClick={handleShare}
                 className="btn-primary min-h-12"
@@ -586,7 +587,7 @@ export function SecureDocumentViewer({
               </button>
               <button
                 onClick={() => setShareModalDoc(null)}
-                className="text-link min-h-12 flex items-center"
+                className="text-link min-h-12"
               >
                 Cancel
               </button>

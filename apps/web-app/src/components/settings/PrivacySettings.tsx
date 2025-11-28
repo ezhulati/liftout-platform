@@ -168,21 +168,21 @@ export function PrivacySettings() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg leading-6 font-medium text-text-primary">Privacy settings</h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <h3 className="text-lg font-bold text-text-primary">Privacy settings</h3>
+        <p className="mt-1 text-sm font-normal text-text-secondary leading-relaxed">
           Control who can see your information and how it's used on the platform.
         </p>
       </div>
 
-      {/* Profile Visibility */}
+      {/* Profile Visibility - Practical UI: bold section headings */}
       <div className="space-y-4">
         <div className="flex items-center">
           <EyeIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Profile visibility</h4>
+          <h4 className="text-base font-bold text-text-primary">Profile visibility</h4>
         </div>
-        <p className="text-sm text-text-secondary">
+        <p className="text-sm font-normal text-text-secondary">
           Choose who can see your profile and contact information.
         </p>
 
@@ -242,9 +242,9 @@ export function PrivacySettings() {
         )}
       </div>
 
-      {/* Privacy Controls */}
+      {/* Privacy Controls - Practical UI: bold section headings */}
       <div className="space-y-4">
-        <h4 className="text-base font-medium text-text-primary">Privacy controls</h4>
+        <h4 className="text-base font-bold text-text-primary">Privacy controls</h4>
         <div className="space-y-4">
           {privacyToggles.map((toggle) => (
             <div
@@ -263,14 +263,14 @@ export function PrivacySettings() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center">
-                    <p className="text-base font-medium text-text-primary">{toggle.title}</p>
+                    <p className="text-base font-bold text-text-primary">{toggle.title}</p>
                     {toggle.important && (
-                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-navy-100 text-navy-800">
+                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-bold bg-navy-100 text-navy-800">
                         Important
                       </span>
                     )}
                   </div>
-                  <p className="text-base text-text-secondary mt-1">{toggle.description}</p>
+                  <p className="text-sm font-normal text-text-secondary mt-1">{toggle.description}</p>
                 </div>
               </div>
               <ToggleSwitch
@@ -282,9 +282,9 @@ export function PrivacySettings() {
         </div>
       </div>
 
-      {/* Data Privacy Information */}
-      <div className="bg-bg-alt rounded-lg p-6">
-        <h4 className="text-base font-medium text-text-primary mb-4">Data privacy and security</h4>
+      {/* Data Privacy Information - Practical UI: bold headings */}
+      <div className="bg-bg-alt rounded-xl p-6">
+        <h4 className="text-base font-bold text-text-primary mb-4">Data privacy and security</h4>
         <div className="space-y-3 text-sm text-text-secondary">
           <p>
             <strong className="text-text-primary">Data protection:</strong> Your personal information is encrypted and stored securely.

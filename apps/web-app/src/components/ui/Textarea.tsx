@@ -140,7 +140,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             className={textareaClasses}
             aria-invalid={error ? 'true' : undefined}
             aria-describedby={error ? `${name}-error` : hint ? `${name}-hint` : undefined}
-            style={autoResize ? { resize: 'none', overflow: 'hidden' } : undefined}
+            style={autoResize ? { resize: 'none', overflow: 'hidden' } as any : undefined}
             {...props}
           />
           {(showCharCount || maxLength) && (
