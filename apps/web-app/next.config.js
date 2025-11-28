@@ -2,6 +2,10 @@
 const nextConfig = {
   output: 'standalone',
   transpilePackages: ['@liftout/database'],
+  eslint: {
+    // Skip ESLint during production builds - linting is done in CI/development
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
   },

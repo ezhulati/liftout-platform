@@ -58,9 +58,20 @@ export async function GET(request: NextRequest) {
       // Transform response to match existing frontend expectations if needed
       // The API server returns { success: true, data: { opportunities, pagination } }
       // The frontend expects { opportunities, total, filters }
+      // API server opportunities have company as object, frontend expects string
       if (data.success && data.data) {
+        const transformedOpportunities = (data.data.opportunities || []).map((opp: any) => ({
+          ...opp,
+          // Transform company object to company name string if it's an object
+          company: typeof opp.company === 'object' && opp.company !== null
+            ? opp.company.name
+            : opp.company,
+          // Extract other company info into separate fields if needed
+          companyData: typeof opp.company === 'object' ? opp.company : undefined
+        }));
+
         return NextResponse.json({
-          opportunities: data.data.opportunities || [],
+          opportunities: transformedOpportunities,
           total: data.data.pagination?.total || 0,
           pagination: data.data.pagination,
           filters: {
