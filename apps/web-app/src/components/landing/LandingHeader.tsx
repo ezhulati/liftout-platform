@@ -100,21 +100,23 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
         isScrolled ? 'py-3' : 'py-4'
       }`}>
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo with lifted container */}
           <Link
             href="/"
             className="flex items-center min-h-12"
             aria-label="Liftout Home"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <Image
-              src={useTransparentStyle ? '/Liftout-logo-white.png' : '/Liftout-logo-dark.png'}
-              alt="Liftout"
-              width={240}
-              height={66}
-              className="h-[66px] w-auto"
-              priority
-            />
+            <div className="bg-white rounded-xl px-4 py-2 shadow-lg shadow-navy/10 hover:shadow-xl hover:shadow-navy/15 transition-shadow duration-300">
+              <Image
+                src="/Liftout-logo-dark.png"
+                alt="Liftout"
+                width={200}
+                height={55}
+                className="h-[55px] w-auto"
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop navigation - Practical UI: 18px text, 48px touch targets */}
