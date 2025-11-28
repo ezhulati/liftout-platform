@@ -40,22 +40,22 @@ interface RoleChangeModalProps {
 const getRoleIcon = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return <StarIcon className="h-5 w-5 text-yellow-600" />;
+      return <StarIcon className="h-5 w-5 text-gold" />;
     case 'admin':
-      return <ShieldCheckIcon className="h-5 w-5 text-blue-600" />;
+      return <ShieldCheckIcon className="h-5 w-5 text-navy" />;
     case 'member':
-      return <UserIcon className="h-5 w-5 text-gray-600" />;
+      return <UserIcon className="h-5 w-5 text-text-secondary" />;
   }
 };
 
 const getRoleBadgeColor = (role: TeamRole) => {
   switch (role) {
     case 'leader':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-gold-100 text-gold-800';
     case 'admin':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-navy-50 text-navy-800';
     case 'member':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-bg-alt text-text-secondary';
   }
 };
 
@@ -127,16 +127,16 @@ function RoleChangeModal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title as="h3" className="text-lg font-medium text-gray-900 mb-4">
+                <Dialog.Title as="h3" className="text-lg font-medium text-text-primary mb-4">
                   Change Role for {member.name}
                 </Dialog.Title>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Current Role */}
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="bg-bg-alt rounded-lg p-3">
                     <div className="flex items-center space-x-2">
                       {getRoleIcon(member.role)}
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-text-secondary">
                         Current: {ROLE_DESCRIPTIONS[member.role].title}
                       </span>
                     </div>
@@ -144,7 +144,7 @@ function RoleChangeModal({
 
                   {/* Role Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                       New Role
                     </label>
                     <div className="space-y-2">
@@ -157,10 +157,10 @@ function RoleChangeModal({
                             key={role}
                             className={`flex items-start space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${
                               selectedRole === role 
-                                ? 'border-blue-500 bg-blue-50' 
+                                ? 'border-navy bg-navy-50' 
                                 : canChange 
-                                  ? 'border-gray-200 hover:border-gray-300' 
-                                  : 'border-gray-100 bg-gray-50 cursor-not-allowed opacity-60'
+                                  ? 'border-border hover:border-border' 
+                                  : 'border-border bg-bg-alt cursor-not-allowed opacity-60'
                             }`}
                           >
                             <input
@@ -175,15 +175,15 @@ function RoleChangeModal({
                             <div className="flex-1">
                               <div className="flex items-center space-x-2">
                                 {getRoleIcon(roleKey)}
-                                <span className="font-medium text-gray-900">
+                                <span className="font-medium text-text-primary">
                                   {description.title}
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-600 mt-1">
+                              <p className="text-sm text-text-secondary mt-1">
                                 {description.description}
                               </p>
                               {!canChange && (
-                                <p className="text-xs text-red-600 mt-1">
+                                <p className="text-xs text-error mt-1">
                                   You don't have permission to assign this role
                                 </p>
                               )}
@@ -196,7 +196,7 @@ function RoleChangeModal({
 
                   {/* Reason */}
                   <div>
-                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="reason" className="block text-sm font-medium text-text-secondary mb-2">
                       Reason (Optional)
                     </label>
                     <textarea
@@ -204,7 +204,7 @@ function RoleChangeModal({
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-navy focus:border-navy"
                       placeholder="Why are you changing this person's role?"
                     />
                   </div>
@@ -233,14 +233,14 @@ function RoleChangeModal({
                       type="button"
                       onClick={onClose}
                       disabled={loading}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                      className="px-4 py-2 text-sm font-medium text-text-secondary bg-white border border-border rounded-md shadow-sm hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={loading || selectedRole === member.role}
-                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-navy border border-transparent rounded-md shadow-sm hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <>
@@ -366,10 +366,10 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
   if (loading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        <div className="h-4 bg-bg-alt rounded w-1/4"></div>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-gray-200 rounded"></div>
+            <div key={i} className="h-16 bg-bg-alt rounded"></div>
           ))}
         </div>
       </div>
@@ -381,23 +381,23 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <UserGroupIcon className="h-6 w-6 text-blue-600 mr-2" />
-          <h3 className="text-lg font-medium text-gray-900">
+          <UserGroupIcon className="h-6 w-6 text-navy mr-2" />
+          <h3 className="text-lg font-medium text-text-primary">
             Team Members ({members.length})
           </h3>
         </div>
       </div>
 
       {/* Members List */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg border border-border overflow-hidden">
         <div className="divide-y divide-gray-200">
           {members.map((member) => (
             <div key={member.id} className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-sm font-medium text-gray-700">
+                    <div className="h-10 w-10 rounded-full bg-bg-alt flex items-center justify-center">
+                      <span className="text-sm font-medium text-text-secondary">
                         {member.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -405,20 +405,20 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                   
                   <div>
                     <div className="flex items-center space-x-2">
-                      <h4 className="text-sm font-medium text-gray-900">
+                      <h4 className="text-sm font-medium text-text-primary">
                         {member.name}
                       </h4>
                       {member.userId === user?.id && (
-                        <span className="text-xs text-blue-600 font-medium">(You)</span>
+                        <span className="text-xs text-navy font-medium">(You)</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500">{member.email}</p>
+                    <p className="text-sm text-text-tertiary">{member.email}</p>
                     <div className="flex items-center space-x-2 mt-1">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getRoleBadgeColor(member.role)}`}>
                         <span className="mr-1">{getRoleIcon(member.role)}</span>
                         {ROLE_DESCRIPTIONS[member.role].title}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-text-tertiary">
                         Joined {formatDistanceToNow(
                           member.joinedAt instanceof Date ? member.joinedAt : member.joinedAt.toDate(), 
                           { addSuffix: true }
@@ -433,7 +433,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                     <button
                       onClick={() => openRoleModal(member)}
                       disabled={actionLoading === member.id}
-                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors disabled:opacity-50"
+                      className="p-1 text-text-tertiary hover:text-navy-800 transition-colors disabled:opacity-50"
                       title="Change role"
                     >
                       <AdjustmentsHorizontalIcon className="h-4 w-4" />
@@ -444,7 +444,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                     <button
                       onClick={() => handleRemoveMember(member)}
                       disabled={actionLoading === member.id}
-                      className="p-1 text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                      className="p-1 text-text-tertiary hover:text-error transition-colors disabled:opacity-50"
                       title="Remove member"
                     >
                       <TrashIcon className="h-4 w-4" />

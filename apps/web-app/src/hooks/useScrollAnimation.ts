@@ -14,7 +14,8 @@ export function useScrollAnimation({
   triggerOnce = true,
 }: UseScrollAnimationOptions = {}) {
   const ref = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  // Start visible to prevent blank page if JS fails to hydrate
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const element = ref.current;

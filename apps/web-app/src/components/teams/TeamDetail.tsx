@@ -132,9 +132,9 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
   if (error || !team) {
     return (
       <div className="text-center py-12">
-        <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Team not found</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
+        <p className="mt-1 text-sm text-text-tertiary">
           The team profile you're looking for doesn't exist or you don't have permission to view it.
         </p>
         <div className="mt-6">
@@ -163,7 +163,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+                  <h1 className="text-2xl font-bold text-text-primary flex items-center">
                     {team.name}
                     {team.openToLiftout && (
                       <CheckBadgeIconSolid className="h-6 w-6 text-green-500 ml-2" title="Open to liftout opportunities" />
@@ -171,12 +171,12 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                   </h1>
                   <div className="flex items-center space-x-4 mt-1">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      team.openToLiftout ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      team.openToLiftout ? 'bg-success-light text-success-dark' : 'bg-bg-alt text-text-primary'
                     }`}>
                       {team.openToLiftout ? 'Available for Liftout' : 'Not Available'}
                     </span>
                     {team.cohesionScore > 0 && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
                         {team.cohesionScore}% Team Cohesion
                       </span>
                     )}
@@ -184,9 +184,9 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                 </div>
               </div>
               
-              <p className="text-gray-700 text-lg mb-4">{team.description}</p>
+              <p className="text-text-secondary text-lg mb-4">{team.description}</p>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-text-secondary">
                 <div className="flex items-center">
                   <UserGroupIcon className="h-4 w-4 mr-2" />
                   <span>{team.size} members</span>
@@ -207,8 +207,8 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
 
               {team.achievements.length > 0 && (
                 <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">Key Achievements</h3>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+                  <h3 className="text-sm font-medium text-text-primary mb-2">Key Achievements</h3>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-text-secondary">
                     {team.achievements.map((achievement, index) => (
                       <li key={index}>{achievement}</li>
                     ))}
@@ -271,9 +271,9 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Team Members */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-gray-900">Team Members</h2>
+                <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
                 {isTeamOwner && (
                   <Link href={`/app/teams/${teamId}/members`} className="btn-sm btn-secondary flex items-center">
                     <PlusIcon className="h-4 w-4 mr-1" />
@@ -285,18 +285,18 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
             <div className="px-6 py-4">
               <div className="space-y-4">
                 {team.members.map((member, index) => (
-                  <div key={member.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-sm font-medium text-gray-600">
+                  <div key={member.id} className="flex items-start space-x-4 p-4 border border-border rounded-lg">
+                    <div className="h-12 w-12 rounded-full bg-bg-alt flex items-center justify-center">
+                      <span className="text-sm font-medium text-text-secondary">
                         {member.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium text-gray-900">{member.name}</h3>
-                          <p className="text-sm text-gray-600">{member.role}</p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <h3 className="font-medium text-text-primary">{member.name}</h3>
+                          <p className="text-sm text-text-secondary">{member.role}</p>
+                          <p className="text-xs text-text-tertiary mt-1">
                             {member.experience} years experience
                           </p>
                         </div>
@@ -315,13 +315,13 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                         {member.skills.slice(0, 4).map((skill, skillIndex) => (
                           <span 
                             key={skillIndex} 
-                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-primary"
                           >
                             {skill}
                           </span>
                         ))}
                         {member.skills.length > 4 && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-secondary">
                             +{member.skills.length - 4} more
                           </span>
                         )}
@@ -335,8 +335,8 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
 
           {/* Team Skills */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Team Skills & Expertise</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Team Skills & Expertise</h2>
             </div>
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
@@ -357,30 +357,30 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
         <div className="space-y-6">
           {/* Quick Stats */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Team Metrics</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Team Metrics</h2>
             </div>
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Team Size</span>
+                <span className="text-sm text-text-secondary">Team Size</span>
                 <span className="text-sm font-medium">{team.size}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Avg Experience</span>
+                <span className="text-sm text-text-secondary">Avg Experience</span>
                 <span className="text-sm font-medium">{avgExperience.toFixed(1)} years</span>
               </div>
               {team.cohesionScore > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Team Cohesion</span>
+                  <span className="text-sm text-text-secondary">Team Cohesion</span>
                   <span className="text-sm font-medium">{team.cohesionScore}%</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Skills Diversity</span>
+                <span className="text-sm text-text-secondary">Skills Diversity</span>
                 <span className="text-sm font-medium">{allSkills.length} skills</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Industry</span>
+                <span className="text-sm text-text-secondary">Industry</span>
                 <span className="text-sm font-medium">{team.industry}</span>
               </div>
             </div>
@@ -389,23 +389,23 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
           {/* Compensation */}
           {(isCompanyUser || isTeamOwner) && (
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900 flex items-center">
+              <div className="px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-medium text-text-primary flex items-center">
                   <CurrencyDollarIcon className="h-5 w-5 mr-2" />
                   Compensation
                 </h2>
               </div>
               <div className="px-6 py-4 space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Range</span>
+                  <span className="text-sm text-text-secondary">Range</span>
                   <span className="text-sm font-medium">{team.compensation.range}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Equity</span>
+                  <span className="text-sm text-text-secondary">Equity</span>
                   <span className="text-sm font-medium">{team.compensation.equity ? 'Yes' : 'No'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Benefits</span>
+                  <span className="text-sm text-text-secondary">Benefits</span>
                   <span className="text-sm font-medium">{team.compensation.benefits}</span>
                 </div>
               </div>
@@ -414,23 +414,23 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
 
           {/* Availability */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary flex items-center">
                 <ClockIcon className="h-5 w-5 mr-2" />
                 Availability
               </h2>
             </div>
             <div className="px-6 py-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Status</span>
+                <span className="text-sm text-text-secondary">Status</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  team.openToLiftout ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  team.openToLiftout ? 'bg-success-light text-success-dark' : 'bg-error-light text-error-dark'
                 }`}>
                   {team.openToLiftout ? 'Available' : 'Not Available'}
                 </span>
               </div>
               <div className="mt-3">
-                <span className="text-sm text-gray-600">Timeline</span>
+                <span className="text-sm text-text-secondary">Timeline</span>
                 <p className="text-sm font-medium mt-1">{team.availability}</p>
               </div>
             </div>
@@ -438,16 +438,16 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
 
           {/* Metadata */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Profile Info</h2>
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-medium text-text-primary">Profile Info</h2>
             </div>
             <div className="px-6 py-4 space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Created</span>
+                <span className="text-text-secondary">Created</span>
                 <span className="font-medium">{new Date(team.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Last Updated</span>
+                <span className="text-text-secondary">Last Updated</span>
                 <span className="font-medium">{new Date(team.updatedAt).toLocaleDateString()}</span>
               </div>
             </div>

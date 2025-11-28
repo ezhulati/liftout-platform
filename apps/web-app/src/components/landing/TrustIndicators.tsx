@@ -10,18 +10,18 @@ const stats = [
   },
   {
     value: '$2.1B',
-    label: 'Successful acquisitions',
-    description: 'Total transaction value',
+    label: 'Transaction value',
+    description: 'Successful acquisitions',
   },
   {
     value: '89%',
     label: 'Satisfaction rate',
-    description: 'Both companies and teams',
+    description: 'Companies and teams',
   },
   {
     value: '3x',
     label: 'Faster productivity',
-    description: 'Vs. individual hiring',
+    description: 'Versus individual hiring',
   },
 ];
 
@@ -31,8 +31,7 @@ export function TrustIndicators() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-12 lg:py-16"
-      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
+      className="py-16 lg:py-20 bg-navy-900"
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -49,13 +48,16 @@ export function TrustIndicators() {
               }`}
               style={{ transitionDelay: isVisible ? `${index * 100}ms` : '0ms' }}
             >
-              <div className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-gold mb-2">
+              {/* Value - large, white */}
+              <div className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
                 {stat.value}
               </div>
+              {/* Label - white, semibold */}
               <div className="font-semibold text-white text-sm mb-1">
                 {stat.label}
               </div>
-              <div className="text-white/60 text-xs">
+              {/* Description - white with opacity */}
+              <div className="text-white/70 text-xs">
                 {stat.description}
               </div>
             </div>

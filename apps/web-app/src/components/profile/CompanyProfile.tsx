@@ -480,13 +480,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           {/* Company Information */}
           <div className="lg:col-span-2 space-y-6">
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Company Information</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Company information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Company Name
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
+                    Company name
                   </label>
                   {isEditing ? (
                     <input
@@ -496,12 +496,12 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                       className="input-field"
                     />
                   ) : (
-                    <p className="text-gray-900">{profileData.companyName || 'Not set'}</p>
+                    <p className="text-text-primary">{profileData.companyName || 'Not set'}</p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Tagline
                   </label>
                   {isEditing ? (
@@ -513,13 +513,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                       placeholder="Transforming the future of work"
                     />
                   ) : (
-                    <p className="text-gray-900">{profileData.tagline || 'Not set'}</p>
+                    <p className="text-text-primary">{profileData.tagline || 'Not set'}</p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Company Description
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
+                    Company description
                   </label>
                   {isEditing ? (
                     <textarea
@@ -530,13 +530,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                       placeholder="Describe your company, what you do, and what makes you unique..."
                     />
                   ) : (
-                    <p className="text-gray-900">{profileData.description || 'Not set'}</p>
+                    <p className="text-text-primary">{profileData.description || 'Not set'}</p>
                   )}
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Industry
                     </label>
                     {isEditing ? (
@@ -556,13 +556,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                         <option value="Other">Other</option>
                       </select>
                     ) : (
-                      <p className="text-gray-900">{profileData.industry || 'Not set'}</p>
+                      <p className="text-text-primary">{profileData.industry || 'Not set'}</p>
                     )}
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Company Size
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Company size
                     </label>
                     {isEditing ? (
                       <select
@@ -580,15 +580,15 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                         <option value="5000+">5000+ employees</option>
                       </select>
                     ) : (
-                      <p className="text-gray-900">{profileData.companySize || 'Not set'}</p>
+                      <p className="text-text-primary">{profileData.companySize || 'Not set'}</p>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Founded Year
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
+                      Founded year
                     </label>
                     {isEditing ? (
                       <input
@@ -600,12 +600,12 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                         max={new Date().getFullYear()}
                       />
                     ) : (
-                      <p className="text-gray-900">{profileData.foundedYear}</p>
+                      <p className="text-text-primary">{profileData.foundedYear}</p>
                     )}
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Website
                     </label>
                     {isEditing ? (
@@ -618,18 +618,18 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                       />
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <GlobeAltIcon className="h-4 w-4 text-gray-400" />
+                        <GlobeAltIcon className="h-4 w-4 text-text-tertiary" />
                         {profileData.website ? (
-                          <a 
-                            href={profileData.website} 
-                            target="_blank" 
+                          <a
+                            href={profileData.website}
+                            target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-navy hover:text-navy-800"
                           >
                             {profileData.website}
                           </a>
                         ) : (
-                          <span className="text-gray-500">Not set</span>
+                          <span className="text-text-tertiary">Not set</span>
                         )}
                       </div>
                     )}
@@ -642,48 +642,48 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
           {/* Quick Stats & Contact */}
           <div className="space-y-6">
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Contact Information</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex items-center space-x-3">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{profileData.contactEmail}</span>
+                  <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{profileData.contactEmail}</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
-                  <PhoneIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{profileData.contactPhone || 'Not set'}</span>
+                  <PhoneIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{profileData.contactPhone || 'Not set'}</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
-                  <MapPinIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{profileData.headquarters || 'Not set'}</span>
+                  <MapPinIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{profileData.headquarters || 'Not set'}</span>
                 </div>
               </div>
             </div>
-            
+
             {/* Company Stats */}
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Company Stats</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Company stats</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Employees</span>
-                  <span className="font-medium">{profileData.stats.employeeCount || 'Not set'}</span>
+                  <span className="text-text-secondary">Employees</span>
+                  <span className="font-medium text-text-primary">{profileData.stats.employeeCount || 'Not set'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Years in Business</span>
-                  <span className="font-medium">{profileData.stats.yearsInBusiness}</span>
+                  <span className="text-text-secondary">Years in business</span>
+                  <span className="font-medium text-text-primary">{profileData.stats.yearsInBusiness}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Offices</span>
-                  <span className="font-medium">{profileData.offices.length}</span>
+                  <span className="text-text-secondary">Offices</span>
+                  <span className="font-medium text-text-primary">{profileData.offices.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Awards</span>
-                  <span className="font-medium">{profileData.achievements.length}</span>
+                  <span className="text-text-secondary">Awards</span>
+                  <span className="font-medium text-text-primary">{profileData.achievements.length}</span>
                 </div>
               </div>
             </div>
@@ -695,13 +695,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
       {activeTab === 'culture' && (
         <div className="space-y-6">
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Mission & Vision</h3>
+            <div className="px-6 py-4 border-b border-border">
+              <h3 className="text-lg font-medium text-text-primary">Mission & vision</h3>
             </div>
             <div className="px-6 py-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mission Statement
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  Mission statement
                 </label>
                 {isEditing ? (
                   <textarea
@@ -712,13 +712,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                     placeholder="What is your company's purpose and reason for existing?"
                   />
                 ) : (
-                  <p className="text-gray-900">{profileData.mission || 'Not set'}</p>
+                  <p className="text-text-primary">{profileData.mission || 'Not set'}</p>
                 )}
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Vision Statement
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  Vision statement
                 </label>
                 {isEditing ? (
                   <textarea
@@ -729,7 +729,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                     placeholder="What does your company aspire to become in the future?"
                   />
                 ) : (
-                  <p className="text-gray-900">{profileData.vision || 'Not set'}</p>
+                  <p className="text-text-primary">{profileData.vision || 'Not set'}</p>
                 )}
               </div>
             </div>
@@ -737,30 +737,30 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
 
           {/* Company Values */}
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h3 className="text-lg font-medium text-gray-900">Company Values</h3>
+            <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+              <h3 className="text-lg font-medium text-text-primary">Company values</h3>
               {isEditing && (
                 <button
                   onClick={addValue}
                   className="btn-secondary text-sm"
                 >
                   <PlusIcon className="h-4 w-4 mr-1" />
-                  Add Value
+                  Add value
                 </button>
               )}
             </div>
             <div className="px-6 py-6">
               {profileData.values.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No values added yet.</p>
+                <p className="text-text-tertiary text-center py-8">No values added yet.</p>
               ) : (
                 <div className="space-y-4">
                   {profileData.values.map((value, index) => (
-                    <div key={value.id} className="border border-gray-200 rounded-lg p-4">
+                    <div key={value.id} className="border border-border rounded-lg p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 space-y-3">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Value Title
+                            <label className="block text-sm font-medium text-text-secondary mb-1">
+                              Value title
                             </label>
                             {isEditing ? (
                               <input
@@ -775,12 +775,12 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                 placeholder="Innovation, Integrity, Collaboration..."
                               />
                             ) : (
-                              <p className="font-medium">{value.title}</p>
+                              <p className="font-medium text-text-primary">{value.title}</p>
                             )}
                           </div>
-                          
+
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-text-secondary mb-1">
                               Description
                             </label>
                             {isEditing ? (
@@ -796,11 +796,11 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                 placeholder="Describe what this value means to your company..."
                               />
                             ) : (
-                              <p className="text-gray-600">{value.description}</p>
+                              <p className="text-text-secondary">{value.description}</p>
                             )}
                           </div>
                         </div>
-                        
+
                         {isEditing && (
                           <button
                             onClick={() => {
@@ -809,7 +809,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                                 values: prev.values.filter(v => v.id !== value.id)
                               }));
                             }}
-                            className="ml-4 text-red-600 hover:text-red-800"
+                            className="ml-4 text-error hover:text-error-dark"
                           >
                             <XMarkIcon className="h-5 w-5" />
                           </button>

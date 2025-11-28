@@ -271,42 +271,37 @@
     color: var(--text-on-navy);
   }
 
-  /* Secondary Button - Gold solid fill
-     Use for prominent secondary actions */
+  /* Secondary Button - Outline style per Practical UI
+     Use for alternative actions or equal-importance multiple actions */
   .btn-secondary {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 1rem;
-    background-color: var(--gold);
-    color: var(--text-on-gold);
+    background-color: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-secondary:hover {
-    background-color: var(--gold-hover);
-    color: var(--text-on-gold);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px hsl(38 70% 50% / 0.3);
+    background-color: var(--navy);
+    color: var(--text-on-navy);
+    border-color: var(--navy);
   }
 
   .btn-secondary:active {
     transform: translateY(0);
-    color: var(--text-on-gold);
   }
 
   .btn-secondary:focus-visible {
     box-shadow: var(--focus-ring);
-    color: var(--text-on-gold);
   }
 
   .btn-secondary:disabled {
     @apply opacity-50 cursor-not-allowed;
-    transform: none;
-    box-shadow: none;
-    color: var(--text-on-gold);
   }
 
   /* Outline Button - Border only, no fill

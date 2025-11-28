@@ -96,11 +96,11 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="card p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Due Diligence Workflow</h2>
-            <p className="text-gray-600 mt-1">
+            <h2 className="text-2xl font-bold text-text-primary">Due diligence workflow</h2>
+            <p className="text-text-secondary mt-1">
               Strategic Analytics Core × Healthcare AI Innovation Team
             </p>
           </div>
@@ -117,115 +117,115 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="card p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-green-500" />
+              <CheckCircleIcon className="h-8 w-8 text-success" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Progress</p>
-              <p className="text-2xl font-semibold text-gray-900">{progress.progressPercentage}%</p>
-              <p className="text-xs text-gray-500">{progress.completedChecks}/{progress.totalChecks} checks</p>
+              <p className="text-sm font-medium text-text-tertiary">Progress</p>
+              <p className="text-2xl font-semibold text-text-primary">{progress.progressPercentage}%</p>
+              <p className="text-xs text-text-tertiary">{progress.completedChecks}/{progress.totalChecks} checks</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="card p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <ExclamationTriangleIcon className="h-8 w-8 text-yellow-500" />
+              <ExclamationTriangleIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">High Priority</p>
-              <p className="text-2xl font-semibold text-gray-900">{progress.highPriorityCompleted}/{progress.highPriorityTotal}</p>
-              <p className="text-xs text-gray-500">Critical checks</p>
+              <p className="text-sm font-medium text-text-tertiary">High priority</p>
+              <p className="text-2xl font-semibold text-text-primary">{progress.highPriorityCompleted}/{progress.highPriorityTotal}</p>
+              <p className="text-xs text-text-tertiary">Critical checks</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="card p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <ClockIcon className="h-8 w-8 text-blue-500" />
+              <ClockIcon className="h-8 w-8 text-navy" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Timeline</p>
-              <p className="text-2xl font-semibold text-gray-900">6</p>
-              <p className="text-xs text-gray-500">Weeks remaining</p>
+              <p className="text-sm font-medium text-text-tertiary">Timeline</p>
+              <p className="text-2xl font-semibold text-text-primary">6</p>
+              <p className="text-xs text-text-tertiary">Weeks remaining</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="card p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <DocumentCheckIcon className="h-8 w-8 text-purple-500" />
+              <DocumentCheckIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Evidence</p>
-              <p className="text-2xl font-semibold text-gray-900">{workflow.checks.reduce((acc, check) => acc + (check.evidence?.length || 0), 0)}</p>
-              <p className="text-xs text-gray-500">Documents collected</p>
+              <p className="text-sm font-medium text-text-tertiary">Evidence</p>
+              <p className="text-2xl font-semibold text-text-primary">{workflow.checks.reduce((acc, check) => acc + (check.evidence?.length || 0), 0)}</p>
+              <p className="text-xs text-text-tertiary">Documents collected</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Category Progress */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-6">Progress by Category</h3>
+      <div className="card p-6">
+        <h3 className="text-lg font-medium text-text-primary mb-6">Progress by category</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {categoryProgress.map(({ category, name, Icon, completed, total, percentage }) => (
             <div key={category} className="text-center">
-              <div className="mx-auto w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center mb-3">
-                <Icon className="h-8 w-8 text-gray-600" />
+              <div className="mx-auto w-16 h-16 bg-bg-alt rounded-lg flex items-center justify-center mb-3">
+                <Icon className="h-8 w-8 text-text-secondary" />
               </div>
-              <h4 className="text-sm font-medium text-gray-900 mb-2">{name}</h4>
+              <h4 className="text-sm font-medium text-text-primary mb-2">{name}</h4>
               <div className="relative pt-1">
                 <div className="flex mb-2 items-center justify-between">
                   <div>
-                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-navy bg-navy-50">
                       {percentage}%
                     </span>
                   </div>
                 </div>
-                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-navy-100">
                   <div
                     style={{ width: `${percentage}%` }}
-                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
+                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-navy"
                   ></div>
                 </div>
               </div>
-              <p className="text-xs text-gray-500">{completed}/{total} complete</p>
+              <p className="text-xs text-text-tertiary">{completed}/{total} complete</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Key Findings */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Key Findings</h3>
+      <div className="card p-6">
+        <h3 className="text-lg font-medium text-text-primary mb-4">Key findings</h3>
         <div className="space-y-3">
           {workflow.keyFindings.map((finding, index) => (
             <div key={index} className="flex items-start">
               <div className="flex-shrink-0">
-                <div className="h-2 w-2 bg-blue-500 rounded-full mt-2"></div>
+                <div className="h-2 w-2 bg-navy rounded-full mt-2"></div>
               </div>
-              <p className="ml-3 text-sm text-gray-700">{finding}</p>
+              <p className="ml-3 text-sm text-text-secondary">{finding}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Recommendations */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Recommendations</h3>
+      <div className="card p-6">
+        <h3 className="text-lg font-medium text-text-primary mb-4">Recommendations</h3>
         <div className="space-y-3">
           {workflow.recommendations.map((recommendation, index) => (
             <div key={index} className="flex items-start">
               <div className="flex-shrink-0">
-                <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5" />
+                <CheckCircleIcon className="h-5 w-5 text-success mt-0.5" />
               </div>
-              <p className="ml-3 text-sm text-gray-700">{recommendation}</p>
+              <p className="ml-3 text-sm text-text-secondary">{recommendation}</p>
             </div>
           ))}
         </div>

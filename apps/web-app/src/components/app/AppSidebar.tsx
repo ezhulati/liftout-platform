@@ -121,9 +121,9 @@ export function AppSidebar() {
               <Image
                 src="/Liftout-logo-dark.png"
                 alt="Liftout"
-                width={140}
-                height={40}
-                className="h-8 w-auto"
+                width={220}
+                height={60}
+                className="h-12 w-auto"
               />
             </Link>
             <button
@@ -189,9 +189,9 @@ export function AppSidebar() {
               <Image
                 src="/Liftout-logo-dark.png"
                 alt="Liftout"
-                width={140}
-                height={40}
-                className="h-8 w-auto"
+                width={220}
+                height={60}
+                className="h-12 w-auto"
               />
             </Link>
           </div>
