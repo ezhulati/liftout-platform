@@ -53,7 +53,7 @@ export function CompanyCTA() {
 
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
+        <p className="text-gold font-semibold tracking-wider uppercase text-sm mb-4">
           Ready to Transform Your Talent Strategy?
         </p>
 
@@ -77,7 +77,7 @@ export function CompanyCTA() {
           {trustReassurances.map((item) => (
             <div key={item.text} className="flex items-center gap-2 text-white/80">
               <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
-              <span className="text-sm font-medium">{item.text}</span>
+              <span className="text-base font-medium">{item.text}</span>
             </div>
           ))}
         </div>
@@ -103,7 +103,7 @@ export function CompanyCTA() {
         </div>
 
         {/* Sign in link */}
-        <p className="text-white/70 text-sm">
+        <p className="text-white/70 text-base">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
@@ -123,7 +123,7 @@ export function CompanyCTA() {
                 style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
                 <h3 className="font-heading text-lg font-bold text-white mb-2">{item.title}</h3>
-                <p className="font-body text-white/70 text-sm leading-relaxed">{item.description}</p>
+                <p className="font-body text-white/70 text-base leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>

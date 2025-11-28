@@ -112,7 +112,7 @@ export function RecentActivity() {
         <h3 className="text-lg font-semibold text-text-primary font-heading">Recent Activity</h3>
         <Link
           href="/app/activity"
-          className="text-sm font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
         >
           View all
         </Link>
@@ -143,19 +143,19 @@ export function RecentActivity() {
                       <div className="min-w-0 flex-1">
                         {activity.href ? (
                           <Link href={activity.href} className="group">
-                            <p className="text-sm font-medium text-text-primary group-hover:text-navy transition-colors duration-fast">
+                            <p className="text-base font-medium text-text-primary group-hover:text-navy transition-colors duration-fast">
                               {activity.title}
                             </p>
-                            <p className="text-sm text-text-secondary group-hover:text-text-primary transition-colors duration-fast">
+                            <p className="text-base text-text-secondary group-hover:text-text-primary transition-colors duration-fast">
                               {activity.description}
                             </p>
                           </Link>
                         ) : (
                           <>
-                            <p className="text-sm font-medium text-text-primary">
+                            <p className="text-base font-medium text-text-primary">
                               {activity.title}
                             </p>
-                            <p className="text-sm text-text-secondary">
+                            <p className="text-base text-text-secondary">
                               {activity.description}
                             </p>
                           </>
@@ -191,8 +191,8 @@ export function RecentActivity() {
               />
             </svg>
           </div>
-          <h4 className="text-sm font-semibold text-text-primary mb-1">No recent activity</h4>
-          <p className="text-sm text-text-secondary">
+          <h4 className="text-base font-semibold text-text-primary mb-1">No recent activity</h4>
+          <p className="text-base text-text-secondary">
             Get started by updating your team profile or browsing liftout opportunities.
           </p>
         </div>

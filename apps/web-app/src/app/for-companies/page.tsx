@@ -1,6 +1,7 @@
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { CompanyHero } from '@/components/landing/CompanyHero';
+import { HowItWorksCompanies } from '@/components/landing/HowItWorksCompanies';
 import { CompanyFeatures } from '@/components/landing/CompanyFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { FAQ } from '@/components/landing/FAQ';
@@ -17,6 +18,7 @@ export default function ForCompaniesPage() {
       <LandingHeader />
       <main className="bg-bg">
         <CompanyHero />
+        <HowItWorksCompanies />
         <CompanyFeatures />
         <TrustIndicators />
         <FAQ />

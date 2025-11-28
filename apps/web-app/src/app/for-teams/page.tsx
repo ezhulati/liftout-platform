@@ -1,6 +1,7 @@
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { TeamHero } from '@/components/landing/TeamHero';
+import { HowItWorksTeams } from '@/components/landing/HowItWorksTeams';
 import { TeamFeatures } from '@/components/landing/TeamFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { FAQ } from '@/components/landing/FAQ';
@@ -17,6 +18,7 @@ export default function ForTeamsPage() {
       <LandingHeader />
       <main className="bg-bg">
         <TeamHero />
+        <HowItWorksTeams />
         <TeamFeatures />
         <TrustIndicators />
         <FAQ />

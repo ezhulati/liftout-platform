@@ -239,7 +239,7 @@ export default function SignUpPage() {
                     formData.userType === 'individual' ? 'text-navy' : 'text-navy-400'
                   }`} />
                   <div className="font-semibold text-text-primary text-sm">Individual / Team</div>
-                  <div className="text-text-tertiary text-xs mt-1">Looking for opportunities</div>
+                  <div className="text-text-tertiary text-sm mt-1">Looking for opportunities</div>
                 </button>
                 <button
                   type="button"
@@ -254,7 +254,7 @@ export default function SignUpPage() {
                     formData.userType === 'company' ? 'text-gold-600' : 'text-gold-400'
                   }`} />
                   <div className="font-semibold text-text-primary text-sm">Company</div>
-                  <div className="text-text-tertiary text-xs mt-1">Hiring teams</div>
+                  <div className="text-text-tertiary text-sm mt-1">Hiring teams</div>
                 </button>
               </div>
             </div>
@@ -399,7 +399,7 @@ export default function SignUpPage() {
             </FormField>
 
             {/* Terms */}
-            <p className="text-text-tertiary text-xs">
+            <p className="text-text-tertiary text-sm">
               By creating an account, you agree to our{' '}
               <Link href="/terms" className="text-gold hover:text-gold-dark underline underline-offset-2">
                 Terms of Service

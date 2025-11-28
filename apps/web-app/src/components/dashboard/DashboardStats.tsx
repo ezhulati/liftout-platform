@@ -147,7 +147,7 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
             </div>
             <div className="ml-4 w-0 flex-1">
               <dl>
-                <dt className="text-sm font-medium text-text-secondary truncate">
+                <dt className="text-base font-medium text-text-secondary truncate">
                   {stat.name}
                 </dt>
                 <dd className="text-xl font-bold text-text-primary font-heading">

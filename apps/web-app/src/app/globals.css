@@ -395,6 +395,38 @@
     color: var(--text-inverse);
   }
 
+  /* Tertiary Button - Underlined text only
+     Practical UI "tertiary" - for cancel, back, less important actions */
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--navy);
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    min-height: var(--touch-target-min);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-tertiary:hover {
+    color: var(--navy-hover);
+  }
+
+  .btn-tertiary:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .btn-tertiary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
   /* Text Link - For cancel/tertiary actions
      Practical UI "tertiary" - underlined text, no button styling */
   .text-link {

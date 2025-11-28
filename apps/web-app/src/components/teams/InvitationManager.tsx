@@ -93,9 +93,9 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
       case 'declined':
         return <XCircleIcon className="h-5 w-5 text-red-500" />;
       case 'expired':
-        return <ExclamationTriangleIcon className="h-5 w-5 text-gray-400" />;
+        return <ExclamationTriangleIcon className="h-5 w-5 text-text-tertiary" />;
       case 'revoked':
-        return <TrashIcon className="h-5 w-5 text-gray-400" />;
+        return <TrashIcon className="h-5 w-5 text-text-tertiary" />;
       default:
         return null;
     }
@@ -128,9 +128,9 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
         return 'text-red-700 bg-red-100';
       case 'expired':
       case 'revoked':
-        return 'text-gray-700 bg-gray-100';
+        return 'text-text-secondary bg-gray-100';
       default:
-        return 'text-gray-700 bg-gray-100';
+        return 'text-text-secondary bg-gray-100';
     }
   };
 
@@ -149,10 +149,10 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
   if (loading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-bg-alt rounded w-3/4"></div>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-gray-200 rounded"></div>
+            <div key={i} className="h-16 bg-bg-alt rounded"></div>
           ))}
         </div>
       </div>
@@ -163,41 +163,41 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
     <div className="space-y-6">
       {/* Summary */}
       {summary && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Invitation Summary</h3>
+        <div className="bg-bg-surface rounded-lg border border-border p-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">Invitation Summary</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-600">{summary.pending}</div>
-              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-sm text-text-secondary">Pending</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{summary.accepted}</div>
-              <div className="text-sm text-gray-600">Accepted</div>
+              <div className="text-sm text-text-secondary">Accepted</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600">{summary.declined}</div>
-              <div className="text-sm text-gray-600">Declined</div>
+              <div className="text-sm text-text-secondary">Declined</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-600">{summary.expired}</div>
-              <div className="text-sm text-gray-600">Expired</div>
+              <div className="text-2xl font-bold text-text-secondary">{summary.expired}</div>
+              <div className="text-sm text-text-secondary">Expired</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{summary.total}</div>
-              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-2xl font-bold text-navy">{summary.total}</div>
+              <div className="text-sm text-text-secondary">Total</div>
             </div>
           </div>
         </div>
       )}
 
       {/* Invitations List */}
-      <div className="bg-white rounded-lg border border-gray-200">
-        <div className="px-4 py-5 border-b border-gray-200">
+      <div className="bg-bg-surface rounded-lg border border-border">
+        <div className="px-4 py-5 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Team Invitations</h3>
+            <h3 className="text-lg font-medium text-text-primary">Team Invitations</h3>
             <button
               onClick={loadInvitations}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-text-secondary bg-bg-surface border border-border rounded-md hover:bg-bg-elevated focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
             >
               <ArrowPathIcon className="h-4 w-4 mr-1" />
               Refresh
@@ -207,9 +207,9 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
 
         {invitations.length === 0 ? (
           <div className="text-center py-8">
-            <PaperAirplaneIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No invitations</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <PaperAirplaneIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+            <h3 className="mt-2 text-sm font-medium text-text-primary">No invitations</h3>
+            <p className="mt-1 text-sm text-text-tertiary">
               Start by inviting team members to join your team.
             </p>
           </div>
@@ -221,13 +221,13 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(invitation.status)}
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-text-primary">
                         {invitation.inviteeEmail}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-text-tertiary">
                         {invitation.role} • Invited by {invitation.inviterName}
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-text-tertiary">
                         {formatDistanceToNow(new Date(invitation.createdAt), { addSuffix: true })}
                         {invitation.status === 'pending' && (
                           <span className="ml-2">
@@ -250,7 +250,7 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                         <button
                           onClick={() => handleSendReminder(invitation.id!)}
                           disabled={actionLoading === invitation.id}
-                          className="p-1 text-gray-400 hover:text-blue-600 transition-colors disabled:opacity-50"
+                          className="p-1 text-text-tertiary hover:text-navy transition-colors disabled:opacity-50"
                           title="Send reminder"
                         >
                           <PaperAirplaneIcon className="h-4 w-4" />
@@ -261,7 +261,7 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                         <button
                           onClick={() => handleRevokeInvitation(invitation.id!)}
                           disabled={actionLoading === invitation.id}
-                          className="p-1 text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                          className="p-1 text-text-tertiary hover:text-error transition-colors disabled:opacity-50"
                           title="Revoke invitation"
                         >
                           <TrashIcon className="h-4 w-4" />
@@ -274,8 +274,8 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                 {/* Personal Message */}
                 {invitation.message && (
                   <div className="mt-3 ml-8">
-                    <div className="bg-gray-50 rounded-md px-3 py-2">
-                      <p className="text-sm text-gray-700">"{invitation.message}"</p>
+                    <div className="bg-bg-alt rounded-md px-3 py-2">
+                      <p className="text-sm text-text-secondary">"{invitation.message}"</p>
                     </div>
                   </div>
                 )}

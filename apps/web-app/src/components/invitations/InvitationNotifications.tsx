@@ -95,7 +95,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
     return (
       <div className="animate-pulse space-y-3">
         {[1, 2].map((i) => (
-          <div key={i} className="h-20 bg-gray-200 rounded-lg"></div>
+          <div key={i} className="h-20 bg-bg-alt rounded-lg"></div>
         ))}
       </div>
     );
@@ -108,9 +108,9 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
   return (
     <div className="space-y-4">
       <div className="flex items-center">
-        <UserGroupIcon className="h-5 w-5 text-blue-600 mr-2" />
-        <h3 className="text-lg font-medium text-gray-900">
-          Team Invitations ({invitations.length})
+        <UserGroupIcon className="h-5 w-5 text-navy mr-2" />
+        <h3 className="text-lg font-medium text-text-primary">
+          Team invitations ({invitations.length})
         </h3>
       </div>
 
@@ -118,30 +118,30 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
         {invitations.map((invitation) => (
           <div
             key={invitation.id}
-            className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-bg-surface border border-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
-                  <h4 className="text-base font-semibold text-gray-900">
+                  <h4 className="text-base font-semibold text-text-primary">
                     {invitation.teamName}
                   </h4>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
                     {getRoleDescription(invitation.role)}
                   </span>
                 </div>
-                
-                <p className="text-sm text-gray-600 mt-1">
+
+                <p className="text-sm text-text-secondary mt-1">
                   Invited by {invitation.inviterName}
                 </p>
 
                 {invitation.message && (
-                  <div className="mt-2 p-3 bg-gray-50 rounded-md">
-                    <p className="text-sm text-gray-700">"{invitation.message}"</p>
+                  <div className="mt-2 p-3 bg-bg-alt rounded-md">
+                    <p className="text-sm text-text-secondary">"{invitation.message}"</p>
                   </div>
                 )}
 
-                <div className="flex items-center mt-3 text-xs text-gray-500">
+                <div className="flex items-center mt-3 text-xs text-text-tertiary">
                   <ClockIcon className="h-4 w-4 mr-1" />
                   <span>
                     Invited {formatDistanceToNow(new Date(invitation.createdAt), { addSuffix: true })}
@@ -157,7 +157,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
                 <button
                   onClick={() => handleAcceptInvitation(invitation.id!)}
                   disabled={actionLoading === invitation.id}
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-success hover:bg-success-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-success disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {actionLoading === invitation.id ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
@@ -172,7 +172,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
                 <button
                   onClick={() => handleDeclineInvitation(invitation.id!)}
                   disabled={actionLoading === invitation.id}
-                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center px-3 py-1.5 border border-border text-sm font-medium rounded-md text-text-secondary bg-bg-surface hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <XMarkIcon className="h-4 w-4 mr-1" />
                   Decline
@@ -184,14 +184,14 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+      <div className="bg-navy-50 border border-navy-200 rounded-md p-3">
         <div className="flex">
-          <InformationCircleIcon className="h-5 w-5 text-blue-400 flex-shrink-0" />
+          <InformationCircleIcon className="h-5 w-5 text-navy flex-shrink-0" />
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">
-              About Team Invitations
+            <h3 className="text-sm font-medium text-navy-800">
+              About team invitations
             </h3>
-            <p className="mt-1 text-sm text-blue-700">
+            <p className="mt-1 text-sm text-navy-700">
               Accepting an invitation will add you to the team and give you access to team resources based on your assigned role.
               Team invitations expire after 7 days.
             </p>

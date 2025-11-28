@@ -1,27 +1,28 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ShieldCheckIcon, ClockIcon, UserGroupIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
-const stats = [
+const features = [
   {
-    value: '500+',
-    label: 'Verified teams',
-    description: 'Pre-vetted and ready',
+    icon: UserGroupIcon,
+    title: 'Intact Teams',
+    description: 'Hire proven groups who already work well together',
   },
   {
-    value: '$2.1B',
-    label: 'Transaction value',
-    description: 'Successful acquisitions',
+    icon: ClockIcon,
+    title: 'Day One Ready',
+    description: 'Skip the 6-month team-building phase entirely',
   },
   {
-    value: '89%',
-    label: 'Satisfaction rate',
-    description: 'Companies and teams',
+    icon: ShieldCheckIcon,
+    title: 'Verified History',
+    description: 'Every team comes with documented track records',
   },
   {
-    value: '3x',
-    label: 'Faster productivity',
-    description: 'Versus individual hiring',
+    icon: LockClosedIcon,
+    title: 'Confidential',
+    description: 'NDA-protected throughout the entire process',
   },
 ];
 
@@ -31,16 +32,17 @@ export function TrustIndicators() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-16 lg:py-20 bg-navy-900"
+      className="py-20 lg:py-24"
+      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <h2 id="trust-heading" className="sr-only">Platform statistics</h2>
+        <h2 id="trust-heading" className="sr-only">Why choose Liftout</h2>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {stats.map((stat, index) => (
+          {features.map((feature, index) => (
             <div
-              key={stat.label}
+              key={feature.title}
               className={`text-center transition-all duration-500 ${
                 isVisible
                   ? 'opacity-100 translate-y-0'
@@ -48,17 +50,19 @@ export function TrustIndicators() {
               }`}
               style={{ transitionDelay: isVisible ? `${index * 100}ms` : '0ms' }}
             >
-              {/* Value - large, white */}
-              <div className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
-                {stat.value}
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                  <feature.icon className="w-6 h-6 text-gold-400" aria-hidden="true" />
+                </div>
               </div>
-              {/* Label - white, semibold */}
-              <div className="font-semibold text-white text-sm mb-1">
-                {stat.label}
+              {/* Title */}
+              <div className="font-semibold text-white text-lg mb-2">
+                {feature.title}
               </div>
-              {/* Description - white with opacity */}
-              <div className="text-white/70 text-xs">
-                {stat.description}
+              {/* Description */}
+              <div className="text-white/70 text-base leading-relaxed">
+                {feature.description}
               </div>
             </div>
           ))}

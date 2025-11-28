@@ -53,7 +53,7 @@ export function TeamCTA() {
 
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
+        <p className="text-gold font-semibold tracking-wider uppercase text-sm mb-4">
           Your team's next chapter awaits
         </p>
 
@@ -77,7 +77,7 @@ export function TeamCTA() {
           {trustReassurances.map((item) => (
             <div key={item.text} className="flex items-center gap-2 text-white/80">
               <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
-              <span className="text-sm font-medium">{item.text}</span>
+              <span className="text-base font-medium">{item.text}</span>
             </div>
           ))}
         </div>
@@ -103,7 +103,7 @@ export function TeamCTA() {
         </div>
 
         {/* Sign in link */}
-        <p className="text-white/70 text-sm">
+        <p className="text-white/70 text-base">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
@@ -115,7 +115,7 @@ export function TeamCTA() {
 
         {/* What teams are saying */}
         <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-white/60 text-xs mb-6 uppercase tracking-wider font-semibold">
+          <p className="text-white/60 text-sm mb-6 uppercase tracking-wider font-semibold">
             Teams that moved together
           </p>
           <div className="grid sm:grid-cols-3 gap-8 text-left">
@@ -125,10 +125,10 @@ export function TeamCTA() {
                 className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
-                <blockquote className="font-body text-white/80 text-sm leading-relaxed mb-3 italic">
+                <blockquote className="font-body text-white/80 text-base leading-relaxed mb-3 italic">
                   "{item.quote}"
                 </blockquote>
-                <p className="text-white/60 text-xs">{item.team}</p>
+                <p className="text-white/60 text-sm">{item.team}</p>
               </div>
             ))}
           </div>

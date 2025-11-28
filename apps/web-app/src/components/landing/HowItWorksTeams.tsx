@@ -1,30 +1,30 @@
 'use client';
 
-import { MagnifyingGlassIcon, ChatBubbleLeftRightIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, EyeSlashIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const steps = [
   {
     number: '1',
-    title: 'Browse verified teams',
-    description: 'Explore pre-vetted teams with documented track records, verified achievements, and detailed team profiles.',
-    icon: MagnifyingGlassIcon,
+    title: 'Build your profile',
+    description: 'Showcase your team\'s expertise, achievements, and chemistry. Highlight what makes you work well together.',
+    icon: UserGroupIcon,
   },
   {
     number: '2',
-    title: 'Connect confidentially',
-    description: 'Initiate NDA-protected conversations. Explore fit, discuss expectations, and evaluate culture alignment.',
-    icon: ChatBubbleLeftRightIcon,
+    title: 'Explore confidentially',
+    description: 'Browse opportunities from companies seeking proven teams. Your current employer never knows.',
+    icon: EyeSlashIcon,
   },
   {
     number: '3',
-    title: 'Acquire and integrate',
-    description: 'Complete the acquisition with our structured process. We support onboarding and track integration success.',
-    icon: RocketLaunchIcon,
+    title: 'Move together',
+    description: 'Negotiate as a collective, transition with support, and start your next chapter intact.',
+    icon: ArrowTrendingUpIcon,
   },
 ];
 
-export function HowItWorks() {
+export function HowItWorksTeams() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
 
   return (
@@ -32,26 +32,26 @@ export function HowItWorks() {
       ref={ref as React.RefObject<HTMLElement>}
       id="how-it-works"
       className="py-24 lg:py-32 bg-bg scroll-mt-20"
-      aria-labelledby="how-it-works-heading"
+      aria-labelledby="how-it-works-teams-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header - left aligned */}
+        {/* Section header */}
         <div className={`max-w-2xl mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-navy font-semibold text-base mb-3">
+          <p className="text-gold-700 font-semibold text-sm mb-3">
             How it works
           </p>
           <h2
-            id="how-it-works-heading"
+            id="how-it-works-teams-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            Three steps to your next high-performing team
+            Your path to the next chapter together
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            Our streamlined process makes team acquisition faster and more predictable than traditional hiring or M&A.
+            Don't leave your team behind. Move as a unit and access opportunities that value your collective strength.
           </p>
         </div>
 
-        {/* Steps - grid layout */}
+        {/* Steps grid */}
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {steps.map((step, index) => (
             <article
@@ -63,19 +63,19 @@ export function HowItWorks() {
               }`}
               style={{ transitionDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms' }}
             >
-              {/* Step number */}
+              {/* Step number and icon */}
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full bg-navy flex items-center justify-center">
-                  <span className="font-heading text-lg font-bold text-white">{step.number}</span>
+                <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center">
+                  <span className="font-heading text-lg font-bold text-navy-900">{step.number}</span>
                 </div>
-                <step.icon className="w-6 h-6 text-navy" aria-hidden="true" />
+                <step.icon className="w-6 h-6 text-gold-700" aria-hidden="true" />
               </div>
 
               {/* Content */}
               <h3 className="font-heading text-xl font-bold text-text-primary leading-snug mb-3">
                 {step.title}
               </h3>
-              <p className="text-text-secondary leading-relaxed text-base">
+              <p className="text-text-secondary leading-relaxed">
                 {step.description}
               </p>
             </article>

@@ -102,7 +102,7 @@ export function RecommendedTeams() {
         <h3 className="text-lg font-semibold text-text-primary font-heading">Recommended Teams</h3>
         <Link
           href="/app/search?type=teams"
-          className="text-sm font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
         >
           Browse all
         </Link>
@@ -130,18 +130,18 @@ export function RecommendedTeams() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-text-primary group-hover:text-navy transition-colors duration-fast">
+                  <h4 className="text-base font-semibold text-text-primary group-hover:text-navy transition-colors duration-fast">
                     {team.name}
                   </h4>
                   <div className="flex items-center">
                     <StarIcon className="h-4 w-4 text-gold fill-current" />
-                    <span className="ml-1 text-sm text-text-secondary">{team.rating}</span>
+                    <span className="ml-1 text-base text-text-secondary">{team.rating}</span>
                   </div>
                 </div>
-                <p className="text-sm text-text-secondary mt-1 line-clamp-2">
+                <p className="text-base text-text-secondary mt-1 line-clamp-2">
                   {team.description}
                 </p>
-                <div className="flex items-center mt-2 text-xs text-text-tertiary space-x-4">
+                <div className="flex items-center mt-2 text-sm text-text-tertiary space-x-4">
                   <div className="flex items-center">
                     <MapPinIcon className="h-3 w-3 mr-1" />
                     {team.location}
@@ -152,7 +152,7 @@ export function RecommendedTeams() {
                   </div>
                   <div>{team.yearsWorkingTogether} years together</div>
                 </div>
-                <div className="flex items-center mt-1 text-xs text-text-tertiary space-x-4">
+                <div className="flex items-center mt-1 text-sm text-text-tertiary space-x-4">
                   <div>{team.industry}</div>
                   <div>•</div>
                   <div>{team.successfulLiftouts} successful liftouts</div>
@@ -163,13 +163,13 @@ export function RecommendedTeams() {
                   {team.skills.slice(0, 3).map((skill) => (
                     <span
                       key={skill}
-                      className="badge badge-secondary text-xs"
+                      className="badge badge-secondary text-sm"
                     >
                       {skill}
                     </span>
                   ))}
                   {team.skills.length > 3 && (
-                    <span className="badge badge-secondary text-xs">
+                    <span className="badge badge-secondary text-sm">
                       +{team.skills.length - 3} more
                     </span>
                   )}
@@ -188,8 +188,8 @@ export function RecommendedTeams() {
           <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
             <UserGroupIcon className="h-7 w-7 text-text-tertiary" />
           </div>
-          <h4 className="text-sm font-semibold text-text-primary mb-1">No team recommendations</h4>
-          <p className="text-sm text-text-secondary mb-6">
+          <h4 className="text-base font-semibold text-text-primary mb-1">No team recommendations</h4>
+          <p className="text-base text-text-secondary mb-6">
             Complete your company profile to get personalized team recommendations for liftout opportunities.
           </p>
           <Link

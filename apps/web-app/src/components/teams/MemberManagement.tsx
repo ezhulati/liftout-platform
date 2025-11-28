@@ -233,26 +233,26 @@ export function MemberManagement({
     <div className="space-y-6">
       {/* Team Statistics */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Team Statistics</h3>
+        <div className="px-6 py-4 border-b border-border">
+          <h3 className="text-lg font-medium text-text-primary">Team Statistics</h3>
         </div>
         <div className="px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary-600">{stats.totalMembers}</div>
-              <div className="text-sm text-gray-600">Team Members</div>
+              <div className="text-2xl font-bold text-navy">{stats.totalMembers}</div>
+              <div className="text-sm text-text-secondary">Team Members</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.avgExperience}</div>
-              <div className="text-sm text-gray-600">Avg Experience (years)</div>
+              <div className="text-2xl font-bold text-success">{stats.avgExperience}</div>
+              <div className="text-sm text-text-secondary">Avg Experience (years)</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalSkills}</div>
-              <div className="text-sm text-gray-600">Unique Skills</div>
+              <div className="text-2xl font-bold text-navy">{stats.totalSkills}</div>
+              <div className="text-sm text-text-secondary">Unique Skills</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.avgRating}</div>
-              <div className="text-sm text-gray-600">Avg Performance</div>
+              <div className="text-2xl font-bold text-gold-700">{stats.avgRating}</div>
+              <div className="text-sm text-text-secondary">Avg Performance</div>
             </div>
           </div>
         </div>
@@ -260,9 +260,9 @@ export function MemberManagement({
 
       {/* Members List */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Team Members</h3>
+            <h3 className="text-lg font-medium text-text-primary">Team Members</h3>
             {isEditable && (
               <button
                 onClick={addMember}
@@ -283,17 +283,17 @@ export function MemberManagement({
             return (
               <div 
                 key={field.id} 
-                className={`border rounded-lg p-4 ${isEditing ? 'border-primary-300 bg-primary-50' : 'border-gray-200'}`}
+                className={`border rounded-lg p-4 ${isEditing ? 'border-navy-300 bg-navy-50' : 'border-border'}`}
               >
                 {/* Member Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <UserIcon className="h-6 w-6 text-gray-500" />
+                    <div className="h-10 w-10 rounded-full bg-bg-alt flex items-center justify-center">
+                      <UserIcon className="h-6 w-6 text-text-tertiary" />
                     </div>
                     <div>
                       <div className="flex items-center space-x-2">
-                        <h4 className="font-medium text-gray-900">
+                        <h4 className="font-medium text-text-primary">
                           {member.name || 'New Member'}
                         </h4>
                         {member.isLead && (
@@ -303,7 +303,7 @@ export function MemberManagement({
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">{member.role || 'Role not set'}</p>
+                      <p className="text-sm text-text-secondary">{member.role || 'Role not set'}</p>
                     </div>
                   </div>
 
@@ -313,14 +313,14 @@ export function MemberManagement({
                         <>
                           <button
                             onClick={() => saveMember(index)}
-                            className="text-green-600 hover:text-green-700"
+                            className="text-success hover:text-success-dark"
                             title="Save changes"
                           >
                             <CheckIconSolid className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => setEditingMember(null)}
-                            className="text-gray-600 hover:text-gray-700"
+                            className="text-text-secondary hover:text-text-secondary"
                             title="Cancel"
                           >
                             <XMarkIcon className="h-5 w-5" />
@@ -330,21 +330,21 @@ export function MemberManagement({
                         <>
                           <button
                             onClick={() => setEditingMember(field.id)}
-                            className="text-primary-600 hover:text-primary-700"
+                            className="text-navy hover:text-navy-hover"
                             title="Edit member"
                           >
                             <PencilSquareIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => toggleTeamLead(index)}
-                            className={`${member.isLead ? 'text-yellow-600' : 'text-gray-400'} hover:text-yellow-700`}
+                            className={`${member.isLead ? 'text-gold-700' : 'text-text-tertiary'} hover:text-gold-800`}
                             title="Toggle team lead"
                           >
                             <StarIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => removeMember(index)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-error hover:text-error-dark"
                             title="Remove member"
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -360,7 +360,7 @@ export function MemberManagement({
                   {/* Basic Information */}
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Name *
                       </label>
                       {isEditing ? (
@@ -370,15 +370,15 @@ export function MemberManagement({
                           placeholder="Full name"
                         />
                       ) : (
-                        <p className="text-sm text-gray-900">{member.name || 'Not set'}</p>
+                        <p className="text-sm text-text-primary">{member.name || 'Not set'}</p>
                       )}
                       {errors.members?.[index]?.name && (
-                        <p className="text-xs text-red-600">{errors.members[index]?.name?.message}</p>
+                        <p className="text-xs text-error">{errors.members[index]?.name?.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Role *
                       </label>
                       {isEditing ? (
@@ -388,15 +388,15 @@ export function MemberManagement({
                           placeholder="e.g., Senior Data Scientist"
                         />
                       ) : (
-                        <p className="text-sm text-gray-900">{member.role || 'Not set'}</p>
+                        <p className="text-sm text-text-primary">{member.role || 'Not set'}</p>
                       )}
                       {errors.members?.[index]?.role && (
-                        <p className="text-xs text-red-600">{errors.members[index]?.role?.message}</p>
+                        <p className="text-xs text-error">{errors.members[index]?.role?.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Experience (years) *
                       </label>
                       {isEditing ? (
@@ -408,8 +408,8 @@ export function MemberManagement({
                           className="input-field"
                         />
                       ) : (
-                        <div className="flex items-center text-sm text-gray-900">
-                          <ClockIcon className="h-4 w-4 mr-1 text-gray-400" />
+                        <div className="flex items-center text-sm text-text-primary">
+                          <ClockIcon className="h-4 w-4 mr-1 text-text-tertiary" />
                           {member.experience} years
                         </div>
                       )}
@@ -419,7 +419,7 @@ export function MemberManagement({
                   {/* Performance & Contact */}
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Email
                       </label>
                       {isEditing ? (
@@ -430,12 +430,12 @@ export function MemberManagement({
                           placeholder="email@example.com"
                         />
                       ) : (
-                        <p className="text-sm text-gray-900">{member.email || 'Not provided'}</p>
+                        <p className="text-sm text-text-primary">{member.email || 'Not provided'}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Performance Rating
                       </label>
                       {isEditing ? (
@@ -458,11 +458,11 @@ export function MemberManagement({
                               className={`h-4 w-4 ${
                                 i < (member.performance?.rating || 0) 
                                   ? 'text-yellow-400 fill-current' 
-                                  : 'text-gray-300'
+                                  : 'text-text-tertiary'
                               }`}
                             />
                           ))}
-                          <span className="ml-2 text-sm text-gray-600">
+                          <span className="ml-2 text-sm text-text-secondary">
                             {member.performance?.rating || 0}/5
                           </span>
                         </div>
@@ -470,7 +470,7 @@ export function MemberManagement({
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-text-secondary mb-1">
                         Projects Completed
                       </label>
                       {isEditing ? (
@@ -482,7 +482,7 @@ export function MemberManagement({
                           placeholder="0"
                         />
                       ) : (
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-text-primary">
                           {member.performance?.projects || 0} projects
                         </p>
                       )}
@@ -492,21 +492,21 @@ export function MemberManagement({
 
                 {/* Skills */}
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
                     Skills *
                   </label>
                   <div className="flex flex-wrap gap-2 mb-2 min-h-[2rem]">
                     {member.skills?.map((skill, skillIndex) => (
                       <span
                         key={skillIndex}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-100 text-navy-800"
                       >
                         {skill}
                         {isEditing && (
                           <button
                             type="button"
                             onClick={() => removeSkill(index, skillIndex)}
-                            className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-primary-400 hover:bg-primary-200 hover:text-primary-500"
+                            className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-500"
                           >
                             ×
                           </button>
@@ -514,7 +514,7 @@ export function MemberManagement({
                       </span>
                     ))}
                     {(!member.skills || member.skills.length === 0) && (
-                      <span className="text-sm text-gray-400 italic">No skills added</span>
+                      <span className="text-sm text-text-tertiary italic">No skills added</span>
                     )}
                   </div>
                   {isEditing && (
@@ -535,7 +535,7 @@ export function MemberManagement({
                       <button
                         type="button"
                         onClick={() => addSkill(index, skillInputs[index] || '')}
-                        className="px-3 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+                        className="px-3 py-2 text-sm bg-navy text-white rounded-md hover:bg-navy-hover disabled:opacity-50"
                         disabled={!skillInputs[index]?.trim()}
                       >
                         Add
@@ -546,27 +546,27 @@ export function MemberManagement({
 
                 {/* Achievements */}
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
                     Achievements
                   </label>
                   <div className="space-y-2 mb-2">
                     {member.performance?.achievements?.map((achievement, achievementIndex) => (
                       <div
                         key={achievementIndex}
-                        className="flex items-center justify-between p-2 bg-gray-50 rounded-md"
+                        className="flex items-center justify-between p-2 bg-bg-alt rounded-md"
                       >
-                        <span className="text-sm text-gray-700">{achievement}</span>
+                        <span className="text-sm text-text-secondary">{achievement}</span>
                         {isEditing && (
                           <button
                             type="button"
                             onClick={() => removeAchievement(index, achievementIndex)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-error hover:text-error-dark"
                           >
                             <XMarkIcon className="h-4 w-4" />
                           </button>
                         )}
                       </div>
-                    )) || <span className="text-sm text-gray-400 italic">No achievements recorded</span>}
+                    )) || <span className="text-sm text-text-tertiary italic">No achievements recorded</span>}
                   </div>
                   {isEditing && (
                     <div className="flex gap-2">
@@ -586,7 +586,7 @@ export function MemberManagement({
                       <button
                         type="button"
                         onClick={() => addAchievement(index, achievementInputs[index] || '')}
-                        className="px-3 py-2 text-sm bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50"
+                        className="px-3 py-2 text-sm bg-text-secondary text-white rounded-md hover:bg-text-primary disabled:opacity-50"
                         disabled={!achievementInputs[index]?.trim()}
                       >
                         Add

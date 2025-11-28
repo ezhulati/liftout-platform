@@ -155,7 +155,7 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
   if (isLoading) {
     return (
       <div className="min-h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-navy"></div>
       </div>
     );
   }
@@ -163,9 +163,9 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
   if (error || !team) {
     return (
       <div className="text-center py-12">
-        <UsersIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Team not found</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <UsersIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Team not found</h3>
+        <p className="mt-1 text-sm text-text-secondary">
           The team you're looking for doesn't exist or you don't have permission to manage it.
         </p>
       </div>
@@ -220,20 +220,20 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{team.name}</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <h2 className="text-xl font-semibold text-text-primary">{team.name}</h2>
+              <p className="text-sm text-text-secondary mt-1">
                 {team.members.length} members • {team.openToLiftout ? 'Open to liftout' : 'Not available'}
               </p>
             </div>
             <div className="flex items-center space-x-2">
               {isTeamOwner && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
                   <ShieldCheckIcon className="h-3 w-3 mr-1" />
                   Team Owner
                 </span>
               )}
               {isTeamLead && !isTeamOwner && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-100 text-navy-800">
                   Team Lead
                 </span>
               )}
@@ -244,15 +244,15 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
 
       {/* Tab Navigation */}
       <Tab.Group selectedIndex={activeTab} onChange={setActiveTab}>
-        <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+        <Tab.List className="flex space-x-1 rounded-xl bg-navy/10 p-1">
           {tabs.map((tab, index) => (
             <Tab
               key={tab.name}
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 ${
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-navy focus:outline-none focus:ring-2 ${
                   selected
-                    ? 'bg-white shadow'
-                    : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+                    ? 'bg-bg-surface shadow text-navy'
+                    : 'text-navy/60 hover:bg-white/[0.12] hover:text-navy'
                 }`
               }
             >
@@ -267,7 +267,7 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
           {tabs.map((tab, index) => (
             <Tab.Panel
               key={index}
-              className="rounded-xl bg-white p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
+              className="rounded-xl bg-bg-surface p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-navy focus:outline-none focus:ring-2"
             >
               {tab.component}
             </Tab.Panel>
@@ -284,9 +284,9 @@ function TeamAnalytics({ team }: { team: Team }) {
     const totalExperience = team.members.reduce((sum, member) => sum + member.experience, 0);
     const avgExperience = totalExperience / team.members.length;
     const allSkills = [...new Set(team.members.flatMap(member => member.skills))];
-    const avgRating = team.members.reduce((sum, member) => 
+    const avgRating = team.members.reduce((sum, member) =>
       sum + (member.performance?.rating || 0), 0) / team.members.length;
-    const totalProjects = team.members.reduce((sum, member) => 
+    const totalProjects = team.members.reduce((sum, member) =>
       sum + (member.performance?.projects || 0), 0);
 
     return {
@@ -314,41 +314,41 @@ function TeamAnalytics({ team }: { team: Team }) {
       {/* Overview Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-primary-600">{stats.totalMembers}</div>
-          <div className="text-sm text-gray-600">Total Members</div>
+          <div className="text-2xl font-bold text-navy">{stats.totalMembers}</div>
+          <div className="text-sm text-text-secondary">Total members</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">{stats.avgExperience}</div>
-          <div className="text-sm text-gray-600">Avg Experience</div>
+          <div className="text-2xl font-bold text-success">{stats.avgExperience}</div>
+          <div className="text-sm text-text-secondary">Avg experience</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">{stats.totalSkills}</div>
-          <div className="text-sm text-gray-600">Unique Skills</div>
+          <div className="text-2xl font-bold text-navy">{stats.totalSkills}</div>
+          <div className="text-sm text-text-secondary">Unique skills</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-600">{stats.avgRating}</div>
-          <div className="text-sm text-gray-600">Avg Rating</div>
+          <div className="text-2xl font-bold text-gold-700">{stats.avgRating}</div>
+          <div className="text-sm text-text-secondary">Avg rating</div>
         </div>
       </div>
 
       {/* Skill Distribution */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Skill Distribution</h3>
+        <div className="px-6 py-4 border-b border-border">
+          <h3 className="text-lg font-medium text-text-primary">Skill distribution</h3>
         </div>
         <div className="px-6 py-4">
           <div className="space-y-3">
             {stats.skillDistribution.slice(0, 10).map(({ skill, count }) => (
               <div key={skill} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">{skill}</span>
+                <span className="text-sm font-medium text-text-primary">{skill}</span>
                 <div className="flex items-center space-x-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div className="w-24 bg-bg-alt rounded-full h-2">
                     <div
-                      className="bg-primary-600 h-2 rounded-full"
+                      className="bg-navy h-2 rounded-full"
                       style={{ width: `${(count / stats.totalMembers) * 100}%` }}
                     />
                   </div>
-                  <span className="text-sm text-gray-600">{count}</span>
+                  <span className="text-sm text-text-secondary">{count}</span>
                 </div>
               </div>
             ))}
@@ -358,22 +358,22 @@ function TeamAnalytics({ team }: { team: Team }) {
 
       {/* Experience Distribution */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Experience Distribution</h3>
+        <div className="px-6 py-4 border-b border-border">
+          <h3 className="text-lg font-medium text-text-primary">Experience distribution</h3>
         </div>
         <div className="px-6 py-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-xl font-bold text-green-600">{stats.experienceDistribution.junior}</div>
-              <div className="text-sm text-gray-600">Junior (0-3 years)</div>
+              <div className="text-xl font-bold text-success">{stats.experienceDistribution.junior}</div>
+              <div className="text-sm text-text-secondary">Junior (0-3 years)</div>
             </div>
             <div className="text-center">
-              <div className="text-xl font-bold text-blue-600">{stats.experienceDistribution.mid}</div>
-              <div className="text-sm text-gray-600">Mid (3-7 years)</div>
+              <div className="text-xl font-bold text-navy">{stats.experienceDistribution.mid}</div>
+              <div className="text-sm text-text-secondary">Mid (3-7 years)</div>
             </div>
             <div className="text-center">
-              <div className="text-xl font-bold text-purple-600">{stats.experienceDistribution.senior}</div>
-              <div className="text-sm text-gray-600">Senior (7+ years)</div>
+              <div className="text-xl font-bold text-gold-700">{stats.experienceDistribution.senior}</div>
+              <div className="text-sm text-text-secondary">Senior (7+ years)</div>
             </div>
           </div>
         </div>
@@ -394,72 +394,72 @@ function TeamMemberSettings({ team, isOwner }: { team: Team; isOwner: boolean })
   return (
     <div className="space-y-6">
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Member Management Settings</h3>
-          <p className="text-sm text-gray-500">
+        <div className="px-6 py-4 border-b border-border">
+          <h3 className="text-lg font-medium text-text-primary">Member management settings</h3>
+          <p className="text-sm text-text-secondary">
             Configure how team members can be managed and what information is visible.
           </p>
         </div>
         <div className="px-6 py-4 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-900">Require approval for new members</label>
-              <p className="text-sm text-gray-500">New member invitations require team lead approval</p>
+              <label className="text-sm font-medium text-text-primary">Require approval for new members</label>
+              <p className="text-sm text-text-secondary">New member invitations require team lead approval</p>
             </div>
             <input
               type="checkbox"
               checked={settings.requireApproval}
               onChange={(e) => setSettings({ ...settings, requireApproval: e.target.checked })}
               disabled={!isOwner}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50"
+              className="rounded border-border text-navy focus:ring-navy disabled:opacity-50"
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-900">Allow members to invite others</label>
-              <p className="text-sm text-gray-500">Team members can send invitations to potential members</p>
+              <label className="text-sm font-medium text-text-primary">Allow members to invite others</label>
+              <p className="text-sm text-text-secondary">Team members can send invitations to potential members</p>
             </div>
             <input
               type="checkbox"
               checked={settings.allowMemberInvites}
               onChange={(e) => setSettings({ ...settings, allowMemberInvites: e.target.checked })}
               disabled={!isOwner}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50"
+              className="rounded border-border text-navy focus:ring-navy disabled:opacity-50"
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-900">Show performance ratings</label>
-              <p className="text-sm text-gray-500">Display member performance ratings in team profile</p>
+              <label className="text-sm font-medium text-text-primary">Show performance ratings</label>
+              <p className="text-sm text-text-secondary">Display member performance ratings in team profile</p>
             </div>
             <input
               type="checkbox"
               checked={settings.showPerformanceRatings}
               onChange={(e) => setSettings({ ...settings, showPerformanceRatings: e.target.checked })}
               disabled={!isOwner}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50"
+              className="rounded border-border text-navy focus:ring-navy disabled:opacity-50"
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-900">Enable member profiles</label>
-              <p className="text-sm text-gray-500">Allow members to create detailed individual profiles</p>
+              <label className="text-sm font-medium text-text-primary">Enable member profiles</label>
+              <p className="text-sm text-text-secondary">Allow members to create detailed individual profiles</p>
             </div>
             <input
               type="checkbox"
               checked={settings.enableMemberProfiles}
               onChange={(e) => setSettings({ ...settings, enableMemberProfiles: e.target.checked })}
               disabled={!isOwner}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50"
+              className="rounded border-border text-navy focus:ring-navy disabled:opacity-50"
             />
           </div>
 
           {!isOwner && (
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-              <p className="text-sm text-yellow-800">
+            <div className="mt-4 p-4 bg-warning-light border border-warning/30 rounded-md">
+              <p className="text-sm text-warning-dark">
                 Only team owners can modify these settings. Contact your team owner to request changes.
               </p>
             </div>

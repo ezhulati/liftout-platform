@@ -13,7 +13,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const features = [
   {
     name: 'Team discovery',
-    description: 'Browse 500+ verified high-performing teams filtered by industry, skills, location, and availability.',
+    description: 'Browse verified high-performing teams filtered by industry, skills, location, and availability.',
     icon: MagnifyingGlassIcon,
   },
   {
@@ -82,7 +82,7 @@ export function CompanyFeatures() {
           ref={featuresRef as React.RefObject<HTMLDivElement>}
           className={`text-center max-w-3xl mx-auto mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
+          <p className="text-gold-700 font-semibold tracking-wider uppercase text-sm mb-4">
             Platform features
           </p>
           <h2
@@ -171,7 +171,7 @@ export function CompanyFeatures() {
                   {item.title}
                 </h4>
                 {/* Description */}
-                <p className="font-body text-text-secondary text-sm leading-relaxed">
+                <p className="font-body text-text-secondary text-base leading-relaxed">
                   {item.description}
                 </p>
               </div>

@@ -124,9 +124,9 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
   if (!isTeamLead) {
     return (
       <div className="text-center py-8">
-        <ShieldCheckIcon className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">Verification Access Restricted</h3>
-        <p className="mt-1 text-sm text-gray-500">Only team leads can manage verification documents.</p>
+        <ShieldCheckIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+        <h3 className="mt-2 text-sm font-medium text-text-primary">Verification access restricted</h3>
+        <p className="mt-1 text-sm text-text-secondary">Only team leads can manage verification documents.</p>
       </div>
     );
   }
@@ -135,22 +135,22 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
     <div className="space-y-6">
       {/* Verification Status */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900 flex items-center">
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary flex items-center">
             <ShieldCheckIcon className="h-5 w-5 mr-2" />
-            Verification Status
+            Verification status
           </h2>
         </div>
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <StatusIcon className="h-6 w-6 text-gray-400" />
+              <StatusIcon className="h-6 w-6 text-text-tertiary" />
               <div>
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${verificationStatusColors[team.verification.status]}`}>
                   {team.verification.status.replace('_', ' ')}
                 </span>
                 {team.verification.verifiedAt && (
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-text-tertiary mt-1">
                     Verified on {team.verification.verifiedAt.toLocaleDateString()}
                   </p>
                 )}
@@ -162,22 +162,22 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 onClick={handleSubmitForVerification}
                 className="btn-primary"
               >
-                Submit for Verification
+                Submit for verification
               </button>
             )}
           </div>
 
           {team.verification.status === 'rejected' && (
-            <div className="mt-4 p-4 bg-red-50 rounded-lg">
-              <p className="text-sm text-red-700">
+            <div className="mt-4 p-4 bg-error-light rounded-lg">
+              <p className="text-sm text-error-dark">
                 Verification was rejected. Please review and resubmit required documents.
               </p>
             </div>
           )}
 
           {team.verification.status === 'pending' && (
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
-              <p className="text-sm text-yellow-700">
+            <div className="mt-4 p-4 bg-warning-light rounded-lg">
+              <p className="text-sm text-warning-dark">
                 Upload required documents and submit for verification review.
               </p>
             </div>
@@ -187,16 +187,16 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
 
       {/* Document Upload */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Verification Documents</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Verification documents</h2>
         </div>
         <div className="px-6 py-4">
           {/* Upload Form */}
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 mb-6">
+          <div className="border-2 border-dashed border-border rounded-lg p-6 mb-6">
             <div className="text-center">
-              <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Upload Verification Document</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+              <h3 className="mt-2 text-sm font-medium text-text-primary">Upload verification document</h3>
+              <p className="mt-1 text-sm text-text-secondary">
                 Upload documents to verify your team's credentials and track record
               </p>
               
@@ -223,15 +223,15 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                       onChange={handleDocumentUpload}
                       accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                       disabled={uploadingDocument}
-                      className="block w-full text-sm text-gray-500
+                      className="block w-full text-sm text-text-secondary
                         file:mr-4 file:py-2 file:px-4
                         file:rounded-full file:border-0
                         file:text-sm file:font-semibold
-                        file:bg-blue-50 file:text-blue-700
-                        hover:file:bg-blue-100"
+                        file:bg-navy-50 file:text-navy
+                        hover:file:bg-navy-100"
                     />
                     {uploadingDocument && (
-                      <p className="mt-2 text-sm text-gray-500">Uploading...</p>
+                      <p className="mt-2 text-sm text-text-tertiary">Uploading...</p>
                     )}
                   </div>
                 )}
@@ -241,33 +241,33 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
 
           {/* Uploaded Documents */}
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Uploaded Documents</h4>
+            <h4 className="font-medium text-text-primary">Uploaded documents</h4>
             {team.verification.documents.length === 0 ? (
-              <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+              <p className="text-sm text-text-tertiary">No documents uploaded yet.</p>
             ) : (
               <div className="space-y-2">
                 {team.verification.documents.map((doc, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border border-border rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <DocumentTextIcon className="h-5 w-5 text-gray-400" />
+                      <DocumentTextIcon className="h-5 w-5 text-text-tertiary" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-text-primary">
                           {documentTypes.find(t => t.value === doc.type)?.label || doc.type}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-text-tertiary">
                           Uploaded {doc.uploadedAt.toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       {doc.verified ? (
-                        <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                        <CheckCircleIcon className="h-5 w-5 text-success" />
                       ) : (
-                        <ClockIcon className="h-5 w-5 text-yellow-500" />
+                        <ClockIcon className="h-5 w-5 text-warning" />
                       )}
                       <button
                         onClick={() => window.open(doc.url, '_blank')}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-navy hover:text-navy-hover"
                       >
                         <EyeIcon className="h-4 w-4" />
                       </button>
@@ -282,16 +282,16 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
 
       {/* References */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Professional References</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Professional references</h2>
         </div>
         <div className="px-6 py-4">
           {/* Add Reference Form */}
-          <div className="border border-gray-200 rounded-lg p-4 mb-6">
-            <h4 className="font-medium text-gray-900 mb-4">Add Professional Reference</h4>
+          <div className="border border-border rounded-lg p-4 mb-6">
+            <h4 className="font-medium text-text-primary mb-4">Add professional reference</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Name *
                 </label>
                 <input
@@ -303,7 +303,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Title
                 </label>
                 <input
@@ -315,7 +315,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Company *
                 </label>
                 <input
@@ -327,7 +327,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Email *
                 </label>
                 <input
@@ -339,7 +339,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Phone
                 </label>
                 <input
@@ -351,7 +351,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Relationship
                 </label>
                 <select
@@ -372,47 +372,47 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
                 disabled={addingReference}
                 className="btn-primary"
               >
-                {addingReference ? 'Adding...' : 'Add Reference'}
+                {addingReference ? 'Adding...' : 'Add reference'}
               </button>
             </div>
           </div>
 
           {/* References List */}
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Added References</h4>
+            <h4 className="font-medium text-text-primary">Added references</h4>
             {team.verification.references.length === 0 ? (
-              <p className="text-sm text-gray-500">No references added yet.</p>
+              <p className="text-sm text-text-tertiary">No references added yet.</p>
             ) : (
               <div className="space-y-3">
                 {team.verification.references.map((ref, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div key={index} className="border border-border rounded-lg p-4">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h5 className="font-medium text-gray-900">{ref.name}</h5>
-                        <p className="text-sm text-gray-600">{ref.title} at {ref.company}</p>
-                        <p className="text-sm text-gray-500">{ref.email}</p>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-2">
+                        <h5 className="font-medium text-text-primary">{ref.name}</h5>
+                        <p className="text-sm text-text-secondary">{ref.title} at {ref.company}</p>
+                        <p className="text-sm text-text-tertiary">{ref.email}</p>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-secondary mt-2">
                           {ref.relationship.replace('_', ' ')}
                         </span>
                       </div>
                       <div className="text-right">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          ref.responseStatus === 'positive' ? 'bg-green-100 text-green-800' :
-                          ref.responseStatus === 'negative' ? 'bg-red-100 text-red-800' :
-                          ref.responseStatus === 'neutral' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
+                          ref.responseStatus === 'positive' ? 'bg-success-light text-success-dark' :
+                          ref.responseStatus === 'negative' ? 'bg-error-light text-error-dark' :
+                          ref.responseStatus === 'neutral' ? 'bg-warning-light text-warning-dark' :
+                          'bg-bg-alt text-text-secondary'
                         }`}>
                           {ref.responseStatus.replace('_', ' ')}
                         </span>
                         {ref.contactedAt && (
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-text-tertiary mt-1">
                             Contacted {ref.contactedAt.toLocaleDateString()}
                           </p>
                         )}
                       </div>
                     </div>
                     {ref.notes && (
-                      <div className="mt-3 p-2 bg-gray-50 rounded text-sm text-gray-700">
+                      <div className="mt-3 p-2 bg-bg-alt rounded text-sm text-text-secondary">
                         {ref.notes}
                       </div>
                     )}
@@ -426,34 +426,34 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
 
       {/* Background Checks */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Background Checks</h2>
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-medium text-text-primary">Background checks</h2>
         </div>
         <div className="px-6 py-4">
           {team.verification.backgroundChecks.length === 0 ? (
             <div className="text-center py-8">
-              <ShieldCheckIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No Background Checks</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <ShieldCheckIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+              <h3 className="mt-2 text-sm font-medium text-text-primary">No background checks</h3>
+              <p className="mt-1 text-sm text-text-secondary">
                 Background checks will be initiated during the verification process.
               </p>
             </div>
           ) : (
             <div className="space-y-3">
               {team.verification.backgroundChecks.map((check, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border border-border rounded-lg">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Member Background Check #{index + 1}
+                    <p className="text-sm font-medium text-text-primary">
+                      Member background check #{index + 1}
                     </p>
                     {check.provider && (
-                      <p className="text-xs text-gray-500">Provider: {check.provider}</p>
+                      <p className="text-xs text-text-tertiary">Provider: {check.provider}</p>
                     )}
                   </div>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    check.status === 'clear' ? 'bg-green-100 text-green-800' :
-                    check.status === 'flagged' ? 'bg-red-100 text-red-800' :
-                    'bg-yellow-100 text-yellow-800'
+                    check.status === 'clear' ? 'bg-success-light text-success-dark' :
+                    check.status === 'flagged' ? 'bg-error-light text-error-dark' :
+                    'bg-warning-light text-warning-dark'
                   }`}>
                     {check.status}
                   </span>

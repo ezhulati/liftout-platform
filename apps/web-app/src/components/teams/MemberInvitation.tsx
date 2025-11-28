@@ -146,7 +146,7 @@ export function MemberInvitation({
       case 'declined':
         return <XCircleIcon className="h-5 w-5 text-red-500" />;
       case 'expired':
-        return <ExclamationTriangleIcon className="h-5 w-5 text-gray-500" />;
+        return <ExclamationTriangleIcon className="h-5 w-5 text-text-tertiary" />;
     }
   };
 
@@ -159,7 +159,7 @@ export function MemberInvitation({
       case 'declined':
         return 'bg-red-100 text-red-800';
       case 'expired':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-alt text-text-secondary';
     }
   };
 
@@ -180,9 +180,9 @@ export function MemberInvitation({
     <div className="space-y-6">
       {/* Invite New Member */}
       <div className="card">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Invite Team Member</h3>
+            <h3 className="text-lg font-medium text-text-primary">Invite Team Member</h3>
             {!isInviting && (
               <button
                 onClick={() => setIsInviting(true)}
@@ -200,11 +200,11 @@ export function MemberInvitation({
           <form onSubmit={handleSubmit(sendInvitation)} className="px-6 py-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Email Address *
                 </label>
                 <div className="relative">
-                  <EnvelopeIcon className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <EnvelopeIcon className="absolute left-3 top-3 h-4 w-4 text-text-tertiary" />
                   <input
                     {...register('email')}
                     type="email"
@@ -213,12 +213,12 @@ export function MemberInvitation({
                   />
                 </div>
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-error">{errors.email.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Role *
                 </label>
                 <input
@@ -228,13 +228,13 @@ export function MemberInvitation({
                   placeholder="e.g., Senior Data Scientist"
                 />
                 {errors.role && (
-                  <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+                  <p className="mt-1 text-sm text-error">{errors.role.message}</p>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Personal Message (Optional)
               </label>
               <textarea
@@ -244,20 +244,20 @@ export function MemberInvitation({
                 placeholder="Add a personal note to your invitation..."
               />
               {errors.personalMessage && (
-                <p className="mt-1 text-sm text-red-600">{errors.personalMessage.message}</p>
+                <p className="mt-1 text-sm text-error">{errors.personalMessage.message}</p>
               )}
             </div>
 
             {/* Permissions */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-text-secondary">
                   Member Permissions
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowPermissions(!showPermissions)}
-                  className="text-sm text-primary-600 hover:text-primary-700 flex items-center"
+                  className="text-sm text-navy hover:text-navy-hover flex items-center"
                 >
                   <EyeIcon className="h-4 w-4 mr-1" />
                   {showPermissions ? 'Hide' : 'Show'} Permissions
@@ -265,14 +265,14 @@ export function MemberInvitation({
               </div>
 
               {showPermissions && (
-                <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                <div className="space-y-3 p-4 bg-bg-alt rounded-lg">
                   <div className="flex items-center">
                     <input
                       {...register('permissions.canEditTeam')}
                       type="checkbox"
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-gray-700">
+                    <label className="ml-2 text-sm text-text-secondary">
                       Can edit team profile and settings
                     </label>
                   </div>
@@ -280,9 +280,9 @@ export function MemberInvitation({
                     <input
                       {...register('permissions.canInviteMembers')}
                       type="checkbox"
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-gray-700">
+                    <label className="ml-2 text-sm text-text-secondary">
                       Can invite new team members
                     </label>
                   </div>
@@ -290,9 +290,9 @@ export function MemberInvitation({
                     <input
                       {...register('permissions.canViewAnalytics')}
                       type="checkbox"
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="rounded border-border text-navy focus:ring-navy"
                     />
-                    <label className="ml-2 text-sm text-gray-700">
+                    <label className="ml-2 text-sm text-text-secondary">
                       Can view team analytics and performance data
                     </label>
                   </div>
@@ -300,7 +300,7 @@ export function MemberInvitation({
               )}
 
               {!showPermissions && (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-text-secondary">
                   Permissions: {Object.values(watchedPermissions).filter(Boolean).length} of 3 enabled
                 </div>
               )}
@@ -333,28 +333,28 @@ export function MemberInvitation({
       {/* Existing Invitations */}
       {existingInvites.length > 0 && (
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">Pending Invitations</h3>
+          <div className="px-6 py-4 border-b border-border">
+            <h3 className="text-lg font-medium text-text-primary">Pending Invitations</h3>
           </div>
           <div className="px-6 py-4">
             <div className="space-y-4">
               {existingInvites.map((invite) => (
                 <div
                   key={invite.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                  className="flex items-center justify-between p-4 border border-border rounded-lg"
                 >
                   <div className="flex-1">
                     <div className="flex items-center space-x-3">
                       {getStatusIcon(invite.status)}
                       <div>
                         <div className="flex items-center space-x-2">
-                          <p className="font-medium text-gray-900">{invite.email}</p>
+                          <p className="font-medium text-text-primary">{invite.email}</p>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(invite.status)}`}>
                             {invite.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">{invite.role}</p>
-                        <div className="flex items-center space-x-4 mt-1 text-xs text-gray-500">
+                        <p className="text-sm text-text-secondary">{invite.role}</p>
+                        <div className="flex items-center space-x-4 mt-1 text-xs text-text-tertiary">
                           <span>Sent {invite.sentAt.toLocaleDateString()}</span>
                           {invite.status === 'pending' && (
                             <span>{formatTimeRemaining(invite.expiresAt)}</span>
@@ -363,7 +363,7 @@ export function MemberInvitation({
                       </div>
                     </div>
                     {invite.personalMessage && (
-                      <p className="mt-2 text-sm text-gray-600 italic">
+                      <p className="mt-2 text-sm text-text-secondary italic">
                         "{invite.personalMessage}"
                       </p>
                     )}
@@ -373,13 +373,13 @@ export function MemberInvitation({
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => resendInvitation(invite.id)}
-                        className="text-sm text-primary-600 hover:text-primary-700"
+                        className="text-sm text-navy hover:text-navy-hover"
                       >
                         Resend
                       </button>
                       <button
                         onClick={() => cancelInvitation(invite.id)}
-                        className="text-sm text-red-600 hover:text-red-700"
+                        className="text-sm text-error hover:text-error-dark"
                       >
                         Cancel
                       </button>
@@ -396,9 +396,9 @@ export function MemberInvitation({
       {existingInvites.length === 0 && !isInviting && (
         <div className="card">
           <div className="px-6 py-12 text-center">
-            <UserPlusIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No pending invitations</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <UserPlusIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+            <h3 className="mt-2 text-sm font-medium text-text-primary">No pending invitations</h3>
+            <p className="mt-1 text-sm text-text-tertiary">
               Start building your team by inviting talented professionals to join.
             </p>
             {isTeamLead && (

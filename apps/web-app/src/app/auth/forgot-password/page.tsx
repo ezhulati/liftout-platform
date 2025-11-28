@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
               We&apos;ve sent a password reset link to
             </p>
             <p className="font-semibold text-text-primary mb-6">{email}</p>
-            <p className="text-text-tertiary text-sm">
+            <p className="text-text-tertiary text-base">
               Didn&apos;t receive the email? Check your spam folder or{' '}
               <button
                 onClick={() => setIsSubmitted(false)}

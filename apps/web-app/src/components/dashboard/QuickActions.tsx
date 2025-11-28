@@ -97,11 +97,11 @@ export function QuickActions({ userType }: QuickActionsProps) {
               </span>
             </div>
             <div className="mt-4">
-              <h4 className="text-sm font-semibold text-text-primary group-hover:text-navy">
+              <h4 className="text-base font-semibold text-text-primary group-hover:text-navy">
                 <span className="absolute inset-0" aria-hidden="true" />
                 {action.name}
               </h4>
-              <p className="mt-1 text-sm text-text-secondary">{action.description}</p>
+              <p className="mt-1 text-base text-text-secondary">{action.description}</p>
             </div>
             <span
               className="pointer-events-none absolute top-5 right-5 text-border group-hover:text-gold transition-colors duration-fast"

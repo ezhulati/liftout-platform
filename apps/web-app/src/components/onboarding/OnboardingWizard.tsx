@@ -123,22 +123,22 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-50">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg">
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="bg-bg-surface border-b border-border px-6 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Welcome to Liftout, {userData?.name}!
               </h1>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-base text-text-secondary mt-1">
                 Let's get you set up to {userData?.type === 'company' ? 'find amazing teams' : 'discover great opportunities'}
               </p>
             </div>
             <button
               onClick={handleClose}
-              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="p-2 text-text-tertiary hover:text-text-primary transition-colors touch-target"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -146,19 +146,19 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         </div>
 
         {/* Progress Bar */}
-        <div className="bg-white border-b border-gray-200 px-6 py-3">
+        <div className="bg-bg-surface border-b border-border px-6 py-3">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-base font-medium text-text-secondary">
                 Step {currentStepIndex + 1} of {steps.length}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-base text-text-tertiary">
                 {completedRequiredSteps} of {totalSteps} required steps completed
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-border rounded-full h-2">
               <div
-                className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                className="bg-navy h-2 rounded-full transition-all duration-300"
                 style={{
                   width: `${((currentStepIndex + 1) / steps.length) * 100}%`,
                 }}
@@ -168,7 +168,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         </div>
 
         {/* Step Navigation */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="bg-bg-surface border-b border-border px-6 py-4">
           <div className="max-w-4xl mx-auto">
             <nav className="flex space-x-4">
               {steps.map((step, index) => {
@@ -181,14 +181,14 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
                     key={step.id}
                     onClick={() => isAccessible && goToStep(step.id)}
                     disabled={!isAccessible}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-base font-medium transition-colors ${
                       isCurrent
-                        ? 'bg-primary-100 text-primary-700 border-2 border-primary-200'
+                        ? 'bg-navy-50 text-navy border-2 border-navy/20'
                         : isCompleted
-                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                        ? 'bg-success-light text-success-dark hover:bg-success-light/80'
                         : isAccessible
-                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        : 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                        ? 'bg-bg-alt text-text-secondary hover:bg-bg-elevated'
+                        : 'bg-bg-alt/50 text-text-tertiary cursor-not-allowed'
                     }`}
                   >
                     {isCompleted ? (
@@ -198,7 +198,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
                     )}
                     <span className="hidden sm:inline">{step.title}</span>
                     {step.required && (
-                      <span className="text-xs bg-red-100 text-red-600 px-1 rounded">
+                      <span className="text-sm bg-error-light text-error px-1 rounded">
                         Required
                       </span>
                     )}
@@ -213,29 +213,29 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         <div className="flex-1 px-6 py-8">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <h2 className="text-xl font-semibold text-text-primary mb-2">
                 {currentStep.title}
               </h2>
-              <p className="text-gray-600">
+              <p className="text-text-secondary">
                 {currentStep.description}
               </p>
             </div>
 
             {/* Step Component */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="card p-6">
               {renderStepComponent()}
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="bg-white border-t border-gray-200 px-6 py-4">
+        <div className="bg-bg-surface border-t border-border px-6 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {canGoBack && (
                 <button
                   onClick={goToPreviousStep}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="btn-outline flex items-center space-x-2"
                 >
                   <ArrowLeftIcon className="h-4 w-4" />
                   <span>Back</span>
@@ -246,16 +246,16 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleSkip}
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-link"
               >
-                Skip Setup
+                Skip setup
               </button>
               {canSkipStep && (
                 <button
                   onClick={handleStepComplete}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="btn-outline flex items-center space-x-2"
                 >
-                  <span>Skip Step</span>
+                  <span>Skip step</span>
                   <ArrowRightIcon className="h-4 w-4" />
                 </button>
               )}

@@ -27,10 +27,10 @@ function ToggleSwitch({ enabled, onChange, disabled = false }: ToggleSwitchProps
       type="button"
       onClick={() => !disabled && onChange(!enabled)}
       className={`${
-        enabled ? 'bg-primary-600' : 'bg-gray-200'
+        enabled ? 'bg-navy' : 'bg-border'
       } ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
+      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy`}
       disabled={disabled}
     >
       <span
@@ -127,16 +127,16 @@ export function ThemeSettings() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-2/3 mb-6"></div>
+          <div className="h-6 bg-bg-alt rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-bg-alt rounded w-2/3 mb-6"></div>
           <div className="grid grid-cols-3 gap-4 mb-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+              <div key={i} className="h-32 bg-bg-alt rounded"></div>
             ))}
           </div>
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+              <div key={i} className="h-16 bg-bg-alt rounded"></div>
             ))}
           </div>
         </div>
@@ -147,9 +147,9 @@ export function ThemeSettings() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="pb-4 border-b border-gray-200">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Theme & Interface</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="pb-4 border-b border-border">
+        <h3 className="text-lg leading-6 font-medium text-text-primary">Theme & interface</h3>
+        <p className="mt-1 text-sm text-text-secondary">
           Customize your Liftout experience with themes, languages, and display preferences.
         </p>
       </div>
@@ -157,39 +157,39 @@ export function ThemeSettings() {
       {/* Theme Selection */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <SwatchIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Appearance</h4>
+          <SwatchIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Appearance</h4>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-text-secondary">
           Choose your preferred theme for the Liftout interface.
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {themeOptions.map((option) => (
             <div
               key={option.value}
               className={`relative cursor-pointer rounded-lg border-2 p-4 focus:outline-none ${
                 settings.theme.theme === option.value
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-300 bg-white hover:border-gray-400'
+                  ? 'border-navy bg-navy-50'
+                  : 'border-border bg-bg-surface hover:border-border-hover'
               }`}
               onClick={() => handleSelectChange('theme', option.value)}
             >
               <div className="flex flex-col items-center text-center">
                 <div className={`w-full h-16 rounded-lg ${option.preview} mb-3 flex items-center justify-center border-2`}>
-                  <option.icon className="h-8 w-8 text-gray-600" />
+                  <option.icon className="h-8 w-8 text-text-secondary" />
                 </div>
                 <div className="flex items-center">
-                  <h3 className="text-sm font-medium text-gray-900">{option.title}</h3>
+                  <h3 className="text-sm font-medium text-text-primary">{option.title}</h3>
                   {settings.theme.theme === option.value && (
-                    <div className="ml-2 flex-shrink-0 text-primary-600">
+                    <div className="ml-2 flex-shrink-0 text-navy">
                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                     </div>
                   )}
                 </div>
-                <p className="mt-1 text-xs text-gray-500">{option.description}</p>
+                <p className="mt-1 text-xs text-text-tertiary">{option.description}</p>
               </div>
             </div>
           ))}
@@ -199,15 +199,15 @@ export function ThemeSettings() {
       {/* Interface Options */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <ViewColumnsIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Interface Options</h4>
+          <ViewColumnsIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Interface options</h4>
         </div>
-        
+
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
             <div>
-              <p className="text-sm font-medium text-gray-900">Compact Mode</p>
-              <p className="text-sm text-gray-500">Reduce padding and spacing for a denser interface</p>
+              <p className="text-sm font-medium text-text-primary">Compact mode</p>
+              <p className="text-sm text-text-secondary">Reduce padding and spacing for a denser interface</p>
             </div>
             <ToggleSwitch
               enabled={settings.theme.compactMode}
@@ -220,20 +220,20 @@ export function ThemeSettings() {
       {/* Localization */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <LanguageIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Language & Region</h4>
+          <LanguageIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Language & region</h4>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="language" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="language" className="block text-sm font-medium text-text-secondary">
               Language
             </label>
             <select
               id="language"
               value={settings.theme.language}
               onChange={(e) => handleSelectChange('language', e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              className="input-field mt-1"
             >
               {languages.map((lang) => (
                 <option key={lang.value} value={lang.value}>
@@ -244,7 +244,7 @@ export function ThemeSettings() {
           </div>
 
           <div>
-            <label htmlFor="timezone" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="timezone" className="block text-sm font-medium text-text-secondary">
               <ClockIcon className="h-4 w-4 inline mr-1" />
               Timezone
             </label>
@@ -252,7 +252,7 @@ export function ThemeSettings() {
               id="timezone"
               value={settings.theme.timezone}
               onChange={(e) => handleSelectChange('timezone', e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              className="input-field mt-1"
             >
               {timezones.map((tz) => (
                 <option key={tz.value} value={tz.value}>
@@ -266,19 +266,19 @@ export function ThemeSettings() {
 
       {/* Format Preferences */}
       <div className="space-y-4">
-        <h4 className="text-base font-medium text-gray-900">Format Preferences</h4>
-        
+        <h4 className="text-base font-medium text-text-primary">Format preferences</h4>
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="dateFormat" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="dateFormat" className="block text-sm font-medium text-text-secondary">
               <CalendarIcon className="h-4 w-4 inline mr-1" />
-              Date Format
+              Date format
             </label>
             <select
               id="dateFormat"
               value={settings.theme.dateFormat}
               onChange={(e) => handleSelectChange('dateFormat', e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              className="input-field mt-1"
             >
               {dateFormats.map((format) => (
                 <option key={format.value} value={format.value}>
@@ -289,7 +289,7 @@ export function ThemeSettings() {
           </div>
 
           <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="currency" className="block text-sm font-medium text-text-secondary">
               <CurrencyDollarIcon className="h-4 w-4 inline mr-1" />
               Currency
             </label>
@@ -297,7 +297,7 @@ export function ThemeSettings() {
               id="currency"
               value={settings.theme.currency}
               onChange={(e) => handleSelectChange('currency', e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              className="input-field mt-1"
             >
               {currencies.map((currency) => (
                 <option key={currency.value} value={currency.value}>
@@ -312,31 +312,31 @@ export function ThemeSettings() {
       {/* Email Preferences */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <EnvelopeIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-base font-medium text-gray-900">Email Digest</h4>
+          <EnvelopeIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h4 className="text-base font-medium text-text-primary">Email digest</h4>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-text-secondary">
           Choose how often you'd like to receive summary emails about platform activity.
         </p>
-        
+
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {digestFrequencies.map((freq) => (
             <div
               key={freq.value}
               className={`cursor-pointer rounded-lg border-2 p-4 focus:outline-none ${
                 settings.theme.emailDigestFrequency === freq.value
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-300 bg-white hover:border-gray-400'
+                  ? 'border-navy bg-navy-50'
+                  : 'border-border bg-bg-surface hover:border-border-hover'
               }`}
               onClick={() => handleSelectChange('emailDigestFrequency', freq.value)}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{freq.label}</p>
-                  <p className="text-sm text-gray-500">{freq.description}</p>
+                  <p className="text-sm font-medium text-text-primary">{freq.label}</p>
+                  <p className="text-sm text-text-secondary">{freq.description}</p>
                 </div>
                 {settings.theme.emailDigestFrequency === freq.value && (
-                  <div className="flex-shrink-0 text-primary-600">
+                  <div className="flex-shrink-0 text-navy">
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
@@ -349,12 +349,12 @@ export function ThemeSettings() {
       </div>
 
       {/* Preview */}
-      <div className="bg-gray-50 rounded-lg p-6">
-        <h4 className="text-base font-medium text-gray-900 mb-4">Preview</h4>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-bg-elevated rounded-lg p-6">
+        <h4 className="text-base font-medium text-text-primary mb-4">Preview</h4>
+        <div className="bg-bg-surface rounded-lg border border-border p-4">
           <div className="flex items-center justify-between mb-3">
-            <h5 className="text-sm font-medium text-gray-900">Sample Liftout Opportunity</h5>
-            <span className="text-xs text-gray-500">
+            <h5 className="text-sm font-medium text-text-primary">Sample liftout opportunity</h5>
+            <span className="text-xs text-text-tertiary">
               {new Date().toLocaleDateString(
                 settings.theme.language,
                 settings.theme.dateFormat === 'US' ? { month: 'numeric', day: 'numeric', year: 'numeric' } :
@@ -363,18 +363,18 @@ export function ThemeSettings() {
               )}
             </span>
           </div>
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-text-secondary mb-2">
             Senior Software Engineering Team • Goldman Sachs
           </p>
-          <p className="text-sm text-gray-900">
-            Compensation: {settings.theme.currency === 'USD' ? '$250,000' : 
+          <p className="text-sm text-text-primary">
+            Compensation: {settings.theme.currency === 'USD' ? '$250,000' :
                           settings.theme.currency === 'EUR' ? '€230,000' :
                           settings.theme.currency === 'GBP' ? '£200,000' :
                           settings.theme.currency === 'JPY' ? '¥35,000,000' :
                           `${settings.theme.currency} 250,000`}
           </p>
         </div>
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-xs text-text-tertiary mt-3">
           This preview updates in real-time as you change your preferences.
         </p>
       </div>

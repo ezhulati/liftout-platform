@@ -162,11 +162,11 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <UserIcon className="mx-auto h-12 w-12 text-primary-600" />
-        <h3 className="mt-2 text-lg font-medium text-gray-900">
+        <UserIcon className="mx-auto h-12 w-12 text-navy" />
+        <h3 className="mt-2 text-lg font-medium text-text-primary">
           Set up your professional profile
         </h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-text-secondary">
           This information helps companies understand your background and expertise.
         </p>
       </div>
@@ -336,10 +336,10 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
         {/* Skills */}
         <div>
           <label className="label-text">Skills & Technologies *</label>
-          <p className="text-sm text-gray-500 mb-3">
+          <p className="text-sm text-text-tertiary mb-3">
             Add your technical skills, tools, and technologies
           </p>
-          
+
           <div className="space-y-3">
             <div className="flex gap-2">
               <input
@@ -353,21 +353,21 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
               <button
                 type="button"
                 onClick={() => addSkill(skillInput)}
-                className="btn-secondary"
+                className="btn-outline"
               >
                 Add
               </button>
             </div>
-            
+
             {/* Common skills suggestions */}
             <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-gray-500">Suggestions:</span>
+              <span className="text-sm text-text-tertiary">Suggestions:</span>
               {commonSkills.slice(0, 12).map((skill) => (
                 <button
                   key={skill}
                   type="button"
                   onClick={() => addSkill(skill)}
-                  className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-bg-alt text-text-secondary hover:bg-bg-elevated"
                 >
                   {skill}
                 </button>
@@ -380,13 +380,13 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
                 {selectedSkills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
                   >
                     {skill}
                     <button
                       type="button"
                       onClick={() => removeSkill(skill)}
-                      className="ml-2 text-primary-600 hover:text-primary-800"
+                      className="ml-2 text-navy hover:text-navy-hover"
                     >
                       ×
                     </button>
@@ -396,14 +396,14 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
             )}
           </div>
           {errors.skills && (
-            <p className="mt-1 text-sm text-red-600">{errors.skills.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.skills.message}</p>
           )}
         </div>
 
         {/* Interests */}
         <div>
-          <label className="label-text">Professional Interests *</label>
-          <p className="text-sm text-gray-500 mb-3">
+          <label className="label-text">Professional interests *</label>
+          <p className="text-sm text-text-tertiary mb-3">
             What industries or types of work interest you?
           </p>
           <div className="flex flex-wrap gap-2">
@@ -412,21 +412,21 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
                 key={interest}
                 type="button"
                 onClick={() => toggleInterest(interest)}
-                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
                   selectedInterests.includes(interest)
-                    ? 'bg-green-100 text-green-800 border-2 border-green-200'
-                    : 'bg-gray-100 text-gray-800 border-2 border-transparent hover:bg-gray-200'
+                    ? 'bg-success-light text-success-dark border-2 border-success/30'
+                    : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-success-light/50'
                 }`}
               >
                 {selectedInterests.includes(interest) && (
-                  <CheckIcon className="h-3 w-3 mr-1" />
+                  <CheckIcon className="h-4 w-4 mr-1.5" />
                 )}
                 {interest}
               </button>
             ))}
           </div>
           {errors.interests && (
-            <p className="mt-1 text-sm text-red-600">{errors.interests.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.interests.message}</p>
           )}
         </div>
 

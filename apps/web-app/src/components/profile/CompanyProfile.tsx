@@ -414,16 +414,16 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                 ) : (
                   <>
                     <button
-                      onClick={() => setIsEditing(false)}
-                      className="btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                    <button
                       onClick={handleSave}
                       className="btn-primary"
                     >
-                      Save Changes
+                      Save changes
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="text-link"
+                    >
+                      Cancel
                     </button>
                   </>
                 )}
@@ -742,7 +742,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
               {isEditing && (
                 <button
                   onClick={addValue}
-                  className="btn-secondary text-sm"
+                  className="btn-outline text-sm"
                 >
                   <PlusIcon className="h-4 w-4 mr-1" />
                   Add value

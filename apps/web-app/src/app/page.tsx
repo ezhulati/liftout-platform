@@ -1,5 +1,5 @@
 import { LandingHero } from '@/components/landing/LandingHero';
-import { HowItWorks } from '@/components/landing/HowItWorks';
+import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { Testimonials } from '@/components/landing/Testimonials';
@@ -14,7 +14,7 @@ export default function HomePage() {
       <LandingHeader />
       <main className="bg-bg">
         <LandingHero />
-        <HowItWorks />
+        <HowItWorksTabs />
         <LandingFeatures />
         <TrustIndicators />
         <Testimonials />

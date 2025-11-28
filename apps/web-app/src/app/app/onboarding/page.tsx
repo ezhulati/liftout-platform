@@ -42,10 +42,10 @@ export default function OnboardingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
           <div className="loading-spinner mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your onboarding experience...</p>
+          <p className="text-base text-text-secondary">Loading your onboarding experience...</p>
         </div>
       </div>
     );

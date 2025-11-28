@@ -159,7 +159,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-primary-500 to-blue-600 flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full bg-navy flex items-center justify-center">
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -234,20 +234,20 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                     )}
                     {hasExpressedInterest ? 'Interest Expressed' : 'Express Interest'}
                   </button>
-                  <button className="btn-secondary flex items-center">
+                  <button className="btn-outline flex items-center">
                     <ChatBubbleLeftRightIcon className="h-4 w-4 mr-2" />
-                    Message Team
+                    Message team
                   </button>
                 </>
               )}
 
               {isTeamOwner && (
                 <>
-                  <Link href={`/app/teams/${teamId}/edit`} className="btn-secondary flex items-center">
+                  <Link href={`/app/teams/${teamId}/edit`} className="btn-primary flex items-center">
                     <PencilSquareIcon className="h-4 w-4 mr-2" />
-                    Edit Team
+                    Edit team
                   </Link>
-                  <Link href={`/app/teams/${teamId}/verification`} className="btn-secondary flex items-center">
+                  <Link href={`/app/teams/${teamId}/verification`} className="btn-outline flex items-center">
                     <ShieldCheckIcon className="h-4 w-4 mr-2" />
                     Verification
                   </Link>
@@ -257,7 +257,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                     className="btn-danger flex items-center"
                   >
                     <TrashIcon className="h-4 w-4 mr-2" />
-                    {deleteTeamMutation.isPending ? 'Deleting...' : 'Delete Team'}
+                    {deleteTeamMutation.isPending ? 'Deleting...' : 'Delete team'}
                   </button>
                 </>
               )}
@@ -275,9 +275,9 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
                 {isTeamOwner && (
-                  <Link href={`/app/teams/${teamId}/members`} className="btn-sm btn-secondary flex items-center">
+                  <Link href={`/app/teams/${teamId}/members`} className="btn-outline text-sm flex items-center">
                     <PlusIcon className="h-4 w-4 mr-1" />
-                    Manage Members
+                    Manage members
                   </Link>
                 )}
               </div>
@@ -302,10 +302,10 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                         </div>
                         {isTeamOwner && (
                           <div className="flex space-x-2">
-                            <button className="text-sm text-primary-600 hover:text-primary-700">
+                            <button className="text-sm text-navy hover:text-navy-hover touch-target">
                               <PencilSquareIcon className="h-4 w-4" />
                             </button>
-                            <button className="text-sm text-red-600 hover:text-red-700">
+                            <button className="text-sm text-error hover:text-error-dark touch-target">
                               <TrashIcon className="h-4 w-4" />
                             </button>
                           </div>
@@ -341,9 +341,9 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
                 {allSkills.map((skill, index) => (
-                  <span 
-                    key={index} 
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
                   >
                     {skill}
                   </span>

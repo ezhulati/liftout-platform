@@ -62,15 +62,15 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
               <ExclamationTriangleIcon className="h-5 w-5 text-gold" />
             )}
             <div>
-              <p className="text-sm font-medium text-text-primary">
+              <p className="text-base font-medium text-text-primary">
                 Profile {completion.score}% complete
               </p>
-              <p className="text-xs text-text-tertiary">{nextRecommendedAction}</p>
+              <p className="text-sm text-text-tertiary">{nextRecommendedAction}</p>
             </div>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors duration-fast touch-target"
+            className="text-primary-600 hover:text-primary-700 text-base font-medium transition-colors duration-fast touch-target"
           >
             {isExpanded ? 'Hide' : 'View'} details
           </button>
@@ -96,15 +96,15 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
           <h3 className="text-lg font-medium text-text-primary mb-2">
             Complete your profile
           </h3>
-          <p className="text-sm text-text-secondary mb-4">
+          <p className="text-base text-text-secondary mb-4">
             A complete profile helps {userData.type === 'company' ? 'teams understand your company' : 'companies find your team'} and improves your chances of successful matches.
           </p>
 
           {/* Overall Progress */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-text-secondary">Overall progress</span>
-              <span className={`text-sm font-bold ${getScoreColor(completion.score)}`}>
+              <span className="text-base font-medium text-text-secondary">Overall progress</span>
+              <span className={`text-base font-bold ${getScoreColor(completion.score)}`}>
                 {completion.score}%
               </span>
             </div>
@@ -188,8 +188,8 @@ function ProfileCompletenessDetails({
         <span className="text-2xl">{badge.icon}</span>
         <div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-text-primary">{badge.text} profile</span>
-            <span className={`text-xs px-2 py-1 rounded-full ${
+            <span className="text-base font-medium text-text-primary">{badge.text} profile</span>
+            <span className={`text-sm px-2 py-1 rounded-full ${
               badge.color === 'green' ? 'bg-success-light text-success-dark' :
               badge.color === 'blue' ? 'bg-navy-50 text-navy-800' :
               badge.color === 'yellow' ? 'bg-gold-100 text-gold-800' :
@@ -198,7 +198,7 @@ function ProfileCompletenessDetails({
               {badge.percentage}
             </span>
           </div>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             {completion.missingRequired.length > 0
               ? `Missing: ${completion.missingRequired.slice(0, 3).join(', ')}${completion.missingRequired.length > 3 ? '...' : ''}`
               : 'All required fields completed'
@@ -210,21 +210,21 @@ function ProfileCompletenessDetails({
       {/* Priority Improvements */}
       {priorityImprovements.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-text-primary mb-3 flex items-center">
+          <h4 className="text-base font-medium text-text-primary mb-3 flex items-center">
             <SparklesIcon className="h-4 w-4 mr-2 text-primary-500" />
             Priority improvements
           </h4>
           <div className="space-y-2">
             {priorityImprovements.map((item, index) => (
               <div key={index} className="flex items-start space-x-3 p-2 bg-bg-surface bg-opacity-40 rounded">
-                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-xs font-medium">
+                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-medium">
                   {index + 1}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-secondary">{item.improvement}</p>
+                  <p className="text-base text-text-secondary">{item.improvement}</p>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-xs text-text-tertiary capitalize">{item.section}</span>
-                    <span className="text-xs text-text-tertiary">{item.score}% complete</span>
+                    <span className="text-sm text-text-tertiary capitalize">{item.section}</span>
+                    <span className="text-sm text-text-tertiary">{item.score}% complete</span>
                   </div>
                 </div>
               </div>
@@ -235,15 +235,15 @@ function ProfileCompletenessDetails({
 
       {/* Next Action */}
       <div className="bg-bg-surface bg-opacity-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-text-primary mb-2">
+        <h4 className="text-base font-medium text-text-primary mb-2">
           Recommended next step
         </h4>
-        <p className="text-sm text-text-secondary mb-3">
+        <p className="text-base text-text-secondary mb-3">
           {nextRecommendedAction}
         </p>
         <button
           onClick={onStartOnboarding}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-700 bg-primary-100 border border-primary-200 rounded-lg hover:bg-primary-200 transition-colors duration-fast"
+          className="inline-flex items-center px-4 py-2 text-base font-medium text-primary-700 bg-primary-100 border border-primary-200 rounded-lg hover:bg-primary-200 transition-colors duration-fast"
         >
           Continue setup
           <ArrowRightIcon className="ml-2 h-4 w-4" />

@@ -123,7 +123,7 @@ export function UpcomingDeadlines() {
         <h3 className="text-lg font-semibold text-text-primary font-heading">Upcoming Deadlines</h3>
         <Link
           href="/app/deadlines"
-          className="text-sm font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
         >
           View all
         </Link>
@@ -134,10 +134,10 @@ export function UpcomingDeadlines() {
           <div className="flex">
             <ExclamationTriangleIcon className="h-5 w-5 text-gold-700" />
             <div className="ml-2">
-              <p className="text-sm font-semibold text-gold-800">
+              <p className="text-base font-semibold text-gold-800">
                 {urgentDeadlines.length} urgent deadline{urgentDeadlines.length > 1 ? 's' : ''} approaching
               </p>
-              <p className="text-xs text-gold-700 mt-0.5">
+              <p className="text-sm text-gold-700 mt-0.5">
                 Don't miss these important dates!
               </p>
             </div>
@@ -163,10 +163,10 @@ export function UpcomingDeadlines() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-text-primary truncate">
+                    <h4 className="text-base font-semibold text-text-primary truncate">
                       {deadline.title}
                     </h4>
-                    <span className={`badge text-xs ${
+                    <span className={`badge text-sm ${
                       deadline.priority === 'high'
                         ? 'badge-error'
                         : deadline.priority === 'medium'
@@ -176,12 +176,12 @@ export function UpcomingDeadlines() {
                       {deadline.priority}
                     </span>
                   </div>
-                  <p className="text-sm text-text-secondary mt-1">{deadline.description}</p>
+                  <p className="text-base text-text-secondary mt-1">{deadline.description}</p>
                   <div className="flex items-center justify-between mt-2">
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-sm text-text-tertiary">
                       Due {format(new Date(deadline.dueDate), 'MMM d, yyyy')}
                     </p>
-                    <p className={`text-xs font-medium ${
+                    <p className={`text-sm font-medium ${
                       isUrgent ? 'text-error' : 'text-text-tertiary'
                     }`}>
                       {formatDistanceToNow(new Date(deadline.dueDate), { addSuffix: true })}
@@ -204,8 +204,8 @@ export function UpcomingDeadlines() {
           <div className="w-14 h-14 mx-auto rounded-full bg-success-light flex items-center justify-center mb-4">
             <CheckCircleIcon className="h-7 w-7 text-success" />
           </div>
-          <h4 className="text-sm font-semibold text-text-primary mb-1">No upcoming deadlines</h4>
-          <p className="text-sm text-text-secondary mb-6">
+          <h4 className="text-base font-semibold text-text-primary mb-1">No upcoming deadlines</h4>
+          <p className="text-base text-text-secondary mb-6">
             You're all caught up! Check back later for new liftout opportunities and important deadlines.
           </p>
           <Link

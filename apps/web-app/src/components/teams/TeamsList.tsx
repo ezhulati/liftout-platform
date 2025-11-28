@@ -51,10 +51,10 @@ export function TeamsList({ userType }: TeamsListProps) {
     return (
       <div className="text-center py-12">
         <UserGroupIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-        <h3 className="mt-2 text-sm font-medium text-text-primary">
+        <h3 className="mt-2 text-base font-medium text-text-primary">
           {isCompanyUser ? 'No teams available' : 'No team profile yet'}
         </h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <p className="mt-1 text-base text-text-secondary">
           {isCompanyUser
             ? 'Check back later for new teams available for liftout opportunities.'
             : 'Create your team profile to explore liftout opportunities.'
@@ -89,19 +89,19 @@ export function TeamsList({ userType }: TeamsListProps) {
                   <h3 className="text-lg font-medium text-text-primary truncate">
                     {team.name}
                   </h3>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light text-success-dark">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-success-light text-success-dark">
                     {team.openToLiftout ? 'Open to liftout' : 'Not available'}
                   </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
                     {team.industry}
                   </span>
                 </div>
 
-                <p className="text-sm text-text-secondary mt-1 line-clamp-2">
+                <p className="text-base text-text-secondary mt-1 line-clamp-2">
                   {team.description}
                 </p>
 
-                <div className="flex items-center mt-3 space-x-6 text-sm text-text-tertiary">
+                <div className="flex items-center mt-3 space-x-6 text-base text-text-tertiary">
                   <div className="flex items-center">
                     <UserGroupIcon className="h-4 w-4 mr-1" />
                     {team.size} members
@@ -128,7 +128,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                   {(team.members?.flatMap(m => m.skills) || []).slice(0, 4).map((skill, index) => (
                     <span
                       key={`${skill}-${index}`}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bg-alt text-text-secondary"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-bg-alt text-text-secondary"
                     >
                       {skill}
                     </span>
@@ -180,7 +180,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/edit`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Edit profile
@@ -193,7 +193,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/members`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Manage team members
@@ -206,7 +206,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/opportunities`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             View opportunities
@@ -219,7 +219,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/settings`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Profile settings

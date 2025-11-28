@@ -65,7 +65,7 @@ function AuthErrorContent() {
         </div>
 
         {error && (
-          <p className="mt-6 text-xs text-text-tertiary text-center">
+          <p className="mt-6 text-sm text-text-tertiary text-center">
             Error code: {error}
           </p>
         )}

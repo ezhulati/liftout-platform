@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { UserGroupIcon, CheckIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +35,7 @@ export function TeamHero() {
             </div>
 
             {/* Eyebrow */}
-            <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
+            <p className="text-gold-700 font-semibold tracking-wider uppercase text-sm mb-4">
               For Teams
             </p>
 
@@ -89,45 +90,33 @@ export function TeamHero() {
             </div>
           </div>
 
-          {/* Right - Visual/Benefits */}
+          {/* Right - Hero Image */}
           <div className={`relative transition-all duration-700 ease-out-expo delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Benefits card */}
-            <div className="bg-bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-lg">
-              {/* Top accent bar */}
-              <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-gold/50 via-gold to-gold/50 rounded-t-2xl" aria-hidden="true" />
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              {/* Gold accent border */}
+              <div className="absolute inset-0 rounded-2xl ring-1 ring-gold/20 z-10 pointer-events-none" />
 
-              <h3 className="font-heading text-xl font-bold text-text-primary mb-6">
-                Why teams choose Liftout
-              </h3>
+              <Image
+                src="/teams-hero-new.jpeg"
+                alt="Diverse professional team collaborating and shaking hands in modern office"
+                width={800}
+                height={600}
+                className="w-full h-auto object-cover"
+                priority
+              />
 
-              <div className="space-y-4">
-                {[
-                  'Stay together through transitions',
-                  'Access 200+ premium opportunities',
-                  'Negotiate as a collective',
-                  'Explore confidentially',
-                ].map((item, index) => (
-                  <div
-                    key={item}
-                    className={`flex items-center gap-3 transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}
-                    style={{ transitionDelay: `${(index + 4) * 100}ms` }}
-                  >
-                    <div className="w-2 h-2 rounded-full bg-gold flex-shrink-0" aria-hidden="true" />
-                    <span className="text-text-secondary text-base leading-snug">{item}</span>
-                  </div>
-                ))}
-              </div>
+              {/* Overlay gradient for depth */}
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-900/20 via-transparent to-transparent" />
+            </div>
 
-              {/* Testimonial/Quote */}
-              <div className={`mt-8 pt-6 border-t border-border transition-all duration-700 delay-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-                <blockquote className="text-text-secondary italic text-base leading-relaxed mb-3">
-                  "We had worked together for 4 years. The thought of splitting up was unthinkable.
-                  Liftout helped us find a company that valued what we had built together."
-                </blockquote>
-                <p className="text-text-tertiary text-sm">
-                  — Analytics team lead, FinTech
-                </p>
-              </div>
+            {/* Floating testimonial card */}
+            <div className={`absolute -bottom-6 -left-6 bg-bg-surface rounded-xl p-5 border border-border shadow-lg max-w-xs transition-all duration-700 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <blockquote className="text-text-secondary italic text-base leading-relaxed mb-2">
+                "We had worked together for 4 years. Liftout helped us find a company that valued what we built together."
+              </blockquote>
+              <p className="text-text-tertiary text-sm">
+                — Analytics team lead, FinTech
+              </p>
             </div>
           </div>
         </div>

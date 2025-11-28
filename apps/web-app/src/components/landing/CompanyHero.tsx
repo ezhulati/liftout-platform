@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { BuildingOfficeIcon, CheckIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { CheckIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
 export function CompanyHero() {
@@ -28,13 +29,8 @@ export function CompanyHero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Copy */}
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            {/* Icon badge */}
-            <div className="w-16 h-16 rounded-xl bg-navy flex items-center justify-center mb-8 shadow-navy">
-              <BuildingOfficeIcon className="w-8 h-8 text-gold" aria-hidden="true" />
-            </div>
-
             {/* Eyebrow */}
-            <p className="text-navy font-semibold tracking-wider uppercase text-xs mb-4">
+            <p className="text-navy font-semibold tracking-wider uppercase text-sm mb-4">
               For Companies
             </p>
 
@@ -89,48 +85,21 @@ export function CompanyHero() {
             </div>
           </div>
 
-          {/* Right - Visual/Stats */}
+          {/* Right - Hero Image */}
           <div className={`relative transition-all duration-700 ease-out-expo delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Stats card */}
-            <div className="bg-bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-lg">
-              {/* Top accent bar */}
-              <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-navy via-navy to-navy/50 rounded-t-2xl" aria-hidden="true" />
-
-              <h3 className="font-heading text-xl font-bold text-text-primary mb-6">
-                Why companies choose Liftout
-              </h3>
-
-              <div className="space-y-6">
-                {[
-                  { stat: '3x', label: 'Faster time to productivity vs individual hiring' },
-                  { stat: '67%', label: 'Lower integration risk compared to M&A' },
-                  { stat: '85%', label: 'Team retention rate after 2 years' },
-                  { stat: '40%', label: 'Cost savings vs building teams from scratch' },
-                ].map((item, index) => (
-                  <div
-                    key={item.label}
-                    className={`flex items-baseline gap-4 transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}
-                    style={{ transitionDelay: `${(index + 4) * 100}ms` }}
-                  >
-                    <span className="font-heading text-3xl lg:text-4xl font-bold text-navy">{item.stat}</span>
-                    <span className="text-text-secondary text-base leading-snug">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Trust badge */}
-              <div className="mt-8 pt-6 border-t border-border">
-                <p className="text-text-tertiary text-sm mb-3">Trusted by industry leaders</p>
-                <div className="flex flex-wrap gap-4 text-text-tertiary">
-                  {['Finance', 'Technology', 'Healthcare', 'Consulting'].map((industry) => (
-                    <div key={industry} className="flex items-center gap-2 text-sm font-medium">
-                      <div className="w-2 h-2 rounded-full bg-gold" aria-hidden="true" />
-                      <span>{industry}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/company-hero.jpeg"
+                alt="Hand placing a team piece into an organizational chart, representing strategic team acquisition"
+                width={600}
+                height={400}
+                className="w-full h-auto object-cover"
+                priority
+              />
             </div>
+            {/* Decorative elements */}
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gold-100 rounded-2xl -z-10" />
+            <div className="absolute -top-4 -left-4 w-16 h-16 bg-navy-100 rounded-xl -z-10" />
           </div>
         </div>
       </div>
