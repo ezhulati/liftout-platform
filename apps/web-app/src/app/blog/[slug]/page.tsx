@@ -150,7 +150,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
         </section>
 
         {/* Article Content with TOC */}
-        <ArticleWithTOC article={article} />
+        <ArticleWithTOC article={article} relatedArticles={relatedArticles} />
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (

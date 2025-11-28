@@ -26,8 +26,29 @@ function extractHeadings(content: string): { id: string; text: string; level: nu
   return headings;
 }
 
+// Sidebar Related Article Card
+function SidebarArticleCard({ article }: { article: BlogArticle }) {
+  return (
+    <Link
+      href={`/blog/${article.slug}`}
+      className="group block py-3 border-b border-border last:border-b-0"
+    >
+      <span className="text-xs text-navy font-medium">{article.category}</span>
+      <h4 className="text-sm font-medium text-text-primary mt-1 group-hover:text-navy transition-colors leading-snug line-clamp-2">
+        {article.title}
+      </h4>
+    </Link>
+  );
+}
+
 // Table of Contents component
-function TableOfContents({ headings }: { headings: { id: string; text: string; level: number }[] }) {
+function TableOfContents({
+  headings,
+  relatedArticles = []
+}: {
+  headings: { id: string; text: string; level: number }[];
+  relatedArticles?: BlogArticle[];
+}) {
   const [activeId, setActiveId] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -114,10 +135,11 @@ function TableOfContents({ headings }: { headings: { id: string; text: string; l
       {/* Desktop TOC - Sticky sidebar */}
       <aside className="hidden xl:block w-64 flex-shrink-0">
         <div className="sticky top-28">
+          {/* Table of Contents */}
           <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
             On this page
           </p>
-          <nav>
+          <nav className="mb-10">
             <ul className="space-y-1 border-l-2 border-border">
               {headings.map(({ id, text, level }) => (
                 <li key={id}>
@@ -137,6 +159,20 @@ function TableOfContents({ headings }: { headings: { id: string; text: string; l
               ))}
             </ul>
           </nav>
+
+          {/* Related Articles */}
+          {relatedArticles.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
+                Related articles
+              </p>
+              <div>
+                {relatedArticles.map((article) => (
+                  <SidebarArticleCard key={article.slug} article={article} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </aside>
     </>
@@ -260,9 +296,10 @@ function ArticleContent({ content }: { content: string }) {
 
 interface ArticleWithTOCProps {
   article: BlogArticle;
+  relatedArticles?: BlogArticle[];
 }
 
-export function ArticleWithTOC({ article }: ArticleWithTOCProps) {
+export function ArticleWithTOC({ article, relatedArticles = [] }: ArticleWithTOCProps) {
   const headings = extractHeadings(article.content);
 
   return (
@@ -270,7 +307,7 @@ export function ArticleWithTOC({ article }: ArticleWithTOCProps) {
       <div className="max-w-7xl mx-auto px-4 lg:px-10">
         <div className="flex gap-12">
           {/* TOC Sidebar - Desktop only */}
-          <TableOfContents headings={headings} />
+          <TableOfContents headings={headings} relatedArticles={relatedArticles} />
 
           {/* Main Content */}
           <div className="flex-1 min-w-0 max-w-3xl">
