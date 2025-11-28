@@ -176,11 +176,14 @@ export default function SignUpPage() {
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8 group">
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center shadow-navy transition-all duration-fast group-hover:shadow-lg">
-              <span className="text-gold font-heading font-bold text-xl">L</span>
-            </div>
-            <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
+          <Link href="/" className="lg:hidden flex items-center mb-8">
+            <Image
+              src="/Liftout-logo-dark.png"
+              alt="Liftout"
+              width={180}
+              height={50}
+              className="h-12 w-auto"
+            />
           </Link>
 
           <div className="mb-8">

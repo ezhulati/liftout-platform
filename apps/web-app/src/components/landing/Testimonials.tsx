@@ -58,9 +58,9 @@ export function Testimonials() {
               }`}
               style={{ transitionDelay: isVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
-              {/* Quote */}
+              {/* Quote - Practical UI: 18px body text */}
               <blockquote className="mb-6">
-                <p className="text-text-secondary leading-relaxed">
+                <p className="text-text-secondary text-lg leading-relaxed">
                   "{testimonial.quote}"
                 </p>
               </blockquote>
@@ -76,7 +76,7 @@ export function Testimonials() {
                   <cite className="font-semibold text-text-primary not-italic block">
                     {testimonial.name}
                   </cite>
-                  <span className="text-text-tertiary text-sm">
+                  <span className="text-text-tertiary text-base">
                     {testimonial.title}, {testimonial.company}
                   </span>
                 </div>

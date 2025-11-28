@@ -37,25 +37,25 @@ export function LandingHero() {
                 a proven track record together.
               </p>
 
-              {/* CTAs - One primary, left-aligned, 16px gap */}
+              {/* CTAs - Primary + tertiary per Practical UI */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link
                   href="/auth/signup"
-                  className="btn-primary inline-flex items-center justify-center gap-2 group"
+                  className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 group"
                 >
                   Browse verified teams
-                  <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/for-teams"
-                  className="btn-outline inline-flex items-center justify-center gap-2"
+                  className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center"
                 >
                   List your team
                 </Link>
               </div>
 
-              {/* Trust signals - simple, minimal */}
-              <p className="text-text-tertiary text-sm">
+              {/* Trust signals - Practical UI: 16px minimum for small text */}
+              <p className="text-text-tertiary text-base">
                 Free to explore. No credit card required.
               </p>
             </div>

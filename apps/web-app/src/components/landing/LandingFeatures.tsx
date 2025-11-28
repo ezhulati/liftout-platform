@@ -91,8 +91,8 @@ export function LandingFeatures() {
                 {feature.name}
               </h3>
 
-              {/* Description */}
-              <p className="text-text-secondary leading-relaxed">
+              {/* Description - Practical UI: 18px body text */}
+              <p className="text-text-secondary text-lg leading-relaxed">
                 {feature.description}
               </p>
             </article>

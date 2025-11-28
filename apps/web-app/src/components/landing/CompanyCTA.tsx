@@ -65,7 +65,7 @@ export function CompanyCTA() {
           ))}
         </div>
 
-        {/* CTA buttons - Practical UI: Primary first (left), one primary per section */}
+        {/* CTA buttons - Practical UI: Primary + tertiary (underlined), one primary per section */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
           {/* Primary CTA - white on dark bg per Practical UI */}
           <Link
@@ -76,10 +76,10 @@ export function CompanyCTA() {
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
-          {/* Secondary CTA - outline on dark bg */}
+          {/* Tertiary CTA - underlined text per Practical UI */}
           <Link
             href="/for-teams"
-            className="btn-secondary-on-dark px-8 py-3 text-lg"
+            className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 hover:text-white transition-colors min-h-12"
           >
             Register a team
           </Link>

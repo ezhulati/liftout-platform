@@ -164,6 +164,47 @@ export function updateMockApplicationStatus(
 }
 
 /**
+ * Schedule an interview for an application
+ */
+export function scheduleMockInterview(
+  id: string,
+  interviewDate: string,
+  notes?: string
+): MockApplication | null {
+  const appIndex = applications.findIndex(app => app.id === id);
+  if (appIndex === -1) return null;
+
+  applications[appIndex] = {
+    ...applications[appIndex],
+    status: 'interview',
+    interviewDate,
+    notes: notes || applications[appIndex].notes,
+    updatedAt: new Date().toISOString()
+  };
+
+  return applications[appIndex];
+}
+
+/**
+ * Add feedback to an application
+ */
+export function addMockApplicationFeedback(
+  id: string,
+  feedback: string
+): MockApplication | null {
+  const appIndex = applications.findIndex(app => app.id === id);
+  if (appIndex === -1) return null;
+
+  applications[appIndex] = {
+    ...applications[appIndex],
+    feedback,
+    updatedAt: new Date().toISOString()
+  };
+
+  return applications[appIndex];
+}
+
+/**
  * Reset applications to initial mock data
  */
 export function resetMockApplications(): void {

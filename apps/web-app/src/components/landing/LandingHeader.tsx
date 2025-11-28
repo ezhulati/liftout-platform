@@ -48,7 +48,7 @@ export function LandingHeader() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled || isMobileMenuOpen
-          ? 'bg-bg-surface/95 backdrop-blur-md border-b border-border'
+          ? 'bg-bg-surface border-b border-border'
           : 'bg-transparent'
       }`}
     >
@@ -129,10 +129,10 @@ export function LandingHeader() {
         aria-hidden="true"
       />
 
-      {/* Mobile menu panel */}
+      {/* Mobile menu panel - solid background for visibility */}
       <div
         id="mobile-menu"
-        className={`absolute top-full left-0 right-0 bg-bg-surface border-b border-border md:hidden transition-all duration-300 z-50 ${
+        className={`absolute top-full left-0 right-0 bg-white border-b border-border md:hidden transition-all duration-300 z-50 shadow-lg ${
           isMobileMenuOpen
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 -translate-y-4 pointer-events-none'

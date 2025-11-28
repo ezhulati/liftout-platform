@@ -78,12 +78,13 @@ export function AppSidebar() {
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
 
+  // Practical UI: 48px minimum touch target (min-h-12), proper text sizing
   const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }> } }) => {
     const isActive = pathname === item.href;
     return (
       <Link
         href={item.href}
-        className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-fast ${
+        className={`group flex items-center px-3 py-3 min-h-12 text-base font-medium rounded-lg transition-all duration-fast ${
           isActive
             ? 'bg-navy text-white'
             : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
@@ -128,7 +129,7 @@ export function AppSidebar() {
             </Link>
             <button
               type="button"
-              className="p-2 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-fast"
+              className="p-3 min-h-12 min-w-12 flex items-center justify-center rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-fast"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="sr-only">Close sidebar</span>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { isApiServerAvailable } from '@/lib/api-helpers';
+import { updateMockApplicationStatus, getMockApplicationById } from '@/lib/mock-data/applications';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -17,18 +19,51 @@ export async function PATCH(
     }
 
     const body = await request.json();
+    const { status, notes } = body;
 
-    const response = await fetch(`${API_BASE}/api/applications/${id}/status`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${(session as any).accessToken}`,
-      },
-      body: JSON.stringify(body),
+    if (!status) {
+      return NextResponse.json(
+        { error: 'Status is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if API server is available
+    const apiAvailable = await isApiServerAvailable();
+
+    if (apiAvailable) {
+      try {
+        const response = await fetch(`${API_BASE}/api/applications/${id}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${(session as any).accessToken}`,
+          },
+          body: JSON.stringify(body),
+        });
+
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+      } catch (error) {
+        console.log('API server request failed, falling back to mock data');
+      }
+    }
+
+    // Fallback to mock data
+    const updated = updateMockApplicationStatus(id, status, notes);
+
+    if (!updated) {
+      return NextResponse.json(
+        { error: 'Application not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      application: updated,
+      message: `Application status updated to ${status}`,
+      _mock: true
     });
-
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error updating application status:', error);
     return NextResponse.json(
