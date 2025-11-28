@@ -28,7 +28,7 @@ export const authors: Record<string, Author> = {
   nick: {
     name: 'Nick Acimovic',
     email: 'nick@liftout.com',
-    bio: 'In addition to co-founding Liftout.com, Nick leads Resolution Capital\'s consumer finance investment group. He holds a master\'s degree in finance from Florida State University.',
+    bio: 'Co-founder of Liftout and Managing Partner at Jovian Capital Management. Nick holds a master\'s degree in finance from Florida State University.',
     avatar: '/images/blog/Nick-Acimovic.png',
     social: {
       linkedin: 'https://www.linkedin.com/in/nicholas-acimovic-a6a64b18/',
