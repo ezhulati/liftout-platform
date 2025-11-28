@@ -28,10 +28,10 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
 
   if (!riskAssessment) {
     return (
-      <div className="text-center py-12 bg-bg-surface rounded-lg border border-border">
-        <ShieldCheckIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-text-primary mb-2">No risk assessment available</h3>
-        <p className="text-text-secondary">Risk assessments will appear here once created</p>
+      <div className="text-center py-12 bg-bg-surface rounded-xl border border-border">
+        <ShieldCheckIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" aria-hidden="true" />
+        <h3 className="text-lg font-bold text-text-primary mb-2">No risk assessment available</h3>
+        <p className="text-base font-normal text-text-secondary">Risk assessments will appear here once created</p>
       </div>
     );
   }
@@ -77,21 +77,21 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
 
   return (
     <div className="space-y-8">
-      {/* Overall Risk Summary */}
+      {/* Overall Risk Summary - Practical UI: bold headings, proper spacing */}
       <div className={`card p-6 border-2 ${overallStyle.border}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className={`w-12 h-12 ${overallStyle.bg} rounded-lg flex items-center justify-center`}>
-              <ExclamationTriangleIcon className={`h-6 w-6 ${overallStyle.text}`} />
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className={`w-12 h-12 ${overallStyle.bg} rounded-xl flex items-center justify-center`}>
+              <ExclamationTriangleIcon className={`h-6 w-6 ${overallStyle.text}`} aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-lg font-medium text-text-primary">Overall Risk Assessment</h2>
-              <p className="text-sm text-text-tertiary">
+              <h2 className="text-lg font-bold text-text-primary">Overall risk assessment</h2>
+              <p className="text-sm font-normal text-text-tertiary mt-1">
                 Assessed by {riskAssessment.assessedBy} on {new Date(riskAssessment.assessmentDate).toLocaleDateString()}
               </p>
             </div>
           </div>
-          <span className={`inline-flex items-center px-4 py-2 rounded-lg text-base font-semibold ${overallStyle.bg} ${overallStyle.text}`}>
+          <span className={`inline-flex items-center px-4 py-2 rounded-xl text-base font-bold ${overallStyle.bg} ${overallStyle.text}`}>
             {riskAssessment.overallRisk.toUpperCase()} RISK
           </span>
         </div>
@@ -131,7 +131,7 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
 
       {/* Risk Matrix */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Risk Matrix</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Risk matrix</h3>
         <div className="grid grid-cols-5 gap-1">
           {/* Y-axis label */}
           <div className="col-span-1 flex flex-col justify-between py-2">
@@ -185,11 +185,11 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
 
       {/* Risks by Category */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Identified Risks</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Identified risks</h3>
         <div className="space-y-6">
           {Object.entries(risksByCategory).map(([category, risks]) => (
             <div key={category}>
-              <h4 className="text-base font-medium text-text-primary mb-3">{category}</h4>
+              <h4 className="text-base font-bold text-text-primary mb-3">{category}</h4>
               <div className="space-y-3">
                 {risks.map((risk) => {
                   const riskStyle = getRiskLevelStyle(risk.riskScore >= 50 ? 'high' : risk.riskScore >= 25 ? 'medium' : 'low');
@@ -198,14 +198,14 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
                   return (
                     <div
                       key={risk.id}
-                      className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                      className={`border rounded-xl p-4 cursor-pointer transition-all duration-fast ${
                         isSelected ? 'border-navy ring-2 ring-navy-100' : 'border-border hover:border-border-hover'
                       }`}
                       onClick={() => setSelectedRisk(isSelected ? null : risk)}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <p className="text-base text-text-primary">{risk.description}</p>
+                          <p className="text-base font-normal text-text-primary">{risk.description}</p>
                           <div className="flex items-center gap-4 mt-2">
                             <span className="text-xs text-text-tertiary">{risk.jurisdiction}</span>
                             <span className="text-xs text-text-tertiary">
@@ -250,7 +250,7 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
 
       {/* Mitigation Plan */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Mitigation Strategies</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Mitigation strategies</h3>
         <div className="space-y-4">
           {riskAssessment.mitigationPlan.map((mitigation) => (
             <MitigationCard key={mitigation.id} mitigation={mitigation} />
@@ -261,12 +261,12 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
       {/* Insurance Recommendations */}
       {riskAssessment.insuranceRecommendations.length > 0 && (
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4">Insurance Recommendations</h3>
+          <h3 className="text-lg font-bold text-text-primary mb-4">Insurance recommendations</h3>
           <ul className="space-y-3">
             {riskAssessment.insuranceRecommendations.map((rec, i) => (
-              <li key={i} className="flex items-start">
-                <ShieldCheckIcon className="h-5 w-5 text-navy mr-3 mt-0.5 flex-shrink-0" />
-                <span className="text-base text-text-secondary">{rec}</span>
+              <li key={i} className="flex items-start gap-3">
+                <ShieldCheckIcon className="h-5 w-5 text-navy mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <span className="text-base font-normal text-text-secondary">{rec}</span>
               </li>
             ))}
           </ul>
@@ -274,17 +274,17 @@ export function RiskAssessment({ assessment }: RiskAssessmentProps) {
       )}
 
       {/* Next Review */}
-      <div className="bg-navy-50 rounded-lg p-4 flex items-center justify-between">
-        <div className="flex items-center">
-          <ScaleIcon className="h-6 w-6 text-navy mr-3" />
+      <div className="bg-navy-50 rounded-xl p-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <ScaleIcon className="h-6 w-6 text-navy" aria-hidden="true" />
           <div>
-            <p className="text-sm font-medium text-navy-800">Next Risk Review</p>
-            <p className="text-xs text-navy-600">
+            <p className="text-sm font-bold text-navy-800">Next risk review</p>
+            <p className="text-xs font-normal text-navy-600">
               Scheduled for {new Date(riskAssessment.nextReviewDate).toLocaleDateString()}
             </p>
           </div>
         </div>
-        <button className="btn-outline text-sm">Schedule Review</button>
+        <button className="btn-outline min-h-12 text-sm transition-colors duration-fast">Schedule review</button>
       </div>
     </div>
   );
@@ -301,15 +301,17 @@ interface MetricCardProps {
 function MetricCard({ icon: Icon, iconColor, title, value, subtitle }: MetricCardProps) {
   return (
     <div className="card p-6">
-      <div className="flex items-center">
-        <div className="flex-shrink-0">
-          <Icon className={`h-8 w-8 ${iconColor}`} />
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+          <Icon className={`h-6 w-6 ${iconColor}`} aria-hidden="true" />
         </div>
-        <div className="ml-4">
-          <p className="text-base font-medium text-text-tertiary">{title}</p>
-          <p className="text-2xl font-semibold text-text-primary">{value}</p>
-          <p className="text-xs text-text-tertiary">{subtitle}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-text-tertiary truncate">{title}</p>
+          <p className="text-xl font-bold text-text-primary mt-1">{value}</p>
         </div>
+      </div>
+      <div className="mt-4 pt-4 border-t border-border">
+        <span className="text-sm font-normal text-text-tertiary">{subtitle}</span>
       </div>
     </div>
   );
@@ -317,11 +319,11 @@ function MetricCard({ icon: Icon, iconColor, title, value, subtitle }: MetricCar
 
 function MitigationCard({ mitigation }: { mitigation: MitigationStrategy }) {
   return (
-    <div className="border border-border rounded-lg p-4">
-      <div className="flex items-start justify-between mb-3">
-        <h4 className="text-base font-medium text-text-primary">{mitigation.strategy}</h4>
+    <div className="border border-border rounded-xl p-4">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-3">
+        <h4 className="text-base font-bold text-text-primary">{mitigation.strategy}</h4>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-text-tertiary">
+          <span className="text-sm font-normal text-text-tertiary">
             Effectiveness: {mitigation.effectiveness}%
           </span>
           <div className="w-16 bg-bg-alt rounded-full h-2">
@@ -332,10 +334,10 @@ function MitigationCard({ mitigation }: { mitigation: MitigationStrategy }) {
           </div>
         </div>
       </div>
-      <p className="text-base text-text-secondary mb-3">{mitigation.implementation}</p>
-      <div className="flex items-center gap-6 text-sm text-text-tertiary">
-        <span className="flex items-center">
-          <CurrencyDollarIcon className="h-4 w-4 mr-1" />
+      <p className="text-base font-normal text-text-secondary mb-3">{mitigation.implementation}</p>
+      <div className="flex flex-wrap items-center gap-6 text-sm text-text-tertiary">
+        <span className="flex items-center gap-1">
+          <CurrencyDollarIcon className="h-4 w-4" aria-hidden="true" />
           ${mitigation.cost?.toLocaleString() || 0}
         </span>
         <span>Timeline: {mitigation.timeline}</span>

@@ -79,26 +79,26 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
 
   return (
     <div className="space-y-6">
-      {/* Search and Filter Bar */}
+      {/* Search and Filter Bar - Practical UI: 48px touch targets */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-tertiary" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-tertiary" aria-hidden="true" />
           <input
             type="text"
             placeholder="Search documents..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy bg-bg-surface"
+            className="w-full pl-10 pr-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-navy focus:border-navy bg-bg-surface min-h-12"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center px-4 py-3 border border-border rounded-lg text-text-secondary hover:bg-bg-alt min-h-12"
+          className="flex items-center gap-2 px-4 py-3 border border-border rounded-xl text-text-secondary hover:bg-bg-alt min-h-12 font-bold transition-colors duration-fast"
         >
-          <FunnelIcon className="h-5 w-5 mr-2" />
+          <FunnelIcon className="h-5 w-5" aria-hidden="true" />
           Filters
           {(statusFilter !== 'all' || typeFilter !== 'all') && (
-            <span className="ml-2 bg-navy text-white text-xs rounded-full px-2 py-0.5">
+            <span className="ml-2 bg-navy text-white text-xs font-bold rounded-full px-2 py-0.5">
               {[statusFilter !== 'all', typeFilter !== 'all'].filter(Boolean).length}
             </span>
           )}
@@ -107,9 +107,9 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="bg-bg-alt p-4 rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-bg-alt p-4 rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Status</label>
+            <label className="block text-sm font-bold text-text-secondary mb-2">Status</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -124,7 +124,7 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Document Type</label>
+            <label className="block text-sm font-bold text-text-secondary mb-2">Document type</label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
@@ -148,10 +148,10 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
 
       {/* Documents Grid */}
       {filteredDocuments.length === 0 ? (
-        <div className="text-center py-12 bg-bg-surface rounded-lg border border-border">
-          <DocumentDuplicateIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-text-primary mb-2">No documents found</h3>
-          <p className="text-text-secondary">Try adjusting your search or filters</p>
+        <div className="text-center py-12 bg-bg-surface rounded-xl border border-border">
+          <DocumentDuplicateIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" aria-hidden="true" />
+          <h3 className="text-lg font-bold text-text-primary mb-2">No documents found</h3>
+          <p className="text-base font-normal text-text-secondary">Try adjusting your search or filters</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -160,16 +160,16 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
             return (
               <div
                 key={doc.id}
-                className="bg-bg-surface rounded-lg border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-bg-surface rounded-xl border border-border p-6 hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => onSelectDocument?.(doc)}
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-navy-50 rounded-lg flex items-center justify-center">
-                      <DocumentTextIcon className="h-5 w-5 text-navy" />
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center">
+                      <DocumentTextIcon className="h-5 w-5 text-navy" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-base font-medium text-text-primary">{doc.title}</h3>
+                      <h3 className="text-base font-bold text-text-primary">{doc.title}</h3>
                       <p className="text-sm text-text-tertiary mt-1">{doc.description}</p>
                       <div className="flex items-center gap-4 mt-3">
                         <span className="text-xs text-text-tertiary">
@@ -198,45 +198,45 @@ export function DocumentsList({ documents = mockLegalDocuments, onSelectDocument
                 {/* Document Stats */}
                 <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
                   <div className="flex items-center gap-6">
-                    <div className="flex items-center text-sm text-text-tertiary">
-                      <CheckCircleIcon className="h-4 w-4 mr-1" />
+                    <div className="flex items-center gap-1 text-sm text-text-tertiary">
+                      <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
                       {doc.complianceChecks.filter((c) => c.status === 'compliant').length}/{doc.complianceChecks.length} compliant
                     </div>
-                    <div className="flex items-center text-sm text-text-tertiary">
-                      <ClockIcon className="h-4 w-4 mr-1" />
+                    <div className="flex items-center gap-1 text-sm text-text-tertiary">
+                      <ClockIcon className="h-4 w-4" aria-hidden="true" />
                       {doc.reviewers.filter((r) => r.status === 'completed').length}/{doc.reviewers.length} reviewed
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      className="p-2 text-text-tertiary hover:text-text-primary transition-colors"
+                      className="p-2 min-h-10 min-w-10 text-text-tertiary hover:text-text-primary transition-colors duration-fast rounded-lg hover:bg-bg-alt"
                       onClick={(e) => {
                         e.stopPropagation();
                         // View document
                       }}
                       title="View"
                     >
-                      <EyeIcon className="h-5 w-5" />
+                      <EyeIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                     <button
-                      className="p-2 text-text-tertiary hover:text-text-primary transition-colors"
+                      className="p-2 min-h-10 min-w-10 text-text-tertiary hover:text-text-primary transition-colors duration-fast rounded-lg hover:bg-bg-alt"
                       onClick={(e) => {
                         e.stopPropagation();
                         // Edit document
                       }}
                       title="Edit"
                     >
-                      <PencilIcon className="h-5 w-5" />
+                      <PencilIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                     <button
-                      className="p-2 text-text-tertiary hover:text-text-primary transition-colors"
+                      className="p-2 min-h-10 min-w-10 text-text-tertiary hover:text-text-primary transition-colors duration-fast rounded-lg hover:bg-bg-alt"
                       onClick={(e) => {
                         e.stopPropagation();
                         // Download document
                       }}
                       title="Download"
                     >
-                      <ArrowDownTrayIcon className="h-5 w-5" />
+                      <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                   </div>
                 </div>

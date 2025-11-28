@@ -139,18 +139,18 @@ export function ComplianceChecklist({ checks }: ComplianceChecklistProps) {
         />
       </div>
 
-      {/* Filter */}
-      <div className="flex items-center gap-4">
-        <label className="text-sm font-medium text-text-secondary">Filter:</label>
-        <div className="flex gap-2">
+      {/* Filter - Practical UI: 48px touch targets */}
+      <div className="flex flex-wrap items-center gap-4">
+        <label className="text-sm font-bold text-text-secondary">Filter:</label>
+        <div className="flex flex-wrap gap-2">
           {['all', 'compliant', 'needs_review', 'non_compliant', 'not_applicable'].map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+              className={`px-4 py-2 text-sm font-bold rounded-xl min-h-10 transition-colors duration-fast ${
                 statusFilter === status
                   ? 'bg-navy text-white'
-                  : 'bg-bg-alt text-text-secondary hover:bg-bg-elevated'
+                  : 'bg-bg-alt text-text-secondary hover:bg-bg-elevated border border-border'
               }`}
             >
               {status === 'all' ? 'All' : status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -167,20 +167,20 @@ export function ComplianceChecklist({ checks }: ComplianceChecklistProps) {
           const categoryTotal = categoryChecks.length;
 
           return (
-            <div key={category} className="bg-bg-surface rounded-lg border border-border overflow-hidden">
+            <div key={category} className="bg-bg-surface rounded-xl border border-border overflow-hidden">
               {/* Category Header */}
               <button
                 onClick={() => toggleCategory(category)}
-                className="w-full flex items-center justify-between p-4 hover:bg-bg-alt transition-colors"
+                className="w-full flex items-center justify-between p-4 hover:bg-bg-alt transition-colors duration-fast min-h-16"
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-3">
                   {isExpanded ? (
-                    <ChevronDownIcon className="h-5 w-5 text-text-tertiary" />
+                    <ChevronDownIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
                   ) : (
-                    <ChevronRightIcon className="h-5 w-5 text-text-tertiary" />
+                    <ChevronRightIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
                   )}
                   <div className="text-left">
-                    <h3 className="text-base font-medium text-text-primary">
+                    <h3 className="text-base font-bold text-text-primary">
                       {CATEGORY_LABELS[category] || category}
                     </h3>
                     <p className="text-sm text-text-tertiary">
@@ -188,8 +188,8 @@ export function ComplianceChecklist({ checks }: ComplianceChecklistProps) {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-text-tertiary">
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-normal text-text-tertiary">
                     {categoryCompliant}/{categoryTotal} compliant
                   </span>
                   <div className="w-24 bg-bg-alt rounded-full h-2">
@@ -209,12 +209,12 @@ export function ComplianceChecklist({ checks }: ComplianceChecklistProps) {
                     const StatusIcon = statusStyle.icon;
 
                     return (
-                      <div key={check.id} className="p-4 hover:bg-bg-alt transition-colors">
+                      <div key={check.id} className="p-4 hover:bg-bg-alt transition-colors duration-fast">
                         <div className="flex items-start justify-between">
-                          <div className="flex items-start space-x-3">
-                            <StatusIcon className={`h-5 w-5 mt-0.5 ${statusStyle.text}`} />
+                          <div className="flex items-start gap-3">
+                            <StatusIcon className={`h-5 w-5 mt-0.5 ${statusStyle.text}`} aria-hidden="true" />
                             <div>
-                              <p className="text-base text-text-primary">{check.requirement}</p>
+                              <p className="text-base font-normal text-text-primary">{check.requirement}</p>
                               <div className="flex items-center gap-3 mt-2">
                                 <span className="text-xs text-text-tertiary">
                                   {check.jurisdiction}
@@ -272,10 +272,10 @@ export function ComplianceChecklist({ checks }: ComplianceChecklistProps) {
       </div>
 
       {filteredGroups.length === 0 && (
-        <div className="text-center py-12 bg-bg-surface rounded-lg border border-border">
-          <ShieldCheckIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-text-primary mb-2">No compliance checks found</h3>
-          <p className="text-text-secondary">No checks match the selected filter</p>
+        <div className="text-center py-12 bg-bg-surface rounded-xl border border-border">
+          <ShieldCheckIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" aria-hidden="true" />
+          <h3 className="text-lg font-bold text-text-primary mb-2">No compliance checks found</h3>
+          <p className="text-base font-normal text-text-secondary">No checks match the selected filter</p>
         </div>
       )}
     </div>
@@ -293,11 +293,13 @@ interface SummaryCardProps {
 function SummaryCard({ label, value, icon: Icon, color, percentage }: SummaryCardProps) {
   return (
     <div className="card p-4">
-      <div className="flex items-center">
-        <Icon className={`h-8 w-8 ${color}`} />
-        <div className="ml-4">
-          <p className="text-sm text-text-tertiary">{label}</p>
-          <p className="text-2xl font-semibold text-text-primary">
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+          <Icon className={`h-6 w-6 ${color}`} aria-hidden="true" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-text-tertiary truncate">{label}</p>
+          <p className="text-xl font-bold text-text-primary mt-1">
             {value}
             {percentage !== undefined && (
               <span className="text-sm font-normal text-text-tertiary ml-2">({percentage}%)</span>
