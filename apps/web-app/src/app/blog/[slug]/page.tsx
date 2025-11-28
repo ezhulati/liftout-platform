@@ -209,10 +209,10 @@ export default async function BlogArticlePage({ params }: PageProps) {
         <section className="bg-[#0f172a] pt-40 pb-20">
           <div className="max-w-4xl mx-auto px-4 lg:px-10">
             {/* Back link - Tertiary button style */}
-            <div className="mb-4">
+            <div className="mb-8">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-200 text-base underline underline-offset-4 decoration-white/30 hover:decoration-white"
+                className="inline-flex items-center gap-2 min-h-[48px] text-white/70 hover:text-white transition-colors duration-200 text-base"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -222,7 +222,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
             </div>
 
             {/* Meta */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-3 mb-4">
               <Link
                 href={`/blog/category/${article.category.toLowerCase()}`}
                 className="text-gold font-medium text-base hover:text-gold-light transition-colors"
@@ -234,41 +234,41 @@ export default async function BlogArticlePage({ params }: PageProps) {
             </div>
 
             {/* Title - H1 44px */}
-            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight tracking-tight max-w-heading">
+            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
               {article.title}
             </h1>
 
             {/* Description */}
-            <p className="text-lg text-white/80 leading-normal mb-6 max-w-prose">
+            <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-10 max-w-prose">
               {article.metaDescription}
             </p>
 
             {/* Author - with avatar and link */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-4">
               {article.author.avatar ? (
                 <Image
                   src={article.author.avatar}
                   alt={article.author.name}
-                  width={48}
-                  height={48}
-                  className="w-12 h-12 rounded-full object-cover"
+                  width={56}
+                  height={56}
+                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                  <span className="text-white font-semibold text-lg">
+                <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-semibold text-xl">
                     {article.author.name.charAt(0)}
                   </span>
                 </div>
               )}
-              <div>
+              <div className="pt-1">
                 <Link
                   href="/blog/author/nick-acimovic"
-                  className="text-white font-medium text-base hover:text-gold transition-colors"
+                  className="text-white font-semibold text-lg hover:text-gold transition-colors"
                 >
                   {article.author.name}
                 </Link>
                 {article.author.bio && (
-                  <p className="text-white/70 text-sm leading-relaxed">{article.author.bio}</p>
+                  <p className="text-white/70 text-base leading-relaxed mt-1 max-w-xl">{article.author.bio}</p>
                 )}
               </div>
             </div>
