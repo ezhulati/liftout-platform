@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@liftout/database';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 // Secret key to protect this endpoint

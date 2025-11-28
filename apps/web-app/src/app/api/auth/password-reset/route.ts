@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@liftout/database';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { z } from 'zod';

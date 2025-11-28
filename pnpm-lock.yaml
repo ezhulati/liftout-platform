@@ -182,12 +182,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.0
         version: 3.10.0(react-hook-form@7.66.1(react@18.3.1))
-      '@liftout/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@next-auth/prisma-adapter':
         specifier: ^1.0.7
         version: 1.0.7(@prisma/client@5.22.0(prisma@5.22.0))(next-auth@4.24.13(next@14.2.33(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@prisma/client':
+        specifier: ^5.5.0
+        version: 5.22.0(prisma@5.22.0)
       '@tailwindcss/aspect-ratio':
         specifier: ^0.4.2
         version: 0.4.2(tailwindcss@3.4.18)
@@ -318,6 +318,9 @@ importers:
       playwright:
         specifier: ^1.57.0
         version: 1.57.0
+      prisma:
+        specifier: ^5.5.0
+        version: 5.22.0
 
   packages/database:
     dependencies:

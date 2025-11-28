@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@liftout/database', 'next-auth'],
+  transpilePackages: ['next-auth'],
   eslint: {
     // Skip ESLint during production builds - linting is done in CI/development
     ignoreDuringBuilds: true,
