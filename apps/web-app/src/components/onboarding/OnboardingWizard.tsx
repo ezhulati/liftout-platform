@@ -138,7 +138,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
             </div>
             <button
               onClick={handleClose}
-              className="p-2 text-text-tertiary hover:text-text-primary transition-colors touch-target"
+              className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -181,7 +181,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
                     key={step.id}
                     onClick={() => isAccessible && goToStep(step.id)}
                     disabled={!isAccessible}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-base font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-3 min-h-12 rounded-lg text-base font-medium transition-colors ${
                       isCurrent
                         ? 'bg-navy-50 text-navy border-2 border-navy/20'
                         : isCompleted
@@ -192,13 +192,13 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
                     }`}
                   >
                     {isCompleted ? (
-                      <CheckIcon className="h-4 w-4" />
+                      <CheckIcon className="h-5 w-5" />
                     ) : (
-                      <span className="w-4 h-4 rounded-full border-2 border-current" />
+                      <span className="w-5 h-5 rounded-full border-2 border-current" />
                     )}
                     <span className="hidden sm:inline">{step.title}</span>
                     {step.required && (
-                      <span className="text-sm bg-error-light text-error px-1 rounded">
+                      <span className="text-base bg-error-light text-error px-2 rounded">
                         Required
                       </span>
                     )}
@@ -235,9 +235,9 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
               {canGoBack && (
                 <button
                   onClick={goToPreviousStep}
-                  className="btn-outline flex items-center space-x-2"
+                  className="btn-outline min-h-12 flex items-center space-x-2"
                 >
-                  <ArrowLeftIcon className="h-4 w-4" />
+                  <ArrowLeftIcon className="h-5 w-5" />
                   <span>Back</span>
                 </button>
               )}
@@ -246,17 +246,17 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleSkip}
-                className="text-link"
+                className="text-link min-h-12 flex items-center"
               >
                 Skip setup
               </button>
               {canSkipStep && (
                 <button
                   onClick={handleStepComplete}
-                  className="btn-outline flex items-center space-x-2"
+                  className="btn-outline min-h-12 flex items-center space-x-2"
                 >
                   <span>Skip step</span>
-                  <ArrowRightIcon className="h-4 w-4" />
+                  <ArrowRightIcon className="h-5 w-5" />
                 </button>
               )}
             </div>

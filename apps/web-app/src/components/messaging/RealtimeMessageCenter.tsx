@@ -384,8 +384,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                 </span>
               </div>
             </div>
-            <button className="btn-primary text-sm inline-flex items-center px-3 py-2 min-h-9">
-              <PlusIcon className="h-4 w-4 mr-1" />
+            <button className="btn-primary inline-flex items-center px-4 py-3 min-h-12">
+              <PlusIcon className="h-5 w-5 mr-2" />
               New
             </button>
           </div>
@@ -440,7 +440,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-1">
                       {getSecurityIcon(conversation.securityLevel)}
-                      <h3 className="text-sm font-medium text-text-primary truncate">
+                      <h3 className="text-base font-medium text-text-primary truncate">
                         {conversation.title}
                       </h3>
                       {unreadCount > 0 && (
@@ -524,7 +524,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   </div>
                 </div>
 
-                <button className="text-text-tertiary hover:text-text-primary transition-colors duration-fast">
+                <button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast">
                   <EllipsisVerticalIcon className="h-5 w-5" />
                 </button>
               </div>
@@ -647,12 +647,12 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <button className="text-text-tertiary hover:text-text-primary transition-colors duration-fast disabled:cursor-not-allowed touch-target" disabled={!isConnected}>
+                  <button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast disabled:cursor-not-allowed" disabled={!isConnected}>
                     <PaperClipIcon className="h-5 w-5" />
                   </button>
                   <button
                     onClick={handleSendMessage}
-                    className="btn-primary text-sm px-3 py-2 min-h-9 disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
+                    className="btn-primary px-4 py-3 min-h-12 disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
                     disabled={!newMessage.trim() || !isConnected}
                   >
                     Send
@@ -686,8 +686,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-              <h3 className="mt-2 text-sm font-medium text-text-primary">No conversation selected</h3>
-              <p className="mt-1 text-sm text-text-secondary">Choose a conversation to start real-time messaging</p>
+              <h3 className="mt-2 text-base font-medium text-text-primary">No conversation selected</h3>
+              <p className="mt-1 text-base text-text-secondary">Choose a conversation to start real-time messaging</p>
               <div className="mt-4 flex items-center justify-center space-x-2 text-xs text-text-tertiary">
                 {getConnectionStatusIcon()}
                 <span>Socket.io {connectionStatus}</span>
