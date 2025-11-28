@@ -1,67 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-
-// In-memory storage for demo (in production, use database)
-let teams: any[] = [
-  {
-    id: 'team_demo_001',
-    name: 'TechFlow Data Science Team',
-    description: 'Elite data science team with proven track record in fintech analytics and machine learning solutions.',
-    size: 4,
-    yearsWorking: 3.5,
-    cohesionScore: 94,
-    successfulProjects: 23,
-    clientSatisfaction: 96,
-    openToLiftout: true,
-    createdBy: '1', // demo user
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    members: [
-      {
-        id: 'member_1',
-        name: 'Alex Chen',
-        role: 'Team Lead & Senior Data Scientist',
-        experience: 8,
-        skills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling']
-      },
-      {
-        id: 'member_2', 
-        name: 'Sarah Kim',
-        role: 'Senior ML Engineer',
-        experience: 6,
-        skills: ['Deep Learning', 'Python', 'TensorFlow', 'Model Deployment']
-      },
-      {
-        id: 'member_3',
-        name: 'Michael Rodriguez',
-        role: 'Data Engineer',
-        experience: 5,
-        skills: ['SQL', 'Apache Spark', 'Data Pipelines', 'AWS']
-      },
-      {
-        id: 'member_4',
-        name: 'Emily Zhang',
-        role: 'Business Analyst',
-        experience: 4,
-        skills: ['Business Intelligence', 'Analytics', 'Tableau', 'SQL']
-      }
-    ],
-    achievements: [
-      'Led team that reduced fraud detection false positives by 35%',
-      'Built predictive models generating $2.1M annual savings',
-      'Mentored 12+ junior data scientists across 3 years'
-    ],
-    industry: 'Financial Services',
-    location: 'San Francisco, CA',
-    availability: 'Open to strategic opportunities',
-    compensation: {
-      range: '$180k-$280k',
-      equity: true,
-      benefits: 'Full package'
-    }
-  }
-];
+import { teams, addTeam, type Team } from './_data';
 
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -281,7 +221,7 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    teams.push(newTeam);
+    addTeam(newTeam as Team);
     
     return NextResponse.json({ 
       team: newTeam,

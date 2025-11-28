@@ -18,8 +18,11 @@ import {
   ShieldCheckIcon,
   EyeIcon,
   UserGroupIcon,
+  PencilSquareIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Opportunity {
   id: string;
@@ -48,6 +51,7 @@ interface Opportunity {
   applicants: number;
   views: number;
   isConfidential?: boolean;
+  createdBy?: string;
 }
 
 const typeLabels: Record<string, string> = {
@@ -67,11 +71,19 @@ const typeColors: Record<string, string> = {
 export default function OpportunityDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { userData } = useAuth();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
+
+  // Determine user role and ownership
+  const isCompanyUser = userData?.type === 'company';
+  const isTeamUser = userData?.type === 'individual';
+  // Check if user owns this opportunity (by createdBy field or if company name matches for demo)
+  const isOwner = opportunity?.createdBy === userData?.id ||
+    (isCompanyUser && opportunity?.company === 'NextGen Financial'); // Demo company user's company
 
   const fetchOpportunity = useCallback(async () => {
     if (!params?.id) return;
@@ -357,45 +369,118 @@ export default function OpportunityDetailPage() {
           <div className="space-y-6">
             {/* Action Card */}
             <div className="bg-bg-elevated rounded-lg border border-border p-6 sticky top-6">
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Interested?</h3>
+              {/* Actions for Team Users (individuals who want to apply) */}
+              {isTeamUser && (
+                <>
+                  <h3 className="text-lg font-semibold text-text-primary mb-4">Interested?</h3>
 
-              {/* Deadline Warning */}
-              {daysUntilDeadline <= 14 && daysUntilDeadline > 0 && (
-                <div className="bg-gold-light rounded-lg p-3 mb-4">
-                  <div className="flex items-center gap-2 text-gold-dark">
-                    <ClockIcon className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {daysUntilDeadline} days left to apply
-                    </span>
+                  {/* Deadline Warning */}
+                  {daysUntilDeadline <= 14 && daysUntilDeadline > 0 && (
+                    <div className="bg-gold-light rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-2 text-gold-dark">
+                        <ClockIcon className="w-4 h-4" />
+                        <span className="text-sm font-medium">
+                          {daysUntilDeadline} days left to apply
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {daysUntilDeadline <= 0 && (
+                    <div className="bg-error-light rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-2 text-error">
+                        <ClockIcon className="w-4 h-4" />
+                        <span className="text-sm font-medium">Application deadline passed</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setShowApplyModal(true)}
+                      disabled={opportunity.status !== 'open' || daysUntilDeadline <= 0}
+                      className="btn-primary min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Apply with your team
+                    </button>
+                    <button
+                      onClick={handleExpressInterest}
+                      disabled={opportunity.status !== 'open'}
+                      className="btn-outline min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Express interest
+                    </button>
                   </div>
-                </div>
+                </>
               )}
 
-              {daysUntilDeadline <= 0 && (
-                <div className="bg-error-light rounded-lg p-3 mb-4">
-                  <div className="flex items-center gap-2 text-error">
-                    <ClockIcon className="w-4 h-4" />
-                    <span className="text-sm font-medium">Application deadline passed</span>
+              {/* Actions for Company Users who own this opportunity */}
+              {isCompanyUser && isOwner && (
+                <>
+                  <h3 className="text-lg font-semibold text-text-primary mb-4">Manage Opportunity</h3>
+
+                  <div className="space-y-3">
+                    <Link
+                      href={`/app/opportunities/${opportunity.id}/edit`}
+                      className="btn-primary min-h-12 w-full flex items-center justify-center gap-2"
+                    >
+                      <PencilSquareIcon className="w-5 h-5" />
+                      Edit opportunity
+                    </Link>
+                    <Link
+                      href="/app/applications"
+                      className="btn-outline min-h-12 w-full flex items-center justify-center gap-2"
+                    >
+                      <UserGroupIcon className="w-5 h-5" />
+                      View applicants ({opportunity.applicants})
+                    </Link>
+                    {opportunity.status === 'open' && (
+                      <button
+                        onClick={() => {
+                          toast.success('Opportunity closed');
+                          // TODO: Implement close opportunity API
+                        }}
+                        className="btn-outline min-h-12 w-full flex items-center justify-center gap-2 text-error border-error hover:bg-error-light"
+                      >
+                        <XCircleIcon className="w-5 h-5" />
+                        Close opportunity
+                      </button>
+                    )}
                   </div>
-                </div>
+
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h4 className="text-sm font-medium text-text-primary mb-3">Performance</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-text-tertiary">Views</span>
+                        <span className="text-text-secondary font-medium">{opportunity.views}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-tertiary">Applicants</span>
+                        <span className="text-text-secondary font-medium">{opportunity.applicants}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-tertiary">Status</span>
+                        <span className={`font-medium ${
+                          opportunity.status === 'open' ? 'text-success' : 'text-text-secondary'
+                        }`}>
+                          {opportunity.status === 'open' ? 'Open' : opportunity.status === 'in_review' ? 'In Review' : 'Closed'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
 
-              <div className="space-y-3">
-                <button
-                  onClick={() => setShowApplyModal(true)}
-                  disabled={opportunity.status !== 'open' || daysUntilDeadline <= 0}
-                  className="btn-primary min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Apply with your team
-                </button>
-                <button
-                  onClick={handleExpressInterest}
-                  disabled={opportunity.status !== 'open'}
-                  className="btn-outline min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Express interest
-                </button>
-              </div>
+              {/* Info card for Company Users viewing other companies' opportunities */}
+              {isCompanyUser && !isOwner && (
+                <>
+                  <h3 className="text-lg font-semibold text-text-primary mb-4">Opportunity Details</h3>
+                  <p className="text-sm text-text-secondary mb-4">
+                    This opportunity was posted by {opportunity.company}. As a company user, you can browse opportunities to understand the competitive landscape.
+                  </p>
+                </>
+              )}
 
               <div className="mt-6 pt-6 border-t border-border">
                 <h4 className="text-sm font-medium text-text-primary mb-3">Compensation Details</h4>

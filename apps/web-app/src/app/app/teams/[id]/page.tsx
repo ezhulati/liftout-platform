@@ -4,45 +4,58 @@ import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { teamService } from '@/lib/services/teamService';
-import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import {
   UserGroupIcon,
-  CheckBadgeIcon,
   MapPinIcon,
   CurrencyDollarIcon,
   ClockIcon,
   StarIcon,
-  DocumentTextIcon,
-  ShieldCheckIcon,
   ChartBarIcon,
   ChatBubbleLeftRightIcon,
   HeartIcon,
-  EyeIcon,
   CalendarDaysIcon,
   BriefcaseIcon,
-  AcademicCapIcon,
-  LinkIcon,
   ExclamationTriangleIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
   CheckBadgeIcon as CheckBadgeIconSolid,
   HeartIcon as HeartIconSolid,
 } from '@heroicons/react/24/solid';
 
-const verificationStatusColors = {
-  pending: 'bg-gold-100 text-gold-800',
-  in_progress: 'bg-navy-50 text-navy-800',
-  verified: 'bg-success-light text-success-dark',
-  rejected: 'bg-error-light text-error-dark',
-};
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  experience: number;
+  skills: string[];
+}
 
-const availabilityColors = {
-  available: 'bg-success-light text-success-dark',
-  selective: 'bg-gold-100 text-gold-800',
-  not_available: 'bg-error-light text-error-dark',
-};
+interface Team {
+  id: string;
+  name: string;
+  description: string;
+  size: number;
+  yearsWorking: number;
+  cohesionScore: number;
+  successfulProjects: number;
+  clientSatisfaction: number;
+  openToLiftout: boolean;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  members: TeamMember[];
+  achievements: string[];
+  industry: string;
+  location: string;
+  availability: string;
+  compensation: {
+    range: string;
+    equity: boolean;
+    benefits: string;
+  };
+}
 
 export default function TeamProfilePage() {
   const params = useParams();
@@ -50,15 +63,18 @@ export default function TeamProfilePage() {
   const teamId = params?.id as string;
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
 
-  const { data: team, isLoading, refetch } = useQuery({
+  const { data: team, isLoading, refetch } = useQuery<Team | null>({
     queryKey: ['team', teamId],
     queryFn: async () => {
-      const team = await teamService.getTeamById(teamId);
-      if (team && userData?.type === 'company') {
-        // Increment view count for company users
-        await teamService.incrementViewCount(teamId);
+      const response = await fetch(`/api/teams/${teamId}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error('Failed to fetch team');
       }
-      return team;
+      const data = await response.json();
+      return data.team;
     },
     enabled: !!teamId,
   });
@@ -70,7 +86,7 @@ export default function TeamProfilePage() {
     }
 
     try {
-      await teamService.expressInterest(teamId, userData.id);
+      // TODO: Implement express interest API endpoint
       setHasExpressedInterest(true);
       toast.success('Interest expressed successfully!');
       refetch();
@@ -98,7 +114,10 @@ export default function TeamProfilePage() {
   }
 
   const isCompanyUser = userData?.type === 'company';
-  const isTeamLead = userData?.id === team.leaderId;
+  const isTeamOwner = userData?.id === team.createdBy;
+
+  // Collect all unique skills from team members
+  const allSkills = [...new Set(team.members.flatMap(member => member.skills))];
 
   return (
     <div className="space-y-6">
@@ -114,23 +133,27 @@ export default function TeamProfilePage() {
                 <div>
                   <h1 className="text-2xl font-bold text-text-primary flex items-center">
                     {team.name}
-                    {team.verification.status === 'verified' && (
-                      <CheckBadgeIconSolid className="h-6 w-6 text-navy ml-2" />
+                    {team.cohesionScore >= 90 && (
+                      <CheckBadgeIconSolid className="h-6 w-6 text-navy ml-2" title="High cohesion team" />
                     )}
                   </h1>
                   <div className="flex items-center space-x-4 mt-1">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${verificationStatusColors[team.verification.status]}`}>
-                      {team.verification.status === 'verified' ? 'Verified Team' : `Verification ${team.verification.status}`}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      team.openToLiftout
+                        ? 'bg-success-light text-success-dark'
+                        : 'bg-gold-100 text-gold-800'
+                    }`}>
+                      {team.openToLiftout ? 'Open to Opportunities' : 'Not Currently Available'}
                     </span>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${availabilityColors[team.availability.status]}`}>
-                      {team.availability.status.replace('_', ' ')}
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
+                      {team.industry}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               <p className="text-text-secondary text-lg mb-4">{team.description}</p>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-text-secondary">
                 <div className="flex items-center">
                   <UserGroupIcon className="h-4 w-4 mr-2" />
@@ -138,15 +161,15 @@ export default function TeamProfilePage() {
                 </div>
                 <div className="flex items-center">
                   <MapPinIcon className="h-4 w-4 mr-2" />
-                  <span>{team.location.primary} {team.location.remote && '(Remote)'}</span>
+                  <span>{team.location}</span>
                 </div>
                 <div className="flex items-center">
                   <CalendarDaysIcon className="h-4 w-4 mr-2" />
-                  <span>{team.dynamics.yearsWorkingTogether} years together</span>
+                  <span>{team.yearsWorking} years together</span>
                 </div>
                 <div className="flex items-center">
-                  <EyeIcon className="h-4 w-4 mr-2" />
-                  <span>{team.viewCount} profile views</span>
+                  <StarIcon className="h-4 w-4 mr-2" />
+                  <span>{team.cohesionScore}% cohesion</span>
                 </div>
               </div>
             </div>
@@ -195,26 +218,27 @@ export default function TeamProfilePage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
                         <h3 className="font-medium text-text-primary">{member.name}</h3>
-                        {member.verified && (
-                          <CheckBadgeIconSolid className="h-4 w-4 text-navy" />
-                        )}
-                        {member.role === 'lead' && (
+                        {member.role.toLowerCase().includes('lead') && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
                             Team Lead
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-text-secondary">{member.title}</p>
+                      <p className="text-sm text-text-secondary">{member.role}</p>
                       <p className="text-xs text-text-tertiary mt-1">
-                        {member.yearsExperience} years experience • 
-                        Joined team {formatDistanceToNow(member.joinedTeamDate, { addSuffix: true })}
+                        {member.experience} years experience
                       </p>
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {member.specializations.slice(0, 3).map((spec) => (
-                          <span key={spec} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-primary">
-                            {spec}
+                        {member.skills.slice(0, 4).map((skill) => (
+                          <span key={skill} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-primary">
+                            {skill}
                           </span>
                         ))}
+                        {member.skills.length > 4 && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-tertiary">
+                            +{member.skills.length - 4} more
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -234,112 +258,39 @@ export default function TeamProfilePage() {
             <div className="px-6 py-4">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-navy">{team.performanceMetrics.projectsCompleted}</div>
+                  <div className="text-2xl font-bold text-navy">{team.successfulProjects}</div>
                   <div className="text-sm text-text-secondary">Projects Completed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-success">{team.performanceMetrics.successRate}%</div>
-                  <div className="text-sm text-text-secondary">Success Rate</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gold-600">{team.performanceMetrics.clientSatisfactionScore}/10</div>
+                  <div className="text-2xl font-bold text-success">{team.clientSatisfaction}%</div>
                   <div className="text-sm text-text-secondary">Client Satisfaction</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gold">{team.performanceMetrics.clientRetentionRate}%</div>
-                  <div className="text-sm text-text-secondary">Client Retention</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-text-secondary">{team.performanceMetrics.timeToDelivery}</div>
-                  <div className="text-sm text-text-secondary">Avg. Delivery (days)</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-navy">${team.performanceMetrics.averageProjectValue.toLocaleString()}</div>
-                  <div className="text-sm text-text-secondary">Avg. Project Value</div>
+                  <div className="text-2xl font-bold text-gold-600">{team.cohesionScore}%</div>
+                  <div className="text-sm text-text-secondary">Team Cohesion</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Portfolio */}
-          {team.portfolioItems.length > 0 && (
+          {/* Achievements */}
+          {team.achievements.length > 0 && (
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
                 <h2 className="text-lg font-medium text-text-primary flex items-center">
                   <BriefcaseIcon className="h-5 w-5 mr-2" />
-                  Portfolio & Case Studies
+                  Key Achievements
                 </h2>
               </div>
               <div className="px-6 py-4">
-                <div className="space-y-4">
-                  {team.portfolioItems.map((item, index) => (
-                    <div key={index} className="border border-border rounded-lg p-4">
-                      <h3 className="font-medium text-text-primary">{item.title}</h3>
-                      <p className="text-sm text-text-secondary mt-1">{item.description}</p>
-                      {item.client && (
-                        <p className="text-xs text-text-tertiary mt-2">Client: {item.client}</p>
-                      )}
-                      <div className="flex items-center justify-between mt-3">
-                        <span className="text-sm text-text-tertiary">{item.duration}</span>
-                        {item.value && (
-                          <span className="text-sm font-medium text-success">
-                            ${item.value.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                      {item.outcomes.length > 0 && (
-                        <div className="mt-3">
-                          <p className="text-xs font-medium text-text-secondary mb-1">Key Outcomes:</p>
-                          <ul className="text-xs text-text-secondary space-y-1">
-                            {item.outcomes.map((outcome, idx) => (
-                              <li key={idx}>• {outcome}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                <ul className="space-y-3">
+                  {team.achievements.map((achievement, index) => (
+                    <li key={index} className="flex items-start space-x-3">
+                      <CheckCircleIcon className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
+                      <span className="text-text-secondary">{achievement}</span>
+                    </li>
                   ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Testimonials */}
-          {team.testimonials.length > 0 && (
-            <div className="card">
-              <div className="px-6 py-4 border-b border-border">
-                <h2 className="text-lg font-medium text-text-primary">Client Testimonials</h2>
-              </div>
-              <div className="px-6 py-4">
-                <div className="space-y-4">
-                  {team.testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="border-l-4 border-navy pl-4 py-2">
-                      <blockquote className="text-text-secondary italic mb-2">
-                        &ldquo;{testimonial.content}&rdquo;
-                      </blockquote>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-text-primary">
-                            {testimonial.clientName}
-                          </p>
-                          <p className="text-xs text-text-secondary">
-                            {testimonial.clientTitle} at {testimonial.clientCompany}
-                          </p>
-                        </div>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < testimonial.rating ? 'text-gold fill-current' : 'text-text-tertiary'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                </ul>
               </div>
             </div>
           )}
@@ -354,53 +305,49 @@ export default function TeamProfilePage() {
             </div>
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Profile Views</span>
-                <span className="text-sm font-medium">{team.viewCount}</span>
+                <span className="text-sm text-text-secondary">Team Size</span>
+                <span className="text-sm font-medium">{team.size} members</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Interest Expressions</span>
-                <span className="text-sm font-medium">{team.expressionsOfInterest}</span>
+                <span className="text-sm text-text-secondary">Years Together</span>
+                <span className="text-sm font-medium">{team.yearsWorking} years</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Active Opportunities</span>
-                <span className="text-sm font-medium">{team.activeOpportunities}</span>
+                <span className="text-sm text-text-secondary">Cohesion Score</span>
+                <span className="text-sm font-medium">{team.cohesionScore}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Team Cohesion</span>
-                <span className="text-sm font-medium">{team.dynamics.cohesionScore}/10</span>
+                <span className="text-sm text-text-secondary">Projects Completed</span>
+                <span className="text-sm font-medium">{team.successfulProjects}</span>
               </div>
             </div>
           </div>
 
-          {/* Specializations */}
+          {/* Skills */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-medium text-text-primary">Specializations</h2>
+              <h2 className="text-lg font-medium text-text-primary">Team Skills</h2>
             </div>
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
-                {team.specializations.map((spec) => (
-                  <span key={spec} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
-                    {spec}
+                {allSkills.map((skill) => (
+                  <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
+                    {skill}
                   </span>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Industries */}
+          {/* Industry */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-medium text-text-primary">Industries</h2>
+              <h2 className="text-lg font-medium text-text-primary">Industry</h2>
             </div>
             <div className="px-6 py-4">
-              <div className="flex flex-wrap gap-2">
-                {team.industry.map((ind) => (
-                  <span key={ind} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
-                    {ind}
-                  </span>
-                ))}
-              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
+                {team.industry}
+              </span>
             </div>
           </div>
 
@@ -415,52 +362,20 @@ export default function TeamProfilePage() {
               </div>
               <div className="px-6 py-4 space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-text-secondary">Total Team Range</span>
-                  <span className="text-sm font-medium">
-                    {team.compensationExpectations.currency} {team.compensationExpectations.totalTeamValue.min.toLocaleString()} - {team.compensationExpectations.totalTeamValue.max.toLocaleString()}
-                  </span>
+                  <span className="text-sm text-text-secondary">Salary Range</span>
+                  <span className="text-sm font-medium">{team.compensation.range}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-text-secondary">Structure</span>
-                  <span className="text-sm font-medium">{team.compensationExpectations.structure.replace('_', ' ')}</span>
+                  <span className="text-sm text-text-secondary">Equity Interest</span>
+                  <span className="text-sm font-medium">{team.compensation.equity ? 'Yes' : 'No'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-text-secondary">Negotiable</span>
-                  <span className="text-sm font-medium">{team.compensationExpectations.negotiable ? 'Yes' : 'No'}</span>
+                  <span className="text-sm text-text-secondary">Benefits</span>
+                  <span className="text-sm font-medium">{team.compensation.benefits}</span>
                 </div>
               </div>
             </div>
           )}
-
-          {/* Verification Status */}
-          <div className="card">
-            <div className="px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-medium text-text-primary flex items-center">
-                <ShieldCheckIcon className="h-5 w-5 mr-2" />
-                Verification
-              </h2>
-            </div>
-            <div className="px-6 py-4 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-text-secondary">Status</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${verificationStatusColors[team.verification.status]}`}>
-                  {team.verification.status}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Documents</span>
-                <span className="text-sm font-medium">{team.verification.documents.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">References</span>
-                <span className="text-sm font-medium">{team.verification.references.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-text-secondary">Background Checks</span>
-                <span className="text-sm font-medium">{team.verification.backgroundChecks.length}</span>
-              </div>
-            </div>
-          </div>
 
           {/* Availability */}
           <div className="card">
@@ -473,17 +388,17 @@ export default function TeamProfilePage() {
             <div className="px-6 py-4 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-text-secondary">Status</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${availabilityColors[team.availability.status]}`}>
-                  {team.availability.status.replace('_', ' ')}
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  team.openToLiftout
+                    ? 'bg-success-light text-success-dark'
+                    : 'bg-gold-100 text-gold-800'
+                }`}>
+                  {team.openToLiftout ? 'Available' : 'Not Available'}
                 </span>
               </div>
               <div>
-                <span className="text-sm text-text-secondary">Timeline</span>
-                <p className="text-sm font-medium mt-1">{team.availability.timeline}</p>
-              </div>
-              <div>
-                <span className="text-sm text-text-secondary">Liftout Readiness</span>
-                <p className="text-sm font-medium mt-1">{team.liftoutHistory.liftoutReadiness.replace('_', ' ')}</p>
+                <span className="text-sm text-text-secondary">Notes</span>
+                <p className="text-sm font-medium mt-1">{team.availability}</p>
               </div>
             </div>
           </div>

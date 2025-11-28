@@ -29,6 +29,7 @@ export interface MockOpportunity {
   applicants: number;
   views: number;
   isConfidential?: boolean;
+  createdBy?: string; // User ID of the company user who created this opportunity
 }
 
 export const mockOpportunities: MockOpportunity[] = [
@@ -213,6 +214,43 @@ export const mockOpportunities: MockOpportunity[] = [
     postedAt: '2025-01-22T11:00:00Z',
     applicants: 6,
     views: 312
+  },
+  {
+    id: 'opp_mock_006',
+    title: 'Lead FinTech Analytics Division',
+    company: 'NextGen Financial',
+    description: 'Build and lead our new quantitative analytics division as we expand into institutional trading. We are seeking a high-performing data science team to own our analytics infrastructure and drive data-driven decision making across the organization.',
+    teamSize: 5,
+    location: 'New York, NY',
+    remote: true,
+    industry: 'Financial Services',
+    type: 'expansion',
+    compensation: {
+      type: 'total_package',
+      range: '$220k - $320k per person',
+      equity: true,
+      benefits: 'Full benefits, equity participation, relocation assistance'
+    },
+    requirements: [
+      'Minimum 3 years working together as cohesive team',
+      'Quantitative finance or data science expertise',
+      'Proven track record in financial analytics',
+      'Strong leadership and communication skills'
+    ],
+    responsibilities: [
+      'Build and own quantitative analytics infrastructure',
+      'Develop predictive models for trading decisions',
+      'Lead data science initiatives across the organization',
+      'Mentor and grow the analytics team'
+    ],
+    strategicRationale: 'Rapidly scale our data capabilities to support $50B+ in trading volume and expand into new markets.',
+    integrationPlan: 'Dedicated floor space, full autonomy, 90-day integration with executive sponsorship.',
+    deadline: '2026-04-15',
+    status: 'open',
+    postedAt: '2025-01-28T10:00:00Z',
+    applicants: 3,
+    views: 89,
+    createdBy: 'company_demo' // Demo company user owns this opportunity
   }
 ];
 

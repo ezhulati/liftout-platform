@@ -1,43 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { getTeamById } from '../_data';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const teamId = params.id;
-  
+
   try {
-    // Fetch from the main teams endpoint
-    const teamsResponse = await fetch(`${request.nextUrl.origin}/api/teams`, {
-      headers: {
-        'Cookie': request.headers.get('cookie') || '',
-      },
-    });
-    
-    if (!teamsResponse.ok) {
-      return NextResponse.json({ error: 'Failed to fetch teams' }, { status: 500 });
-    }
-    
-    const { teams } = await teamsResponse.json();
-    const team = teams.find((t: any) => t.id === teamId);
-    
+    const team = getTeamById(teamId);
+
     if (!team) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
-    
-    // Check if user has permission to view this team
-    if (session.user.userType === 'individual' && team.createdBy !== session.user.id) {
+
+    // Company users can view all teams that are open to liftout
+    // Individual users can only view their own teams
+    const isCompanyUser = session.user.userType === 'company';
+    const isTeamOwner = team.createdBy === session.user.id;
+
+    if (!isCompanyUser && !isTeamOwner) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    
+
+    // Company users can only see teams open to liftout (unless it's their own)
+    if (isCompanyUser && !team.openToLiftout && !isTeamOwner) {
+      return NextResponse.json({ error: 'Team not available' }, { status: 403 });
+    }
+
     return NextResponse.json({ team });
   } catch (error) {
     console.error('Error fetching team:', error);
