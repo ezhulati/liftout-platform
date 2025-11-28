@@ -168,7 +168,7 @@ export default function ContactPage() {
                 </p>
                 <Link
                   href="/#faq"
-                  className="btn-primary inline-flex items-center justify-center gap-2"
+                  className="btn-primary min-h-12 inline-flex items-center justify-center gap-2"
                 >
                   View frequently asked questions
                 </Link>

@@ -49,18 +49,18 @@ function AuthErrorContent() {
         <div className="space-y-3">
           <Link
             href="/auth/signin"
-            className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+            className="btn-primary w-full min-h-12 flex items-center justify-center gap-2"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
-            Try Again
+            <ArrowLeftIcon className="w-5 h-5" />
+            Try again
           </Link>
 
           <Link
             href="/"
-            className="btn-outline w-full flex items-center justify-center gap-2 py-3"
+            className="btn-outline w-full min-h-12 flex items-center justify-center gap-2"
           >
-            <HomeIcon className="w-4 h-4" />
-            Go Home
+            <HomeIcon className="w-5 h-5" />
+            Go home
           </Link>
         </div>
 

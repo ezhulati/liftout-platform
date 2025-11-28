@@ -270,7 +270,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-primary w-full"
+              className="btn-primary w-full min-h-12"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
