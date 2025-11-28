@@ -482,9 +482,9 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           )}
           <Link
             href={`/app/teams/${team.id}`}
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
-            View Profile
+            View profile
           </Link>
         </div>
       </div>

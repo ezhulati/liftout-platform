@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import {
@@ -15,22 +16,46 @@ import { useRouter } from 'next/navigation';
 import { FormField, ButtonGroup, TextLink } from '@/components/ui';
 
 export function ProfileSettings() {
-  const { user, updateProfile } = useAuth();
+  const { data: session } = useSession();
+  const { user, updateProfile, isUserLoading } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  
+
+  // Use session data as fallback when Firestore user hasn't loaded yet
+  const sessionUser = session?.user as any;
+  const displayName = user?.name || sessionUser?.name || '';
+  const displayEmail = user?.email || sessionUser?.email || '';
+
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
+    name: displayName,
+    email: displayEmail,
     phone: user?.phone || '',
     location: user?.location || '',
     companyName: user?.companyName || '',
     position: user?.position || '',
     industry: user?.industry || '',
-    bio: user?.profileData?.bio || '',
-    website: user?.profileData?.website || '',
-    linkedin: user?.profileData?.linkedin || '',
+    bio: (user as any)?.profileData?.bio || '',
+    website: (user as any)?.profileData?.website || '',
+    linkedin: (user as any)?.profileData?.linkedin || '',
   });
+
+  // Update form when user data loads
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || sessionUser?.name || '',
+        email: user.email || sessionUser?.email || '',
+        phone: user.phone || '',
+        location: user.location || '',
+        companyName: user.companyName || '',
+        position: user.position || '',
+        industry: user.industry || '',
+        bio: (user as any)?.profileData?.bio || '',
+        website: (user as any)?.profileData?.website || '',
+        linkedin: (user as any)?.profileData?.linkedin || '',
+      });
+    }
+  }, [user, sessionUser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,9 +88,9 @@ export function ProfileSettings() {
         <div className="mt-3">
           <button
             onClick={handleGoToDetailedProfile}
-            className="btn-outline inline-flex items-center"
+            className="btn-outline min-h-12 inline-flex items-center"
           >
-            <UserIcon className="h-4 w-4 mr-2" />
+            <UserIcon className="h-5 w-5 mr-2" />
             Edit detailed profile
           </button>
         </div>
@@ -257,23 +282,23 @@ export function ProfileSettings() {
         <ButtonGroup>
           <button
             type="submit"
-            disabled={isLoading}
-            className="btn-primary"
+            disabled={isLoading || isUserLoading}
+            className="btn-primary min-h-12"
           >
             {isLoading ? 'Saving...' : 'Save changes'}
           </button>
           <TextLink
             onClick={() => setFormData({
-              name: user?.name || '',
-              email: user?.email || '',
+              name: user?.name || sessionUser?.name || '',
+              email: user?.email || sessionUser?.email || '',
               phone: user?.phone || '',
               location: user?.location || '',
               companyName: user?.companyName || '',
               position: user?.position || '',
               industry: user?.industry || '',
-              bio: user?.profileData?.bio || '',
-              website: user?.profileData?.website || '',
-              linkedin: user?.profileData?.linkedin || '',
+              bio: (user as any)?.profileData?.bio || '',
+              website: (user as any)?.profileData?.website || '',
+              linkedin: (user as any)?.profileData?.linkedin || '',
             })}
           >
             Reset

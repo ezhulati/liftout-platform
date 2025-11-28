@@ -1,9 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { signOut } from 'next-auth/react';
+import { auth } from '@/lib/firebase';
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  deleteUser,
+} from 'firebase/auth';
+import { settingsService } from '@/lib/services/settingsService';
+import { userService } from '@/lib/firestore';
 import {
   Cog6ToothIcon,
   ExclamationTriangleIcon,
@@ -18,10 +27,12 @@ import {
   ClockIcon,
   ArrowUpTrayIcon,
   ArrowDownTrayIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  EyeIcon,
+  EyeSlashIcon
 } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
-import { ButtonGroup, TextLink } from '@/components/ui';
+import { ButtonGroup, TextLink, FormField } from '@/components/ui';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -64,7 +75,7 @@ function ConfirmationModal({
           <ButtonGroup>
             <button
               onClick={onConfirm}
-              className={`btn-primary ${isDestructive ? confirmButtonClass : ''}`}
+              className={`btn-primary min-h-12 ${isDestructive ? confirmButtonClass : ''}`}
             >
               {confirmText}
             </button>
@@ -78,9 +89,125 @@ function ConfirmationModal({
   );
 }
 
+interface DeleteAccountModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (password: string) => Promise<void>;
+  userEmail: string;
+}
+
+function DeleteAccountModal({ isOpen, onClose, onConfirm, userEmail }: DeleteAccountModalProps) {
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isValid = password.length >= 6 && confirmEmail === userEmail;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    setIsDeleting(true);
+    try {
+      await onConfirm(password);
+    } catch {
+      // Error handled in parent
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setPassword('');
+    setConfirmEmail('');
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-navy-900/75 flex items-center justify-center p-4 z-50">
+      <div className="bg-bg-surface rounded-lg max-w-md w-full shadow-xl">
+        <form onSubmit={handleSubmit}>
+          <div className="px-6 py-5">
+            <div className="flex items-center">
+              <ExclamationTriangleIcon className="h-6 w-6 text-error mr-3" />
+              <h3 className="text-lg font-medium text-text-primary">Delete account</h3>
+            </div>
+            <p className="mt-2 text-sm text-text-secondary">
+              This will permanently delete your account and all associated data. This action cannot be undone.
+            </p>
+
+            <div className="mt-4 space-y-4">
+              <FormField label="Type your email to confirm" name="confirm-email" required>
+                <input
+                  type="email"
+                  id="confirm-email"
+                  value={confirmEmail}
+                  onChange={(e) => setConfirmEmail(e.target.value)}
+                  placeholder={userEmail}
+                  className="input-field"
+                  required
+                />
+              </FormField>
+
+              <FormField label="Enter your password" name="delete-password" required>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="delete-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-field pr-12"
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </FormField>
+            </div>
+          </div>
+
+          <div className="px-6 py-4 bg-bg-alt rounded-b-lg">
+            <ButtonGroup>
+              <button
+                type="submit"
+                disabled={!isValid || isDeleting}
+                className="btn-danger min-h-12"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete forever'}
+              </button>
+              <TextLink onClick={handleClose}>
+                Cancel
+              </TextLink>
+            </ButtonGroup>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export function AccountSettings() {
+  const { data: session } = useSession();
   const { user } = useAuth();
   const { settings, updateAccountSettings, exportSettings, importSettings, resetSettings } = useSettings();
+
+  // Use session data as fallback
+  const sessionUser = session?.user as any;
+  const displayEmail = user?.email || sessionUser?.email || '';
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -145,14 +272,47 @@ export function AccountSettings() {
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = async (password: string) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser || !currentUser.email || !user) {
+      toast.error('You must be logged in to delete your account');
+      return;
+    }
+
     try {
-      // In a real app, this would call your API to delete the account
-      toast.success('Account deletion initiated. You will receive a confirmation email.');
+      // Re-authenticate user with password
+      const credential = EmailAuthProvider.credential(currentUser.email, password);
+      await reauthenticateWithCredential(currentUser, credential);
+
+      // Delete user settings from Firestore
+      await settingsService.deleteUserSettings(user.id);
+
+      // Delete user data from Firestore
+      // Note: In production, you might want to use a Cloud Function to handle cascading deletes
+      try {
+        await userService.updateUser(user.id, { status: 'inactive' });
+      } catch {
+        // User document might not exist in Firestore
+      }
+
+      // Delete Firebase Auth account
+      await deleteUser(currentUser);
+
+      toast.success('Account deleted successfully');
       setShowDeleteModal(false);
-      await signOut();
-    } catch (error) {
-      toast.error('Failed to delete account');
+
+      // Sign out from NextAuth
+      await signOut({ callbackUrl: '/' });
+    } catch (error: any) {
+      console.error('Account deletion error:', error);
+      if (error.code === 'auth/wrong-password') {
+        toast.error('Incorrect password');
+      } else if (error.code === 'auth/requires-recent-login') {
+        toast.error('Please sign out and sign in again before deleting your account');
+      } else {
+        toast.error('Failed to delete account. Please try again.');
+      }
+      throw error;
     }
   };
 
@@ -201,7 +361,7 @@ export function AccountSettings() {
                 Email
               </dt>
               <dd className="mt-1 text-sm text-text-primary flex items-center">
-                {user?.email}
+                {displayEmail}
                 {user?.verified ? (
                   <CheckCircleIcon className="h-4 w-4 text-success ml-2" title="Verified" />
                 ) : (
@@ -440,13 +600,11 @@ export function AccountSettings() {
         isDestructive={false}
       />
 
-      <ConfirmationModal
+      <DeleteAccountModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDeleteAccount}
-        title="Delete account"
-        description="This will permanently delete your account and all associated data. This action cannot be undone. Are you absolutely sure?"
-        confirmText="Delete forever"
+        userEmail={displayEmail}
       />
 
       <ConfirmationModal

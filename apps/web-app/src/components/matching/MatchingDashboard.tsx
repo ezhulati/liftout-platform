@@ -335,19 +335,19 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
           <div className="flex space-x-3">
             <Link
               href={entityType === 'team' ? `/app/opportunities/${opportunity.id}` : `/app/teams/${team.id}`}
-              className="btn-outline text-sm"
+              className="btn-outline min-h-12"
             >
               View details
             </Link>
             {isCompanyUser && entityType === 'company' && (
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="md">
                 Express interest
               </Button>
             )}
             {!isCompanyUser && entityType === 'team' && (
               <Link
                 href={`/app/opportunities/${opportunity.id}/apply`}
-                className="btn-primary text-sm"
+                className="btn-primary min-h-12"
               >
                 Apply now
               </Link>

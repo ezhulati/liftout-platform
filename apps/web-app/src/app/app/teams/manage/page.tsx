@@ -179,10 +179,10 @@ export default function TeamManagePage() {
           {isLeader && (
             <button
               onClick={() => setShowInviteForm(true)}
-              className="btn-primary flex items-center"
+              className="btn-primary min-h-12 flex items-center"
             >
-              <PlusIcon className="h-4 w-4 mr-2" />
-              Invite Member
+              <PlusIcon className="h-5 w-5 mr-2" />
+              Invite member
             </button>
           )}
         </div>

@@ -178,10 +178,10 @@ export default function OpportunityDetailPage() {
           </p>
           <Link
             href="/app/opportunities"
-            className="btn-primary inline-flex items-center gap-2"
+            className="btn-primary min-h-12 inline-flex items-center gap-2"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
-            Back to Opportunities
+            <ArrowLeftIcon className="w-5 h-5" />
+            Back to opportunities
           </Link>
         </div>
       </div>
@@ -384,16 +384,16 @@ export default function OpportunityDetailPage() {
                 <button
                   onClick={() => setShowApplyModal(true)}
                   disabled={opportunity.status !== 'open' || daysUntilDeadline <= 0}
-                  className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-primary min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Apply with Your Team
+                  Apply with your team
                 </button>
                 <button
                   onClick={handleExpressInterest}
                   disabled={opportunity.status !== 'open'}
-                  className="btn-outline w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-outline min-h-12 w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Express Interest
+                  Express interest
                 </button>
               </div>
 
@@ -459,17 +459,17 @@ export default function OpportunityDetailPage() {
             />
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() => setShowApplyModal(false)}
-                className="btn-ghost"
-              >
-                Cancel
-              </button>
-              <button
                 onClick={handleApply}
                 disabled={applying || !coverLetter.trim()}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary min-h-12 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {applying ? 'Submitting...' : 'Submit Application'}
+                {applying ? 'Submitting...' : 'Submit application'}
+              </button>
+              <button
+                onClick={() => setShowApplyModal(false)}
+                className="text-link min-h-12"
+              >
+                Cancel
               </button>
             </div>
           </div>

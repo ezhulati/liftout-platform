@@ -330,7 +330,7 @@ export default function PhotoUpload({
               <div className="flex space-x-3">
                 <button
                   onClick={uploadPhoto}
-                  className="flex-1 btn-primary inline-flex items-center justify-center"
+                  className="flex-1 btn-primary min-h-12 inline-flex items-center justify-center"
                   disabled={isUploading}
                 >
                   {isUploading ? (
@@ -340,14 +340,14 @@ export default function PhotoUpload({
                     </>
                   ) : (
                     <>
-                      <CheckIcon className="w-4 h-4 mr-2" />
+                      <CheckIcon className="w-5 h-5 mr-2" />
                       Upload photo
                     </>
                   )}
                 </button>
                 <button
                   onClick={cancelUpload}
-                  className="flex-1 btn-outline"
+                  className="flex-1 btn-outline min-h-12"
                   disabled={isUploading}
                 >
                   Cancel

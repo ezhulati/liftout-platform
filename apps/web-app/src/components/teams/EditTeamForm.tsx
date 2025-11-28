@@ -476,9 +476,9 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
             <button
               type="submit"
               disabled={updateTeamMutation.isPending}
-              className="btn-primary flex items-center"
+              className="btn-primary min-h-12 flex items-center"
             >
-              <CheckIcon className="h-4 w-4 mr-2" />
+              <CheckIcon className="h-5 w-5 mr-2" />
               {updateTeamMutation.isPending ? 'Saving...' : 'Save changes'}
             </button>
             <TextLink onClick={() => router.back()}>

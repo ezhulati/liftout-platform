@@ -44,10 +44,10 @@ export default function OpportunitiesPage() {
         {isCompanyUser && (
           <Link
             href="/app/opportunities/create"
-            className="btn-primary flex items-center"
+            className="btn-primary min-h-12 flex items-center"
           >
-            <PlusIcon className="h-4 w-4 mr-2" />
-Post Liftout Opportunity
+            <PlusIcon className="h-5 w-5 mr-2" />
+            Post liftout opportunity
           </Link>
         )}
       </div>

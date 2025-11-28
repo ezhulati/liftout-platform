@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { auth } from '@/lib/firebase';
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from 'firebase/auth';
 import {
   ShieldCheckIcon,
   KeyIcon,
@@ -39,7 +45,7 @@ function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (passwords.new !== passwords.confirm) {
       toast.error('New passwords do not match');
       return;
@@ -50,15 +56,37 @@ function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
       return;
     }
 
+    const currentUser = auth.currentUser;
+    if (!currentUser || !currentUser.email) {
+      toast.error('You must be logged in to change your password');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // In a real app, this would call your API to change the password
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
+      // Re-authenticate user with current password
+      const credential = EmailAuthProvider.credential(
+        currentUser.email,
+        passwords.current
+      );
+      await reauthenticateWithCredential(currentUser, credential);
+
+      // Update to new password
+      await updatePassword(currentUser, passwords.new);
+
       toast.success('Password updated successfully');
       onSuccess();
-    } catch (error) {
-      toast.error('Failed to update password');
+    } catch (error: any) {
+      console.error('Password change error:', error);
+      if (error.code === 'auth/wrong-password') {
+        toast.error('Current password is incorrect');
+      } else if (error.code === 'auth/weak-password') {
+        toast.error('New password is too weak. Please choose a stronger password.');
+      } else if (error.code === 'auth/requires-recent-login') {
+        toast.error('Please sign out and sign in again before changing your password');
+      } else {
+        toast.error('Failed to update password. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -159,7 +187,7 @@ function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-primary"
+          className="btn-primary min-h-12"
         >
           {isSubmitting ? 'Updating...' : 'Update password'}
         </button>
@@ -323,7 +351,7 @@ export function SecuritySettings() {
               </p>
               <button
                 onClick={() => setShowPasswordForm(true)}
-                className="btn-primary"
+                className="btn-primary min-h-12"
               >
                 Change password
               </button>
