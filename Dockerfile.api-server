@@ -1,0 +1,65 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /app
+
+# Copy root package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy all packages that api-server depends on
+COPY packages/database/package.json ./packages/database/
+COPY packages/database/prisma ./packages/database/prisma/
+COPY packages/database/src ./packages/database/src/
+COPY packages/email/package.json ./packages/email/
+COPY packages/email/src ./packages/email/src/
+
+# Copy api-server
+COPY apps/api-server/package.json ./apps/api-server/
+COPY apps/api-server/tsconfig.json ./apps/api-server/
+COPY apps/api-server/src ./apps/api-server/src/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Generate Prisma client
+RUN cd packages/database && npx prisma generate
+
+# Build api-server
+RUN cd apps/api-server && pnpm run build
+
+# Production stage
+FROM node:20-alpine
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /app
+
+# Copy package files for production install
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/database/package.json ./packages/database/
+COPY packages/email/package.json ./packages/email/
+COPY apps/api-server/package.json ./apps/api-server/
+
+# Install production dependencies only
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy built files and prisma
+COPY --from=builder /app/apps/api-server/dist ./apps/api-server/dist
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client* ./node_modules/.pnpm/
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+# Copy package database node_modules for prisma
+COPY --from=builder /app/packages/database/node_modules ./packages/database/node_modules
+
+WORKDIR /app/apps/api-server
+
+ENV NODE_ENV=production
+
+EXPOSE 8000
+
+CMD ["node", "dist/index.js"]
