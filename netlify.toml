@@ -1,13 +1,10 @@
 [build]
   base = "apps/web-app"
-  command = "cd ../.. && pnpm --filter @liftout/web-app run build"
+  command = "npm install -g pnpm && cd ../.. && pnpm install && pnpm --filter @liftout/web-app run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
-  # Remove NODE_ENV=production to allow devDependencies to be installed
-  NETLIFY_USE_PNPM = "true"
-  PNPM_FLAGS = "--shamefully-hoist"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
