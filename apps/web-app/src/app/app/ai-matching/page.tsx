@@ -625,13 +625,13 @@ function DemoAIMatchingResults({
 
               {/* Description */}
               <p className="text-sm text-text-secondary mb-4 line-clamp-2">
-                {isTeamUser ? match.opportunity.description : match.team.description}
+                {isTeamUser ? match.opportunity.description : ('description' in match.team ? match.team.description : 'High-performing team with proven track record.')}
               </p>
 
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <div className="flex items-center space-x-2">
-                  {(isTeamUser ? match.opportunity.skills || match.opportunity.requirements : match.team.skills)?.slice(0, 3).map((skill: string, i: number) => (
+                  {(isTeamUser ? match.opportunity.requirements : match.team.skills)?.slice(0, 3).map((skill: string, i: number) => (
                     <span key={i} className="inline-flex items-center px-2 py-1 rounded text-xs bg-bg-alt text-text-secondary">
                       {skill}
                     </span>
