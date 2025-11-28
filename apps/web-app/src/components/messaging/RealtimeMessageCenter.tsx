@@ -382,7 +382,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                 </span>
               </div>
             </div>
-            <button className="btn-primary text-sm inline-flex items-center px-3 py-2 min-h-[36px]">
+            <button className="btn-primary text-sm inline-flex items-center px-3 py-2 min-h-9">
               <PlusIcon className="h-4 w-4 mr-1" />
               New
             </button>
@@ -650,7 +650,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   </button>
                   <button
                     onClick={handleSendMessage}
-                    className="btn-primary text-sm px-3 py-2 min-h-[36px] disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
+                    className="btn-primary text-sm px-3 py-2 min-h-9 disabled:bg-bg-alt disabled:text-text-tertiary disabled:cursor-not-allowed"
                     disabled={!newMessage.trim() || !isConnected}
                   >
                     Send

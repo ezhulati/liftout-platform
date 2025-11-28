@@ -412,7 +412,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
                 key={interest}
                 type="button"
                 onClick={() => toggleInterest(interest)}
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-9 ${
                   selectedInterests.includes(interest)
                     ? 'bg-success-light text-success-dark border-2 border-success/30'
                     : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-success-light/50'

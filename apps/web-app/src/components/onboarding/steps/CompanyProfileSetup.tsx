@@ -246,7 +246,7 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
                 key={value}
                 type="button"
                 onClick={() => toggleArrayItem(value, selectedValues, setSelectedValues, 'culture.values')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-9 ${
                   selectedValues.includes(value)
                     ? 'bg-navy-100 text-navy-800 border-2 border-navy-200'
                     : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-navy-50'
@@ -276,7 +276,7 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
                 key={style}
                 type="button"
                 onClick={() => toggleArrayItem(style, selectedWorkStyles, setSelectedWorkStyles, 'culture.workStyle')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-9 ${
                   selectedWorkStyles.includes(style)
                     ? 'bg-success-light text-success-dark border-2 border-success/30'
                     : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-success-light/50'
@@ -306,7 +306,7 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
                 key={benefit}
                 type="button"
                 onClick={() => toggleArrayItem(benefit, selectedBenefits, setSelectedBenefits, 'culture.benefits')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-9 ${
                   selectedBenefits.includes(benefit)
                     ? 'bg-gold-100 text-gold-800 border-2 border-gold-200'
                     : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-gold-50'

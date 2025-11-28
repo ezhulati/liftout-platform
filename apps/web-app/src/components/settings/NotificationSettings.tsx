@@ -203,7 +203,7 @@ export function NotificationSettings() {
                 [key]: true
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-success-dark bg-success-light hover:bg-success-light/80 min-h-[36px]"
+            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-success-dark bg-success-light hover:bg-success-light/80 min-h-9"
           >
             <CheckCircleIcon className="h-4 w-4 mr-1" />
             Enable all
@@ -223,7 +223,7 @@ export function NotificationSettings() {
                 [key]: false
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-error-dark bg-error-light hover:bg-error-light/80 min-h-[36px]"
+            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-error-dark bg-error-light hover:bg-error-light/80 min-h-9"
           >
             <XCircleIcon className="h-4 w-4 mr-1" />
             Disable all

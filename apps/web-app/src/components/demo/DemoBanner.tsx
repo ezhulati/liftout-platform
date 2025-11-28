@@ -37,13 +37,13 @@ export function DemoBanner() {
               <span className="opacity-75">Try:</span>
               <Link
                 href="/auth/signin"
-                className="bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-xs font-medium transition-colors min-h-[32px] inline-flex items-center"
+                className="bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-xs font-medium transition-colors min-h-8 inline-flex items-center"
               >
                 👤 Individual Demo
               </Link>
               <Link
                 href="/auth/signin"
-                className="bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-xs font-medium transition-colors min-h-[32px] inline-flex items-center"
+                className="bg-white/20 hover:bg-white/30 px-2 py-1 rounded text-xs font-medium transition-colors min-h-8 inline-flex items-center"
               >
                 🏢 Company Demo
               </Link>

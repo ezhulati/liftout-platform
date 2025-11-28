@@ -986,4 +986,35 @@
   .shadow-navy {
     box-shadow: 0 4px 14px 0 hsl(220 60% 20% / 0.3);
   }
+
+  /* ============================================
+     PRACTICAL UI UTILITY CLASSES
+     Button Heights, Container Patterns, Typography
+     ============================================ */
+
+  /* Button Heights - Touch Target Compliant */
+  .btn-height-sm { @apply min-h-10; } /* 40px */
+  .btn-height-md { @apply min-h-11; } /* 44px */
+  .btn-height-lg { @apply min-h-12; } /* 48px - DEFAULT */
+  .btn-height-xl { min-height: 52px; }
+
+  /* Container Patterns */
+  .container-padding { @apply px-4 lg:px-8; }
+  .section-padding { @apply py-16 lg:py-24; }
+  .card-padding { @apply p-6; }
+
+  /* Typography Helpers */
+  .text-body { @apply text-lg leading-relaxed; } /* 18px, 1.5+ line height */
+  .text-small { @apply text-base leading-relaxed; } /* 16px fallback */
+
+  /* Card Variants */
+  .card-featured { @apply bg-bg-surface rounded-xl p-6 border border-border; }
+
+  /* Form Field Spacing */
+  .form-gap { @apply space-y-6; } /* 24px between fields */
+  .label-gap { @apply mb-1.5; } /* 6px label to field gap */
+
+  /* Dark Section Backgrounds */
+  .bg-section-dark { @apply bg-navy-900; }
+  .bg-section-darker { @apply bg-navy-950; }
 }

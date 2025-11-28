@@ -5,7 +5,7 @@ export function LandingFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="" style={{ backgroundColor: 'hsl(220, 70%, 10%)' }} role="contentinfo">
+    <footer className="bg-navy-950" role="contentinfo">
       {/* Pre-sale support banner (#12) */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">

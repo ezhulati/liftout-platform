@@ -89,7 +89,7 @@ export function QuickActions({ userType }: QuickActionsProps) {
           <Link
             key={action.name}
             href={action.href}
-            className="group relative rounded-xl p-5 border border-border hover:border-gold/30 hover:bg-bg-elevated transition-all duration-base"
+            className="group relative rounded-xl p-6 border border-border hover:border-gold/30 hover:bg-bg-elevated transition-all duration-base"
           >
             <div>
               <span className={`inline-flex rounded-lg p-3 ${action.color} text-white transition-transform duration-fast group-hover:scale-105`}>

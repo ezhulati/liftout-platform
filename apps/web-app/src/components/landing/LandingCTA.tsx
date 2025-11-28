@@ -10,8 +10,7 @@ export function LandingCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-24 lg:py-32"
-      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
+      className="py-24 lg:py-32 bg-navy-900"
       aria-labelledby="cta-heading"
     >
       <div className={`max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>

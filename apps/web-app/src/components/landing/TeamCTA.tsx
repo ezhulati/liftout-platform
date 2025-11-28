@@ -31,8 +31,7 @@ export function TeamCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-20 lg:py-28 overflow-hidden"
-      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
+      className="relative py-20 lg:py-28 overflow-hidden bg-navy-900"
       aria-labelledby="team-cta-heading"
     >
       {/* Background decorative elements */}
