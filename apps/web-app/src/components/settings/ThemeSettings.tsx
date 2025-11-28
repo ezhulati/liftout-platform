@@ -66,14 +66,14 @@ export function ThemeSettings() {
       title: 'Dark',
       description: 'Easy on the eyes',
       icon: MoonIcon,
-      preview: 'bg-gray-900 border-gray-700',
+      preview: 'bg-navy-900 border-navy-700',
     },
     {
       value: 'system' as const,
       title: 'System',
       description: 'Match your device setting',
       icon: ComputerDesktopIcon,
-      preview: 'bg-gradient-to-r from-white to-gray-900 border-gray-400',
+      preview: 'bg-gradient-to-r from-white to-gray-900 border-border',
     },
   ];
 

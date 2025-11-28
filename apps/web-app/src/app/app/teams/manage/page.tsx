@@ -249,7 +249,7 @@ export default function TeamManagePage() {
                 <div className="flex items-center space-x-2">
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                     member.role === 'leader' 
-                      ? 'bg-navy-50 text-blue-800' 
+                      ? 'bg-navy-50 text-navy-800' 
                       : 'bg-bg-alt text-text-primary'
                   }`}>
                     {member.role === 'leader' ? 'Team Leader' : 'Member'}
@@ -302,7 +302,7 @@ export default function TeamManagePage() {
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <span className="flex items-center px-2 py-1 text-xs font-medium bg-gold-100 text-yellow-800 rounded-full">
+                    <span className="flex items-center px-2 py-1 text-xs font-medium bg-gold-100 text-gold-800 rounded-full">
                       <ClockIcon className="h-3 w-3 mr-1" />
                       Pending
                     </span>

@@ -20,9 +20,9 @@ function classNames(...classes: string[]) {
 function getStatusColor(status: string) {
   switch (status) {
     case 'submitted':
-      return 'bg-navy-50 text-blue-800';
+      return 'bg-navy-50 text-navy-800';
     case 'under_review':
-      return 'bg-gold-100 text-yellow-800';
+      return 'bg-gold-100 text-gold-800';
     case 'interview_scheduled':
       return 'bg-purple-100 text-purple-800';
     case 'offer_made':
@@ -30,7 +30,7 @@ function getStatusColor(status: string) {
     case 'accepted':
       return 'bg-success-light text-success-dark';
     case 'rejected':
-      return 'bg-red-100 text-red-800';
+      return 'bg-error-light text-error-dark';
     default:
       return 'bg-bg-alt text-text-primary';
   }
@@ -206,10 +206,10 @@ export default function ApplicationsPage() {
                 
                 {isCompanyUser && application.status === 'submitted' && (
                   <div className="flex space-x-2">
-                    <button className="btn-secondary text-success hover:text-green-700">
+                    <button className="btn-secondary text-success hover:text-success-dark">
                       Review
                     </button>
-                    <button className="btn-secondary text-error hover:text-red-700">
+                    <button className="btn-secondary text-error hover:text-error-dark">
                       Decline
                     </button>
                   </div>

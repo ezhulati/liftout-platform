@@ -292,13 +292,13 @@ export default function EditTeamPage() {
               {formData.specializations.map((spec, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800"
                 >
                   {spec}
                   <button
                     type="button"
                     onClick={() => removeSpecialization(index)}
-                    className="ml-2 text-navy hover:text-blue-800"
+                    className="ml-2 text-navy hover:text-navy-800"
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>

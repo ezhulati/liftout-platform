@@ -362,7 +362,7 @@ export function SecureDocumentViewer({
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => handleDocumentAction(doc, 'view')}
-                      className="btn-sm bg-navy text-white hover:bg-blue-700 inline-flex items-center"
+                      className="btn-sm bg-navy text-white hover:bg-navy-700 inline-flex items-center"
                     >
                       <EyeIcon className="h-4 w-4 mr-1" />
                       View
@@ -371,7 +371,7 @@ export function SecureDocumentViewer({
                     {doc.canDownload && (
                       <button
                         onClick={() => handleDocumentAction(doc, 'download')}
-                        className="btn-sm bg-gray-600 text-white hover:bg-gray-700 inline-flex items-center"
+                        className="btn-sm bg-navy-600 text-white hover:bg-navy-700 inline-flex items-center"
                       >
                         <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
                         Download

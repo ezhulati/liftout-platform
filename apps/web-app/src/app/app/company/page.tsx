@@ -381,7 +381,7 @@ function LiftoutHistory() {
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   liftout.outcome === 'Successful' 
                     ? 'bg-success-light text-success-dark'
-                    : 'bg-gold-100 text-yellow-800'
+                    : 'bg-gold-100 text-gold-800'
                 }`}>
                   {liftout.outcome}
                 </span>
@@ -440,7 +440,7 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
               {requirements.targetIndustries.map((industry, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800"
                 >
                   {industry}
                 </span>
