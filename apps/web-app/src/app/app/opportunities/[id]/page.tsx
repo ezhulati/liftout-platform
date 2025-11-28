@@ -61,7 +61,7 @@ const typeColors: Record<string, string> = {
   expansion: 'bg-success-light text-success',
   capability: 'bg-navy-50 text-navy',
   market_entry: 'bg-gold-light text-gold-dark',
-  acquisition: 'bg-purple-100 text-purple-700',
+  acquisition: 'bg-navy-100 text-navy-dark',
 };
 
 export default function OpportunityDetailPage() {
