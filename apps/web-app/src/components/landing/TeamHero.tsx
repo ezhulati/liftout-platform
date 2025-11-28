@@ -89,20 +89,20 @@ export function TeamHero() {
               ))}
             </div>
 
-            {/* CTA - action-oriented (#04) */}
+            {/* CTA - Practical UI: Primary first (left), Verb+Noun labels */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/signup?type=team"
-                className="btn-secondary min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
+                className="btn-primary min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
-                Register your team free
+                Register your team
                 <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
               </Link>
               <Link
                 href="#features"
-                className="btn-outline min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-2"
+                className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center gap-2"
               >
-                See how it works
+                Learn how it works
               </Link>
             </div>
           </div>

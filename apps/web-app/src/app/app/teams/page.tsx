@@ -49,36 +49,24 @@ export default function TeamsPage() {
   });
 
   const teams = teamsResponse?.teams || [];
-  const filterMetadata = teamsResponse?.filters || { industries: [], locations: [], sizes: [] };
-  
-  if (status === 'loading') {
-    return (
-      <div className="min-h-96 flex items-center justify-center">
-        <div className="loading-spinner w-12 h-12"></div>
-      </div>
-    );
-  }
+  const filterMetadataData = teamsResponse?.filters || { industries: [], locations: [], sizes: [] };
 
-  if (!session?.user) {
-    return null;
-  }
+  const isCompanyUser = session?.user?.userType === 'company';
+  const isTeamUser = session?.user?.userType === 'individual';
 
-  const isCompanyUser = session.user.userType === 'company';
-  const isTeamUser = session.user.userType === 'individual';
-
-  // Filter groups for the SearchAndFilter component
+  // Filter groups for the SearchAndFilter component - must be before early returns
   const filterGroups = useMemo(() => [
     {
       label: 'Industry',
       key: 'industry',
       type: 'select' as const,
-      options: filterMetadata.industries.map(industry => ({ label: industry, value: industry }))
+      options: filterMetadataData.industries.map(industry => ({ label: industry, value: industry }))
     },
     {
       label: 'Location',
       key: 'location', 
       type: 'select' as const,
-      options: filterMetadata.locations.map(location => ({ label: location, value: location }))
+      options: filterMetadataData.locations.map(location => ({ label: location, value: location }))
     },
     {
       label: 'Min Team Size',
@@ -151,7 +139,20 @@ export default function TeamsPage() {
         { label: '95+', value: '95' }
       ]
     }
-  ], [filterMetadata]);
+  ], [filterMetadataData]);
+
+  // Early returns after all hooks
+  if (status === 'loading') {
+    return (
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="loading-spinner w-12 h-12"></div>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return null;
+  }
 
   const handleFilterChange = (filterKey: string, value: string | string[]) => {
     setActiveFilters(prev => ({

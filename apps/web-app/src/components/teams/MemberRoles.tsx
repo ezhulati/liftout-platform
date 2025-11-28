@@ -184,7 +184,7 @@ function RoleChangeModal({
                               </p>
                               {!canChange && (
                                 <p className="text-xs text-error mt-1">
-                                  You don't have permission to assign this role
+                                  You don&apos;t have permission to assign this role
                                 </p>
                               )}
                             </div>
@@ -219,8 +219,8 @@ function RoleChangeModal({
                             Role Change Impact
                           </h3>
                           <p className="mt-1 text-sm text-gold-700">
-                            Changing roles will immediately update the member's permissions and access level.
-                            This action will be recorded in the team's audit log.
+                            Changing roles will immediately update the member&apos;s permissions and access level.
+                            This action will be recorded in the team&apos;s audit log.
                           </p>
                         </div>
                       </div>

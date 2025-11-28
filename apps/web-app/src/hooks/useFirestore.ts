@@ -303,14 +303,20 @@ export function useSearchOpportunities(filters: {
 // Dashboard data hooks
 export function useDashboardData() {
   const { userData } = useAuth();
+  const isCompany = userData?.type === 'company';
+
   const teamsQuery = useTeamsByUser();
-  const opportunitiesQuery = userData?.type === 'company' 
-    ? useOpportunitiesByCompany() 
-    : useOpportunities();
-  const applicationsQuery = userData?.type === 'company' 
-    ? useApplicationsByCompany() 
-    : useApplicationsByTeam();
+
+  // Call all hooks unconditionally to follow Rules of Hooks
+  const companyOpportunitiesQuery = useOpportunitiesByCompany();
+  const teamOpportunitiesQuery = useOpportunities();
+  const companyApplicationsQuery = useApplicationsByCompany();
+  const teamApplicationsQuery = useApplicationsByTeam();
   const notificationsQuery = useUnreadNotifications();
+
+  // Select the appropriate data based on user type
+  const opportunitiesQuery = isCompany ? companyOpportunitiesQuery : teamOpportunitiesQuery;
+  const applicationsQuery = isCompany ? companyApplicationsQuery : teamApplicationsQuery;
 
   return {
     teams: teamsQuery.data || [],

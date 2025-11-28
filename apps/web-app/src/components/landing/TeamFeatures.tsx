@@ -147,11 +147,12 @@ export function TeamFeatures() {
             </p>
           </div>
 
+          {/* Practical UI: Left-align text, avoid center-aligned body text */}
           <div className="grid md:grid-cols-4 gap-8">
             {steps.map((item, index) => (
               <div
                 key={item.step}
-                className={`text-center transition-all duration-500 ${
+                className={`transition-all duration-500 ${
                   stepsVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-6'
@@ -159,8 +160,8 @@ export function TeamFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-16 h-16 rounded-full bg-gold mx-auto mb-4 flex items-center justify-center shadow-lg shadow-gold/30">
-                  <span className="font-heading text-xl font-bold text-on-gold">{item.step}</span>
+                <div className="w-14 h-14 rounded-full bg-gold mb-4 flex items-center justify-center shadow-lg shadow-gold/30">
+                  <span className="font-heading text-lg font-bold text-on-gold">{item.step}</span>
                 </div>
                 {/* Title */}
                 <h4 className="font-heading text-lg font-bold text-text-primary mb-2">

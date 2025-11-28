@@ -197,7 +197,7 @@ export function TeamVerification({ team, onUpdate }: TeamVerificationProps) {
               <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
               <h3 className="mt-2 text-sm font-medium text-text-primary">Upload verification document</h3>
               <p className="mt-1 text-sm text-text-secondary">
-                Upload documents to verify your team's credentials and track record
+                Upload documents to verify your team&apos;s credentials and track record
               </p>
               
               <div className="mt-4 space-y-4">
