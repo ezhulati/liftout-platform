@@ -81,7 +81,7 @@ export function LandingHero() {
       <div className="pb-8 flex justify-center">
         <button
           onClick={scrollToContent}
-          className="flex flex-col items-center gap-2 text-text-tertiary hover:text-text-secondary transition-colors min-h-[48px] min-w-[48px] justify-center"
+          className="flex flex-col items-center gap-2 text-text-tertiary hover:text-text-secondary transition-colors min-h-12 min-w-12 justify-center"
           aria-label="Scroll to learn more"
         >
           <span className="text-xs font-medium">See how it works</span>

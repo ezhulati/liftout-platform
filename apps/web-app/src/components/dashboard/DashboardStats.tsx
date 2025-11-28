@@ -117,7 +117,7 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="card animate-pulse">
             <div className="flex items-center">

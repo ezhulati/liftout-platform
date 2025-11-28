@@ -151,7 +151,7 @@ const RadioOption = forwardRef<HTMLInputElement, RadioOptionProps>(
         htmlFor={optionId}
         className={`
           flex items-start gap-3 cursor-pointer
-          min-h-[48px] py-2 px-3 rounded-lg
+          min-h-12 py-2 px-3 rounded-lg
           border transition-all duration-fast
           ${isChecked ? 'border-navy bg-navy-50' : 'border-border hover:border-border-hover'}
           ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}

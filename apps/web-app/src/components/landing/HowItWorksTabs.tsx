@@ -101,7 +101,7 @@ export function HowItWorksTabs() {
                   aria-selected={isActive}
                   onClick={() => setActiveTab(tab.id)}
                   className={`
-                    flex items-center gap-2 px-5 py-2.5 rounded-md min-h-[44px]
+                    flex items-center gap-2 px-5 py-2.5 rounded-md min-h-11
                     font-medium text-sm transition-all duration-fast
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2
                     ${isActive

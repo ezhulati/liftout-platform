@@ -63,8 +63,8 @@ export function Card({
 }: CardProps) {
   const isInteractive = onClick || hoverable;
 
-  // Base classes
-  const baseClasses = 'bg-bg-surface rounded-2xl transition-all duration-base';
+  // Base classes - rounded-lg for standard cards per Practical UI
+  const baseClasses = 'bg-bg-surface rounded-lg transition-all duration-base';
 
   // Variant classes
   const variantClasses = {
@@ -110,7 +110,7 @@ export function Card({
 
       {/* Footer */}
       {footer && (
-        <div className="px-6 py-4 border-t border-border bg-bg-alt rounded-b-2xl">
+        <div className="px-6 py-4 border-t border-border bg-bg-alt rounded-b-lg">
           {footer}
         </div>
       )}

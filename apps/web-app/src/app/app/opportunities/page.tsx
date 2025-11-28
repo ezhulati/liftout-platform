@@ -58,7 +58,7 @@ Post Liftout Opportunity
           <nav className="-mb-px flex space-x-8">
             <Link
               href="/app/opportunities"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
                 activeTab === 'all'
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
@@ -68,7 +68,7 @@ Post Liftout Opportunity
             </Link>
             <Link
               href="/app/opportunities?tab=active"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
                 activeTab === 'active'
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
@@ -78,7 +78,7 @@ Post Liftout Opportunity
             </Link>
             <Link
               href="/app/opportunities?tab=applications"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
                 activeTab === 'applications'
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
@@ -88,7 +88,7 @@ Post Liftout Opportunity
             </Link>
             <Link
               href="/app/opportunities?tab=closed"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-[48px] transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
                 activeTab === 'closed'
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'

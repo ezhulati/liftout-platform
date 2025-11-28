@@ -95,7 +95,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
     };
 
     return (
-      <div className={`flex items-start gap-4 min-h-[48px] py-2 ${className}`}>
+      <div className={`flex items-start gap-4 min-h-12 py-2 ${className}`}>
         {/* Toggle switch */}
         <button
           ref={ref}

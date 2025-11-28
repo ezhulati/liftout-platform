@@ -170,7 +170,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
         <h2 className="text-2xl font-bold text-text-primary">Team analytics</h2>
         <button
           onClick={loadAnalytics}
-          className="btn-secondary min-h-[44px]"
+          className="btn-secondary min-h-11"
         >
           Refresh data
         </button>
@@ -188,7 +188,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm min-h-[44px] ${
+              className={`py-2 px-1 border-b-2 font-medium text-sm min-h-11 ${
                 activeTab === tab.id
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'

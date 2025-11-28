@@ -86,7 +86,7 @@ export function SearchAndFilter({
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={classNames(
-              "inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium min-h-[44px] transition-colors",
+              "inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium min-h-11 transition-colors",
               showFilters
                 ? "border-navy-300 text-navy bg-navy-50"
                 : "border-border text-text-secondary bg-bg-surface hover:bg-bg-alt"
@@ -104,7 +104,7 @@ export function SearchAndFilter({
           {activeFilterCount > 0 && (
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 border border-border rounded-md text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt min-h-[44px] transition-colors"
+              className="inline-flex items-center px-3 py-2 border border-border rounded-md text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt min-h-11 transition-colors"
             >
               <XMarkIcon className="h-4 w-4 mr-1" />
               Clear

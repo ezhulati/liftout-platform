@@ -32,7 +32,7 @@ export function TrustIndicators() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-20 lg:py-24 bg-navy-900"
+      className="py-20 lg:py-24 bg-[hsl(220,65%,15%)]"
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -53,7 +53,7 @@ export function TrustIndicators() {
               {/* Icon */}
               <div className="flex justify-center mb-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
-                  <feature.icon className="w-6 h-6 text-gold" aria-hidden="true" />
+                  <feature.icon className="w-6 h-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               {/* Title */}

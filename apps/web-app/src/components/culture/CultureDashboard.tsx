@@ -172,7 +172,7 @@ export function CultureDashboard() {
         <div className="flex space-x-3">
           <button
             onClick={() => setViewMode('overview')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'overview'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -182,7 +182,7 @@ export function CultureDashboard() {
           </button>
           <button
             onClick={() => setViewMode('profiles')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'profiles'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -192,7 +192,7 @@ export function CultureDashboard() {
           </button>
           <button
             onClick={() => setViewMode('compatibility')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'compatibility'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -202,7 +202,7 @@ export function CultureDashboard() {
           </button>
           <button
             onClick={() => setViewMode('integration')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'integration'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -214,10 +214,10 @@ export function CultureDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <div key={item.name} className="card overflow-hidden">
-            <div className="p-5">
+            <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />

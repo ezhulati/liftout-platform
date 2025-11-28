@@ -85,7 +85,7 @@ export default function SettingsPage() {
                   activeTab === tab.id
                     ? 'bg-navy-50 border-navy text-navy'
                     : 'border-transparent text-text-primary hover:bg-bg-elevated'
-                } group border-l-4 px-3 py-2.5 flex items-center text-sm font-medium w-full min-h-[44px] transition-colors duration-fast`}
+                } group border-l-4 px-3 py-2.5 flex items-center text-sm font-medium w-full min-h-11 transition-colors duration-fast`}
               >
                 <tab.icon
                   className={`${

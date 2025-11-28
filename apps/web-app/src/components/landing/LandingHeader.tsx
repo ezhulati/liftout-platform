@@ -59,7 +59,7 @@ export function LandingHeader() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center min-h-[48px]"
+            className="flex items-center min-h-12"
             aria-label="Liftout Home"
             onClick={() => setIsMobileMenuOpen(false)}
           >
@@ -79,7 +79,7 @@ export function LandingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-[48px] flex items-center"
+                className="text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-12 flex items-center"
               >
                 {link.label}
               </Link>
@@ -90,13 +90,13 @@ export function LandingHeader() {
           <div className="flex items-center gap-4">
             <Link
               href="/auth/signin"
-              className="hidden sm:flex text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-[48px] items-center"
+              className="hidden sm:flex text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-12 items-center"
             >
               Sign in
             </Link>
             <Link
               href="/auth/signup"
-              className="btn-outline min-h-[48px] px-5 text-base hidden sm:inline-flex"
+              className="btn-outline min-h-12 px-5 text-base hidden sm:inline-flex"
             >
               Get started
             </Link>
@@ -160,7 +160,7 @@ export function LandingHeader() {
             </Link>
             <Link
               href="/auth/signup"
-              className="btn-outline w-full min-h-[48px] justify-center"
+              className="btn-outline w-full min-h-12 justify-center"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Get started

@@ -53,7 +53,7 @@ export function ProfileCompleteness({ className = '', showMinimal = false }: Pro
 
   if (showMinimal) {
     return (
-      <div className={`card p-4 ${className}`}>
+      <div className={`card p-6 ${className}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {completion.score >= 70 ? (

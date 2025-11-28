@@ -456,7 +456,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm min-h-[48px] ${
+              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm min-h-12 ${
                 activeTab === tab.id
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'

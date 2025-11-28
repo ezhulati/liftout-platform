@@ -118,7 +118,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
         {invitations.map((invitation) => (
           <div
             key={invitation.id}
-            className="bg-bg-surface border border-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">

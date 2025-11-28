@@ -68,7 +68,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           htmlFor={inputId}
           className={`
             flex items-start gap-3 cursor-pointer
-            min-h-[48px] py-2
+            min-h-12 py-2
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >

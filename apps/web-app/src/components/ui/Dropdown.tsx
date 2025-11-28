@@ -125,7 +125,7 @@ export function Dropdown({
         aria-expanded={isOpen}
         aria-haspopup="menu"
         className={`
-          inline-flex items-center gap-2 px-4 min-h-[48px]
+          inline-flex items-center gap-2 px-4 min-h-12
           font-medium text-sm rounded-lg
           bg-bg-surface border border-border
           hover:border-border-hover hover:bg-bg-elevated
@@ -178,7 +178,7 @@ export function Dropdown({
                   setIsOpen(false);
                 }}
                 className={`
-                  w-full flex items-center gap-3 px-4 min-h-[44px]
+                  w-full flex items-center gap-3 px-4 min-h-11
                   text-sm text-left transition-colors duration-fast
                   focus-visible:outline-none focus-visible:bg-bg-elevated
                   ${item.danger

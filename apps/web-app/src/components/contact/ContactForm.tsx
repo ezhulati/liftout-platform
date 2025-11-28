@@ -330,7 +330,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-primary min-h-[48px] px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary min-h-12 px-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Sending message...' : 'Send message'}
           </button>

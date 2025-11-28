@@ -70,7 +70,7 @@ export function DiscoveryDashboard() {
         <div className="flex space-x-3">
           <button
             onClick={() => setViewMode('targets')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'targets'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -80,7 +80,7 @@ export function DiscoveryDashboard() {
           </button>
           <button
             onClick={() => setViewMode('market')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'market'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -90,7 +90,7 @@ export function DiscoveryDashboard() {
           </button>
           <button
             onClick={() => setViewMode('signals')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-[44px] ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
               viewMode === 'signals'
                 ? 'bg-navy-50 text-navy border border-navy-200'
                 : 'text-text-tertiary hover:text-text-primary'
@@ -102,10 +102,10 @@ export function DiscoveryDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <div key={item.name} className="card">
-            <div className="p-5">
+            <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />

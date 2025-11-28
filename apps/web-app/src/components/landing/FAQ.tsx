@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDownIcon, EnvelopeIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // FAQs ordered by popularity/importance - most asked first (#30)
@@ -73,44 +73,19 @@ export function FAQ() {
                 Everything you need to know about team acquisition. Can't find what you're looking for? Our team is here to help.
               </p>
 
-              {/* Support options (#12, #62) */}
-              <div className="space-y-4">
-                <Link
-                  href="/contact"
-                  className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-navy/10 flex items-center justify-center group-hover:bg-navy transition-colors">
-                    <EnvelopeIcon className="w-5 h-5 text-navy group-hover:text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-text-primary text-sm">Contact us</p>
-                    <p className="text-text-secondary text-sm">Send us a message</p>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/contact"
-                  className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-navy/10 flex items-center justify-center group-hover:bg-navy transition-colors">
-                    <PhoneIcon className="w-5 h-5 text-navy group-hover:text-white" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-text-primary text-sm">Schedule a call</p>
-                    <p className="text-text-secondary text-sm">Talk to our team</p>
-                  </div>
-                </Link>
-
-                <div className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border">
-                  <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
-                    <ChatBubbleLeftRightIcon className="w-5 h-5 text-success" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-text-primary text-sm">Response time</p>
-                    <p className="text-success text-sm font-medium">Usually within 2 hours</p>
-                  </div>
+              {/* Support option */}
+              <Link
+                href="/contact"
+                className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-navy/10 flex items-center justify-center group-hover:bg-navy transition-colors">
+                  <EnvelopeIcon className="w-5 h-5 text-navy group-hover:text-white" aria-hidden="true" />
                 </div>
-              </div>
+                <div>
+                  <p className="font-semibold text-text-primary text-sm">Contact us</p>
+                  <p className="text-text-secondary text-sm">We respond within 2 hours</p>
+                </div>
+              </Link>
             </div>
           </div>
 
