@@ -252,9 +252,9 @@ export default function AIMatchingPage() {
                             setSelectedEntityId(userOpportunities.opportunities[0].id);
                           }
                         }}
-                        className="btn-secondary text-sm"
+                        className="btn-outline min-h-12 text-base"
                       >
-                        Analyze Match
+                        Analyze match
                       </button>
                     </div>
                   ))}

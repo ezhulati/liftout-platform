@@ -28,12 +28,12 @@ export default function Error({
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => reset()}
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
-            Try Again
+            Try again
           </button>
-          <Link href="/" className="btn-secondary">
-            Go Home
+          <Link href="/" className="btn-outline min-h-12">
+            Go home
           </Link>
         </div>
       </div>

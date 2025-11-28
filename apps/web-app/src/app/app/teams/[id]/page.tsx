@@ -156,18 +156,18 @@ export default function TeamProfilePage() {
                 <button
                   onClick={handleExpressInterest}
                   disabled={hasExpressedInterest}
-                  className={`btn-primary flex items-center ${hasExpressedInterest ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`btn-primary min-h-12 flex items-center ${hasExpressedInterest ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {hasExpressedInterest ? (
-                    <HeartIconSolid className="h-4 w-4 mr-2" />
+                    <HeartIconSolid className="h-5 w-5 mr-2" />
                   ) : (
-                    <HeartIcon className="h-4 w-4 mr-2" />
+                    <HeartIcon className="h-5 w-5 mr-2" />
                   )}
-                  {hasExpressedInterest ? 'Interest Expressed' : 'Express Interest'}
+                  {hasExpressedInterest ? 'Interest expressed' : 'Express interest'}
                 </button>
-                <button className="btn-secondary flex items-center">
-                  <ChatBubbleLeftRightIcon className="h-4 w-4 mr-2" />
-                  Message Team
+                <button className="btn-outline min-h-12 flex items-center">
+                  <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                  Message team
                 </button>
               </div>
             )}

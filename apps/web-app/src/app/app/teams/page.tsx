@@ -183,11 +183,11 @@ export default function TeamsPage() {
               </p>
             </div>
             <div className="flex space-x-3">
-              <Link href="/app/teams/edit" className="btn-secondary">
-                Edit Team Profile
+              <Link href="/app/opportunities" className="btn-primary min-h-12">
+                Browse opportunities
               </Link>
-              <Link href="/app/opportunities" className="btn-primary">
-                Browse Opportunities
+              <Link href="/app/teams/edit" className="btn-outline min-h-12">
+                Edit team profile
               </Link>
             </div>
           </div>

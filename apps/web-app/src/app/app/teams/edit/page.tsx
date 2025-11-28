@@ -281,7 +281,7 @@ export default function EditTeamPage() {
                 <button
                   type="button"
                   onClick={addSpecialization}
-                  className="btn-secondary"
+                  className="btn-outline min-h-12"
                 >
                   Add
                 </button>
@@ -327,7 +327,7 @@ export default function EditTeamPage() {
                 <button
                   type="button"
                   onClick={addAchievement}
-                  className="btn-secondary"
+                  className="btn-outline min-h-12"
                 >
                   Add
                 </button>
@@ -512,18 +512,18 @@ export default function EditTeamPage() {
         {/* Submit */}
         <div className="flex justify-end space-x-4">
           <button
-            type="button"
-            onClick={() => router.back()}
-            className="btn-secondary"
-          >
-            Cancel
-          </button>
-          <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
+            {isSubmitting ? 'Saving...' : 'Save changes'}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="text-link min-h-12 flex items-center"
+          >
+            Cancel
           </button>
         </div>
       </form>

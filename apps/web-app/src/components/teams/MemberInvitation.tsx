@@ -308,22 +308,22 @@ export function MemberInvitation({
 
             <div className="flex justify-end space-x-3">
               <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-primary min-h-12 flex items-center"
+              >
+                <PaperAirplaneIcon className="h-5 w-5 mr-2" />
+                {isSubmitting ? 'Sending...' : 'Send invitation'}
+              </button>
+              <button
                 type="button"
                 onClick={() => {
                   setIsInviting(false);
                   reset();
                 }}
-                className="btn-secondary"
+                className="text-link min-h-12 flex items-center"
               >
                 Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-primary flex items-center"
-              >
-                <PaperAirplaneIcon className="h-4 w-4 mr-2" />
-                {isSubmitting ? 'Sending...' : 'Send Invitation'}
               </button>
             </div>
           </form>

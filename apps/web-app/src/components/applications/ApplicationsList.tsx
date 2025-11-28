@@ -203,7 +203,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                       {!application.viewedByCompany && (
                         <button
                           onClick={() => handleMarkAsViewed(application.id)}
-                          className="btn-secondary min-h-12"
+                          className="btn-outline min-h-12"
                         >
                           Mark as viewed
                         </button>
@@ -273,7 +273,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                         </>
                       )}
 
-                      <button className="btn-secondary min-h-12 flex items-center justify-center">
+                      <button className="btn-outline min-h-12 flex items-center justify-center">
                         <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                         Message
                       </button>
@@ -289,14 +289,14 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                         </button>
                       )}
 
-                      <button className="btn-secondary min-h-12 flex items-center justify-center">
+                      <button className="btn-outline min-h-12 flex items-center justify-center">
                         <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                         Message company
                       </button>
 
                       <Link
                         href={`/app/opportunities/${application.opportunityId}`}
-                        className="btn-secondary min-h-12 text-center flex items-center justify-center"
+                        className="btn-outline min-h-12 text-center flex items-center justify-center"
                       >
                         View opportunity
                       </Link>

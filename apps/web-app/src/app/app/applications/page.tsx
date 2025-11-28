@@ -198,18 +198,18 @@ export default function ApplicationsPage() {
               <div className="flex items-center space-x-3 ml-6">
                 <Link
                   href={`/app/applications/${application.id}`}
-                  className="btn-secondary flex items-center"
+                  className="btn-outline min-h-12 flex items-center"
                 >
-                  <EyeIcon className="h-4 w-4 mr-2" />
-                  View Details
+                  <EyeIcon className="h-5 w-5 mr-2" />
+                  View details
                 </Link>
-                
+
                 {isCompanyUser && application.status === 'submitted' && (
                   <div className="flex space-x-2">
-                    <button className="btn-secondary text-success hover:text-success-dark">
+                    <button className="btn-outline min-h-12 text-success hover:text-success-dark">
                       Review
                     </button>
-                    <button className="btn-secondary text-error hover:text-error-dark">
+                    <button className="btn-outline min-h-12 text-error hover:text-error-dark">
                       Decline
                     </button>
                   </div>

@@ -388,18 +388,18 @@ export default function TeamManagePage() {
 
               <div className="flex justify-end space-x-3 pt-4">
                 <button
-                  type="button"
-                  onClick={() => setShowInviteForm(false)}
-                  className="btn-secondary"
-                >
-                  Cancel
-                </button>
-                <button
                   type="submit"
                   disabled={isInviting}
-                  className="btn-primary"
+                  className="btn-primary min-h-12"
                 >
-                  {isInviting ? 'Sending...' : 'Send Invitation'}
+                  {isInviting ? 'Sending...' : 'Send invitation'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowInviteForm(false)}
+                  className="text-link min-h-12 flex items-center"
+                >
+                  Cancel
                 </button>
               </div>
             </form>

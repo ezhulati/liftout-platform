@@ -171,7 +171,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
         <h2 className="text-2xl font-bold text-text-primary">Team analytics</h2>
         <button
           onClick={loadAnalytics}
-          className="btn-secondary min-h-11"
+          className="btn-outline min-h-12"
         >
           Refresh data
         </button>

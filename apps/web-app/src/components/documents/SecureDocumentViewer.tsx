@@ -579,16 +579,16 @@ export function SecureDocumentViewer({
 
             <div className="flex justify-end space-x-3 mt-6">
               <button
-                onClick={() => setShareModalDoc(null)}
-                className="btn-secondary"
+                onClick={handleShare}
+                className="btn-primary min-h-12"
               >
-                Cancel
+                Share document
               </button>
               <button
-                onClick={handleShare}
-                className="btn-primary"
+                onClick={() => setShareModalDoc(null)}
+                className="text-link min-h-12 flex items-center"
               >
-                Share Document
+                Cancel
               </button>
             </div>
           </div>
