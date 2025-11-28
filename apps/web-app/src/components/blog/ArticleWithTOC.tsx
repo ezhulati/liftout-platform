@@ -87,7 +87,7 @@ function TableOfContents({
   return (
     <>
       {/* Mobile TOC - Collapsible */}
-      <div className="xl:hidden mb-8">
+      <div className="lg:hidden mb-8">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between min-h-[48px] px-4 bg-white rounded-lg text-text-primary font-medium border border-border shadow-sm"
@@ -133,7 +133,7 @@ function TableOfContents({
       </div>
 
       {/* Desktop TOC - Sticky sidebar */}
-      <aside className="hidden xl:block w-64 flex-shrink-0">
+      <aside className="hidden lg:block w-56 flex-shrink-0">
         <div className="sticky top-28">
           {/* Table of Contents */}
           <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">

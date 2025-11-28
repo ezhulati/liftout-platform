@@ -3,11 +3,27 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const navLinks = [
-  { href: '/for-companies', label: 'For companies' },
-  { href: '/for-teams', label: 'For teams' },
+  {
+    href: '/for-companies',
+    label: 'For companies',
+    submenu: [
+      { href: '/for-companies#discover', label: 'Discover teams', description: 'Find pre-vetted, high-performing teams' },
+      { href: '/for-companies#process', label: 'How it works', description: 'Our streamlined liftout process' },
+      { href: '/for-companies#pricing', label: 'Pricing', description: 'Transparent, success-based pricing' },
+    ]
+  },
+  {
+    href: '/for-teams',
+    label: 'For teams',
+    submenu: [
+      { href: '/for-teams#opportunities', label: 'Explore opportunities', description: 'Browse confidential liftout positions' },
+      { href: '/for-teams#profile', label: 'Create team profile', description: 'Showcase your team\'s capabilities' },
+      { href: '/for-teams#success', label: 'Success stories', description: 'Teams that made the move' },
+    ]
+  },
   { href: '#how-it-works', label: 'How it works' },
 ];
 
@@ -19,11 +35,24 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [dropdownTimeout, setDropdownTimeout] = useState<NodeJS.Timeout | null>(null);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
   // For transparent variant, switch to light style when scrolled
   const useTransparentStyle = variant === 'transparent' && !isScrolled && !isMobileMenuOpen;
+
+  // Handle dropdown with delay for better UX
+  const handleMouseEnter = (label: string) => {
+    if (dropdownTimeout) clearTimeout(dropdownTimeout);
+    setActiveDropdown(label);
+  };
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => setActiveDropdown(null), 150);
+    setDropdownTimeout(timeout);
+  };
 
   useEffect(() => {
     const threshold = 5;
@@ -84,6 +113,18 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
     };
   }, [isMobileMenuOpen]);
 
+  // Close dropdown on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveDropdown(null);
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
@@ -100,63 +141,112 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
         isScrolled ? 'py-3' : 'py-4'
       }`}>
         <div className="flex items-center justify-between">
-          {/* Logo with lifted container */}
+          {/* Logo with lifted container - Enterprise refinement: subtle lift animation */}
           <Link
             href="/"
-            className="flex items-center min-h-12"
+            className="flex items-center min-h-12 group"
             aria-label="Liftout Home"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <div className="bg-white rounded-xl px-4 py-2 shadow-lg shadow-navy/10 hover:shadow-xl hover:shadow-navy/15 transition-shadow duration-300">
+            <div className="relative bg-white rounded-xl px-4 py-2 shadow-lg shadow-navy/10 group-hover:shadow-xl group-hover:shadow-navy/15 group-hover:-translate-y-0.5 transition-all duration-300 ease-out">
+              {/* Subtle gradient overlay on hover */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-navy/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <Image
                 src="/Liftout-logo-dark.png"
                 alt="Liftout"
                 width={200}
                 height={55}
-                className="h-[55px] w-auto"
+                className="h-[55px] w-auto relative"
                 priority
               />
             </div>
           </Link>
 
-          {/* Desktop navigation - Practical UI: 18px text, 48px touch targets */}
-          <div className="hidden md:flex items-center gap-6">
+          {/* Desktop navigation with dropdowns - Enterprise refinement */}
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
+              <div
                 key={link.href}
-                href={link.href}
-                className={`font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2 ${
-                  useTransparentStyle
-                    ? 'text-white/90 hover:text-white'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className="relative"
+                onMouseEnter={() => link.submenu && handleMouseEnter(link.label)}
+                onMouseLeave={handleMouseLeave}
               >
-                {link.label}
-              </Link>
+                <Link
+                  href={link.href}
+                  className={`group font-medium text-[15px] transition-all duration-200 min-h-12 flex items-center gap-1.5 px-4 rounded-lg ${
+                    useTransparentStyle
+                      ? 'text-white/90 hover:text-white hover:bg-white/10'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  } ${activeDropdown === link.label ? (useTransparentStyle ? 'bg-white/10 text-white' : 'bg-gray-50 text-gray-900') : ''}`}
+                >
+                  {link.label}
+                  {link.submenu && (
+                    <ChevronDownIcon
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        activeDropdown === link.label ? 'rotate-180' : ''
+                      }`}
+                    />
+                  )}
+                </Link>
+
+                {/* Dropdown menu - Enterprise refinement with descriptions */}
+                {link.submenu && (
+                  <div
+                    className={`absolute top-full left-0 pt-2 transition-all duration-200 ${
+                      activeDropdown === link.label
+                        ? 'opacity-100 translate-y-0 pointer-events-auto'
+                        : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}
+                  >
+                    <div className="bg-white rounded-xl shadow-xl shadow-gray-900/10 border border-gray-100 p-2 min-w-[280px] backdrop-blur-xl">
+                      {/* Subtle top accent line */}
+                      <div className="absolute top-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-navy/20 to-transparent" />
+
+                      {link.submenu.map((item, idx) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="group/item flex flex-col gap-0.5 px-4 py-3 rounded-lg hover:bg-navy/5 transition-colors duration-150"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          <span className="font-medium text-gray-900 group-hover/item:text-navy transition-colors text-[15px]">
+                            {item.label}
+                          </span>
+                          <span className="text-sm text-gray-500 group-hover/item:text-gray-600 transition-colors">
+                            {item.description}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
-          {/* Right side - Practical UI: Primary button with Verb+Noun label */}
-          <div className="flex items-center gap-4">
+          {/* Right side - Enterprise refinement: polished CTAs */}
+          <div className="flex items-center gap-2">
             <Link
               href="/auth/signin"
-              className={`hidden sm:flex font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2 ${
+              className={`hidden sm:flex font-medium text-[15px] transition-all duration-200 min-h-11 items-center px-4 rounded-lg ${
                 useTransparentStyle
-                  ? 'text-white/90 hover:text-white'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'text-white/90 hover:text-white hover:bg-white/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               Sign in
             </Link>
             <Link
               href="/auth/signup"
-              className={`min-h-12 px-6 text-base hidden sm:inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-200 ${
+              className={`group relative min-h-11 px-5 text-[15px] hidden sm:inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 overflow-hidden ${
                 useTransparentStyle
-                  ? 'bg-white text-navy hover:bg-white/90'
-                  : 'btn-primary'
+                  ? 'bg-white text-navy hover:bg-white/95 shadow-lg shadow-white/20'
+                  : 'bg-navy text-white hover:bg-navy-600 shadow-lg shadow-navy/25 hover:shadow-xl hover:shadow-navy/30 hover:-translate-y-0.5'
               }`}
             >
-              Start free
+              {/* Subtle shimmer effect on hover */}
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <span className="relative">Start free</span>
             </Link>
 
             {/* Mobile menu button */}
