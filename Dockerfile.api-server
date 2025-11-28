@@ -1,65 +1,56 @@
-# Build stage
+# Multi-stage build for the api-server
+# This Dockerfile builds from the monorepo root
+
 FROM node:20-alpine AS builder
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@9 --activate
+RUN npm install -g pnpm@9
 
 WORKDIR /app
 
-# Copy root package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy root workspace files
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# Copy all packages that api-server depends on
-COPY packages/database/package.json ./packages/database/
-COPY packages/database/prisma ./packages/database/prisma/
-COPY packages/database/src ./packages/database/src/
-COPY packages/email/package.json ./packages/email/
-COPY packages/email/src ./packages/email/src/
+# Copy packages directory (for shared dependencies)
+COPY packages ./packages
 
-# Copy api-server
-COPY apps/api-server/package.json ./apps/api-server/
-COPY apps/api-server/tsconfig.json ./apps/api-server/
-COPY apps/api-server/src ./apps/api-server/src/
+# Copy the api-server app
+COPY apps/api-server ./apps/api-server
 
-# Install dependencies
+# Install all dependencies from root
 RUN pnpm install --frozen-lockfile
 
-# Generate Prisma client
-RUN cd packages/database && npx prisma generate
-
 # Build api-server
-RUN cd apps/api-server && pnpm run build
+WORKDIR /app/apps/api-server
+RUN pnpm run build
 
 # Production stage
-FROM node:20-alpine
+FROM node:20-alpine AS production
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@9 --activate
+RUN npm install -g pnpm@9
 
 WORKDIR /app
 
 # Copy package files for production install
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/database/package.json ./packages/database/
-COPY packages/email/package.json ./packages/email/
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages ./packages
 COPY apps/api-server/package.json ./apps/api-server/
 
 # Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 
-# Copy built files and prisma
+# Copy built files from builder
 COPY --from=builder /app/apps/api-server/dist ./apps/api-server/dist
-COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
-COPY --from=builder /app/node_modules/.pnpm/@prisma+client* ./node_modules/.pnpm/
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/apps/api-server/prisma ./apps/api-server/prisma
 
-# Copy package database node_modules for prisma
-COPY --from=builder /app/packages/database/node_modules ./packages/database/node_modules
-
+# Generate Prisma client
 WORKDIR /app/apps/api-server
-
-ENV NODE_ENV=production
+RUN npx prisma generate
 
 EXPOSE 8000
+ENV NODE_ENV=production
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
 
 CMD ["node", "dist/index.js"]
