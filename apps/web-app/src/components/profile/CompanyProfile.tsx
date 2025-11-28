@@ -407,21 +407,21 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="btn-primary"
+                    className="btn-primary min-h-12"
                   >
-                    Edit Profile
+                    Edit profile
                   </button>
                 ) : (
                   <>
                     <button
                       onClick={handleSave}
-                      className="btn-primary"
+                      className="btn-primary min-h-12"
                     >
                       Save changes
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="text-link"
+                      className="text-link min-h-12 flex items-center"
                     >
                       Cancel
                     </button>
@@ -461,7 +461,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-fast ${
+              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-base min-h-12 transition-colors duration-fast ${
                 activeTab === tab.id
                   ? 'border-navy-500 text-navy-600'
                   : 'border-transparent text-text-tertiary hover:text-text-secondary hover:border-border'
@@ -742,9 +742,9 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
               {isEditing && (
                 <button
                   onClick={addValue}
-                  className="btn-outline text-sm"
+                  className="btn-outline min-h-12 text-base"
                 >
-                  <PlusIcon className="h-4 w-4 mr-1" />
+                  <PlusIcon className="h-5 w-5 mr-2" />
                   Add value
                 </button>
               )}

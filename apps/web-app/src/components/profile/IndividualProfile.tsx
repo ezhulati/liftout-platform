@@ -373,23 +373,23 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="btn-primary"
+                    className="btn-primary min-h-12"
                   >
-                    Edit Profile
+                    Edit profile
                   </button>
                 ) : (
                   <>
                     <button
-                      onClick={() => setIsEditing(false)}
-                      className="btn-secondary"
+                      onClick={handleSave}
+                      className="btn-primary min-h-12"
                     >
-                      Cancel
+                      Save changes
                     </button>
                     <button
-                      onClick={handleSave}
-                      className="btn-primary"
+                      onClick={() => setIsEditing(false)}
+                      className="text-link min-h-12 flex items-center"
                     >
-                      Save Changes
+                      Cancel
                     </button>
                   </>
                 )}
@@ -628,9 +628,9 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             {isEditing && (
               <button
                 onClick={addSkill}
-                className="btn-secondary text-sm"
+                className="btn-outline min-h-12 text-base"
               >
-                <PlusIcon className="h-4 w-4 mr-1" />
+                <PlusIcon className="h-5 w-5 mr-2" />
                 Add skill
               </button>
             )}
