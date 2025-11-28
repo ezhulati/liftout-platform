@@ -123,7 +123,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <CheckCircleIcon className="h-8 w-8 text-success" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Progress</p>
+              <p className="text-base font-medium text-text-tertiary">Progress</p>
               <p className="text-2xl font-semibold text-text-primary">{progress.progressPercentage}%</p>
               <p className="text-xs text-text-tertiary">{progress.completedChecks}/{progress.totalChecks} checks</p>
             </div>
@@ -136,7 +136,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <ExclamationTriangleIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">High priority</p>
+              <p className="text-base font-medium text-text-tertiary">High priority</p>
               <p className="text-2xl font-semibold text-text-primary">{progress.highPriorityCompleted}/{progress.highPriorityTotal}</p>
               <p className="text-xs text-text-tertiary">Critical checks</p>
             </div>
@@ -149,7 +149,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <ClockIcon className="h-8 w-8 text-navy" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Timeline</p>
+              <p className="text-base font-medium text-text-tertiary">Timeline</p>
               <p className="text-2xl font-semibold text-text-primary">6</p>
               <p className="text-xs text-text-tertiary">Weeks remaining</p>
             </div>
@@ -162,7 +162,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <DocumentCheckIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Evidence</p>
+              <p className="text-base font-medium text-text-tertiary">Evidence</p>
               <p className="text-2xl font-semibold text-text-primary">{workflow.checks.reduce((acc, check) => acc + (check.evidence?.length || 0), 0)}</p>
               <p className="text-xs text-text-tertiary">Documents collected</p>
             </div>
@@ -179,7 +179,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <div className="mx-auto w-16 h-16 bg-bg-alt rounded-lg flex items-center justify-center mb-3">
                 <Icon className="h-8 w-8 text-text-secondary" />
               </div>
-              <h4 className="text-sm font-medium text-text-primary mb-2">{name}</h4>
+              <h4 className="text-base font-medium text-text-primary mb-2">{name}</h4>
               <div className="relative pt-1">
                 <div className="flex mb-2 items-center justify-between">
                   <div>
@@ -210,7 +210,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <div className="flex-shrink-0">
                 <div className="h-2 w-2 bg-navy rounded-full mt-2"></div>
               </div>
-              <p className="ml-3 text-sm text-text-secondary">{finding}</p>
+              <p className="ml-3 text-base text-text-secondary">{finding}</p>
             </div>
           ))}
         </div>
@@ -225,22 +225,22 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
               <div className="flex-shrink-0">
                 <CheckCircleIcon className="h-5 w-5 text-success mt-0.5" />
               </div>
-              <p className="ml-3 text-sm text-text-secondary">{recommendation}</p>
+              <p className="ml-3 text-base text-text-secondary">{recommendation}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button className="btn-primary">
-          View Detailed Checklist
+      <div className="flex flex-wrap gap-4">
+        <button className="btn-primary min-h-12">
+          View detailed checklist
         </button>
-        <button className="btn-secondary">
-          Generate Report
+        <button className="btn-outline min-h-12">
+          Generate report
         </button>
-        <button className="btn-secondary">
-          Schedule Review Meeting
+        <button className="btn-outline min-h-12">
+          Schedule review meeting
         </button>
       </div>
     </div>

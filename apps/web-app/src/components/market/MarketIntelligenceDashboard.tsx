@@ -85,7 +85,7 @@ export function MarketIntelligenceDashboard() {
 
   const renderSupplyDemandChart = () => (
     <div className="space-y-4">
-      <h4 className="text-sm font-medium text-text-primary">Supply vs demand by experience</h4>
+      <h4 className="text-base font-medium text-text-primary">Supply vs demand by experience</h4>
       {marketData.talentSupplyDemand.byExperience.map((item, index) => (
         <div key={index} className="space-y-2">
           <div className="flex justify-between items-center">
@@ -133,7 +133,7 @@ export function MarketIntelligenceDashboard() {
 
     return (
       <div className="text-center">
-        <h4 className="text-sm font-medium text-text-primary mb-4">Market share distribution</h4>
+        <h4 className="text-base font-medium text-text-primary mb-4">Market share distribution</h4>
         <div className="relative">
           <svg width={size} height={size} className="mx-auto">
             {marketData.marketShare.map((segment, index) => {
@@ -198,7 +198,7 @@ export function MarketIntelligenceDashboard() {
 
     return (
       <div className="text-center">
-        <h4 className="text-sm font-medium text-text-primary mb-4">Competitive positioning map</h4>
+        <h4 className="text-base font-medium text-text-primary mb-4">Competitive positioning map</h4>
         <div className="relative">
           <svg width={size} height={size} className="mx-auto border border-border rounded-lg">
             {/* Grid lines */}
@@ -302,53 +302,53 @@ export function MarketIntelligenceDashboard() {
           <h1 className="text-2xl font-bold text-text-primary">Market intelligence</h1>
           <p className="text-text-secondary">Competitive analysis and strategic market insights</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setViewMode('overview')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'overview'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Overview
           </button>
           <button
             onClick={() => setViewMode('competitors')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'competitors'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Competitors
           </button>
           <button
             onClick={() => setViewMode('trends')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'trends'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Trends
           </button>
           <button
             onClick={() => setViewMode('positioning')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'positioning'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Positioning
           </button>
           <button
             onClick={() => setViewMode('alerts')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'alerts'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Alerts
@@ -367,7 +367,7 @@ export function MarketIntelligenceDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-text-tertiary truncate">
+                    <dt className="text-base font-medium text-text-tertiary truncate">
                       {item.name}
                     </dt>
                     <dd className="text-lg font-medium text-text-primary">

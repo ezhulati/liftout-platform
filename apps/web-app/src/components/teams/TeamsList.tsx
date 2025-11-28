@@ -62,8 +62,8 @@ export function TeamsList({ userType }: TeamsListProps) {
         </p>
         {!isCompanyUser && (
           <div className="mt-6">
-            <Link href="/app/teams/create" className="btn-primary">
-              <PlusIcon className="h-4 w-4 mr-2" />
+            <Link href="/app/teams/create" className="btn-primary min-h-12 inline-flex items-center">
+              <PlusIcon className="h-5 w-5 mr-2" />
               Create team profile
             </Link>
           </div>
@@ -145,7 +145,7 @@ export function TeamsList({ userType }: TeamsListProps) {
             <div className="flex items-center space-x-3">
               <Link
                 href={`/app/teams/${team.id}`}
-                className="btn-outline"
+                className="btn-outline min-h-12"
               >
                 {isCompanyUser ? 'View profile' : 'Manage profile'}
               </Link>
@@ -153,7 +153,7 @@ export function TeamsList({ userType }: TeamsListProps) {
               {isCompanyUser && team.openToLiftout && (
                 <Link
                   href={`/app/teams/${team.id}/contact`}
-                  className="btn-primary"
+                  className="btn-primary min-h-12"
                 >
                   Initiate contact
                 </Link>

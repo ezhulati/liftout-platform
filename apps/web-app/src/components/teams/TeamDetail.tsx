@@ -138,8 +138,8 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
           The team profile you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
         </p>
         <div className="mt-6">
-          <Link href="/app/teams" className="btn-primary">
-            Back to Teams
+          <Link href="/app/teams" className="btn-primary min-h-12 inline-flex items-center">
+            Back to teams
           </Link>
         </div>
       </div>
@@ -223,19 +223,19 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                   <button
                     onClick={handleExpressInterest}
                     disabled={hasExpressedInterest}
-                    className={`btn-primary flex items-center ${
+                    className={`btn-primary min-h-12 flex items-center ${
                       hasExpressedInterest ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     {hasExpressedInterest ? (
-                      <HeartIconSolid className="h-4 w-4 mr-2" />
+                      <HeartIconSolid className="h-5 w-5 mr-2" />
                     ) : (
-                      <HeartIcon className="h-4 w-4 mr-2" />
+                      <HeartIcon className="h-5 w-5 mr-2" />
                     )}
-                    {hasExpressedInterest ? 'Interest Expressed' : 'Express Interest'}
+                    {hasExpressedInterest ? 'Interest expressed' : 'Express interest'}
                   </button>
-                  <button className="btn-outline flex items-center">
-                    <ChatBubbleLeftRightIcon className="h-4 w-4 mr-2" />
+                  <button className="btn-outline min-h-12 flex items-center">
+                    <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                     Message team
                   </button>
                 </>
@@ -243,20 +243,20 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
 
               {isTeamOwner && (
                 <>
-                  <Link href={`/app/teams/${teamId}/edit`} className="btn-primary flex items-center">
-                    <PencilSquareIcon className="h-4 w-4 mr-2" />
+                  <Link href={`/app/teams/${teamId}/edit`} className="btn-primary min-h-12 flex items-center">
+                    <PencilSquareIcon className="h-5 w-5 mr-2" />
                     Edit team
                   </Link>
-                  <Link href={`/app/teams/${teamId}/verification`} className="btn-outline flex items-center">
-                    <ShieldCheckIcon className="h-4 w-4 mr-2" />
+                  <Link href={`/app/teams/${teamId}/verification`} className="btn-outline min-h-12 flex items-center">
+                    <ShieldCheckIcon className="h-5 w-5 mr-2" />
                     Verification
                   </Link>
                   <button
                     onClick={handleDeleteTeam}
                     disabled={deleteTeamMutation.isPending}
-                    className="btn-danger flex items-center"
+                    className="btn-danger min-h-12 flex items-center"
                   >
-                    <TrashIcon className="h-4 w-4 mr-2" />
+                    <TrashIcon className="h-5 w-5 mr-2" />
                     {deleteTeamMutation.isPending ? 'Deleting...' : 'Delete team'}
                   </button>
                 </>
@@ -275,8 +275,8 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
                 {isTeamOwner && (
-                  <Link href={`/app/teams/${teamId}/members`} className="btn-outline text-sm flex items-center">
-                    <PlusIcon className="h-4 w-4 mr-1" />
+                  <Link href={`/app/teams/${teamId}/members`} className="btn-outline min-h-12 text-base flex items-center">
+                    <PlusIcon className="h-5 w-5 mr-2" />
                     Manage members
                   </Link>
                 )}

@@ -135,15 +135,15 @@ export function ReferenceManager({ teamId }: ReferenceManagerProps) {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-medium text-text-primary">Reference management</h3>
-            <p className="text-sm text-text-tertiary mt-1">
+            <p className="text-base text-text-tertiary mt-1">
               Client and colleague references for team validation
             </p>
           </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="btn-primary inline-flex items-center"
+            className="btn-primary min-h-12 inline-flex items-center"
           >
-            <PlusIcon className="h-4 w-4 mr-2" />
+            <PlusIcon className="h-5 w-5 mr-2" />
             Add reference
           </button>
         </div>
@@ -295,23 +295,23 @@ export function ReferenceManager({ teamId }: ReferenceManagerProps) {
               )}
 
               {/* Actions */}
-              <div className="mt-6 flex items-center space-x-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 {reference.status === 'pending' && (
-                  <button className="btn-sm bg-navy text-white hover:bg-navy-800">
+                  <button className="btn-primary min-h-12">
                     Send request
                   </button>
                 )}
                 {reference.status === 'contacted' && (
-                  <button className="btn-sm bg-gold text-white hover:bg-gold-600">
+                  <button className="btn-primary min-h-12">
                     Follow up
                   </button>
                 )}
                 {reference.status === 'responded' && (
-                  <button className="btn-sm bg-success text-white hover:bg-success-dark">
+                  <button className="btn-primary min-h-12">
                     Mark verified
                   </button>
                 )}
-                <button className="btn-sm border border-border text-text-secondary hover:bg-bg-alt">
+                <button className="btn-outline min-h-12">
                   Edit contact
                 </button>
               </div>
@@ -328,9 +328,9 @@ export function ReferenceManager({ teamId }: ReferenceManagerProps) {
           <div className="mt-6">
             <button
               onClick={() => setShowAddForm(true)}
-              className="btn-primary inline-flex items-center"
+              className="btn-primary min-h-12 inline-flex items-center"
             >
-              <PlusIcon className="h-4 w-4 mr-2" />
+              <PlusIcon className="h-5 w-5 mr-2" />
               Add reference
             </button>
           </div>

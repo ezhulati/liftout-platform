@@ -74,7 +74,7 @@ export function EmptyState({
 
       {/* Description */}
       {description && (
-        <p className="text-text-secondary max-w-sm mb-6">
+        <p className="text-base text-text-secondary max-w-sm mb-6">
           {description}
         </p>
       )}

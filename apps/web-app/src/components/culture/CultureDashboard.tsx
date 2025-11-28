@@ -117,7 +117,7 @@ export function CultureDashboard() {
 
     return (
       <div className="text-center">
-        <h4 className="text-sm font-medium text-text-primary mb-3">{title}</h4>
+        <h4 className="text-base font-medium text-text-primary mb-3">{title}</h4>
         <svg width={size} height={size} className="mx-auto">
           {gridCircles}
           {axisLines}
@@ -144,8 +144,8 @@ export function CultureDashboard() {
     return (
       <div key={dimension.dimension} className="space-y-2">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-text-secondary">{dimension.dimension}</span>
-          <span className="text-sm text-text-tertiary">{Math.round(dimension.compatibility)}%</span>
+          <span className="text-base font-medium text-text-secondary">{dimension.dimension}</span>
+          <span className="text-base text-text-tertiary">{Math.round(dimension.compatibility)}%</span>
         </div>
         <div className="w-full bg-bg-alt rounded-full h-2">
           <div
@@ -169,43 +169,43 @@ export function CultureDashboard() {
           <h1 className="text-2xl font-bold text-text-primary">Culture assessment</h1>
           <p className="text-text-secondary">Cultural compatibility analysis and integration planning</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setViewMode('overview')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'overview'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Overview
           </button>
           <button
             onClick={() => setViewMode('profiles')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'profiles'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Profiles
           </button>
           <button
             onClick={() => setViewMode('compatibility')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'compatibility'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Compatibility
           </button>
           <button
             onClick={() => setViewMode('integration')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'integration'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Integration
@@ -224,7 +224,7 @@ export function CultureDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-text-tertiary truncate">
+                    <dt className="text-base font-medium text-text-tertiary truncate">
                       {item.name}
                     </dt>
                     <dd className="text-lg font-medium text-text-primary">

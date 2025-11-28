@@ -132,7 +132,7 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
               <ChartBarIcon className="h-8 w-8 text-navy" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Progress</p>
+              <p className="text-base font-medium text-text-tertiary">Progress</p>
               <p className="text-2xl font-semibold text-text-primary">{progress.overallProgress}%</p>
               <p className="text-xs text-text-tertiary">Stage {deal.currentRound} of 5</p>
             </div>
@@ -145,7 +145,7 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
               <ArrowPathIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Rounds</p>
+              <p className="text-base font-medium text-text-tertiary">Rounds</p>
               <p className="text-2xl font-semibold text-text-primary">{deal.currentRound}</p>
               <p className="text-xs text-text-tertiary">{progress.completedRounds} completed</p>
             </div>
@@ -158,7 +158,7 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
               <CurrencyDollarIcon className="h-8 w-8 text-success" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Package value</p>
+              <p className="text-base font-medium text-text-tertiary">Package value</p>
               <p className="text-2xl font-semibold text-text-primary">
                 {formatCurrency(deal.currentTermSheet.compensation.totalPackageEstimate.year1)}
               </p>
@@ -173,7 +173,7 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
               <UserGroupIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Team size</p>
+              <p className="text-base font-medium text-text-tertiary">Team size</p>
               <p className="text-2xl font-semibold text-text-primary">{deal.currentTermSheet.employment.roleDefinitions.length}</p>
               <p className="text-xs text-text-tertiary">Members</p>
             </div>
@@ -188,8 +188,8 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Compensation */}
           <div>
-            <h4 className="text-sm font-medium text-text-secondary mb-3 flex items-center">
-              <CurrencyDollarIcon className="h-4 w-4 mr-2" />
+            <h4 className="text-base font-medium text-text-secondary mb-3 flex items-center">
+              <CurrencyDollarIcon className="h-5 w-5 mr-2" />
               Compensation
             </h4>
             <div className="space-y-2 text-sm">
@@ -216,8 +216,8 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
 
           {/* Employment Terms */}
           <div>
-            <h4 className="text-sm font-medium text-text-secondary mb-3 flex items-center">
-              <DocumentTextIcon className="h-4 w-4 mr-2" />
+            <h4 className="text-base font-medium text-text-secondary mb-3 flex items-center">
+              <DocumentTextIcon className="h-5 w-5 mr-2" />
               Employment
             </h4>
             <div className="space-y-2 text-sm">
@@ -242,8 +242,8 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
 
           {/* Legal & Transition */}
           <div>
-            <h4 className="text-sm font-medium text-text-secondary mb-3 flex items-center">
-              <ScaleIcon className="h-4 w-4 mr-2" />
+            <h4 className="text-base font-medium text-text-secondary mb-3 flex items-center">
+              <ScaleIcon className="h-5 w-5 mr-2" />
               Legal & transition
             </h4>
             <div className="space-y-2 text-sm">
@@ -322,25 +322,25 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
               <div className="flex-shrink-0">
                 <div className="h-2 w-2 bg-navy rounded-full"></div>
               </div>
-              <p className="ml-3 text-sm text-text-secondary">{step}</p>
+              <p className="ml-3 text-base text-text-secondary">{step}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button className="btn-primary">
-          View Full Term Sheet
+      <div className="flex flex-wrap gap-4">
+        <button className="btn-primary min-h-12">
+          View full term sheet
         </button>
-        <button className="btn-secondary">
-          Schedule Meeting
+        <button className="btn-outline min-h-12">
+          Schedule meeting
         </button>
-        <button className="btn-secondary">
-          Generate Status Report
+        <button className="btn-outline min-h-12">
+          Generate status report
         </button>
-        <button className="btn-secondary">
-          Update Timeline
+        <button className="btn-outline min-h-12">
+          Update timeline
         </button>
       </div>
     </div>

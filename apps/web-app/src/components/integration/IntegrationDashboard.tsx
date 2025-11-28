@@ -161,7 +161,7 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
               <ArrowTrendingUpIcon className="h-8 w-8 text-success" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Performance score</p>
+              <p className="text-base font-medium text-text-tertiary">Performance score</p>
               <p className="text-2xl font-semibold text-text-primary">{integration.performanceMetrics.productivity[0]?.velocityScore || 0}/100</p>
               <p className="text-xs text-text-tertiary">+{integration.performanceMetrics.productivity[0]?.benchmarkComparison || 0}% vs benchmark</p>
             </div>
@@ -174,7 +174,7 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
               <HeartIcon className="h-8 w-8 text-navy" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Cultural fit</p>
+              <p className="text-base font-medium text-text-tertiary">Cultural fit</p>
               <p className="text-2xl font-semibold text-text-primary">{integration.culturalIntegration.culturalFitScore}/100</p>
               <p className="text-xs text-text-tertiary">Above expectations</p>
             </div>
@@ -187,7 +187,7 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
               <CurrencyDollarIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">ROI progress</p>
+              <p className="text-base font-medium text-text-tertiary">ROI progress</p>
               <p className="text-2xl font-semibold text-text-primary">{integration.businessResults.roiMetrics[0]?.roi || 0}%</p>
               <p className="text-xs text-text-tertiary">{integration.businessResults.roiMetrics[0]?.paybackPeriod || 0} month payback</p>
             </div>
@@ -200,7 +200,7 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
               <CalendarDaysIcon className="h-8 w-8 text-gold" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-text-tertiary">Milestones</p>
+              <p className="text-base font-medium text-text-tertiary">Milestones</p>
               <p className="text-2xl font-semibold text-text-primary">
                 {integration.milestones.filter(m => m.status === 'completed').length}/{integration.milestones.length}
               </p>
@@ -442,18 +442,18 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
       </div>
 
       {/* Action Buttons */}
-      <div className="flex space-x-4">
-        <button className="btn-primary">
-          Schedule Check-in
+      <div className="flex flex-wrap gap-4">
+        <button className="btn-primary min-h-12">
+          Schedule check-in
         </button>
-        <button className="btn-secondary">
-          Generate Report
+        <button className="btn-outline min-h-12">
+          Generate report
         </button>
-        <button className="btn-secondary">
-          View Detailed Analytics
+        <button className="btn-outline min-h-12">
+          View detailed analytics
         </button>
-        <button className="btn-secondary">
-          Update Milestones
+        <button className="btn-outline min-h-12">
+          Update milestones
         </button>
       </div>
     </div>

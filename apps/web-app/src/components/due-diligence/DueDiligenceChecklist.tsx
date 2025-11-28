@@ -105,13 +105,13 @@ export function DueDiligenceChecklist({ workflowId }: DueDiligenceChecklistProps
               <button
                 key={key}
                 onClick={() => setSelectedCategory(key)}
-                className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium min-h-11 transition-colors duration-fast ${
+                className={`inline-flex items-center px-4 py-3 rounded-lg text-base font-medium min-h-12 transition-colors duration-fast ${
                   selectedCategory === key
                     ? 'bg-navy-100 text-navy border border-navy-200'
                     : 'bg-bg-surface text-text-secondary border border-border hover:bg-bg-elevated'
                 }`}
               >
-                <Icon className="h-4 w-4 mr-2" />
+                <Icon className="h-5 w-5 mr-2" />
                 {name}
               </button>
             ))}
