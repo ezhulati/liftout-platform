@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserGroupIcon, CheckIcon, ArrowRightIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
-// USPs with quantified benefits (#43, #89)
-const usps = [
-  { text: 'Collective mobility keeps your team intact', stat: '150+ matched' },
-  { text: 'Enhanced negotiating power from your collective value', stat: '40% avg increase' },
-  { text: 'Better opportunities with companies actively seeking teams', stat: 'Zero job hunting' },
-  { text: 'Reduced career risk with team support through transitions', stat: '100% confidential' },
+// Simple benefit list - Practical UI: concise, scannable
+const benefits = [
+  'Move together as a unit',
+  'Keep your team chemistry intact',
+  '100% confidential exploration',
+  'Companies actively seeking teams',
 ];
 
 export function TeamHero() {
@@ -22,129 +22,76 @@ export function TeamHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-bg">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Subtle diagonal gradient - gold tint */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gold-50/30 via-transparent to-navy-50/20" />
-        {/* Decorative shapes */}
-        <div className="absolute top-20 left-[10%] w-96 h-96 rounded-full bg-gold/5 blur-3xl" />
-        <div className="absolute bottom-20 right-[5%] w-80 h-80 rounded-full bg-navy/5 blur-3xl" />
-      </div>
-
+    <section className="relative min-h-[85vh] flex items-center bg-bg">
       {/* Main content container */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24 pt-[120px] lg:pt-[160px] relative z-10 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24 pt-[120px] lg:pt-[140px] w-full">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left - Copy */}
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            {/* Icon badge */}
-            <div className="w-16 h-16 rounded-xl bg-gold flex items-center justify-center mb-8 shadow-lg shadow-gold/30">
-              <UserGroupIcon className="w-8 h-8 text-on-gold" aria-hidden="true" />
-            </div>
-
-            {/* Eyebrow */}
-            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-gold-dark">
+            {/* Eyebrow - Practical UI: simple, no decorative icons */}
+            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-navy">
               For Teams
             </p>
 
-            {/* Pain Point Headline (#06) */}
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-              Ready for a new challenge without{' '}
-              <span className="text-gold-700">breaking up your team?</span>
+            {/* Headline - Practical UI: clear, no colored text breaks */}
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
+              Move to your next opportunity together
             </h1>
 
-            {/* Solution - quantified (#43) */}
-            <p className="font-body text-lg lg:text-xl text-text-secondary leading-relaxed mb-6 max-w-xl">
-              Move together as a unit. Keep what works, elevate your opportunities. Access companies
-              actively seeking proven teams like yours.
+            {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
+            <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
+              High-performing teams deserve opportunities that keep them intact.
+              Find companies actively seeking proven teams like yours.
             </p>
 
-            {/* Confidentiality callout - Practical UI: icons with labels, proper text size */}
-            <div className="flex items-center gap-4 mb-8 p-4 bg-bg-elevated rounded-lg border border-border">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
-                <ShieldCheckIcon className="w-6 h-6 text-gold-dark" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="font-semibold text-text-primary text-lg">100% Confidential</p>
-                <p className="text-text-secondary text-base">Your current employer will never know you're exploring</p>
-              </div>
-            </div>
-
-            {/* USPs with stats - Practical UI: 16px min for small text, proper spacing */}
-            <div className="space-y-2 mb-10">
-              {usps.map((usp, index) => (
-                <div
-                  key={usp.text}
-                  className={`flex items-center justify-between gap-4 p-4 rounded-lg bg-bg-surface border border-border transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+            {/* Benefits list - Practical UI: simple checkmarks, no cards */}
+            <ul className="space-y-3 mb-10">
+              {benefits.map((benefit, index) => (
+                <li
+                  key={benefit}
+                  className={`flex items-center gap-3 transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                   style={{ transitionDelay: `${(index + 2) * 100}ms` }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
-                      <CheckIcon className="w-4 h-4 text-gold-dark" aria-hidden="true" />
-                    </div>
-                    <span className="text-text-secondary text-base leading-snug">{usp.text}</span>
-                  </div>
-                  <span className="font-semibold text-base whitespace-nowrap text-gold-dark">{usp.stat}</span>
-                </div>
+                  <CheckIcon className="w-5 h-5 text-navy flex-shrink-0" aria-hidden="true" />
+                  <span className="text-text-secondary text-lg">{benefit}</span>
+                </li>
               ))}
-            </div>
+            </ul>
 
-            {/* CTA - Practical UI: Primary first (left), Verb+Noun labels */}
+            {/* CTA - Practical UI: Primary + tertiary, clear hierarchy */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/signup?type=team"
                 className="btn-primary min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
                 Register your team
-                <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
+                <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
               <Link
-                href="#features"
-                className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center gap-2"
+                href="#how-it-works"
+                className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center"
               >
-                Learn how it works
+                See how it works
               </Link>
             </div>
+
+            {/* Social proof - Practical UI: minimal, text-only */}
+            <p className="mt-8 text-text-tertiary text-base">
+              Join 150+ teams who found their next chapter together
+            </p>
           </div>
 
-          {/* Right - Hero Image */}
+          {/* Right - Hero Image - Practical UI: clean, no overlays */}
           <div className={`relative transition-all duration-700 ease-out-expo delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-              {/* Gold accent border */}
-              <div className="absolute inset-0 rounded-2xl ring-1 ring-gold/20 z-10 pointer-events-none" />
-
+            <div className="relative rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src="/teams-hero-new.jpeg"
-                alt="Diverse professional team collaborating and shaking hands in modern office"
+                alt="Professional team collaborating in modern office"
                 width={800}
                 height={600}
                 className="w-full h-auto object-cover"
                 priority
               />
-
-              {/* Overlay gradient for depth */}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-900/20 via-transparent to-transparent" />
-            </div>
-
-            {/* Floating testimonial card - Practical UI: proper text sizes */}
-            <div className={`absolute -bottom-6 -left-6 bg-bg-surface rounded-xl p-6 border border-border shadow-lg max-w-sm transition-all duration-700 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="inline-flex px-3 py-1 bg-success/10 text-success text-sm font-semibold rounded-full">
-                  40% compensation increase
-                </span>
-              </div>
-              <blockquote className="text-text-secondary text-base leading-relaxed mb-3">
-                "We had worked together for 4 years. Liftout helped us find a company that valued what we built together."
-              </blockquote>
-              <p className="text-text-tertiary text-sm font-medium">
-                — Marcus Johnson, Engineering Team Lead
-              </p>
-            </div>
-
-            {/* Stats card - top right */}
-            <div className={`absolute -top-4 -right-4 bg-gold rounded-xl p-4 shadow-lg transition-all duration-700 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <p className="font-bold text-2xl text-on-gold">150+</p>
-              <p className="text-sm text-navy-900/70">teams matched</p>
             </div>
           </div>
         </div>
