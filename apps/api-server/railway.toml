@@ -1,8 +1,3 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd ../.. && pnpm install --prefer-offline && cd packages/database && npx prisma generate && cd ../../apps/api-server && pnpm run build"
-watchPatterns = ["apps/api-server/**", "packages/database/**"]
-
 [deploy]
 startCommand = "node dist/index.js"
 healthcheckPath = "/health"

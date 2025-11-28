@@ -305,12 +305,12 @@ export function ArticleWithTOC({ article, relatedArticles = [] }: ArticleWithTOC
   return (
     <article className="py-12 md:py-20">
       <div className="max-w-7xl mx-auto px-4 lg:px-10">
-        <div className="flex gap-12">
-          {/* TOC Sidebar - Desktop only */}
+        <div className="flex flex-col lg:flex-row lg:gap-12">
+          {/* TOC - Collapsible on mobile, sticky sidebar on desktop */}
           <TableOfContents headings={headings} relatedArticles={relatedArticles} />
 
           {/* Main Content */}
-          <div className="flex-1 min-w-0 max-w-3xl">
+          <div className="flex-1 min-w-0 max-w-3xl mx-auto lg:mx-0">
 
             <div className="bg-white rounded-lg p-6 md:p-12 shadow-sm border border-border">
               <ArticleContent content={article.content} />

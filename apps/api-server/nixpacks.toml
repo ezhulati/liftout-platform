@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = ["pnpm install"]
+
+[phases.build]
+cmds = ["npx prisma generate --schema=node_modules/@liftout/database/prisma/schema.prisma || true", "pnpm run build"]
+
+[start]
+cmd = "node dist/index.js"

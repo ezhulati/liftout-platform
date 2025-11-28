@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: 'Insights - Team Hiring & Liftout Resources | Liftout',
   description:
     'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams. Stay informed with the latest trends in team-based recruitment.',
+  alternates: {
+    canonical: '/blog',
+  },
   openGraph: {
     title: 'Insights - Team Hiring & Liftout Resources | Liftout',
     description:
@@ -161,8 +164,42 @@ export default function BlogPage() {
   const recentArticles = getRecentArticles(13);
   const [featuredArticle, ...otherArticles] = recentArticles;
 
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://liftout.com';
+
+  // JSON-LD structured data for Blog
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Liftout Insights',
+    description: 'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams.',
+    url: `${baseUrl}/blog`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Liftout',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/Liftout-logo-dark.png`,
+      },
+    },
+    blogPost: recentArticles.slice(0, 10).map((article) => ({
+      '@type': 'BlogPosting',
+      headline: article.title,
+      description: article.metaDescription,
+      url: `${baseUrl}/blog/${article.slug}`,
+      datePublished: article.publishDate,
+      author: {
+        '@type': 'Person',
+        name: article.author.name,
+      },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}

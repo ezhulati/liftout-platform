@@ -46,6 +46,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${normalizedCategory} - Insights | Liftout`,
     description,
+    alternates: {
+      canonical: `/blog/category/${category.toLowerCase()}`,
+    },
     openGraph: {
       title: `${normalizedCategory} - Insights | Liftout`,
       description,
@@ -157,8 +160,37 @@ export default async function CategoryPage({ params }: PageProps) {
 
   const articles = getArticlesByCategory(normalizedCategory);
 
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://liftout.com';
+
+  // JSON-LD structured data for CollectionPage
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${normalizedCategory} - Liftout Insights`,
+    description: categoryDescriptions[category.toLowerCase()] || `Articles about ${normalizedCategory}`,
+    url: `${baseUrl}/blog/category/${category.toLowerCase()}`,
+    isPartOf: {
+      '@type': 'Blog',
+      name: 'Liftout Insights',
+      url: `${baseUrl}/blog`,
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: articles.map((article, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${baseUrl}/blog/${article.slug}`,
+        name: article.title,
+      })),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}

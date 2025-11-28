@@ -7,7 +7,10 @@ async function signIn(page: any, email: string, password: string) {
   await page.fill('input[type="email"]', email);
   await page.fill('input[type="password"]', password);
   await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
+  await Promise.race([
+    page.waitForURL('**/app/dashboard', { timeout: 30000 }),
+    page.waitForURL('**/app/onboarding', { timeout: 30000 })
+  ]);
 }
 
 test.describe('Teams - Team User View', () => {
