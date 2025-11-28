@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "The first marketplace for team-based hiring",
-  "packageManager": "pnpm@8.15.0",
   "workspaces": [
     "apps/*",
     "packages/*"

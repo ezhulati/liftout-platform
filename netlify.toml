@@ -1,10 +1,9 @@
 [build]
-  command = "cd packages/database && npx prisma generate && cd ../.. && pnpm run build --filter=@liftout/web-app"
+  command = "npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
   publish = "apps/web-app/.next"
 
 [build.environment]
-  NODE_VERSION = "20.18.0"
-  PNPM_VERSION = "8.15.0"
+  NODE_VERSION = "20"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
