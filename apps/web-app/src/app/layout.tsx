@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
+import Script from 'next/script';
 import { Providers } from './providers';
 import './globals.css';
 
@@ -93,6 +94,21 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${playfair.variable} ${sourceSans.variable}`}
     >
+      <head>
+        <Script
+          id="microsoft-clarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "iipj1dgvoo");
+            `,
+          }}
+        />
+      </head>
       <body className="font-body antialiased">
         <Providers>
           {children}
