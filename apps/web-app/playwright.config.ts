@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'line',
   timeout: 60000,
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     navigationTimeout: 30000,
   },

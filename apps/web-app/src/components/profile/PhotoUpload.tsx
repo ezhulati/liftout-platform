@@ -340,75 +340,97 @@ export default function PhotoUpload({
         />
       </div>
 
-      {/* Crop/Preview Modal */}
+      {/* Crop/Preview Modal - Using portal-like positioning with high z-index and solid backdrop */}
       {showCropModal && selectedFile && previewUrl && (
-        <div className="fixed inset-0 bg-navy-900/75 flex items-center justify-center z-50 p-4">
-          <div className="bg-bg-surface rounded-lg max-w-md w-full mx-4 shadow-xl">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">
-                {type === 'profile' ? 'Profile photo preview' : 'Company logo preview'}
-              </h3>
-              <button
-                onClick={cancelUpload}
-                className="text-text-tertiary hover:text-text-primary transition-colors touch-target"
-                disabled={isUploading}
-                aria-label="Close"
-              >
-                <XMarkIcon className="w-6 h-6" />
-              </button>
-            </div>
+        <div
+          className="fixed inset-0 z-[9999] overflow-y-auto"
+          aria-labelledby="photo-preview-modal"
+          role="dialog"
+          aria-modal="true"
+        >
+          {/* Solid backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            onClick={cancelUpload}
+            aria-hidden="true"
+          />
 
-            <div className="p-6">
-              {/* Preview */}
-              <div className="flex justify-center mb-4">
-                <div className={`${sizeClasses.xl} rounded-full overflow-hidden border-2 border-border relative`}>
-                  <Image
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                    fill
-                    sizes="160px"
-                  />
-                </div>
-              </div>
-
-              {/* File info */}
-              <div className="text-center text-sm text-text-secondary mb-6">
-                <div className="font-medium text-text-primary">{selectedFile.name}</div>
-                <div>{formatFileSize(selectedFile.size)}</div>
-                {type === 'profile' && (
-                  <div className="text-xs mt-1 text-text-tertiary">
-                    Image will be cropped to square and resized to 400x400px
-                  </div>
-                )}
-              </div>
-
-              {/* Actions - Primary button first per Practical UI */}
-              <div className="flex space-x-3">
-                <button
-                  onClick={uploadPhoto}
-                  className="flex-1 btn-primary min-h-12 inline-flex items-center justify-center"
-                  disabled={isUploading}
-                >
-                  {isUploading ? (
-                    <>
-                      <div className="loading-spinner mr-2"></div>
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <CheckIcon className="w-5 h-5 mr-2" />
-                      Upload photo
-                    </>
-                  )}
-                </button>
+          {/* Modal positioning container */}
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            {/* Modal content */}
+            <div className="relative bg-white rounded-xl max-w-md w-full shadow-2xl transform transition-all">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <h3 id="photo-preview-modal" className="text-lg font-semibold text-gray-900">
+                  {type === 'profile' ? 'Profile photo preview' : 'Company logo preview'}
+                </h3>
                 <button
                   onClick={cancelUpload}
-                  className="flex-1 btn-outline min-h-12"
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
                   disabled={isUploading}
+                  aria-label="Close"
                 >
-                  Cancel
+                  <XMarkIcon className="w-5 h-5" />
                 </button>
+              </div>
+
+              {/* Body */}
+              <div className="px-6 py-6">
+                {/* Preview image */}
+                <div className="flex justify-center mb-6">
+                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg relative bg-gray-50">
+                    <Image
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      fill
+                      sizes="160px"
+                    />
+                  </div>
+                </div>
+
+                {/* File info */}
+                <div className="text-center mb-6">
+                  <div className="font-medium text-gray-900 truncate max-w-xs mx-auto">
+                    {selectedFile.name}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    {formatFileSize(selectedFile.size)}
+                  </div>
+                  {type === 'profile' && (
+                    <div className="text-xs text-gray-400 mt-2">
+                      Image will be cropped to square and resized to 400x400px
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={uploadPhoto}
+                    className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-navy text-white font-medium rounded-lg hover:bg-navy-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50 transition-colors"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <>
+                        <div className="loading-spinner mr-2"></div>
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <CheckIcon className="w-5 h-5 mr-2" />
+                        Upload photo
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={cancelUpload}
+                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 transition-colors"
+                    disabled={isUploading}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
