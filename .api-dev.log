@@ -238,3 +238,92 @@ Error: listen EADDRINUSE: address already in use :::8000
 2025-11-28 15:34:02 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
 2025-11-28 15:34:02 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
 2025-11-28 15:34:02 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 15:40:50 [[32MINFO[39M]: Socket authenticated: Y2ATbh6GO8fl5Tx0AAAB (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:50 [[32MINFO[39M]: Socket connected: Y2ATbh6GO8fl5Tx0AAAB (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:50 [[32MINFO[39M]: Socket disconnected: Y2ATbh6GO8fl5Tx0AAAB (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:40:51 [[32MINFO[39M]: Socket authenticated: n9BPTLdW3OEtXONUAAAG (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:52 [[32MINFO[39M]: Socket authenticated: WGVGfvzZ6sL0cOpKAAAJ (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:52 [[32MINFO[39M]: Socket authenticated: P5w4ZJCv1IcSBng4AAAN (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:52 [[32MINFO[39M]: Socket connected: P5w4ZJCv1IcSBng4AAAN (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:53 [[32MINFO[39M]: Socket disconnected: P5w4ZJCv1IcSBng4AAAN (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:40:53 [[32MINFO[39M]: Socket authenticated: X00QfPBufmR9NIooAAAQ (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:54 [[32MINFO[39M]: Socket authenticated: zmo1KR-SS-IaCb65AAAU (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:54 [[32MINFO[39M]: Socket connected: zmo1KR-SS-IaCb65AAAU (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:56 [[32MINFO[39M]: Socket disconnected: zmo1KR-SS-IaCb65AAAU (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:40:57 [[32MINFO[39M]: Socket authenticated: A9FPl2Rptlqf59uYAAAX (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:58 [[32MINFO[39M]: Socket authenticated: 5CGInXCumqNzTCulAAAb (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:59 [[32MINFO[39M]: Socket authenticated: a4nWOdv1kTo6CRAWAAAe (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:40:59 [[32MINFO[39M]: Socket authenticated: k5yAe4makgv_K0XtAAAh (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:00 [[32MINFO[39M]: Socket authenticated: Jf12GWlXXmaIArQfAAAl (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:00 [[32MINFO[39M]: Socket connected: Jf12GWlXXmaIArQfAAAl (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:00 [[32MINFO[39M]: Socket disconnected: Jf12GWlXXmaIArQfAAAl (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:01 [[32MINFO[39M]: Socket authenticated: wOyu5qtouV_zVDV4AAAo (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:01 [[32MINFO[39M]: Socket authenticated: __qOILZycdW_4UmgAAAs (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:01 [[32MINFO[39M]: Socket connected: __qOILZycdW_4UmgAAAs (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:02 [[32MINFO[39M]: Socket disconnected: __qOILZycdW_4UmgAAAs (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:03 [[32MINFO[39M]: Socket authenticated: wUehs3DPbOlr5Cr4AAAv (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:04 [[32MINFO[39M]: Socket authenticated: cLbjyiKJxJC3ZowFAAA0 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:04 [[32MINFO[39M]: Socket connected: cLbjyiKJxJC3ZowFAAA0 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:04 [[32MINFO[39M]: Socket disconnected: cLbjyiKJxJC3ZowFAAA0 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:25 [[32MINFO[39M]: Socket authenticated: NVvJVaNlf4k66484AAA3 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:25 [[32MINFO[39M]: Socket authenticated: qbaO8h5ci1723b-_AAA7 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:25 [[32MINFO[39M]: Socket connected: qbaO8h5ci1723b-_AAA7 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:25 [[32MINFO[39M]: Socket disconnected: qbaO8h5ci1723b-_AAA7 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:26 [[32MINFO[39M]: Socket authenticated: nFwSJMDEkrUk8hewAAA- (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:26 [[32MINFO[39M]: Socket authenticated: uJKnqsdyrPuZVV1fAABC (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:26 [[32MINFO[39M]: Socket connected: uJKnqsdyrPuZVV1fAABC (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:26 [[32MINFO[39M]: Socket disconnected: uJKnqsdyrPuZVV1fAABC (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:27 [[32MINFO[39M]: Socket authenticated: lSxqxXguKmcx49GkAABF (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:28 [[32MINFO[39M]: Socket authenticated: vybPzGn-ZaJQUr21AABK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:28 [[32MINFO[39M]: Socket connected: vybPzGn-ZaJQUr21AABK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:28 [[32MINFO[39M]: Socket disconnected: vybPzGn-ZaJQUr21AABK (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:28 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:28 +0000] "GET /health HTTP/1.1" 200 128 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:29 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:29 +0000] "GET /api/opportunities HTTP/1.1" 200 - "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:29 [[32MINFO[39M]: Socket authenticated: oGl_1MB5clZoIHVqAABN (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:30 [[32MINFO[39M]: Socket authenticated: 4KtjfgbxJdbYZ8cvAABR (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:30 [[32MINFO[39M]: Socket connected: 4KtjfgbxJdbYZ8cvAABR (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:30 [[32MINFO[39M]: Socket disconnected: 4KtjfgbxJdbYZ8cvAABR (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:31 [[32MINFO[39M]: Socket authenticated: e-OnB_NgembwETLsAABU (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:32 [[32MINFO[39M]: Socket authenticated: -LtrscKdipHIWrTiAABZ (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:32 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:32 +0000] "GET /health HTTP/1.1" 200 128 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "GET /health HTTP/1.1" 200 128 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 200 90 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[32MINFO[39M]: Socket authenticated: GVZZ90LMJgLCneEYAABc (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:33 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1/messages","body":{},"query":{"page":"1","limit":"50"},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationMessages (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:484:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:161:18
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:33 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:41:33 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:33 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:34 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:41:34 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:41:34 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:41:34 [[32MINFO[39M]: Socket authenticated: lzg9VViW57GzORpfAABh (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:35 [[32MINFO[39M]: Socket authenticated: qdAIx-6cW8-FUTCaAABk (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:36 [[32MINFO[39M]: Socket authenticated: YnFAzgWoKDkTkIIQAABp (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:36 [[32MINFO[39M]: Socket connected: YnFAzgWoKDkTkIIQAABp (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:36 [[32MINFO[39M]: Socket disconnected: YnFAzgWoKDkTkIIQAABp (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:37 [[32MINFO[39M]: Socket authenticated: 89X0PHzbDvQtYFV6AABs (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:37 [[32MINFO[39M]: Socket authenticated: OyqaeS4qNFhkhh3zAABw (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:37 [[32MINFO[39M]: Socket connected: OyqaeS4qNFhkhh3zAABw (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:37 [[32MINFO[39M]: Socket disconnected: OyqaeS4qNFhkhh3zAABw (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:41:38 [[32MINFO[39M]: Socket authenticated: 2GXKeoDdl-0ry1wKAABz (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:39 [[32MINFO[39M]: Socket authenticated: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:39 [[32MINFO[39M]: Socket connected: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:41:39 [[32MINFO[39M]: Socket disconnected: x9KnZ6IIX6FKGSlFAAB3 (user: demo@example.com), reason: transport close {"service":"liftout-api"}

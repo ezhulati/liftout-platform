@@ -7,10 +7,16 @@ async function signIn(page: any, email: string, password: string) {
   if (page.url().includes('/app/dashboard')) {
     return;
   }
-  await page.locator('input[type="email"]').fill(email);
-  await page.locator('input[type="password"]').fill(password);
+  const emailInput = page.locator('input[type="email"]');
+  const passwordInput = page.locator('input[type="password"]');
+  await emailInput.waitFor({ state: 'visible', timeout: 20000 });
+  await emailInput.fill(email);
+  await passwordInput.fill(password);
   await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+  await Promise.race([
+    page.waitForURL('**/app/dashboard', { timeout: 30000 }),
+    page.waitForURL('**/app/onboarding', { timeout: 30000 })
+  ]);
 }
 
 test.describe('Dashboard - Team User', () => {
