@@ -238,10 +238,25 @@ These are seeded by `packages/database/src/seed.ts` and work on both local and p
 2. Run seed script: `npx tsx packages/database/src/seed.ts`
 3. Verify user exists: `psql $DATABASE_URL -c "SELECT email FROM users;"`
 
-**Netlify build fails:**
+**Netlify build fails with "Install dependencies" error:**
+This is typically caused by pnpm/corepack version conflicts. The fix:
+1. **DO NOT** add `packageManager` field to root `package.json` - this causes Netlify's corepack to fail
+2. Let Netlify auto-detect pnpm from `pnpm-lock.yaml`
+3. Keep `netlify.toml` simple:
+   ```toml
+   [build]
+     command = "npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
+     publish = "apps/web-app/.next"
+
+   [build.environment]
+     NODE_VERSION = "20"
+   ```
+4. In `.npmrc`, do NOT set `enable-pre-post-scripts=false` (prevents prisma generate from running)
+
+**Other Netlify build issues:**
 1. Check all env vars are set in Netlify dashboard
 2. Ensure `@liftout/database` is transpiled in next.config.js
-3. Check Prisma client is generated during build
+3. Check Prisma client is generated during build (included in build command above)
 
 **Database connection issues:**
 1. For Neon: ensure `?sslmode=require` in connection string
