@@ -115,8 +115,8 @@ prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
 3:27:32 PM [tsx] forcing restart
 3:27:40 PM [tsx] forcing restart
 3:34:01 PM [tsx] forcing restart
-"service":"liftout-api"}
-2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
+3:45:33 PM [tsx] forcing restart
+28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
 2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Zpcj68phglU3MKmdAAEW) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:25 +0000] "GET /health HTTP/1.1" 200 129 "-" "node" {"service":"liftout-api"}
@@ -335,3 +335,309 @@ AuthorizationError: You do not have access to this conversation
 2025-11-28 15:41:59 [[32MINFO[39M]: Socket authenticated: QUq0TsGyMus3m3T9AACE (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:41:59 [[32MINFO[39M]: Socket authenticated: 1u2euuum-Y_yHHghAACI (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:41:59 [[32MINFO[39M]: Socket connected: 1u2euuum-Y_yHHghAACI (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:01 [[32MINFO[39M]: Socket disconnected: 1u2euuum-Y_yHHghAACI (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:05 [[32MINFO[39M]: Socket authenticated: Nq7OR4t-TV_HY5i1AACL (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:05 [[32MINFO[39M]: Socket authenticated: 9BlNCZYRwGgUWcAQAACP (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:05 [[32MINFO[39M]: Socket connected: 9BlNCZYRwGgUWcAQAACP (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:08 [[32MINFO[39M]: Socket disconnected: 9BlNCZYRwGgUWcAQAACP (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:11 [[32MINFO[39M]: Socket authenticated: sj0npt4aaBa8Gd80AACS (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:11 [[32MINFO[39M]: Socket authenticated: ZILf_k2f6lB8GBCCAACW (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:11 [[32MINFO[39M]: Socket connected: ZILf_k2f6lB8GBCCAACW (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:11 [[32MINFO[39M]: Socket disconnected: ZILf_k2f6lB8GBCCAACW (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:12 [[32MINFO[39M]: Socket authenticated: A1rmKOvi89D37ET7AACZ (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:12 [[32MINFO[39M]: Socket authenticated: k0jvrwRgx6NZKP36AACd (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:12 [[32MINFO[39M]: Socket connected: k0jvrwRgx6NZKP36AACd (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:12 [[32MINFO[39M]: Socket disconnected: k0jvrwRgx6NZKP36AACd (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:15 [[32MINFO[39M]: Socket authenticated: -PYMZeLI385oIg-wAACg (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:15 [[32MINFO[39M]: Socket authenticated: uqs5NE0gYagNCAbmAACk (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:15 [[32MINFO[39M]: Socket connected: uqs5NE0gYagNCAbmAACk (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:15 [[32MINFO[39M]: Socket disconnected: uqs5NE0gYagNCAbmAACk (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:16 [[32MINFO[39M]: Socket authenticated: QGx_Vrxqk7EaWaClAACn (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:17 [[32MINFO[39M]: Socket authenticated: aHcS03k8KbKfZoBMAACr (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:17 [[32MINFO[39M]: Socket authenticated: xAm17qPWE1yzqwI6AACu (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:18 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:18 +0000] "GET /health HTTP/1.1" 200 128 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:18 [[32MINFO[39M]: Socket authenticated: q7qMsR-zx2ao8aV1AACy (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:18 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:18 +0000] "GET /api/opportunities HTTP/1.1" 200 - "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:19 [[32MINFO[39M]: Socket authenticated: _bAGN-fP7JY_4TneAAC1 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:20 [[32MINFO[39M]: Socket authenticated: njjDMwTRppSgdvUrAAC5 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:20 [[32MINFO[39M]: Socket connected: njjDMwTRppSgdvUrAAC5 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:20 [[32MINFO[39M]: Socket disconnected: njjDMwTRppSgdvUrAAC5 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:21 [[32MINFO[39M]: Socket authenticated: wYSxcxBIvQ23mxAhAAC8 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:21 [[32MINFO[39M]: Socket authenticated: klCbcmdJR-duPl9MAADA (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:21 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:42:21 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:21 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:21 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1/messages","body":{},"query":{"page":"1","limit":"50"},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationMessages (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:484:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:161:18
+2025-11-28 15:42:21 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:21 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:22 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:22 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:22 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:22 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:22 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 200 90 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:22 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:22 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:22 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:22 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:22 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:22 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:22 [[32MINFO[39M]: Socket authenticated: IherSYs7VL9uW4g5AADD (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:23 [[32MINFO[39M]: Socket authenticated: 7HbOQ5nuLErOxnIgAADH (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:24 [[32MINFO[39M]: Socket authenticated: gELoUNY4x_897fU0AADK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:24 [[32MINFO[39M]: Socket authenticated: 5eNd0ToHspZgtxTcAADO (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:24 [[32MINFO[39M]: Socket connected: 5eNd0ToHspZgtxTcAADO (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:24 [[32MINFO[39M]: Socket disconnected: 5eNd0ToHspZgtxTcAADO (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:25 [[32MINFO[39M]: Socket authenticated: wQzCNJ3mdo1zJ4MUAADR (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:25 [[32MINFO[39M]: Socket authenticated: KDBmWqcrmsA092xWAADV (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:26 [[32MINFO[39M]: Socket authenticated: FPgJDtld4LaaIlhdAADY (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:27 [[32MINFO[39M]: Socket authenticated: 9jn1RobROeHZ_lOvAADc (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:27 [[32MINFO[39M]: Socket connected: 9jn1RobROeHZ_lOvAADc (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:27 [[32MINFO[39M]: Socket disconnected: 9jn1RobROeHZ_lOvAADc (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:29 [[32MINFO[39M]: Socket authenticated: aCIy3NWEIC_Ajyi9AADf (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:30 [[32MINFO[39M]: Socket authenticated: Fn-SrQ0w-LSPtiQ0AADj (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:31 [[32MINFO[39M]: Socket authenticated: 4DUn9U1Lmfcb_SiMAADm (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:31 [[32MINFO[39M]: Socket authenticated: pA4BK80K8PMRZSZ3AADq (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:31 [[32MINFO[39M]: Socket connected: pA4BK80K8PMRZSZ3AADq (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:31 [[32MINFO[39M]: Socket disconnected: pA4BK80K8PMRZSZ3AADq (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:32 [[32MINFO[39M]: Socket authenticated: LLljX_IviI3y21BRAADt (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:32 [[32MINFO[39M]: Socket authenticated: 67Ud5ZhR1Pq_9iejAADx (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:32 [[32MINFO[39M]: Socket connected: 67Ud5ZhR1Pq_9iejAADx (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:32 [[32MINFO[39M]: Socket disconnected: 67Ud5ZhR1Pq_9iejAADx (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:33 [[32MINFO[39M]: Socket authenticated: a0I8WP77S-smuca2AAD0 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket authenticated: AYF510bvt52qXnoFAAD3 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket connected: AYF510bvt52qXnoFAAD3 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket disconnected: AYF510bvt52qXnoFAAD3 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket authenticated: H__VgPM8P8HVVqMBAAD7 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket connected: H__VgPM8P8HVVqMBAAD7 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:34 [[32MINFO[39M]: Socket disconnected: H__VgPM8P8HVVqMBAAD7 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:35 [[32MINFO[39M]: Socket authenticated: SoQRwbJdMVtiuDXPAAD- (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:35 [[32MINFO[39M]: Socket authenticated: BJSmTOPcu-ZZZcz6AAEC (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:35 [[32MINFO[39M]: Socket connected: BJSmTOPcu-ZZZcz6AAEC (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:36 [[32MINFO[39M]: Socket disconnected: BJSmTOPcu-ZZZcz6AAEC (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:37 [[32MINFO[39M]: Socket authenticated: oDuB4CDDjYQMh8fpAAEF (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:37 [[32MINFO[39M]: Socket authenticated: ZHijpLp82Iqz-75XAAEK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:38 [[32MINFO[39M]: Socket authenticated: ZJ_B2EQI6dbYRJ-GAAEN (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:39 [[32MINFO[39M]: Socket authenticated: nOTw1iSuCrvZEdxRAAEQ (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:39 [[32MINFO[39M]: Socket authenticated: 7TKjQz_bX94T_B0AAAET (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:39 [[32MINFO[39M]: Socket connected: 7TKjQz_bX94T_B0AAAET (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:39 [[32MINFO[39M]: Socket disconnected: 7TKjQz_bX94T_B0AAAET (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:40 [[32MINFO[39M]: Socket authenticated: 3ncS0A4BWbVJ5QAnAAEW (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:40 [[32MINFO[39M]: Socket authenticated: IG-PWcmzxRoS_EHXAAEa (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:40 [[32MINFO[39M]: Socket connected: IG-PWcmzxRoS_EHXAAEa (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:40 [[32MINFO[39M]: Socket disconnected: IG-PWcmzxRoS_EHXAAEa (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:41 [[32MINFO[39M]: Socket authenticated: jB-vDYiRoh_MDlBpAAEd (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:42 [[32MINFO[39M]: Socket authenticated: Xclvg7z1IKdELpb4AAEh (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:42 [[32MINFO[39M]: Socket connected: Xclvg7z1IKdELpb4AAEh (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:42 [[32MINFO[39M]: Socket disconnected: Xclvg7z1IKdELpb4AAEh (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:45 [[32MINFO[39M]: Socket authenticated: ZZ7nve-dsiCxpnHpAAEk (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:46 [[32MINFO[39M]: Socket authenticated: sS2VWI6eBVzqF5YOAAEo (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:46 [[32MINFO[39M]: Socket connected: sS2VWI6eBVzqF5YOAAEo (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:48 [[32MINFO[39M]: Socket disconnected: sS2VWI6eBVzqF5YOAAEo (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "GET /health HTTP/1.1" 200 128 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[32MINFO[39M]: Socket authenticated: TejKW9Dg_YAcwEpIAAEs (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:48 [[32MINFO[39M]: Socket connected: TejKW9Dg_YAcwEpIAAEs (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:48 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1/messages","body":{},"query":{"page":"1","limit":"50"},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationMessages (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:484:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:161:18
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:48 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:48 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 200 90 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:49 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:49 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:49 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:49 [[32MINFO[39M]: Socket TejKW9Dg_YAcwEpIAAEs left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:49 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:49 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:49 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:50 [[32MINFO[39M]: Socket TejKW9Dg_YAcwEpIAAEs left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:50 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:50 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:50 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:51 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:51 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:51 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:51 [[32MINFO[39M]: Socket TejKW9Dg_YAcwEpIAAEs left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:51 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:51 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:51 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:52 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:52 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:52 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:52 [[32MINFO[39M]: Socket TejKW9Dg_YAcwEpIAAEs left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:52 [[32MINFO[39M]: Socket disconnected: TejKW9Dg_YAcwEpIAAEs (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:52 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:52 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:52 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:52 [[32MINFO[39M]: Socket authenticated: BiHnuGcRTxBNnh4QAAEw (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:52 [[32MINFO[39M]: Socket connected: BiHnuGcRTxBNnh4QAAEw (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:53 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:53 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 200 90 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:54 [[32MINFO[39M]: Socket disconnected: BiHnuGcRTxBNnh4QAAEw (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:55 [[32MINFO[39M]: Socket authenticated: 8VtWt6iADTLAlx1yAAE0 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:55 [[32MINFO[39M]: Socket connected: 8VtWt6iADTLAlx1yAAE0 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1/messages","body":{},"query":{"page":"1","limit":"50"},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationMessages (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:484:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:161:18
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "GET /api/conversations/conv-demo-1/messages?page=1&limit=50 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "GET /api/conversations?page=1&limit=20 HTTP/1.1" 200 90 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:55 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:55 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:55 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:56 [[32MINFO[39M]: Socket 8VtWt6iADTLAlx1yAAE0 left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:56 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:56 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:56 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"GET","path":"/api/conversations/conv-demo-1","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.getConversationById (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:160:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:108:24
+2025-11-28 15:42:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:56 +0000] "GET /api/conversations/conv-demo-1 HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:56 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:56 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:56 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:56 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:57 [[32MINFO[39M]: Socket 8VtWt6iADTLAlx1yAAE0 left conversation conv-demo-1 {"service":"liftout-api"}
+2025-11-28 15:42:57 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:57 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:57 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:42:57 [[32MINFO[39M]: Socket disconnected: 8VtWt6iADTLAlx1yAAE0 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:42:57 [[31MERROR[39M]: Error occurred: {"service":"liftout-api","error":"You do not have access to this conversation","method":"POST","path":"/api/conversations/conv-demo-1/read","body":{},"query":{},"params":{}}
+AuthorizationError: You do not have access to this conversation
+    at MessagingService.markMessagesAsRead (/Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/services/messagingService.ts:622:13)
+    at /Users/ez/Documents/Apps/Liftout/liftout-platform/apps/api-server/src/routes/conversations.ts:249:3
+2025-11-28 15:42:57 [[32MINFO[39M]: ::1 - - [28/Nov/2025:21:42:57 +0000] "POST /api/conversations/conv-demo-1/read HTTP/1.1" 403 71 "-" "node" {"service":"liftout-api"}
+2025-11-28 15:43:01 [[32MINFO[39M]: Socket authenticated: Q1BvA9UT51w3zy7_AAE3 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:43:01 [[32MINFO[39M]: Socket authenticated: 37cG_YkpR0w1Ym5jAAE7 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:43:01 [[32MINFO[39M]: Socket connected: 37cG_YkpR0w1Ym5jAAE7 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:43:30 [[32MINFO[39M]: Socket disconnected: 37cG_YkpR0w1Ym5jAAE7 (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:43:32 [[32MINFO[39M]: Socket authenticated: QEDBBNVUeFn8Cqf7AAE- (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:43:32 [[32MINFO[39M]: Socket authenticated: lPBjLeFkmBci15XyAAFC (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:43:32 [[32MINFO[39M]: Socket connected: lPBjLeFkmBci15XyAAFC (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:01 [[32MINFO[39M]: Socket disconnected: lPBjLeFkmBci15XyAAFC (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:44:03 [[32MINFO[39M]: Socket authenticated: bSANLI51MoCsDSJ2AAFF (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:03 [[32MINFO[39M]: Socket authenticated: TSELpjarBmU1_yGfAAFJ (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:03 [[32MINFO[39M]: Socket connected: TSELpjarBmU1_yGfAAFJ (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:32 [[32MINFO[39M]: Socket disconnected: TSELpjarBmU1_yGfAAFJ (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:44:34 [[32MINFO[39M]: Socket authenticated: MPXrpSbEow8ueB_0AAFM (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:34 [[32MINFO[39M]: Socket authenticated: Mo_9FdVYwLLje8fJAAFQ (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:44:34 [[32MINFO[39M]: Socket connected: Mo_9FdVYwLLje8fJAAFQ (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:45:03 [[32MINFO[39M]: Socket disconnected: Mo_9FdVYwLLje8fJAAFQ (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:45:05 [[32MINFO[39M]: Socket authenticated: A2h6s-taRH8pqmpsAAFT (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:45:05 [[32MINFO[39M]: Socket authenticated: Sf50qrGAaNtc0PHvAAFX (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:45:05 [[32MINFO[39M]: Socket connected: Sf50qrGAaNtc0PHvAAFX (user: company@example.com) {"service":"liftout-api"}
+3:45:33 PM [tsx] restarting
+2025-11-28 15:45:33 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:45:34 [[32MINFO[39M]: Socket disconnected: Sf50qrGAaNtc0PHvAAFX (user: company@example.com), reason: forced close {"service":"liftout-api"}
+2025-11-28 15:45:34 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:45:35 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:45:35 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:45:35 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:45:35 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+2025-11-28 15:45:36 [[32MINFO[39M]: Socket authenticated: 8PriZyAEo-AEDnd-AAAB (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:45:36 [[32MINFO[39M]: Socket authenticated: UDFvlEdYTdmztwIjAAAF (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:45:36 [[32MINFO[39M]: Socket connected: UDFvlEdYTdmztwIjAAAF (user: company@example.com) {"service":"liftout-api"}
