@@ -2,16 +2,10 @@ import { Metadata } from 'next';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { ContactForm } from '@/components/contact/ContactForm';
+import { ContactOptions } from '@/components/contact/ContactOptions';
 import {
-  EnvelopeIcon,
-  PhoneIcon,
   MapPinIcon,
-  BuildingOffice2Icon,
-  UserGroupIcon,
-  QuestionMarkCircleIcon,
-  NewspaperIcon,
   ChatBubbleLeftRightIcon,
-  ClockIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -19,37 +13,6 @@ export const metadata: Metadata = {
   title: 'Contact Us - Liftout',
   description: 'Get in touch with the Liftout team. Whether you\'re a company looking to acquire teams or a team exploring opportunities, we\'re here to help.',
 };
-
-const contactOptions = [
-  {
-    title: 'For companies',
-    description: 'Looking to acquire a high-performing team? Our enterprise team will help you find the perfect match.',
-    email: 'companies@liftout.io',
-    icon: BuildingOffice2Icon,
-    responseTime: 'Same-day response',
-  },
-  {
-    title: 'For teams',
-    description: 'Ready to explore new opportunities together? We\'ll guide you through the liftout process.',
-    email: 'teams@liftout.io',
-    icon: UserGroupIcon,
-    responseTime: 'Same-day response',
-  },
-  {
-    title: 'General inquiries',
-    description: 'Have questions about how Liftout works? Our support team is here to help.',
-    email: 'hello@liftout.io',
-    icon: QuestionMarkCircleIcon,
-    responseTime: 'Within 24 hours',
-  },
-  {
-    title: 'Press & media',
-    description: 'For press inquiries, interview requests, or media-related questions.',
-    email: 'press@liftout.io',
-    icon: NewspaperIcon,
-    responseTime: 'Within 48 hours',
-  },
-];
 
 export default function ContactPage() {
   return (
@@ -86,47 +49,11 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Contact Options Grid - Reduce choices, clear hierarchy (#Hick's Law) */}
-        <section className="pb-16 lg:pb-20">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {contactOptions.map((option) => (
-                <a
-                  key={option.title}
-                  href={`mailto:${option.email}`}
-                  className="group bg-bg-surface border border-border rounded-xl p-6 hover:border-navy/30 hover:shadow-sm transition-all duration-200"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-navy transition-colors">
-                      <option.icon className="w-6 h-6 text-navy group-hover:text-white transition-colors" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-text-primary text-lg mb-1">
-                        {option.title}
-                      </h3>
-                      <p className="text-text-secondary text-sm mb-3 leading-relaxed">
-                        {option.description}
-                      </p>
-                      <div className="flex items-center justify-between gap-4">
-                        <span className="inline-flex items-center gap-2 text-navy font-semibold text-sm group-hover:underline">
-                          <EnvelopeIcon className="w-4 h-4" />
-                          {option.email}
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 text-text-tertiary text-xs">
-                          <ClockIcon className="w-3.5 h-3.5" />
-                          {option.responseTime}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Contact Options Grid - Links to form section */}
+        <ContactOptions />
 
         {/* Contact Form Section */}
-        <section className="pb-16 lg:pb-20">
+        <section id="contact-form" className="pb-16 lg:pb-20 scroll-mt-24">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
               {/* Left - Contact Info with personality (#29, #35) */}
@@ -136,40 +63,37 @@ export default function ContactPage() {
                 </h2>
                 <p className="text-text-secondary leading-relaxed mb-8">
                   Fill out the form and our team will get back to you within 24 hours.
-                  For urgent matters, reach out directly via phone or email.
                 </p>
 
                 <div className="space-y-5">
-                  {/* Email - larger touch targets (#Fitts's Law) */}
-                  <a
-                    href="mailto:hello@liftout.io"
-                    className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-navy transition-colors">
-                      <EnvelopeIcon className="w-5 h-5 text-navy group-hover:text-white transition-colors" />
+                  {/* Email - display only, not mailto */}
+                  <div className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border">
+                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-text-primary">Email us</p>
+                      <p className="font-semibold text-text-primary">Email</p>
                       <p className="text-text-secondary text-sm">hello@liftout.io</p>
                     </div>
-                  </a>
+                  </div>
 
-                  {/* Phone */}
-                  <a
-                    href="tel:+1-888-LIFTOUT"
-                    className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-navy/20 hover:shadow-sm transition-all group"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-navy transition-colors">
-                      <PhoneIcon className="w-5 h-5 text-navy group-hover:text-white transition-colors" />
+                  {/* Phone - display only */}
+                  <div className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border">
+                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-text-primary">Schedule a call</p>
+                      <p className="font-semibold text-text-primary">Phone</p>
                       <p className="text-text-secondary text-sm">+1 (888) LIFTOUT</p>
                       <p className="text-text-tertiary text-xs mt-0.5">Mon-Fri, 9am-6pm EST</p>
                     </div>
-                  </a>
+                  </div>
 
-                  {/* Address - not clickable, just info */}
+                  {/* Address */}
                   <div className="flex items-start gap-4 p-4 bg-bg-surface rounded-xl border border-border">
                     <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center flex-shrink-0">
                       <MapPinIcon className="w-5 h-5 text-navy" />
@@ -184,7 +108,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Social Links - adequate spacing (#Fitts's Law) */}
+                {/* Social Links */}
                 <div className="mt-8 pt-8 border-t border-border">
                   <p className="font-semibold text-text-primary mb-4">Follow us</p>
                   <div className="flex gap-3">

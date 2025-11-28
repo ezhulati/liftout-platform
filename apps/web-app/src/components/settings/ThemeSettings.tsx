@@ -73,7 +73,7 @@ export function ThemeSettings() {
       title: 'System',
       description: 'Match your device setting',
       icon: ComputerDesktopIcon,
-      preview: 'bg-gradient-to-r from-white to-gray-900 border-border',
+      preview: 'bg-gradient-to-r from-white to-navy-900 border-border',
     },
   ];
 

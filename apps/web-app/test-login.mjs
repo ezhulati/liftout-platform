@@ -48,10 +48,10 @@ async function testLogin(email, password, userType) {
   }
 }
 
-// Test both logins
+// Test both logins - password is demo123
 async function main() {
-  await testLogin('demo@example.com', 'password', 'team-user');
-  await testLogin('company@example.com', 'password', 'company-user');
+  await testLogin('demo@example.com', 'demo123', 'team-user');
+  await testLogin('company@example.com', 'demo123', 'company-user');
 }
 
 main().catch(console.error);
