@@ -62,19 +62,18 @@ export function LandingHeader() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-3 group min-h-[44px] min-w-[44px]"
+            className="flex items-center group min-h-[44px] min-w-[44px]"
             aria-label="Liftout Home"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <Image
-              src="/logo-icon.png"
+              src="/Liftout-logo-dark.png"
               alt="Liftout"
-              width={40}
-              height={40}
-              className="w-10 h-10 transition-transform duration-fast ease-out-quart group-hover:scale-105"
+              width={160}
+              height={44}
+              className="h-11 w-auto transition-transform duration-fast ease-out-quart group-hover:scale-[1.02]"
               priority
             />
-            <span className="font-heading font-bold text-2xl text-navy tracking-tight leading-none">Liftout</span>
           </Link>
 
           {/* Navigation links - hidden on mobile, shown on larger screens */}

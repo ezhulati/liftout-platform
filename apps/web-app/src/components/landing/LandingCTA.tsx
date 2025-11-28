@@ -16,7 +16,8 @@ export function LandingCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-20 lg:py-28 bg-navy-900 overflow-hidden"
+      className="relative py-20 lg:py-28 overflow-hidden"
+      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
       aria-labelledby="cta-heading"
     >
       {/* Background decorative elements */}

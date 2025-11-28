@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
@@ -110,21 +111,26 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex bg-bg">
-      {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-navy relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gold/10 blur-3xl" />
-          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-gold/5 blur-3xl" />
-        </div>
+      {/* Left side - Branding with background image */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url(/Liftout_AdobeStock_577548004.jpeg)' }}
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center shadow-gold transition-all duration-fast group-hover:shadow-lg">
-              <span className="text-navy-900 font-heading font-bold text-xl">L</span>
-            </div>
-            <span className="font-heading font-bold text-2xl tracking-tight">Liftout</span>
+          <Link href="/" className="group">
+            <Image
+              src="/Liftout-logo-white.png"
+              alt="Liftout"
+              width={400}
+              height={112}
+              className="h-28 w-auto transition-opacity duration-fast group-hover:opacity-80"
+            />
           </Link>
 
           {/* Content */}
@@ -133,7 +139,7 @@ export default function SignUpPage() {
               Join the Future of
               <span className="block text-gold">Team Acquisition</span>
             </h1>
-            <p className="text-navy-200 text-lg leading-relaxed max-w-md mb-8">
+            <p className="text-white/90 text-lg leading-relaxed max-w-md mb-8">
               Whether you&apos;re a high-performing team seeking opportunities or a company looking
               to acquire proven talent, Liftout is your platform for strategic growth.
             </p>
@@ -151,7 +157,7 @@ export default function SignUpPage() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-200">{benefit}</span>
+                  <span className="text-white/90">{benefit}</span>
                 </li>
               ))}
             </ul>
@@ -159,7 +165,7 @@ export default function SignUpPage() {
 
           {/* Social proof */}
           <div>
-            <p className="text-navy-400 text-sm">
+            <p className="text-white/70 text-sm">
               Trusted by teams and companies across Finance, Healthcare, and Technology
             </p>
           </div>

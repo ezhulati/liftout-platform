@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { getDemoDataForUser } from '@/lib/demo-accounts';
@@ -116,11 +117,14 @@ export function AppSidebar() {
         <div className="flex h-full flex-col bg-bg-surface border-r border-border">
           {/* Header */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
-                <span className="text-gold font-heading font-bold text-lg">L</span>
-              </div>
-              <span className="font-heading font-bold text-xl text-text-primary">Liftout</span>
+            <Link href="/app/dashboard" className="flex items-center">
+              <Image
+                src="/Liftout-logo-dark.png"
+                alt="Liftout"
+                width={140}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
             <button
               type="button"
@@ -181,11 +185,14 @@ export function AppSidebar() {
         <div className="flex flex-col flex-grow bg-bg-surface border-r border-border">
           {/* Header */}
           <div className="flex items-center h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
-                <span className="text-gold font-heading font-bold text-lg">L</span>
-              </div>
-              <span className="font-heading font-bold text-xl text-text-primary">Liftout</span>
+            <Link href="/app/dashboard" className="flex items-center">
+              <Image
+                src="/Liftout-logo-dark.png"
+                alt="Liftout"
+                width={140}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
           </div>
 

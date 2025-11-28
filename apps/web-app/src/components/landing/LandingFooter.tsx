@@ -6,7 +6,7 @@ export function LandingFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy-900" role="contentinfo">
+    <footer className="" style={{ backgroundColor: 'hsl(220, 65%, 15%)' }} role="contentinfo">
       {/* Pre-sale support banner */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
@@ -48,17 +48,16 @@ export function LandingFooter() {
             {/* Logo */}
             <Link
               href="/"
-              className="inline-flex items-center gap-4 mb-6 group"
+              className="inline-flex items-center mb-6 group"
               aria-label="Liftout Home"
             >
               <Image
-                src="/logo-icon.png"
+                src="/Liftout-logo-white.png"
                 alt="Liftout"
-                width={48}
-                height={48}
-                className="w-12 h-12 brightness-0 invert transition-transform duration-fast group-hover:scale-[1.02]"
+                width={180}
+                height={50}
+                className="h-12 w-auto transition-transform duration-fast group-hover:scale-[1.02]"
               />
-              <span className="font-heading font-bold text-3xl text-white tracking-tight leading-none">Liftout</span>
             </Link>
 
             {/* Tagline */}

@@ -31,7 +31,8 @@ export function TrustIndicators() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-12 lg:py-16 bg-navy-900"
+      className="py-12 lg:py-16"
+      style={{ backgroundColor: 'hsl(220, 65%, 15%)' }}
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
