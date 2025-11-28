@@ -31,13 +31,13 @@ function ToggleSwitch({ enabled, onChange, disabled = false }: ToggleSwitchProps
         enabled ? 'bg-navy' : 'bg-bg-alt'
       } ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy touch-target`}
+      } relative inline-flex flex-shrink-0 h-8 w-14 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy min-h-12 min-w-14 items-center`}
       disabled={disabled}
     >
       <span
         className={`${
-          enabled ? 'translate-x-5' : 'translate-x-0'
-        } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-base`}
+          enabled ? 'translate-x-6' : 'translate-x-0'
+        } pointer-events-none inline-block h-7 w-7 rounded-full bg-white shadow transform ring-0 transition duration-base`}
       />
     </button>
   );
@@ -249,11 +249,11 @@ export function PrivacySettings() {
           {privacyToggles.map((toggle) => (
             <div
               key={toggle.key}
-              className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${
+              className={`flex items-center justify-between p-4 border rounded-lg transition-colors min-h-20 ${
                 toggle.important ? 'border-navy-200 bg-navy-50 hover:bg-navy-50/80' : 'border-border hover:bg-bg-alt'
               }`}
             >
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-3 mr-4">
                 <div className={`flex-shrink-0 p-1 rounded ${
                   toggle.important ? 'bg-navy-100' : 'bg-bg-alt'
                 }`}>
@@ -263,14 +263,14 @@ export function PrivacySettings() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center">
-                    <p className="text-sm font-medium text-text-primary">{toggle.title}</p>
+                    <p className="text-base font-medium text-text-primary">{toggle.title}</p>
                     {toggle.important && (
-                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
+                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-navy-100 text-navy-800">
                         Important
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-text-secondary mt-1">{toggle.description}</p>
+                  <p className="text-base text-text-secondary mt-1">{toggle.description}</p>
                 </div>
               </div>
               <ToggleSwitch

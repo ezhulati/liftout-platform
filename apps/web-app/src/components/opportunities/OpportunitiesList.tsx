@@ -144,10 +144,10 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
     return (
       <div className="text-center py-12">
         <BriefcaseIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-        <h3 className="mt-2 text-sm font-medium text-text-primary">
+        <h3 className="mt-2 text-base font-medium text-text-primary">
           {isCompanyUser ? 'No liftout opportunities posted' : 'No liftout opportunities found'}
         </h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <p className="mt-1 text-base text-text-secondary">
           {isCompanyUser
             ? 'Start by posting your first liftout opportunity to attract high-performing teams.'
             : 'Check back later for new liftout opportunities or adjust your search criteria.'
@@ -155,7 +155,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
         </p>
         {isCompanyUser && (
           <div className="mt-6">
-            <Link href="/app/opportunities/create" className="btn-primary">
+            <Link href="/app/opportunities/create" className="btn-primary min-h-12">
               Post liftout opportunity
             </Link>
           </div>
@@ -194,7 +194,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   </Link>
                 </h3>
                 <span className={classNames(
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                  'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
                   opportunity.status === 'active'
                     ? 'bg-success-light text-success-dark'
                     : opportunity.status === 'closed'
@@ -206,18 +206,18 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   {opportunity.status.replace('_', ' ')}
                 </span>
                 {opportunity.urgent && (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-light text-error-dark">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-error-light text-error-dark">
                     Urgent
                   </span>
                 )}
                 {opportunity.confidential && (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800">
                     Confidential
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center text-sm text-text-tertiary mb-3 space-x-4">
+              <div className="flex flex-wrap items-center text-base text-text-tertiary mb-3 gap-x-4 gap-y-1">
                 <span className="font-medium text-text-secondary">{opportunity.company}</span>
                 <div className="flex items-center">
                   <MapPinIcon className="h-4 w-4 mr-1" />
@@ -234,27 +234,27 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="flex items-center text-sm text-text-secondary">
-                  <CurrencyDollarIcon className="h-4 w-4 mr-2 text-success" />
+                <div className="flex items-center text-base text-text-secondary">
+                  <CurrencyDollarIcon className="h-5 w-5 mr-2 text-success" />
                   <span>
                     {opportunity.compensation}
                   </span>
                 </div>
-                <div className="flex items-center text-sm text-text-secondary">
-                  <ClockIcon className="h-4 w-4 mr-2 text-navy" />
+                <div className="flex items-center text-base text-text-secondary">
+                  <ClockIcon className="h-5 w-5 mr-2 text-navy" />
                   <span>
                     {opportunity.timeline}
                   </span>
                 </div>
-                <div className="flex items-center text-sm text-text-secondary">
-                  <UserGroupIcon className="h-4 w-4 mr-2 text-gold" />
+                <div className="flex items-center text-base text-text-secondary">
+                  <UserGroupIcon className="h-5 w-5 mr-2 text-gold" />
                   <span>
                     {opportunity.teamSize}
                   </span>
                 </div>
                 {isCompanyUser && (
-                  <div className="flex items-center text-sm text-text-secondary">
-                    <DocumentTextIcon className="h-4 w-4 mr-2 text-gold-700" />
+                  <div className="flex items-center text-base text-text-secondary">
+                    <DocumentTextIcon className="h-5 w-5 mr-2 text-gold-700" />
                     <span>{opportunity.applications?.length || 0} expressions of interest</span>
                   </div>
                 )}
@@ -277,7 +277,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   )}
                 </div>
 
-                <div className="text-sm text-text-tertiary">
+                <div className="text-base text-text-tertiary">
                   Type: {opportunity.type || 'Strategic Expansion'}
                 </div>
               </div>
@@ -302,7 +302,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   </Link>
 
                   <Menu as="div" className="relative">
-                    <Menu.Button className="p-2 text-text-tertiary hover:text-text-primary transition-colors duration-fast touch-target">
+                    <Menu.Button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast">
                       <EllipsisVerticalIcon className="h-5 w-5" />
                     </Menu.Button>
                     <Transition
@@ -314,14 +314,14 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-bg-surface py-1 shadow-lg ring-1 ring-border focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
                             <Link
                               href={`/app/opportunities/${opportunity.id}/edit`}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                                'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                               )}
                             >
                               Edit liftout opportunity
@@ -334,7 +334,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                               href={`/app/opportunities/${opportunity.id}/analytics`}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'block px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                                'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                               )}
                             >
                               View analytics
@@ -346,7 +346,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                             <button
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'block w-full text-left px-4 py-2 text-sm text-text-secondary transition-colors duration-fast'
+                                'flex items-center w-full text-left px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                               )}
                             >
                               Close liftout opportunity

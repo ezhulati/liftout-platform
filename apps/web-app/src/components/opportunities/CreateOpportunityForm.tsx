@@ -279,16 +279,16 @@ export function CreateOpportunityForm() {
               {requirements.map((req, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
+                  className="inline-flex items-center pl-4 pr-2 py-2 rounded-full text-base font-medium bg-navy-100 text-navy-800"
                 >
                   {req}
                   <button
                     type="button"
                     onClick={() => removeRequirement(index)}
-                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                    className="ml-2 inline-flex items-center justify-center min-w-8 min-h-8 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600"
                     aria-label={`Remove ${req}`}
                   >
-                    <XMarkIcon className="w-3 h-3" />
+                    <XMarkIcon className="w-4 h-4" />
                   </button>
                 </span>
               ))}
@@ -333,16 +333,16 @@ export function CreateOpportunityForm() {
               {whatWeOffer.map((offer, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800"
+                  className="inline-flex items-center pl-4 pr-2 py-2 rounded-full text-base font-medium bg-gold-100 text-gold-800"
                 >
                   {offer}
                   <button
                     type="button"
                     onClick={() => removeOffering(index)}
-                    className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-gold-400 hover:bg-gold-200 hover:text-gold-600 touch-target"
+                    className="ml-2 inline-flex items-center justify-center min-w-8 min-h-8 rounded-full text-gold-400 hover:bg-gold-200 hover:text-gold-600"
                     aria-label={`Remove ${offer}`}
                   >
-                    <XMarkIcon className="w-3 h-3" />
+                    <XMarkIcon className="w-4 h-4" />
                   </button>
                 </span>
               ))}
@@ -397,25 +397,25 @@ export function CreateOpportunityForm() {
         <div className="space-y-5">
           <h3 className="text-lg font-medium text-text-primary">Opportunity settings</h3>
 
-          <div className="space-y-4">
-            <label className="flex items-center gap-3 cursor-pointer">
+          <div className="space-y-2">
+            <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
               <input
                 {...register('confidential')}
                 type="checkbox"
                 className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="text-text-secondary">
+              <span className="text-base text-text-secondary">
                 Confidential opportunity (only visible to invited teams)
               </span>
             </label>
 
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
               <input
                 {...register('urgent')}
                 type="checkbox"
                 className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="text-text-secondary">
+              <span className="text-base text-text-secondary">
                 Urgent timeline (expedited review process)
               </span>
             </label>

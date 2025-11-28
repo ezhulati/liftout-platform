@@ -254,17 +254,17 @@ export function CreateTeamForm() {
                 required
                 error={errors.members?.[index]?.skills?.message}
               >
-                <div className="flex flex-wrap gap-2 mb-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {watch(`members.${index}.skills`)?.map((skill, skillIndex) => (
                     <span
                       key={skillIndex}
-                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-800"
+                      className="inline-flex items-center pl-3 pr-2 py-2 rounded-full text-base font-medium bg-navy-100 text-navy-800"
                     >
                       {skill}
                       <button
                         type="button"
                         onClick={() => removeSkill(index, skillIndex)}
-                        className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                        className="ml-2 inline-flex items-center justify-center min-w-8 min-h-8 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600"
                         aria-label={`Remove ${skill}`}
                       >
                         ×
@@ -333,13 +333,13 @@ export function CreateTeamForm() {
           </FormField>
 
           <div className="mt-4">
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
               <input
                 {...register('compensation.equity')}
                 type="checkbox"
                 className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
-              <span className="text-text-secondary">Open to equity participation</span>
+              <span className="text-base text-text-secondary">Open to equity participation</span>
             </label>
           </div>
         </div>

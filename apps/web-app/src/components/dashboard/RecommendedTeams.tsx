@@ -144,18 +144,18 @@ export function RecommendedTeams() {
                 <p className="text-base text-text-secondary mt-1 line-clamp-2">
                   {team.description}
                 </p>
-                <div className="flex items-center mt-2 text-sm text-text-tertiary space-x-4">
+                <div className="flex flex-wrap items-center mt-2 text-base text-text-tertiary gap-x-4 gap-y-1">
                   <div className="flex items-center">
-                    <MapPinIcon className="h-3 w-3 mr-1" />
+                    <MapPinIcon className="h-4 w-4 mr-1" />
                     {team.location}
                   </div>
                   <div className="flex items-center">
-                    <UserGroupIcon className="h-3 w-3 mr-1" />
+                    <UserGroupIcon className="h-4 w-4 mr-1" />
                     {team.size} members
                   </div>
                   <div>{team.yearsWorkingTogether} years together</div>
                 </div>
-                <div className="flex items-center mt-1 text-sm text-text-tertiary space-x-4">
+                <div className="flex flex-wrap items-center mt-1 text-base text-text-tertiary gap-x-4 gap-y-1">
                   <div>{team.industry}</div>
                   <div>•</div>
                   <div>{team.successfulLiftouts} successful liftouts</div>

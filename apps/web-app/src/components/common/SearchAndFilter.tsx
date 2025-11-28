@@ -86,16 +86,16 @@ export function SearchAndFilter({
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={classNames(
-              "inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium min-h-11 transition-colors",
+              "inline-flex items-center px-4 py-3 border rounded-lg text-base font-medium min-h-12 transition-colors",
               showFilters
                 ? "border-navy-300 text-navy bg-navy-50"
                 : "border-border text-text-secondary bg-bg-surface hover:bg-bg-alt"
             )}
           >
-            <FunnelIcon className="h-4 w-4 mr-2" />
+            <FunnelIcon className="h-5 w-5 mr-2" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-navy rounded-full">
+              <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-sm font-bold leading-none text-white bg-navy rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -104,10 +104,10 @@ export function SearchAndFilter({
           {activeFilterCount > 0 && (
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 border border-border rounded-md text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt min-h-11 transition-colors"
+              className="inline-flex items-center px-4 py-3 border border-border rounded-lg text-base font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt min-h-12 transition-colors"
             >
-              <XMarkIcon className="h-4 w-4 mr-1" />
-              Clear
+              <XMarkIcon className="h-5 w-5 mr-2" />
+              Clear all
             </button>
           )}
         </div>
@@ -138,16 +138,16 @@ export function SearchAndFilter({
             return (
               <span
                 key={filterKey}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
+                className="inline-flex items-center pl-4 pr-2 py-2 rounded-full text-base font-medium bg-navy-100 text-navy-800 min-h-12"
               >
                 <span className="mr-1 text-navy-600">{filterGroup.label}:</span>
                 {getFilterValueLabel(filterValue)}
                 <button
                   onClick={() => clearFilter(filterKey)}
-                  className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600 touch-target"
+                  className="ml-2 inline-flex items-center justify-center min-w-8 min-h-8 rounded-full text-navy-400 hover:bg-navy-200 hover:text-navy-600"
                   aria-label={`Remove ${filterGroup.label} filter`}
                 >
-                  <XMarkIcon className="w-3 h-3" />
+                  <XMarkIcon className="w-4 h-4" />
                 </button>
               </span>
             );
@@ -157,7 +157,7 @@ export function SearchAndFilter({
 
       {/* Results Count */}
       {resultCount !== undefined && (
-        <div className="text-sm text-text-tertiary">
+        <div className="text-base text-text-tertiary">
           {resultCount} result{resultCount !== 1 ? 's' : ''} found
         </div>
       )}
@@ -198,14 +198,14 @@ export function SearchAndFilter({
                 )}
 
                 {group.type === 'multi-select' && (
-                  <div className="space-y-3 max-h-40 overflow-y-auto">
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {group.options.map((option) => {
                       const isSelected = Array.isArray(activeFilters[group.key])
                         ? (activeFilters[group.key] as string[]).includes(option.value)
                         : false;
 
                       return (
-                        <label key={option.value} className="flex items-center gap-3 cursor-pointer">
+                        <label key={option.value} className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors">
                           <input
                             type="checkbox"
                             checked={isSelected}
@@ -222,7 +222,7 @@ export function SearchAndFilter({
                             }}
                             className="rounded border-border text-navy focus:ring-navy w-5 h-5"
                           />
-                          <span className="text-sm text-text-secondary">
+                          <span className="text-base text-text-secondary">
                             {option.label}
                             {option.count !== undefined && (
                               <span className="text-text-tertiary"> ({option.count})</span>

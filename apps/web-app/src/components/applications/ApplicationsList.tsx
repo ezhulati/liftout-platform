@@ -107,16 +107,16 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
           <h3 className="mt-4 text-lg font-medium text-text-primary">
             {isCompanyUser ? 'No applications yet' : 'No applications submitted'}
           </h3>
-          <p className="mt-2 text-sm text-text-secondary">
+          <p className="mt-2 text-base text-text-secondary">
             {isCompanyUser
-              ? 'When teams express interest in your opportunities, they\'ll appear here.'
+              ? 'When teams express interest in your opportunities, they will appear here.'
               : 'Applications you submit to liftout opportunities will be tracked here.'
             }
           </p>
           <div className="mt-6">
             <Link
               href={isCompanyUser ? "/app/opportunities/create" : "/app/opportunities"}
-              className="btn-primary"
+              className="btn-primary min-h-12"
             >
               {isCompanyUser ? 'Post your first opportunity' : 'Browse opportunities'}
             </Link>
@@ -139,13 +139,13 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                   <div className="flex items-center space-x-3 mb-2">
                     <StatusIcon className="h-5 w-5 text-text-tertiary" />
                     <span className={classNames(
-                      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                      'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
                       statusColors[application.status]
                     )}>
                       {application.status.replace('_', ' ')}
                     </span>
                     {isCompanyUser && !application.viewedByCompany && (
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-error-light text-error-dark">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-error-light text-error-dark">
                         New
                       </span>
                     )}
@@ -155,22 +155,22 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                     {getOpportunityTitle(application.opportunityId)}
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-text-secondary mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-base text-text-secondary mb-4">
                     <div className="flex items-center">
-                      <ClockIcon className="h-4 w-4 mr-2" />
+                      <ClockIcon className="h-5 w-5 mr-2" />
                       <span>
                         Submitted {formatDistanceToNow(application.submittedAt, { addSuffix: true })}
                       </span>
                     </div>
 
                     <div className="flex items-center">
-                      <UserGroupIcon className="h-4 w-4 mr-2" />
+                      <UserGroupIcon className="h-5 w-5 mr-2" />
                       <span>Team ID: {application.teamId.slice(-6)}</span>
                     </div>
 
                     {application.compensationExpectations && (
                       <div className="flex items-center">
-                        <CurrencyDollarIcon className="h-4 w-4 mr-2" />
+                        <CurrencyDollarIcon className="h-5 w-5 mr-2" />
                         <span>
                           {application.compensationExpectations.currency} {application.compensationExpectations.min.toLocaleString()} - {application.compensationExpectations.max.toLocaleString()}
                         </span>
@@ -179,7 +179,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
 
                     {application.viewedAt && (
                       <div className="flex items-center">
-                        <EyeIcon className="h-4 w-4 mr-2" />
+                        <EyeIcon className="h-5 w-5 mr-2" />
                         <span>
                           Viewed {formatDistanceToNow(application.viewedAt, { addSuffix: true })}
                         </span>
@@ -203,78 +203,78 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                       {!application.viewedByCompany && (
                         <button
                           onClick={() => handleMarkAsViewed(application.id)}
-                          className="btn-secondary text-xs"
+                          className="btn-secondary min-h-12"
                         >
-                          Mark as Viewed
+                          Mark as viewed
                         </button>
                       )}
-                      
+
                       {application.status === 'pending' && (
                         <>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'under_review')}
                             disabled={updatingStatus === application.id}
-                            className="btn-primary text-xs"
+                            className="btn-primary min-h-12"
                           >
                             Review
                           </button>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'rejected')}
                             disabled={updatingStatus === application.id}
-                            className="btn-danger text-xs"
+                            className="btn-danger min-h-12"
                           >
                             Reject
                           </button>
                         </>
                       )}
-                      
+
                       {application.status === 'under_review' && (
                         <>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'interview_scheduled')}
                             disabled={updatingStatus === application.id}
-                            className="btn-primary text-xs"
+                            className="btn-primary min-h-12"
                           >
-                            Schedule Interview
+                            Schedule interview
                           </button>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'accepted')}
                             disabled={updatingStatus === application.id}
-                            className="btn-success text-xs"
+                            className="btn-success min-h-12"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'rejected')}
                             disabled={updatingStatus === application.id}
-                            className="btn-danger text-xs"
+                            className="btn-danger min-h-12"
                           >
                             Reject
                           </button>
                         </>
                       )}
-                      
+
                       {application.status === 'interview_scheduled' && (
                         <>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'accepted')}
                             disabled={updatingStatus === application.id}
-                            className="btn-success text-xs"
+                            className="btn-success min-h-12"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => handleStatusUpdate(application.id, 'rejected')}
                             disabled={updatingStatus === application.id}
-                            className="btn-danger text-xs"
+                            className="btn-danger min-h-12"
                           >
                             Reject
                           </button>
                         </>
                       )}
-                      
-                      <button className="btn-secondary text-xs flex items-center">
-                        <ChatBubbleLeftRightIcon className="h-3 w-3 mr-1" />
+
+                      <button className="btn-secondary min-h-12 flex items-center justify-center">
+                        <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                         Message
                       </button>
                     </>
@@ -283,22 +283,22 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                       {application.status === 'pending' && (
                         <button
                           onClick={() => handleWithdraw(application.id)}
-                          className="btn-danger text-xs"
+                          className="btn-danger min-h-12"
                         >
                           Withdraw
                         </button>
                       )}
-                      
-                      <button className="btn-secondary text-xs flex items-center">
-                        <ChatBubbleLeftRightIcon className="h-3 w-3 mr-1" />
-                        Message Company
+
+                      <button className="btn-secondary min-h-12 flex items-center justify-center">
+                        <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                        Message company
                       </button>
-                      
+
                       <Link
                         href={`/app/opportunities/${application.opportunityId}`}
-                        className="btn-secondary text-xs text-center"
+                        className="btn-secondary min-h-12 text-center flex items-center justify-center"
                       >
-                        View Opportunity
+                        View opportunity
                       </Link>
                     </>
                   )}

@@ -349,12 +349,12 @@ export function SecuritySettings() {
           </div>
         </div>
         <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-text-primary font-medium">
+          <div className="flex items-center justify-between min-h-16">
+            <div className="mr-4">
+              <p className="text-base text-text-primary font-medium">
                 {settings.security.twoFactorEnabled ? 'Enabled' : 'Disabled'}
               </p>
-              <p className="text-sm text-text-secondary">
+              <p className="text-base text-text-secondary">
                 {settings.security.twoFactorEnabled
                   ? 'Your account is protected with two-factor authentication'
                   : 'Add an extra layer of security to your account'
@@ -363,7 +363,7 @@ export function SecuritySettings() {
             </div>
             <button
               onClick={handleTwoFactorToggle}
-              className={settings.security.twoFactorEnabled ? 'btn-danger' : 'btn-primary'}
+              className={`min-h-12 ${settings.security.twoFactorEnabled ? 'btn-danger' : 'btn-primary'}`}
             >
               {settings.security.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
             </button>
@@ -408,7 +408,7 @@ export function SecuritySettings() {
 
               <div className="space-y-3">
                 {mockSessions.map((session) => (
-                  <div key={session.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                  <div key={session.id} className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
                     <div className="flex items-center space-x-3">
                       <div className="flex-shrink-0">
                         {session.device.includes('iPhone') || session.device.includes('Android') ? (
@@ -419,14 +419,14 @@ export function SecuritySettings() {
                       </div>
                       <div>
                         <div className="flex items-center">
-                          <p className="text-sm font-medium text-text-primary">{session.device}</p>
+                          <p className="text-base font-medium text-text-primary">{session.device}</p>
                           {session.current && (
-                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success-light text-success-dark">
+                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-success-light text-success-dark">
                               Current
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center text-sm text-text-tertiary">
+                        <div className="flex flex-wrap items-center text-base text-text-tertiary">
                           <span>{session.browser}</span>
                           <span className="mx-2">•</span>
                           <MapPinIcon className="h-4 w-4 mr-1" />
@@ -445,10 +445,10 @@ export function SecuritySettings() {
                     {!session.current && (
                       <button
                         onClick={() => handleEndSession(session.id)}
-                        className="text-error hover:text-error-dark transition-colors duration-fast p-2 touch-target"
+                        className="text-error hover:text-error-dark transition-colors duration-fast min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light"
                         title="End session"
                       >
-                        <TrashIcon className="h-4 w-4" />
+                        <TrashIcon className="h-5 w-5" />
                       </button>
                     )}
                   </div>

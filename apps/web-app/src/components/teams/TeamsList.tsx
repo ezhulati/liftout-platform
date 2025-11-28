@@ -161,7 +161,7 @@ export function TeamsList({ userType }: TeamsListProps) {
 
               {!isCompanyUser && (
                 <Menu as="div" className="relative">
-                  <Menu.Button className="p-2 text-text-tertiary hover:text-text-primary transition-colors duration-fast touch-target">
+                  <Menu.Button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast">
                     <EllipsisVerticalIcon className="h-5 w-5" />
                   </Menu.Button>
                   <Transition
@@ -173,14 +173,14 @@ export function TeamsList({ userType }: TeamsListProps) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-bg-surface py-1 shadow-lg ring-1 ring-border focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-lg bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
                           <Link
                             href={`/app/teams/${team.id}/edit`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
+                              'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Edit profile
@@ -193,7 +193,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/members`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
+                              'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Manage team members
@@ -206,7 +206,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/opportunities`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
+                              'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             View opportunities
@@ -219,7 +219,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                             href={`/app/teams/${team.id}/settings`}
                             className={classNames(
                               active ? 'bg-bg-alt' : '',
-                              'block px-4 py-2 text-base text-text-secondary transition-colors duration-fast'
+                              'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
                             )}
                           >
                             Profile settings

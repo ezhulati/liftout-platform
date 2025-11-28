@@ -25,13 +25,13 @@ function ToggleSwitch({ enabled, onChange, disabled = false }: ToggleSwitchProps
         enabled ? 'bg-navy' : 'bg-bg-alt'
       } ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy touch-target`}
+      } relative inline-flex flex-shrink-0 h-8 w-14 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy min-h-12 min-w-14 items-center`}
       disabled={disabled}
     >
       <span
         className={`${
-          enabled ? 'translate-x-5' : 'translate-x-0'
-        } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-base`}
+          enabled ? 'translate-x-6' : 'translate-x-0'
+        } pointer-events-none inline-block h-7 w-7 rounded-full bg-white shadow transform ring-0 transition duration-base`}
       />
     </button>
   );
@@ -203,9 +203,9 @@ export function NotificationSettings() {
                 [key]: true
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-success-dark bg-success-light hover:bg-success-light/80 min-h-9"
+            className="inline-flex items-center px-4 py-3 border border-transparent text-base font-medium rounded-lg text-success-dark bg-success-light hover:bg-success-light/80 min-h-12"
           >
-            <CheckCircleIcon className="h-4 w-4 mr-1" />
+            <CheckCircleIcon className="h-5 w-5 mr-2" />
             Enable all
           </button>
           <button
@@ -223,9 +223,9 @@ export function NotificationSettings() {
                 [key]: false
               }), {} as any),
             })}
-            className="inline-flex items-center px-3 py-2 border border-transparent text-xs font-medium rounded-md text-error-dark bg-error-light hover:bg-error-light/80 min-h-9"
+            className="inline-flex items-center px-4 py-3 border border-transparent text-base font-medium rounded-lg text-error-dark bg-error-light hover:bg-error-light/80 min-h-12"
           >
-            <XCircleIcon className="h-4 w-4 mr-1" />
+            <XCircleIcon className="h-5 w-5 mr-2" />
             Disable all
           </button>
         </div>
@@ -239,10 +239,10 @@ export function NotificationSettings() {
         </div>
         <div className="space-y-4">
           {emailNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
-                <p className="text-sm text-text-secondary">{notification.description}</p>
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+              <div className="flex-1 mr-4">
+                <p className="text-base font-medium text-text-primary">{notification.title}</p>
+                <p className="text-base text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.email[notification.key]}
@@ -261,10 +261,10 @@ export function NotificationSettings() {
         </div>
         <div className="space-y-4">
           {pushNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
-                <p className="text-sm text-text-secondary">{notification.description}</p>
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+              <div className="flex-1 mr-4">
+                <p className="text-base font-medium text-text-primary">{notification.title}</p>
+                <p className="text-base text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.push[notification.key]}
@@ -283,10 +283,10 @@ export function NotificationSettings() {
         </div>
         <div className="space-y-4">
           {inAppNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-text-primary">{notification.title}</p>
-                <p className="text-sm text-text-secondary">{notification.description}</p>
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+              <div className="flex-1 mr-4">
+                <p className="text-base font-medium text-text-primary">{notification.title}</p>
+                <p className="text-base text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.inApp[notification.key]}

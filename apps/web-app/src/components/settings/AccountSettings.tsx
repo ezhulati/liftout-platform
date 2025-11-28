@@ -278,26 +278,26 @@ export function AccountSettings() {
         </div>
         <div className="px-6 py-4 space-y-4">
           {/* Export Data */}
-          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-            <div>
-              <h5 className="text-sm font-medium text-text-primary">Export account data</h5>
-              <p className="text-sm text-text-secondary">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
+            <div className="mr-4">
+              <h5 className="text-base font-medium text-text-primary">Export account data</h5>
+              <p className="text-base text-text-secondary">
                 Download a copy of your account data including profile, applications, and messages.
               </p>
             </div>
             <button
               onClick={handleExportData}
               disabled={isExporting}
-              className={`btn-outline flex items-center ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`btn-outline flex items-center min-h-12 ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isExporting ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-tertiary mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-text-tertiary mr-2"></div>
                   Exporting...
                 </>
               ) : (
                 <>
-                  <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
+                  <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
                   Export data
                 </>
               )}
@@ -305,26 +305,26 @@ export function AccountSettings() {
           </div>
 
           {/* Import Settings */}
-          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-            <div>
-              <h5 className="text-sm font-medium text-text-primary">Import settings</h5>
-              <p className="text-sm text-text-secondary">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
+            <div className="mr-4">
+              <h5 className="text-base font-medium text-text-primary">Import settings</h5>
+              <p className="text-base text-text-secondary">
                 Import your settings from a previously exported file.
               </p>
             </div>
             <button
               onClick={handleImportSettings}
               disabled={isImporting}
-              className={`btn-outline flex items-center ${isImporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`btn-outline flex items-center min-h-12 ${isImporting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isImporting ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-tertiary mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-text-tertiary mr-2"></div>
                   Importing...
                 </>
               ) : (
                 <>
-                  <ArrowUpTrayIcon className="h-4 w-4 mr-2" />
+                  <ArrowUpTrayIcon className="h-5 w-5 mr-2" />
                   Import settings
                 </>
               )}
@@ -332,18 +332,18 @@ export function AccountSettings() {
           </div>
 
           {/* Reset Settings */}
-          <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-            <div>
-              <h5 className="text-sm font-medium text-text-primary">Reset settings</h5>
-              <p className="text-sm text-text-secondary">
+          <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
+            <div className="mr-4">
+              <h5 className="text-base font-medium text-text-primary">Reset settings</h5>
+              <p className="text-base text-text-secondary">
                 Reset all settings to their default values. This cannot be undone.
               </p>
             </div>
             <button
               onClick={() => setShowResetModal(true)}
-              className="flex items-center px-4 py-2 text-sm font-medium text-error-dark bg-error-light border border-error rounded-md hover:bg-error/20 transition-colors duration-fast"
+              className="flex items-center px-4 py-3 text-base font-medium text-error-dark bg-error-light border border-error rounded-lg hover:bg-error/20 transition-colors duration-fast min-h-12"
             >
-              <Cog6ToothIcon className="h-4 w-4 mr-2" />
+              <Cog6ToothIcon className="h-5 w-5 mr-2" />
               Reset settings
             </button>
           </div>
@@ -356,10 +356,10 @@ export function AccountSettings() {
           <h4 className="text-base font-medium text-text-primary">Privacy preferences</h4>
         </div>
         <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h5 className="text-sm font-medium text-text-primary">Marketing communications</h5>
-              <p className="text-sm text-text-secondary">
+          <div className="flex items-center justify-between min-h-16">
+            <div className="mr-4">
+              <h5 className="text-base font-medium text-text-primary">Marketing communications</h5>
+              <p className="text-base text-text-secondary">
                 Receive emails about new features, product updates, and industry insights.
               </p>
             </div>
@@ -367,12 +367,12 @@ export function AccountSettings() {
               onClick={handleMarketingConsentToggle}
               className={`${
                 settings.account.marketingConsent ? 'bg-navy' : 'bg-bg-alt'
-              } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy`}
+              } relative inline-flex flex-shrink-0 h-8 w-14 border-2 border-transparent rounded-full cursor-pointer transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy min-h-12 min-w-14 items-center`}
             >
               <span
                 className={`${
-                  settings.account.marketingConsent ? 'translate-x-5' : 'translate-x-0'
-                } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-base`}
+                  settings.account.marketingConsent ? 'translate-x-6' : 'translate-x-0'
+                } pointer-events-none inline-block h-7 w-7 rounded-full bg-white shadow transform ring-0 transition duration-base`}
               />
             </button>
           </div>
@@ -384,19 +384,19 @@ export function AccountSettings() {
         {/* Deactivate Account */}
         <div className="card">
           <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between min-h-20">
+              <div className="mr-4">
                 <h4 className="text-base font-medium text-text-primary flex items-center">
                   <PauseIcon className="h-5 w-5 text-gold mr-2" />
                   Deactivate account
                 </h4>
-                <p className="text-sm text-text-secondary mt-1">
+                <p className="text-base text-text-secondary mt-1">
                   Temporarily deactivate your account. You can reactivate it at any time by signing in.
                 </p>
               </div>
               <button
                 onClick={() => setShowDeactivateModal(true)}
-                className="bg-gold text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gold-700 transition-colors duration-fast focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold"
+                className="bg-gold text-white px-4 py-3 rounded-lg text-base font-medium hover:bg-gold-700 transition-colors duration-fast focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold min-h-12"
               >
                 Deactivate
               </button>
@@ -407,19 +407,19 @@ export function AccountSettings() {
         {/* Delete Account */}
         <div className="bg-error-light border border-error rounded-lg">
           <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between min-h-20">
+              <div className="mr-4">
                 <h4 className="text-base font-medium text-error-dark flex items-center">
                   <TrashIcon className="h-5 w-5 text-error mr-2" />
                   Delete account
                 </h4>
-                <p className="text-sm text-error-dark/80 mt-1">
+                <p className="text-base text-error-dark/80 mt-1">
                   Permanently delete your account and all associated data. This action cannot be undone.
                 </p>
               </div>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="btn-danger"
+                className="btn-danger min-h-12"
               >
                 Delete account
               </button>

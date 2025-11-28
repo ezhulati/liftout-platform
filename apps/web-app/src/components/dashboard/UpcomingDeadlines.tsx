@@ -137,8 +137,8 @@ export function UpcomingDeadlines() {
               <p className="text-base font-semibold text-gold-800">
                 {urgentDeadlines.length} urgent deadline{urgentDeadlines.length > 1 ? 's' : ''} approaching
               </p>
-              <p className="text-sm text-gold-700 mt-0.5">
-                Don't miss these important dates!
+              <p className="text-base text-gold-700 mt-0.5">
+                Do not miss these important dates!
               </p>
             </div>
           </div>
@@ -178,10 +178,10 @@ export function UpcomingDeadlines() {
                   </div>
                   <p className="text-base text-text-secondary mt-1">{deadline.description}</p>
                   <div className="flex items-center justify-between mt-2">
-                    <p className="text-sm text-text-tertiary">
+                    <p className="text-base text-text-tertiary">
                       Due {format(new Date(deadline.dueDate), 'MMM d, yyyy')}
                     </p>
-                    <p className={`text-sm font-medium ${
+                    <p className={`text-base font-medium ${
                       isUrgent ? 'text-error' : 'text-text-tertiary'
                     }`}>
                       {formatDistanceToNow(new Date(deadline.dueDate), { addSuffix: true })}
