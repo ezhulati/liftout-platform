@@ -243,35 +243,16 @@ export default async function BlogArticlePage({ params }: PageProps) {
               {article.metaDescription}
             </p>
 
-            {/* Author - with avatar and link */}
-            <div className="flex items-start gap-4">
-              {article.author.avatar ? (
-                <Image
-                  src={article.author.avatar}
-                  alt={article.author.name}
-                  width={56}
-                  height={56}
-                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
-                />
-              ) : (
-                <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-semibold text-xl">
-                    {article.author.name.charAt(0)}
-                  </span>
-                </div>
-              )}
-              <div className="pt-1">
-                <Link
-                  href="/blog/author/nick-acimovic"
-                  className="text-white font-semibold text-lg hover:text-gold transition-colors"
-                >
-                  {article.author.name}
-                </Link>
-                {article.author.bio && (
-                  <p className="text-white/70 text-base leading-relaxed mt-1 max-w-xl">{article.author.bio}</p>
-                )}
-              </div>
-            </div>
+            {/* Author byline */}
+            <p className="text-white/80 text-base">
+              By{' '}
+              <Link
+                href="/blog/author/nick-acimovic"
+                className="text-white font-medium hover:text-gold transition-colors"
+              >
+                {article.author.name}
+              </Link>
+            </p>
           </div>
         </section>
 
