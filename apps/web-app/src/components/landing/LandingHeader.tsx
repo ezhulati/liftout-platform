@@ -259,11 +259,12 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Primary button - solid fill, ONE per screen, Verb+Noun label */}
             <Link
               href="/auth/signup"
-              className={`group relative min-h-12 px-6 text-lg hidden sm:inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 overflow-hidden ${
+              className={`group relative min-h-12 px-6 text-lg hidden sm:inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${
                 useTransparentStyle
-                  ? 'bg-white text-[hsl(220,60%,20%)] hover:bg-gray-50 shadow-lg shadow-black/10'
-                  : 'bg-[hsl(220,60%,20%)] text-white shadow-lg shadow-navy/30 hover:shadow-xl hover:shadow-navy/40 hover:-translate-y-0.5 hover:bg-[hsl(220,60%,25%)]'
+                  ? 'bg-white hover:bg-gray-50 shadow-black/10'
+                  : 'text-white shadow-navy/30 hover:shadow-navy/40'
               }`}
+              style={{ backgroundColor: useTransparentStyle ? undefined : 'hsl(220, 60%, 20%)', color: useTransparentStyle ? 'hsl(220, 60%, 20%)' : undefined }}
             >
               {/* Inner highlight for depth */}
               <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -356,7 +357,8 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Primary button first on mobile (stacked vertically) */}
             <Link
               href="/auth/signup"
-              className="group relative flex items-center justify-center w-full px-4 py-4 bg-[hsl(220,60%,20%)] text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-navy/30 overflow-hidden hover:bg-[hsl(220,60%,25%)]"
+              className="group relative flex items-center justify-center w-full px-4 py-4 text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-navy/30 overflow-hidden"
+              style={{ backgroundColor: 'hsl(220, 60%, 20%)' }}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
