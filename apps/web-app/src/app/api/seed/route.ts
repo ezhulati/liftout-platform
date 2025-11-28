@@ -1,79 +1,151 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { firebaseStatus } from '@/lib/firebase';
+import { prisma } from '@liftout/database';
+import bcrypt from 'bcryptjs';
+
+// Secret key to protect this endpoint
+const SEED_SECRET = process.env.SEED_SECRET || 'liftout-seed-2024';
 
 export async function POST(request: NextRequest) {
   try {
-    // Enhanced production protection
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_ALLOW_SEEDING) {
-      return NextResponse.json(
-        { error: 'Database seeding is not allowed in production' },
-        { status: 403 }
-      );
-    }
+    // Check for secret key in header or query param
+    const authHeader = request.headers.get('x-seed-secret');
+    const { searchParams } = new URL(request.url);
+    const querySecret = searchParams.get('secret');
 
-    // Validate Firebase configuration
-    if (!firebaseStatus.isConfigured) {
+    if (authHeader !== SEED_SECRET && querySecret !== SEED_SECRET) {
       return NextResponse.json(
-        { 
-          error: 'Firebase not properly configured', 
-          details: 'Using fallback configuration - cannot seed database'
-        },
-        { status: 400 }
-      );
-    }
-
-    // Optional API key validation for development
-    const authHeader = request.headers.get('authorization');
-    const expectedKey = process.env.SEED_API_KEY;
-    if (expectedKey && authHeader !== `Bearer ${expectedKey}`) {
-      return NextResponse.json(
-        { error: 'Invalid API key' },
+        { error: 'Unauthorized - provide x-seed-secret header or ?secret= query param' },
         { status: 401 }
       );
     }
 
-    console.log('🌱 Starting database seeding...');
-    
-    // Dynamically import seedDatabase to avoid Firebase initialization during build
-    const { seedDatabase } = await import('@/scripts/seed-database');
-    const result = await seedDatabase();
-    
-    if (result.success) {
-      console.log('✅ Database seeding completed successfully');
-      return NextResponse.json(result, { status: 200 });
+    const results: string[] = [];
+
+    // Hash password for demo users
+    const demoPassword = await bcrypt.hash('password', 12);
+
+    // Create demo team user
+    const demoUser = await prisma.user.upsert({
+      where: { email: 'demo@example.com' },
+      update: { passwordHash: demoPassword },
+      create: {
+        email: 'demo@example.com',
+        passwordHash: demoPassword,
+        firstName: 'Demo',
+        lastName: 'User',
+        userType: 'individual',
+        emailVerified: true,
+        profileCompleted: true,
+        profile: {
+          create: {
+            title: 'Team Lead',
+            location: 'San Francisco, CA',
+            bio: 'Demo team lead user for testing the platform.',
+            yearsExperience: 10,
+            availabilityStatus: 'open_to_opportunities',
+            salaryExpectationMin: 180000,
+            salaryExpectationMax: 250000,
+            remotePreference: 'hybrid',
+            skillsSummary: 'Leadership, Full-Stack Development, Team Management'
+          }
+        }
+      }
+    });
+    results.push(`Created/updated demo user: ${demoUser.email}`);
+
+    // Create demo company user
+    const demoCompanyUser = await prisma.user.upsert({
+      where: { email: 'company@example.com' },
+      update: { passwordHash: demoPassword },
+      create: {
+        email: 'company@example.com',
+        passwordHash: demoPassword,
+        firstName: 'Company',
+        lastName: 'Demo',
+        userType: 'company',
+        emailVerified: true,
+        profileCompleted: true
+      }
+    });
+    results.push(`Created/updated company user: ${demoCompanyUser.email}`);
+
+    // Check if demo company exists, create if not
+    const existingCompany = await prisma.company.findUnique({
+      where: { slug: 'demo-company' }
+    });
+
+    if (!existingCompany) {
+      const demoCompany = await prisma.company.create({
+        data: {
+          name: 'Demo Company',
+          slug: 'demo-company',
+          description: 'Demo company for testing the platform.',
+          industry: 'Technology',
+          companySize: 'large',
+          foundedYear: 2010,
+          websiteUrl: 'https://demo-company.com',
+          headquartersLocation: 'New York, NY',
+          companyCulture: 'Innovative and collaborative.',
+          employeeCount: 500,
+          verificationStatus: 'verified',
+          verifiedAt: new Date(),
+          users: {
+            create: {
+              userId: demoCompanyUser.id,
+              role: 'admin',
+              isPrimaryContact: true,
+              title: 'Head of Talent Acquisition'
+            }
+          }
+        }
+      });
+      results.push(`Created demo company: ${demoCompany.name}`);
     } else {
-      console.error('❌ Database seeding failed:', result.error);
-      return NextResponse.json(result, { status: 500 });
+      // Make sure company user is linked
+      const existingMembership = await prisma.companyUser.findFirst({
+        where: {
+          userId: demoCompanyUser.id,
+          companyId: existingCompany.id
+        }
+      });
+
+      if (!existingMembership) {
+        await prisma.companyUser.create({
+          data: {
+            userId: demoCompanyUser.id,
+            companyId: existingCompany.id,
+            role: 'admin',
+            isPrimaryContact: true,
+            title: 'Head of Talent Acquisition'
+          }
+        });
+        results.push(`Linked company user to existing demo company`);
+      } else {
+        results.push(`Demo company already exists and user is linked`);
+      }
     }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Demo data seeded successfully',
+      results
+    });
   } catch (error) {
-    console.error('Seed API error:', error);
+    console.error('Seed error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        message: 'Failed to seed database',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: 'Failed to seed data', details: String(error) },
       { status: 500 }
     );
   }
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { 
-      message: 'Database Seeding API',
-      usage: 'Use POST to seed the database',
-      environment: process.env.NODE_ENV,
-      firebaseStatus: {
-        configured: firebaseStatus.isConfigured,
-        projectId: firebaseStatus.projectId,
-        usingFallback: firebaseStatus.usingFallback
-      },
-      requirements: {
-        development: 'NODE_ENV !== production OR NEXT_PUBLIC_ALLOW_SEEDING=true',
-        authentication: 'Optional SEED_API_KEY environment variable'
-      }
-    },
-    { status: 200 }
-  );
+  return NextResponse.json({
+    message: 'POST to this endpoint with secret to seed demo data',
+    usage: 'POST /api/seed?secret=liftout-seed-2024 OR with x-seed-secret header',
+    credentials: {
+      team: { email: 'demo@example.com', password: 'password' },
+      company: { email: 'company@example.com', password: 'password' }
+    }
+  });
 }
