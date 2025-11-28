@@ -82,7 +82,7 @@ export function LandingFeatures() {
               style={{ transitionDelay: isVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
                 <feature.icon className="w-6 h-6 text-navy" aria-hidden="true" />
               </div>
 

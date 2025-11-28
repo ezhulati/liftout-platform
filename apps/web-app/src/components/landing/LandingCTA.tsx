@@ -10,40 +10,40 @@ export function LandingCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-24 lg:py-32 bg-[hsl(220,65%,15%)]"
+      className="py-24 lg:py-32 dark-section"
       aria-labelledby="cta-heading"
     >
       <div className={`max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <h2
           id="cta-heading"
-          className="font-heading text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl font-bold text-on-dark tracking-tight leading-tight mb-6"
         >
           Ready to hire a team that works from day one?
         </h2>
 
-        <p className="text-white/80 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+        <p className="text-on-dark-muted text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
           Join 150+ companies who've discovered a smarter alternative to individual hiring.
         </p>
 
-        {/* Single primary CTA - white button on dark bg for contrast */}
+        {/* Single primary CTA - white button on dark bg for contrast (Practical UI) */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Link
             href="/auth/signup"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-white text-[hsl(220,65%,15%)] font-semibold hover:bg-white/90 transition-colors min-h-[52px] group text-lg"
+            className="btn-primary-on-dark gap-2 px-8 py-4 text-lg group"
           >
             Browse verified teams
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
           <Link
             href="/for-teams"
-            className="inline-flex items-center justify-center px-8 py-4 rounded-lg border-2 border-white/30 text-white font-semibold hover:bg-white/10 transition-colors min-h-[52px] text-lg"
+            className="btn-secondary-on-dark px-8 py-4 text-lg"
           >
             List your team
           </Link>
         </div>
 
         {/* Simple trust line */}
-        <p className="text-white/60 text-sm text-center">
+        <p className="text-on-dark-subtle text-sm text-center mx-auto">
           Free to explore · No credit card required · NDA-protected
         </p>
       </div>

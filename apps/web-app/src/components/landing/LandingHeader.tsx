@@ -66,9 +66,9 @@ export function LandingHeader() {
             <Image
               src="/Liftout-logo-dark.png"
               alt="Liftout"
-              width={160}
-              height={44}
-              className="h-11 w-auto"
+              width={240}
+              height={66}
+              className="h-[66px] w-auto"
               priority
             />
           </Link>

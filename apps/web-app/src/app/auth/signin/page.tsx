@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { signIn as nextAuthSignIn } from 'next-auth/react';
 import { DEMO_ACCOUNTS } from '@/lib/demo-accounts';
@@ -65,30 +66,35 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex bg-bg">
-      {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-navy relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gold/10 blur-3xl" />
-          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-gold/5 blur-3xl" />
-        </div>
+      {/* Left side - Branding with background image */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-no-repeat"
+          style={{ backgroundImage: 'url(/signin-hero.jpeg)', backgroundPosition: '65% center' }}
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center shadow-gold transition-all duration-fast group-hover:shadow-lg">
-              <span className="text-navy-900 font-heading font-bold text-xl">L</span>
-            </div>
-            <span className="font-heading font-bold text-2xl tracking-tight">Liftout</span>
+          <Link href="/" className="group">
+            <Image
+              src="/Liftout-logo-white.png"
+              alt="Liftout"
+              width={240}
+              height={66}
+              className="h-[66px] w-auto transition-opacity duration-fast group-hover:opacity-80"
+            />
           </Link>
 
           {/* Content */}
           <div>
-            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight">
+            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
               Strategic Team
               <span className="block text-gold">Acquisition Platform</span>
             </h1>
-            <p className="text-navy-200 text-lg leading-relaxed max-w-md">
+            <p className="text-white/90 text-lg leading-relaxed max-w-md">
               Connect with proven, intact teams ready for new opportunities.
               Transform your growth strategy today.
             </p>
@@ -98,11 +104,11 @@ export default function SignInPage() {
           <div className="flex gap-8">
             <div>
               <p className="text-gold font-heading text-3xl font-bold">85%</p>
-              <p className="text-navy-300 text-sm">Faster Integration</p>
+              <p className="text-white/70 text-sm">Faster Integration</p>
             </div>
             <div>
               <p className="text-gold font-heading text-3xl font-bold">3x</p>
-              <p className="text-navy-300 text-sm">Productivity Gain</p>
+              <p className="text-white/70 text-sm">Productivity Gain</p>
             </div>
           </div>
         </div>

@@ -38,12 +38,12 @@ export function TeamHero() {
           {/* Left - Copy */}
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Icon badge */}
-            <div className="w-16 h-16 rounded-xl bg-gold flex items-center justify-center mb-8 shadow-gold">
-              <UserGroupIcon className="w-8 h-8 text-navy-900" aria-hidden="true" />
+            <div className="w-16 h-16 rounded-xl bg-gold flex items-center justify-center mb-8 shadow-lg shadow-gold/30">
+              <UserGroupIcon className="w-8 h-8 text-on-gold" aria-hidden="true" />
             </div>
 
             {/* Eyebrow */}
-            <p className="text-gold-700 font-semibold tracking-wider uppercase text-sm mb-4">
+            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-gold-dark">
               For Teams
             </p>
 
@@ -61,8 +61,8 @@ export function TeamHero() {
 
             {/* Confidentiality callout (#47 - reduce risk) */}
             <div className="flex items-center gap-4 mb-8 p-4 bg-bg-elevated rounded-lg border border-border">
-              <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
-                <ShieldCheckIcon className="w-5 h-5 text-gold-700" aria-hidden="true" />
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gold/20">
+                <ShieldCheckIcon className="w-5 h-5 text-gold-dark" aria-hidden="true" />
               </div>
               <div>
                 <p className="font-semibold text-text-primary">100% Confidential</p>
@@ -79,12 +79,12 @@ export function TeamHero() {
                   style={{ transitionDelay: `${(index + 2) * 100}ms` }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
-                      <CheckIcon className="w-3 h-3 text-gold-700" aria-hidden="true" />
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
+                      <CheckIcon className="w-3 h-3 text-gold-dark" aria-hidden="true" />
                     </div>
                     <span className="text-text-secondary text-sm leading-snug">{usp.text}</span>
                   </div>
-                  <span className="text-gold-700 font-semibold text-sm whitespace-nowrap">{usp.stat}</span>
+                  <span className="font-semibold text-sm whitespace-nowrap text-gold-dark">{usp.stat}</span>
                 </div>
               ))}
             </div>
@@ -93,14 +93,14 @@ export function TeamHero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/signup?type=team"
-                className="btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
+                className="btn-secondary min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
                 Register your team free
                 <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
               </Link>
               <Link
                 href="#features"
-                className="min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-2 border-2 border-border text-text-primary bg-transparent hover:bg-bg-elevated hover:border-border-hover transition-all duration-fast ease-out-quart"
+                className="btn-outline min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-2"
               >
                 See how it works
               </Link>
@@ -143,8 +143,8 @@ export function TeamHero() {
 
             {/* Stats card - top right */}
             <div className={`absolute -top-4 -right-4 bg-gold rounded-xl p-4 shadow-lg transition-all duration-700 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <p className="text-navy-900 font-bold text-2xl">150+</p>
-              <p className="text-navy-900/70 text-xs">teams matched</p>
+              <p className="font-bold text-2xl text-on-gold">150+</p>
+              <p className="text-xs text-navy-900/70">teams matched</p>
             </div>
           </div>
         </div>

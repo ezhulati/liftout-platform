@@ -76,9 +76,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ) => {
     // Size classes for select
     const sizeClasses = {
-      sm: 'py-2 text-sm min-h-[40px]',
+      sm: 'py-2 text-sm min-h-10',
       md: '', // Uses default 48px from CSS
-      lg: 'py-4 text-lg min-h-[56px]',
+      lg: 'py-4 text-lg min-h-14',
     };
 
     const selectClasses = [

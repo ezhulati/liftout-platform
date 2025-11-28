@@ -5,7 +5,7 @@
   "description": "Liftout API Server",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "lsof -ti:8000 | xargs kill -9 2>/dev/null || true; tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",

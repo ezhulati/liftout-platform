@@ -82,7 +82,7 @@ export function TeamFeatures() {
           ref={featuresRef as React.RefObject<HTMLDivElement>}
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <p className="text-gold-700 font-semibold text-base mb-3">
+          <p className="font-semibold text-base mb-3 text-gold-dark">
             Platform features
           </p>
           <h2
@@ -110,8 +110,8 @@ export function TeamFeatures() {
               style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-14 h-14 rounded-lg bg-gold flex items-center justify-center mb-6 transition-all duration-base ease-out-quart group-hover:bg-gold-dark group-hover:shadow-gold group-hover:scale-105">
-                <feature.icon className="w-7 h-7 text-navy-900" aria-hidden="true" />
+              <div className="w-14 h-14 rounded-lg bg-gold flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105 shadow-lg shadow-gold/30">
+                <feature.icon className="w-7 h-7 text-on-gold" aria-hidden="true" />
               </div>
 
               {/* Feature title */}
@@ -159,8 +159,8 @@ export function TeamFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-16 h-16 rounded-full bg-gold mx-auto mb-4 flex items-center justify-center shadow-gold">
-                  <span className="font-heading text-xl font-bold text-navy-900">{item.step}</span>
+                <div className="w-16 h-16 rounded-full bg-gold mx-auto mb-4 flex items-center justify-center shadow-lg shadow-gold/30">
+                  <span className="font-heading text-xl font-bold text-on-gold">{item.step}</span>
                 </div>
                 {/* Title */}
                 <h4 className="font-heading text-lg font-bold text-text-primary mb-2">

@@ -73,9 +73,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     // Size classes for input
     const sizeClasses = {
-      sm: 'py-2 text-sm min-h-[40px]',
+      sm: 'py-2 text-sm min-h-10',
       md: '', // Uses default 48px from CSS
-      lg: 'py-4 text-lg min-h-[56px]',
+      lg: 'py-4 text-lg min-h-14',
     };
 
     // Padding for icons

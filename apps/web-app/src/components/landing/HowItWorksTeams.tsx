@@ -37,7 +37,7 @@ export function HowItWorksTeams() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-gold-700 font-semibold text-base mb-3">
+          <p className="font-semibold text-base mb-3 text-gold-dark">
             How it works
           </p>
           <h2
@@ -66,9 +66,9 @@ export function HowItWorksTeams() {
               {/* Step number and icon */}
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center">
-                  <span className="font-heading text-lg font-bold text-navy-900">{step.number}</span>
+                  <span className="font-heading text-lg font-bold text-on-gold">{step.number}</span>
                 </div>
-                <step.icon className="w-6 h-6 text-gold-700" aria-hidden="true" />
+                <step.icon className="w-6 h-6 text-gold-dark" aria-hidden="true" />
               </div>
 
               {/* Content */}

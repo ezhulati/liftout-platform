@@ -127,15 +127,15 @@ export default function SignUpPage() {
             <Image
               src="/Liftout-logo-white.png"
               alt="Liftout"
-              width={400}
-              height={112}
-              className="h-28 w-auto transition-opacity duration-fast group-hover:opacity-80"
+              width={240}
+              height={66}
+              className="h-[66px] w-auto transition-opacity duration-fast group-hover:opacity-80"
             />
           </Link>
 
           {/* Content */}
           <div>
-            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight">
+            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
               Join the Future of
               <span className="block text-gold">Team Acquisition</span>
             </h1>

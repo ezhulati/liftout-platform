@@ -82,7 +82,7 @@ export function CompanyFeatures() {
           ref={featuresRef as React.RefObject<HTMLDivElement>}
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <p className="text-navy font-semibold text-base mb-3">
+          <p className="font-semibold text-base mb-3 text-navy">
             Platform features
           </p>
           <h2
@@ -110,7 +110,7 @@ export function CompanyFeatures() {
               style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-base ease-out-quart group-hover:bg-navy-600 group-hover:shadow-navy group-hover:scale-105">
+              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105 shadow-lg shadow-navy/30">
                 <feature.icon className="w-7 h-7 text-gold" aria-hidden="true" />
               </div>
 
@@ -159,7 +159,7 @@ export function CompanyFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-16 h-16 rounded-full bg-navy mx-auto mb-4 flex items-center justify-center shadow-navy">
+                <div className="w-16 h-16 rounded-full bg-navy mx-auto mb-4 flex items-center justify-center shadow-lg shadow-navy/30">
                   <span className="font-heading text-xl font-bold text-gold">{item.step}</span>
                 </div>
                 {/* Connector line (except last) */}

@@ -1,90 +1,81 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-
-const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
-
-/**
- * Helper to get authorization header for API server requests
- */
-async function getAuthHeaders(session: any): Promise<HeadersInit> {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  if (session?.accessToken) {
-    headers['Authorization'] = `Bearer ${session.accessToken}`;
-  }
-
-  return headers;
-}
-
-/**
- * Helper to proxy requests to the API server
- */
-async function proxyToApiServer(
-  path: string,
-  options: RequestInit,
-  session: any
-): Promise<Response> {
-  const headers = await getAuthHeaders(session);
-
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      ...headers,
-      ...(options.headers || {}),
-    },
-  });
-
-  return response;
-}
+import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
+import { getMockOpportunityById } from '@/lib/mock-data';
 
 // GET /api/opportunities/[id] - Get opportunity details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  try {
-    const response = await proxyToApiServer(
-      `/api/opportunities/${params.id}`,
-      { method: 'GET' },
-      session
-    );
+  // Check if API server is available
+  const apiAvailable = await isApiServerAvailable();
 
-    const data = await response.json();
+  if (apiAvailable) {
+    try {
+      const response = await proxyToApiServer(
+        `/api/opportunities/${id}`,
+        { method: 'GET' },
+        session
+      );
 
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Fall back to mock data
+        const mockOpp = getMockOpportunityById(id);
+        if (mockOpp) {
+          return NextResponse.json({ opportunity: mockOpp, _mock: true });
+        }
+        return NextResponse.json(data, { status: response.status });
+      }
+
+      // Transform response to match frontend expectations
+      if (data.success && data.data) {
+        return NextResponse.json({ opportunity: data.data });
+      }
+
+      return NextResponse.json(data);
+    } catch (error) {
+      console.error('Error fetching opportunity:', error);
+      // Fall back to mock data
+      const mockOpp = getMockOpportunityById(id);
+      if (mockOpp) {
+        return NextResponse.json({ opportunity: mockOpp, _mock: true });
+      }
+      return NextResponse.json(
+        { error: 'Failed to fetch opportunity' },
+        { status: 500 }
+      );
     }
-
-    // Transform response to match frontend expectations
-    if (data.success && data.data) {
-      return NextResponse.json({ opportunity: data.data });
-    }
-
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching opportunity:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch opportunity' },
-      { status: 500 }
-    );
   }
+
+  // API server not available, use mock data
+  const mockOpp = getMockOpportunityById(id);
+  if (mockOpp) {
+    return NextResponse.json({ opportunity: mockOpp, _mock: true });
+  }
+  return NextResponse.json(
+    { error: 'Opportunity not found' },
+    { status: 404 }
+  );
 }
 
 // PUT /api/opportunities/[id] - Update opportunity
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -100,8 +91,18 @@ export async function PUT(
   try {
     const body = await request.json();
 
+    const apiAvailable = await isApiServerAvailable();
+    if (!apiAvailable) {
+      // For mock mode, just return success with the updated data
+      return NextResponse.json({
+        opportunity: { id, ...body },
+        _mock: true,
+        message: 'Update simulated (mock mode)'
+      });
+    }
+
     const response = await proxyToApiServer(
-      `/api/opportunities/${params.id}`,
+      `/api/opportunities/${id}`,
       {
         method: 'PUT',
         body: JSON.stringify(body),
@@ -132,9 +133,10 @@ export async function PUT(
 // DELETE /api/opportunities/[id] - Delete opportunity
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -147,9 +149,18 @@ export async function DELETE(
     );
   }
 
+  const apiAvailable = await isApiServerAvailable();
+  if (!apiAvailable) {
+    return NextResponse.json({
+      success: true,
+      message: 'Delete simulated (mock mode)',
+      _mock: true
+    });
+  }
+
   try {
     const response = await proxyToApiServer(
-      `/api/opportunities/${params.id}`,
+      `/api/opportunities/${id}`,
       { method: 'DELETE' },
       session
     );
@@ -173,9 +184,10 @@ export async function DELETE(
 // PATCH /api/opportunities/[id] - Update opportunity status
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -191,8 +203,17 @@ export async function PATCH(
   try {
     const body = await request.json();
 
+    const apiAvailable = await isApiServerAvailable();
+    if (!apiAvailable) {
+      return NextResponse.json({
+        opportunity: { id, status: body.status },
+        _mock: true,
+        message: 'Status update simulated (mock mode)'
+      });
+    }
+
     const response = await proxyToApiServer(
-      `/api/opportunities/${params.id}/status`,
+      `/api/opportunities/${id}/status`,
       {
         method: 'PATCH',
         body: JSON.stringify(body),

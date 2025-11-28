@@ -78,9 +78,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Size classes
     const sizeClasses = {
-      sm: 'px-4 py-2 text-sm min-h-[40px]',
+      sm: 'px-4 py-2 text-sm min-h-10',
       md: '', // Uses default from CSS
-      lg: 'px-8 py-4 text-lg min-h-[56px]',
+      lg: 'px-8 py-4 text-lg min-h-14',
     };
 
     const baseClass = variantClasses[variant];

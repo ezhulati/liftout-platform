@@ -1014,7 +1014,122 @@
   .form-gap { @apply space-y-6; } /* 24px between fields */
   .label-gap { @apply mb-1.5; } /* 6px label to field gap */
 
-  /* Dark Section Backgrounds */
-  .bg-section-dark { @apply bg-navy-900; }
-  .bg-section-darker { @apply bg-navy-950; }
+  /* Dark Section Backgrounds - Using explicit HSL values for reliability */
+  .bg-section-dark {
+    background-color: hsl(220, 65%, 15%); /* navy-900 */
+  }
+  .bg-section-darker {
+    background-color: hsl(220, 70%, 10%); /* navy-950 */
+  }
+
+  /* ============================================
+     PRACTICAL UI DARK SECTION COMPONENTS
+     For CTA sections, footers, dark backgrounds
+     ============================================ */
+
+  /* Dark section container - use for CTAs, footers */
+  .dark-section {
+    background-color: hsl(220, 65%, 15%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  .dark-section-deep {
+    background-color: hsl(220, 70%, 10%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  /* Primary button on dark background - white fill */
+  .btn-primary-on-dark {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(220, 65%, 15%);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-primary-on-dark:hover {
+    background-color: hsl(0, 0%, 95%);
+    color: hsl(220, 65%, 15%);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary-on-dark:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0, 0%, 100%, 0.4);
+  }
+
+  /* Secondary button on dark background - outlined white */
+  .btn-secondary-on-dark {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: transparent;
+    color: hsl(0, 0%, 100%);
+    border: 2px solid hsl(0, 0%, 100%, 0.3);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-secondary-on-dark:hover {
+    background-color: hsl(0, 0%, 100%, 0.1);
+    border-color: hsl(0, 0%, 100%, 0.5);
+    color: hsl(0, 0%, 100%);
+  }
+
+  .btn-secondary-on-dark:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0, 0%, 100%, 0.4);
+  }
+
+  /* Text colors for dark sections */
+  .text-on-dark {
+    color: hsl(0, 0%, 100%);
+  }
+
+  .text-on-dark-muted {
+    color: hsl(0, 0%, 100%, 0.8);
+  }
+
+  .text-on-dark-subtle {
+    color: hsl(0, 0%, 100%, 0.6);
+  }
+
+  /* ============================================
+     PRACTICAL UI LIGHT SECTION COMPONENTS
+     For sections on light/cream backgrounds
+     ============================================ */
+
+  /* Navy accent text - for eyebrow labels, accents on light bg */
+  .text-navy {
+    color: hsl(220, 70%, 50%);
+  }
+
+  /* Navy icon/element background */
+  .bg-navy {
+    background-color: hsl(220, 70%, 50%);
+  }
+
+  /* Gold accent text - for eyebrow labels, accents on light bg */
+  .text-gold {
+    color: hsl(38, 70%, 50%);
+  }
+
+  /* Gold darker text - for better contrast */
+  .text-gold-dark {
+    color: hsl(38, 65%, 40%);
+  }
+
+  /* Gold icon/element background */
+  .bg-gold {
+    background-color: hsl(38, 70%, 50%);
+  }
+
+  /* Text on gold background (dark navy) */
+  .text-on-gold {
+    color: hsl(220, 65%, 15%);
+  }
 }

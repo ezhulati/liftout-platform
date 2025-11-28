@@ -5,7 +5,7 @@ export function LandingFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[hsl(220,70%,10%)]" role="contentinfo">
+    <footer className="dark-section-deep" role="contentinfo">
       {/* Pre-sale support banner (#12) */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
@@ -56,9 +56,9 @@ export function LandingFooter() {
               <Image
                 src="/Liftout-logo-white.png"
                 alt="Liftout"
-                width={160}
-                height={44}
-                className="h-10 w-auto"
+                width={320}
+                height={88}
+                className="h-20 w-auto"
               />
             </Link>
 
@@ -66,23 +66,6 @@ export function LandingFooter() {
               The strategic alternative to individual hiring and costly acquisitions.
               Connect with proven teams ready for new challenges.
             </p>
-
-            {/* Founder note - adds personality (#29, #35) */}
-            <div className="bg-white/5 rounded-xl p-5 mb-6 max-w-md">
-              <p className="text-white/70 text-sm leading-relaxed mb-4">
-                "We started Liftout because we saw too many great teams broken apart
-                by individual job changes. There had to be a better way."
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
-                  <span className="font-semibold text-gold text-sm">JL</span>
-                </div>
-                <div>
-                  <p className="text-white font-medium text-sm">James Liu</p>
-                  <p className="text-white/50 text-xs">Founder & CEO</p>
-                </div>
-              </div>
-            </div>
 
             {/* Social links */}
             <div className="flex gap-4">

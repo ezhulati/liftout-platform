@@ -31,7 +31,7 @@ export function CompanyCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-20 lg:py-28 overflow-hidden bg-navy-900"
+      className="relative py-20 lg:py-28 overflow-hidden dark-section"
       aria-labelledby="company-cta-heading"
     >
       {/* Background decorative elements */}
@@ -44,7 +44,7 @@ export function CompanyCTA() {
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `linear-gradient(hsl(38, 50%, 55%) 1px, transparent 1px), linear-gradient(90deg, hsl(38, 50%, 55%) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgb(var(--color-gold) / 0.3) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-gold) / 0.3) 1px, transparent 1px)`,
             backgroundSize: '64px 64px',
           }}
         />
@@ -52,21 +52,21 @@ export function CompanyCTA() {
 
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="text-gold font-semibold tracking-wider uppercase text-sm mb-4">
+        <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-gold">
           Ready to Transform Your Talent Strategy?
         </p>
 
         {/* Headline */}
         <h2
           id="company-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6"
         >
           Acquire the teams that will
-          <span className="block text-gold mt-2">drive your next phase of growth</span>
+          <span className="block mt-2 text-gold">drive your next phase of growth</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
+        <p className="font-body text-on-dark-muted text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
           Stop building teams from scratch. Access proven, intact teams with verified track records
           who are ready to deliver immediate impact.
         </p>
@@ -74,19 +74,19 @@ export function CompanyCTA() {
         {/* Trust reassurances */}
         <div className="flex flex-wrap justify-center gap-6 mb-10">
           {trustReassurances.map((item) => (
-            <div key={item.text} className="flex items-center gap-2 text-white/80">
+            <div key={item.text} className="flex items-center gap-2 text-on-dark-muted">
               <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
               <span className="text-base font-medium">{item.text}</span>
             </div>
           ))}
         </div>
 
-        {/* CTA buttons - left aligned per Practical UI, primary first */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:justify-start justify-center mb-8">
-          {/* Primary CTA - solid white on dark bg */}
+        {/* CTA buttons - centered per Practical UI */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          {/* Primary CTA - white on dark bg per Practical UI */}
           <Link
             href="/auth/signup?type=company"
-            className="group inline-flex items-center justify-center gap-3 min-h-[52px] px-8 py-3 rounded-md bg-white text-navy-900 font-semibold text-lg hover:bg-white/90 transition-all duration-fast"
+            className="btn-primary-on-dark gap-3 px-8 py-3 text-lg group"
           >
             Browse verified teams
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -95,18 +95,18 @@ export function CompanyCTA() {
           {/* Secondary CTA - outline on dark bg */}
           <Link
             href="/for-teams"
-            className="group min-h-[52px] px-8 py-3 rounded-md text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast"
+            className="btn-secondary-on-dark px-8 py-3 text-lg"
           >
             Register a team
           </Link>
         </div>
 
         {/* Sign in link */}
-        <p className="text-white/70 text-base">
+        <p className="text-on-dark-muted text-base">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
-            className="text-gold hover:text-gold-300 underline underline-offset-4 transition-colors duration-fast"
+            className="text-gold underline underline-offset-4 transition-colors hover:text-white"
           >
             Sign in here
           </Link>
@@ -121,8 +121,8 @@ export function CompanyCTA() {
                 className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
-                <h3 className="font-heading text-lg font-bold text-white mb-2">{item.title}</h3>
-                <p className="font-body text-white/70 text-base leading-relaxed">{item.description}</p>
+                <h3 className="font-heading text-lg font-bold text-on-dark mb-2">{item.title}</h3>
+                <p className="font-body text-on-dark-muted text-base leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>

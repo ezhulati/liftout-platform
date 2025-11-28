@@ -31,7 +31,7 @@ export function TeamCTA() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-20 lg:py-28 overflow-hidden bg-navy-900"
+      className="relative py-20 lg:py-28 overflow-hidden dark-section"
       aria-labelledby="team-cta-heading"
     >
       {/* Background decorative elements */}
@@ -44,7 +44,7 @@ export function TeamCTA() {
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `linear-gradient(hsl(38, 50%, 55%) 1px, transparent 1px), linear-gradient(90deg, hsl(38, 50%, 55%) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgb(var(--color-gold) / 0.3) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-gold) / 0.3) 1px, transparent 1px)`,
             backgroundSize: '64px 64px',
           }}
         />
@@ -52,17 +52,17 @@ export function TeamCTA() {
 
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="text-gold font-semibold tracking-wider uppercase text-sm mb-4">
+        <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-gold">
           Your team's next chapter awaits
         </p>
 
         {/* Headline */}
         <h2
           id="team-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6"
         >
           Your next opportunity should not
-          <span className="block text-gold mt-2">break up what you have built</span>
+          <span className="block mt-2 text-gold">break up what you have built</span>
         </h2>
 
         {/* Description */}
@@ -74,19 +74,19 @@ export function TeamCTA() {
         {/* Trust reassurances */}
         <div className="flex flex-wrap justify-center gap-6 mb-10">
           {trustReassurances.map((item) => (
-            <div key={item.text} className="flex items-center gap-2 text-white/80">
+            <div key={item.text} className="flex items-center gap-2 text-on-dark-muted">
               <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
               <span className="text-base font-medium">{item.text}</span>
             </div>
           ))}
         </div>
 
-        {/* CTA buttons - left aligned per Practical UI, primary first */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:justify-start justify-center mb-8">
-          {/* Primary CTA - solid gold on dark bg */}
+        {/* CTA buttons - centered per Practical UI */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          {/* Primary CTA - white on dark bg per Practical UI */}
           <Link
             href="/auth/signup?type=team"
-            className="group inline-flex items-center justify-center gap-3 min-h-[52px] px-8 py-3 rounded-md bg-gold text-navy-900 font-semibold text-lg hover:bg-gold-400 transition-all duration-fast"
+            className="btn-primary-on-dark gap-3 px-8 py-3 text-lg group"
           >
             Register your team
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -95,18 +95,18 @@ export function TeamCTA() {
           {/* Secondary CTA - outline on dark bg */}
           <Link
             href="/for-companies"
-            className="group min-h-[52px] px-8 py-3 rounded-md text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast"
+            className="btn-secondary-on-dark px-8 py-3 text-lg"
           >
             Browse teams
           </Link>
         </div>
 
         {/* Sign in link */}
-        <p className="text-white/70 text-base">
+        <p className="text-on-dark-muted text-base">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
-            className="text-gold hover:text-gold-300 underline underline-offset-4 transition-colors duration-fast"
+            className="text-gold underline underline-offset-4 transition-colors hover:text-white"
           >
             Sign in here
           </Link>

@@ -70,7 +70,7 @@ export function HowItWorksTabs() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-12 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-navy font-semibold text-base mb-3">
+          <p className="font-semibold text-base mb-3 text-navy">
             How it works
           </p>
           <h2
@@ -136,11 +136,11 @@ export function HowItWorksTabs() {
                   accentColor === 'navy' ? 'bg-navy' : 'bg-gold'
                 }`}>
                   <span className={`font-heading text-lg font-bold ${
-                    accentColor === 'navy' ? 'text-white' : 'text-navy-900'
+                    accentColor === 'navy' ? 'text-on-dark' : 'text-on-gold'
                   }`}>{step.number}</span>
                 </div>
                 <step.icon className={`w-6 h-6 ${
-                  accentColor === 'navy' ? 'text-navy' : 'text-gold-700'
+                  accentColor === 'navy' ? 'text-navy' : 'text-gold-dark'
                 }`} aria-hidden="true" />
               </div>
 
