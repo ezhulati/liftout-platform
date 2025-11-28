@@ -25,10 +25,10 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: {
     template: '%s | Liftout',
-    default: 'Liftout - Strategic Team Acquisition Platform',
+    default: 'Liftout – Hire Entire Teams, Not Just Individuals',
   },
-  description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
-  keywords: ['team acquisition', 'liftout', 'strategic hiring', 'talent acquisition', 'team placement', 'executive recruitment'],
+  description: 'Skip the 6-month team-building phase. Connect with verified, intact teams who already work well together and deliver from day one.',
+  keywords: ['hire teams', 'team acquisition', 'liftout', 'intact teams', 'high-performing teams', 'team hiring', 'team placement'],
   authors: [{ name: 'Liftout Team' }],
   creator: 'Liftout',
   publisher: 'Liftout',
@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'Liftout - Strategic Team Acquisition Platform',
-    description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
+    title: 'Liftout – Hire Entire Teams, Not Just Individuals',
+    description: 'Skip the 6-month team-building phase. Connect with verified, intact teams who already work well together and deliver from day one.',
     url: '/',
     siteName: 'Liftout',
     images: [
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Liftout - Strategic Team Acquisition Platform',
+        alt: 'Liftout – Hire verified teams that deliver from day one',
       },
     ],
     locale: 'en_US',
@@ -61,8 +61,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Liftout - Strategic Team Acquisition Platform',
-    description: 'The premier platform for strategic team acquisition. Connect companies seeking proven, intact teams with high-performing teams ready for new opportunities.',
+    title: 'Liftout – Hire Entire Teams, Not Just Individuals',
+    description: 'Skip the 6-month team-building phase. Connect with verified, intact teams who already work well together and deliver from day one.',
     images: ['/og-image.png'],
     creator: '@liftout',
   },
