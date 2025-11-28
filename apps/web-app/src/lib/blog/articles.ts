@@ -51,7 +51,7 @@ export const blogArticles: BlogArticle[] = [
     featuredImage: '/images/blog/Steve-Jobs-and-Woz-Dream-Team-1024x768.jpg',
     category: 'Teamwork',
     tags: ['Steve Jobs', 'Steve Wozniak', 'Apple', 'Dream Team'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-22',
     content: `## The Unlikely Friends Who Formed Apple's Original Dream Team
 
@@ -86,7 +86,7 @@ Apple's foundation exemplifies how great partnerships can transform entire indus
     featuredImage: '/images/blog/Non-Compete-Fines-1024x684.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Legal', 'Compliance', 'State Laws'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Careers
 
@@ -123,7 +123,7 @@ Innovation results from empowerment, not restraints. Workers, consumers, and the
     featuredImage: '/images/blog/Non-Compete-Agreements-1024x778.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'New York', 'Legislation', 'Employee Rights'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `New York is on the verge of joining a small but growing list of states that prohibit non-compete agreements. This would be a major win for employee mobility and career freedom within the state.
 
@@ -160,7 +160,7 @@ Outdated retention models centered on restrictions must evolve as talent mobilit
     featuredImage: '/images/blog/AdobeStock_474582113-1024x683.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'State Laws', 'Employee Mobility'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## Non-Competes Limit Mobility
 
@@ -195,7 +195,7 @@ This trajectory points toward a future where worker potential remains unencumber
     featuredImage: '/images/blog/AdobeStock_402034033-1024x693.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'North Dakota', 'State Laws'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Careers
 
@@ -232,7 +232,7 @@ As worker freedom expands, retention models centered on restrictions require tra
     featuredImage: '/images/blog/Liftout-Hire-1024x536.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Oklahoma', 'State Laws'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Opportunity
 
@@ -267,7 +267,7 @@ As employee freedom expands, outdated retention models dependent on constraints 
     featuredImage: '/images/blog/AdobeStock_303326413-1024x768.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Minnesota', 'Legislation'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     modifiedDate: '2023-10-21',
     content: `Minnesota has enacted one of the nation's most restrictive statewide bans on non-compete agreements, prohibiting most post-employment non-competes entered into after July 1, 2023. This legislation marks a significant achievement for worker autonomy.
@@ -305,7 +305,7 @@ As worker freedom expands, restrictive retention tactics must transform. Progres
     featuredImage: '/images/blog/Successful_Team_Liftout-1024x512.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'FTC', 'Federal Ban', 'State Laws'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `A growing number of states have moved to prohibit or restrict non-compete agreements between employers and employees. With the FTC also proposing a nationwide ban, this marks a major shift empowering career mobility.
 
@@ -346,7 +346,7 @@ The future belongs to employers embracing mobility and self-determination. Now i
     featuredImage: '/images/blog/People-Liftout-Hire-together-1024x471.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'FTC', 'Federal Ban', 'Regulation'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## Overview
 
@@ -375,7 +375,7 @@ Several states including California, Oklahoma, Minnesota, and North Dakota have 
     featuredImage: '/images/blog/Liftout_Hire_Team-1024x536.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'California', 'SB 699', 'Employee Rights'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-10-17',
     content: `## California Strengthens Limits on Restrictive Covenants
 
@@ -464,7 +464,7 @@ Embrace excitement about this unified fresh start! The essential element involve
     featuredImage: '/images/blog/Non-Compete-Agreements-1024x778.jpg',
     category: 'Contracts',
     tags: ['Employment Contract', 'NDA', 'Non-Compete', 'Legal'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2023-08-24',
     modifiedDate: '2023-09-27',
     content: `Employment contracts serve as foundational agreements outlining job responsibilities, compensation, and benefits. However, many contain clauses warranting careful review before signature.
@@ -614,7 +614,7 @@ In today's collaborative business landscape, team hiring delivers results. Inter
     featuredImage: '/images/blog/Liftout-Hire-1024x536.jpg',
     category: 'Liftouts',
     tags: ['Liftout', 'Team Hiring', 'Recruitment'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2021-01-16',
     modifiedDate: '2023-09-27',
     content: `## What is a Liftout?
@@ -698,7 +698,7 @@ Join the liftout revolution at Liftout.com – where companies and teams confide
     featuredImage: '/images/blog/AdobeStock_474582113-1024x683.jpg',
     category: 'Liftouts',
     tags: ['Liftout', 'Process', 'Guide'],
-    author: authors.team,
+    author: authors.nick,
     publishDate: '2021-01-16',
     modifiedDate: '2023-09-27',
     content: `## What Are Liftouts?
