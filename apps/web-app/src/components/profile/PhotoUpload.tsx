@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import {
   CameraIcon,
@@ -209,10 +210,12 @@ export default function PhotoUpload({
           {currentPhotoUrl ? (
             <>
               {/* Current photo */}
-              <img
+              <Image
                 src={currentPhotoUrl}
                 alt="Profile"
                 className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 160px) 100vw, 160px"
               />
 
               {/* Overlay on hover */}
@@ -301,11 +304,13 @@ export default function PhotoUpload({
             <div className="p-6">
               {/* Preview */}
               <div className="flex justify-center mb-4">
-                <div className={`${sizeClasses.xl} rounded-full overflow-hidden border-2 border-border`}>
-                  <img
+                <div className={`${sizeClasses.xl} rounded-full overflow-hidden border-2 border-border relative`}>
+                  <Image
                     src={previewUrl}
                     alt="Preview"
                     className="w-full h-full object-cover"
+                    fill
+                    sizes="160px"
                   />
                 </div>
               </div>

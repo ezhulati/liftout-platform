@@ -11,6 +11,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import type { User } from '@/types/firebase';
 
@@ -89,10 +90,12 @@ export function AppHeader({ user }: AppHeaderProps) {
               <Menu.Button className="-m-1.5 flex items-center p-1.5 rounded-lg hover:bg-bg-elevated transition-colors duration-fast">
                 <span className="sr-only">Open user menu</span>
                 {user.photoURL ? (
-                  <img
+                  <Image
                     className="h-8 w-8 rounded-full"
                     src={user.photoURL}
                     alt=""
+                    width={32}
+                    height={32}
                   />
                 ) : (
                   <div className="h-8 w-8 rounded-full bg-navy flex items-center justify-center">

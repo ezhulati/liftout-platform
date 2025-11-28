@@ -56,6 +56,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     if (userData && !isLoading) {
       initializeProgress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, isLoading]);
 
   // Load onboarding progress
@@ -63,6 +64,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     if (userData) {
       loadOnboardingProgress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   // Update profile completeness when profile completion data changes
@@ -70,6 +72,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     if (userData && profileCompletionData.score > 0) {
       calculateProfileCompleteness();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, profileCompletionData.score, profileCompletionData.completionData.breakdown, profileCompletionData.nextSteps]);
 
   const initializeProgress = async () => {

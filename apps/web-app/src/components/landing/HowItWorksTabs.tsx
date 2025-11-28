@@ -58,7 +58,6 @@ export function HowItWorksTabs() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
 
   const steps = activeTab === 'companies' ? companySteps : teamSteps;
-  const accentColor = activeTab === 'companies' ? 'navy' : 'gold';
 
   return (
     <section
@@ -132,23 +131,17 @@ export function HowItWorksTabs() {
             >
               {/* Step number and icon */}
               <div className="flex items-center gap-4 mb-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  accentColor === 'navy' ? 'bg-navy' : 'bg-gold'
-                }`}>
-                  <span className={`font-heading text-lg font-bold ${
-                    accentColor === 'navy' ? 'text-on-dark' : 'text-on-gold'
-                  }`}>{step.number}</span>
+                <div className="w-10 h-10 rounded-full bg-navy flex items-center justify-center">
+                  <span className="font-heading text-lg font-bold text-white">{step.number}</span>
                 </div>
-                <step.icon className={`w-6 h-6 ${
-                  accentColor === 'navy' ? 'text-navy' : 'text-gold-dark'
-                }`} aria-hidden="true" />
+                <step.icon className="w-6 h-6 text-navy" aria-hidden="true" />
               </div>
 
-              {/* Content */}
+              {/* Content - Practical UI: 18px body text minimum */}
               <h3 className="font-heading text-xl font-bold text-text-primary leading-snug mb-3">
                 {step.title}
               </h3>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-text-secondary text-lg leading-relaxed">
                 {step.description}
               </p>
             </article>

@@ -50,6 +50,7 @@ export function useTeamPermissions(teamId: string): UseTeamPermissionsReturn {
 
   useEffect(() => {
     fetchMember();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, teamId]);
 
   const hasPermission = useMemo(() => {

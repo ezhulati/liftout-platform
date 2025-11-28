@@ -66,6 +66,7 @@ export function RoleChangeNotification({
 
   useEffect(() => {
     loadRoleHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamId]);
 
   const loadRoleHistory = async () => {
@@ -248,6 +249,7 @@ export function RoleChangeAlert({ teamId }: { teamId: string }) {
 
   useEffect(() => {
     loadRecentChanges();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamId]);
 
   const loadRecentChanges = async () => {

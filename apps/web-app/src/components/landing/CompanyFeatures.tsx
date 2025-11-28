@@ -110,8 +110,8 @@ export function CompanyFeatures() {
               style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105 shadow-lg shadow-navy/30">
-                <feature.icon className="w-7 h-7 text-gold" aria-hidden="true" />
+              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105">
+                <feature.icon className="w-7 h-7 text-white" aria-hidden="true" />
               </div>
 
               {/* Feature title */}
@@ -119,8 +119,8 @@ export function CompanyFeatures() {
                 {feature.name}
               </h3>
 
-              {/* Feature description */}
-              <p className="font-body text-text-secondary leading-relaxed text-base">
+              {/* Feature description - Practical UI: 18px body text */}
+              <p className="font-body text-text-secondary leading-relaxed text-lg">
                 {feature.description}
               </p>
 
@@ -151,7 +151,7 @@ export function CompanyFeatures() {
             {steps.map((item, index) => (
               <div
                 key={item.step}
-                className={`text-center transition-all duration-500 ${
+                className={`transition-all duration-500 ${
                   stepsVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-6'
@@ -159,19 +159,15 @@ export function CompanyFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-16 h-16 rounded-full bg-navy mx-auto mb-4 flex items-center justify-center shadow-lg shadow-navy/30">
-                  <span className="font-heading text-xl font-bold text-gold">{item.step}</span>
+                <div className="w-14 h-14 rounded-full bg-navy mb-4 flex items-center justify-center">
+                  <span className="font-heading text-lg font-bold text-white">{item.step}</span>
                 </div>
-                {/* Connector line (except last) */}
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-navy/20" aria-hidden="true" />
-                )}
                 {/* Title */}
                 <h4 className="font-heading text-lg font-bold text-text-primary mb-2">
                   {item.title}
                 </h4>
-                {/* Description */}
-                <p className="font-body text-text-secondary text-base leading-relaxed">
+                {/* Description - Practical UI: 18px body text */}
+                <p className="font-body text-text-secondary text-lg leading-relaxed">
                   {item.description}
                 </p>
               </div>

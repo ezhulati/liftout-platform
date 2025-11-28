@@ -196,7 +196,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages?.length]);
 
   // Join conversation room when selected conversation changes
   useEffect(() => {
@@ -212,6 +213,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
         leaveConversation(selectedConversationId);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedConversationId, joinConversation, leaveConversation]);
 
   const playNotificationSound = () => {

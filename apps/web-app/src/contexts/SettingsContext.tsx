@@ -38,6 +38,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     if (user) {
       loadUserSettings();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Load user settings from storage

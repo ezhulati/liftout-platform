@@ -82,7 +82,7 @@ export function TeamFeatures() {
           ref={featuresRef as React.RefObject<HTMLDivElement>}
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <p className="font-semibold text-base mb-3 text-gold-dark">
+          <p className="font-semibold text-base mb-3 text-navy">
             Platform features
           </p>
           <h2
@@ -102,7 +102,7 @@ export function TeamFeatures() {
           {features.map((feature, index) => (
             <article
               key={feature.name}
-              className={`group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-gold/40 transition-all duration-500 ease-out-quart hover:shadow-lg ${
+              className={`group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-navy/30 transition-all duration-500 ease-out-quart hover:shadow-lg ${
                 featuresVisible
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'
@@ -110,8 +110,8 @@ export function TeamFeatures() {
               style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-14 h-14 rounded-lg bg-gold flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105 shadow-lg shadow-gold/30">
-                <feature.icon className="w-7 h-7 text-on-gold" aria-hidden="true" />
+              <div className="w-14 h-14 rounded-lg bg-navy flex items-center justify-center mb-6 transition-all duration-300 ease-out group-hover:scale-105">
+                <feature.icon className="w-7 h-7 text-white" aria-hidden="true" />
               </div>
 
               {/* Feature title */}
@@ -126,7 +126,7 @@ export function TeamFeatures() {
 
               {/* Hover accent line */}
               <div
-                className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity duration-base rounded-full"
+                className="absolute bottom-0 left-8 right-8 h-0.5 bg-navy opacity-0 group-hover:opacity-100 transition-opacity duration-base rounded-full"
                 aria-hidden="true"
               />
             </article>
@@ -160,8 +160,8 @@ export function TeamFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-14 h-14 rounded-full bg-gold mb-4 flex items-center justify-center shadow-lg shadow-gold/30">
-                  <span className="font-heading text-lg font-bold text-on-gold">{item.step}</span>
+                <div className="w-14 h-14 rounded-full bg-navy mb-4 flex items-center justify-center">
+                  <span className="font-heading text-lg font-bold text-white">{item.step}</span>
                 </div>
                 {/* Title */}
                 <h4 className="font-heading text-lg font-bold text-text-primary mb-2">

@@ -106,17 +106,18 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
   const deleteMutation = useDeleteDocument();
 
   const documents = documentsResponse?.documents || [];
-  const filterMetadata = documentsResponse?.filters || { types: [], tags: [] };
 
   // Filter groups for the SearchAndFilter component
-  const filterGroups = useMemo(() => [
+  const filterGroups = useMemo(() => {
+    const filterMetadata = documentsResponse?.filters || { types: [], tags: [] };
+    return [
     {
       label: 'Document Type',
       key: 'type',
       type: 'select' as const,
-      options: filterMetadata.types.map(type => ({ 
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()), 
-        value: type 
+      options: filterMetadata.types.map(type => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        value: type
       }))
     },
     {
@@ -144,7 +145,8 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
         { label: 'My Documents', value: 'private' }
       ]
     }] : [])
-  ], [filterMetadata, session?.user.userType]);
+  ];
+  }, [documentsResponse?.filters, session?.user.userType]);
 
   const handleFilterChange = (filterKey: string, value: string | string[]) => {
     setActiveFilters(prev => ({

@@ -71,11 +71,11 @@ export function HowItWorksCompanies() {
                 <step.icon className="w-6 h-6 text-navy" aria-hidden="true" />
               </div>
 
-              {/* Content */}
+              {/* Content - Practical UI: 18px body text minimum */}
               <h3 className="font-heading text-xl font-bold text-text-primary leading-snug mb-3">
                 {step.title}
               </h3>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-text-secondary text-lg leading-relaxed">
                 {step.description}
               </p>
             </article>

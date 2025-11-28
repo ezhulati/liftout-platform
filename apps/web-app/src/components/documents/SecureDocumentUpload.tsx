@@ -71,6 +71,7 @@ export function SecureDocumentUpload({
     newFiles.forEach(uploadFile => {
       processFileUpload(uploadFile);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId, dealId, teamId, companyId, securityLevel, accessLevel]);
 
   const processFileUpload = async (uploadFile: UploadingFile) => {

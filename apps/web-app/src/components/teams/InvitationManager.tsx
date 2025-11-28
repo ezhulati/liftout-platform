@@ -29,6 +29,7 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
 
   useEffect(() => {
     loadInvitations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamId]);
 
   const loadInvitations = async () => {

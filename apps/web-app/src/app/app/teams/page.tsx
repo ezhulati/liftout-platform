@@ -49,13 +49,14 @@ export default function TeamsPage() {
   });
 
   const teams = teamsResponse?.teams || [];
-  const filterMetadataData = teamsResponse?.filters || { industries: [], locations: [], sizes: [] };
 
   const isCompanyUser = session?.user?.userType === 'company';
   const isTeamUser = session?.user?.userType === 'individual';
 
   // Filter groups for the SearchAndFilter component - must be before early returns
-  const filterGroups = useMemo(() => [
+  const filterGroups = useMemo(() => {
+    const filterMetadataData = teamsResponse?.filters || { industries: [], locations: [], sizes: [] };
+    return [
     {
       label: 'Industry',
       key: 'industry',
@@ -64,7 +65,7 @@ export default function TeamsPage() {
     },
     {
       label: 'Location',
-      key: 'location', 
+      key: 'location',
       type: 'select' as const,
       options: filterMetadataData.locations.map(location => ({ label: location, value: location }))
     },
@@ -139,7 +140,8 @@ export default function TeamsPage() {
         { label: '95+', value: '95' }
       ]
     }
-  ], [filterMetadataData]);
+  ];
+  }, [teamsResponse?.filters]);
 
   // Early returns after all hooks
   if (status === 'loading') {

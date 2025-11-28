@@ -27,6 +27,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
     if (user?.email) {
       loadInvitations();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const loadInvitations = async () => {

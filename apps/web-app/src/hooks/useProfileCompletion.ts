@@ -122,7 +122,8 @@ export function useProfileCompletion(options: UseProfileCompletionOptions = {}) 
     if (autoUpdate && user) {
       calculateCompletion();
     }
-  }, [user?.profileData, autoUpdate, calculateCompletion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.profileData, autoUpdate]);
 
   // Manual recalculation
   const recalculate = (profileData?: any) => {

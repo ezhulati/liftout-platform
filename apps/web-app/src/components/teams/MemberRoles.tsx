@@ -276,6 +276,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
 
   useEffect(() => {
     loadMembers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamId]);
 
   const loadMembers = async () => {

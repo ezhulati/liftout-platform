@@ -44,11 +44,12 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
   });
 
   const opportunities = opportunitiesResponse?.opportunities || [];
-  const filterMetadata = opportunitiesResponse?.filters || { industries: [], locations: [], types: [] };
   const isCompanyUser = userType === 'company';
 
   // Filter groups for the SearchAndFilter component
-  const filterGroups = useMemo(() => [
+  const filterGroups = useMemo(() => {
+    const filterMetadata = opportunitiesResponse?.filters || { industries: [], locations: [], types: [] };
+    return [
     {
       label: 'Industry',
       key: 'industry',
@@ -57,7 +58,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
     },
     {
       label: 'Location',
-      key: 'location', 
+      key: 'location',
       type: 'select' as const,
       options: filterMetadata.locations.map(location => ({ label: location, value: location }))
     },
@@ -102,7 +103,8 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
         { label: 'Business Development', value: 'business development' }
       ]
     }
-  ], [filterMetadata, isCompanyUser]);
+  ];
+  }, [opportunitiesResponse?.filters, isCompanyUser]);
 
   const handleFilterChange = (filterKey: string, value: string | string[]) => {
     setActiveFilters(prev => ({

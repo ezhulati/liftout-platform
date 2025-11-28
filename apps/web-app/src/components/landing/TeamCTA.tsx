@@ -34,26 +34,11 @@ export function TeamCTA() {
       className="relative py-20 lg:py-28 overflow-hidden dark-section"
       aria-labelledby="team-cta-heading"
     >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {/* Soft gold glows */}
-        <div className="absolute top-0 right-[20%] w-96 h-96 rounded-full bg-gold/5 blur-3xl" />
-        <div className="absolute bottom-0 left-[20%] w-80 h-80 rounded-full bg-gold/8 blur-3xl" />
-
-        {/* Subtle grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgb(var(--color-gold) / 0.3) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-gold) / 0.3) 1px, transparent 1px)`,
-            backgroundSize: '64px 64px',
-          }}
-        />
-      </div>
 
       {/* Practical UI: Left-align on desktop for body text readability */}
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="font-semibold tracking-wider uppercase text-base mb-4 text-gold text-center lg:text-left">
+        <p className="font-semibold tracking-wider uppercase text-base mb-4 text-white/60 text-center lg:text-left">
           Your team's next chapter awaits
         </p>
 
@@ -62,8 +47,7 @@ export function TeamCTA() {
           id="team-cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
         >
-          Your next opportunity should not
-          <span className="block mt-2 text-gold">break up what you have built</span>
+          Your next opportunity should not break up what you have built
         </h2>
 
         {/* Description - Practical UI: left-align body text, 18px min */}
@@ -75,8 +59,8 @@ export function TeamCTA() {
         {/* Trust reassurances - Practical UI: icons with labels, 18px text */}
         <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-10">
           {trustReassurances.map((item) => (
-            <div key={item.text} className="flex items-center gap-2 text-on-dark-muted">
-              <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
+            <div key={item.text} className="flex items-center gap-2 text-white/80">
+              <item.icon className="w-5 h-5 text-white" aria-hidden="true" />
               <span className="text-lg font-medium">{item.text}</span>
             </div>
           ))}
@@ -103,11 +87,11 @@ export function TeamCTA() {
         </div>
 
         {/* Sign in link - Practical UI: tertiary/underlined link */}
-        <p className="text-on-dark-muted text-lg text-center lg:text-left">
+        <p className="text-white/70 text-lg text-center lg:text-left">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
-            className="text-gold underline underline-offset-4 transition-colors hover:text-white"
+            className="text-white underline underline-offset-4 transition-colors hover:text-white/80"
           >
             Sign in
           </Link>

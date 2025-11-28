@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   UserGroupIcon,
   MapPinIcon,
@@ -117,10 +118,12 @@ export function RecommendedTeams() {
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 {team.profileImageUrl ? (
-                  <img
+                  <Image
                     className="h-12 w-12 rounded-lg object-cover"
                     src={team.profileImageUrl}
                     alt={team.name}
+                    width={48}
+                    height={48}
                   />
                 ) : (
                   <div className="h-12 w-12 rounded-lg bg-navy-50 flex items-center justify-center">

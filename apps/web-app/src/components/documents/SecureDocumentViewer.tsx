@@ -60,6 +60,7 @@ export function SecureDocumentViewer({
 
   useEffect(() => {
     loadDocuments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentIds, currentUserId]);
 
   const loadDocuments = async () => {

@@ -172,6 +172,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
         newSocket.disconnect();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user]);
 
   // Clean up typing indicators that are older than 5 seconds
