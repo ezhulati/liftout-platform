@@ -92,7 +92,7 @@ export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewP
 
       {/* Document Status Summary */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Document status</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Document status</h3>
         <div className="space-y-4">
           <StatusBar label="Draft" count={draftDocuments} total={totalDocuments} color="bg-bg-alt" />
           <StatusBar label="In Review" count={reviewDocuments} total={totalDocuments} color="bg-gold-400" />
@@ -102,7 +102,7 @@ export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewP
 
       {/* Compliance Overview */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Compliance status by category</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Compliance status by category</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {getComplianceCategories(allComplianceChecks).map((category) => (
             <ComplianceCategoryCard key={category.name} category={category} />
@@ -112,7 +112,7 @@ export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewP
 
       {/* Active Documents */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Active documents</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Active documents</h3>
         <div className="space-y-4">
           {documents.slice(0, 5).map((doc) => (
             <DocumentRow key={doc.id} document={doc} />
@@ -128,7 +128,7 @@ export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewP
       {/* Risk Summary */}
       {documents.some((d) => d.riskAssessment) && (
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4">Risk assessment summary</h3>
+          <h3 className="text-lg font-bold text-text-primary mb-4">Risk assessment summary</h3>
           <div className="space-y-4">
             {documents
               .filter((d) => d.riskAssessment)
@@ -154,15 +154,17 @@ interface MetricCardProps {
 function MetricCard({ icon: Icon, iconColor, title, value, subtitle }: MetricCardProps) {
   return (
     <div className="card p-6">
-      <div className="flex items-center">
-        <div className="flex-shrink-0">
-          <Icon className={`h-8 w-8 ${iconColor}`} />
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+          <Icon className={`h-6 w-6 ${iconColor}`} aria-hidden="true" />
         </div>
-        <div className="ml-4">
-          <p className="text-base font-medium text-text-tertiary">{title}</p>
-          <p className="text-2xl font-semibold text-text-primary">{value}</p>
-          <p className="text-xs text-text-tertiary">{subtitle}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-text-tertiary truncate">{title}</p>
+          <p className="text-xl font-bold text-text-primary mt-1">{value}</p>
         </div>
+      </div>
+      <div className="mt-4 pt-4 border-t border-border">
+        <span className="text-sm font-normal text-text-tertiary">{subtitle}</span>
       </div>
     </div>
   );
@@ -208,7 +210,7 @@ function ComplianceCategoryCard({ category }: { category: { name: string; compli
   const statusColor = category.percentage >= 80 ? 'text-success-dark bg-success-light' : category.percentage >= 50 ? 'text-gold-800 bg-gold-100' : 'text-error-dark bg-error-light';
 
   return (
-    <div className="border border-border rounded-lg p-4">
+    <div className="border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-text-primary">{category.name}</span>
         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
@@ -239,21 +241,21 @@ function DocumentRow({ document }: { document: LegalDocument }) {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors">
-      <div className="flex items-center space-x-4">
-        <DocumentDuplicateIcon className="h-6 w-6 text-text-tertiary" />
+    <div className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt transition-colors duration-fast">
+      <div className="flex items-center gap-4">
+        <DocumentDuplicateIcon className="h-6 w-6 text-text-tertiary" aria-hidden="true" />
         <div>
-          <h4 className="text-base font-medium text-text-primary">{document.title}</h4>
-          <p className="text-sm text-text-tertiary">
+          <h4 className="text-base font-bold text-text-primary">{document.title}</h4>
+          <p className="text-sm font-normal text-text-tertiary">
             {document.type.replace(/_/g, ' ')} | {document.jurisdiction}
           </p>
         </div>
       </div>
-      <div className="flex items-center space-x-4">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(document.status)}`}>
+      <div className="flex items-center gap-4">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-xl text-xs font-bold ${getStatusStyle(document.status)}`}>
           {document.status.replace(/_/g, ' ')}
         </span>
-        <button className="text-link text-sm">View</button>
+        <button className="text-link text-sm font-bold min-h-12 px-2 transition-colors duration-fast">View</button>
       </div>
     </div>
   );
@@ -277,19 +279,19 @@ function RiskSummaryRow({ document }: { document: LegalDocument }) {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-      <div className="flex items-center space-x-4">
-        <ScaleIcon className="h-6 w-6 text-text-tertiary" />
+    <div className="flex items-center justify-between p-4 border border-border rounded-xl">
+      <div className="flex items-center gap-4">
+        <ScaleIcon className="h-6 w-6 text-text-tertiary" aria-hidden="true" />
         <div>
-          <h4 className="text-base font-medium text-text-primary">{document.title}</h4>
-          <p className="text-sm text-text-tertiary">{risk.risks.length} risks identified</p>
+          <h4 className="text-base font-bold text-text-primary">{document.title}</h4>
+          <p className="text-sm font-normal text-text-tertiary">{risk.risks.length} risks identified</p>
         </div>
       </div>
-      <div className="flex items-center space-x-4">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRiskStyle(risk.overallRisk)}`}>
+      <div className="flex items-center gap-4">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-xl text-xs font-bold ${getRiskStyle(risk.overallRisk)}`}>
           {risk.overallRisk.toUpperCase()} Risk
         </span>
-        <button className="text-link text-sm">Details</button>
+        <button className="text-link text-sm font-bold min-h-12 px-2 transition-colors duration-fast">Details</button>
       </div>
     </div>
   );

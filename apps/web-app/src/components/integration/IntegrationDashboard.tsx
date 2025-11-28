@@ -105,48 +105,48 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, proper spacing */}
       <div className="card p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-text-primary">Integration success tracking</h2>
-            <p className="text-text-secondary mt-1">
+            <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">Integration success tracking</h2>
+            <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
               {integration.teamName} at {integration.companyName}
             </p>
-            <div className="mt-3 flex items-center space-x-4">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getHealthColor(healthScore)}`}>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <span className={`inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold ${getHealthColor(healthScore)}`}>
                 {healthScore}/100 Health score
               </span>
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getRetentionRiskColor(retentionRisk)}`}>
+              <span className={`inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold ${getRetentionRiskColor(retentionRisk)}`}>
                 {retentionRisk.toUpperCase()} Retention risk
               </span>
-              <span className="text-sm text-text-tertiary">
+              <span className="text-sm font-normal text-text-tertiary">
                 Day {daysSinceStart} of integration
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-text-tertiary">Current phase</div>
-            <div className="text-lg font-semibold text-text-primary">
+            <div className="text-sm font-bold text-text-tertiary">Current phase</div>
+            <div className="text-lg font-bold text-text-primary mt-1">
               {integration.currentPhase.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
             </div>
-            <div className="text-sm text-text-tertiary">
+            <div className="text-sm font-normal text-text-tertiary mt-1">
               {integration.overallProgress}% Complete
             </div>
           </div>
         </div>
       </div>
 
-      {/* Early Warnings */}
+      {/* Early Warnings - Practical UI: rounded-xl callout */}
       {earlyWarnings.length > 0 && (
-        <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
-          <div className="flex">
-            <ExclamationTriangleIcon className="h-5 w-5 text-gold" />
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-gold-900">Early warning indicators</h3>
+        <div className="bg-gold-50 border border-gold-200 rounded-xl p-4">
+          <div className="flex gap-3">
+            <ExclamationTriangleIcon className="h-5 w-5 text-gold flex-shrink-0" aria-hidden="true" />
+            <div>
+              <h3 className="text-sm font-bold text-gold-900">Early warning indicators</h3>
               <div className="mt-2 space-y-1">
                 {earlyWarnings.map((warning, index) => (
-                  <p key={index} className="text-sm text-gold-700">• {warning}</p>
+                  <p key={index} className="text-sm font-normal text-gold-700">• {warning}</p>
                 ))}
               </div>
             </div>
@@ -154,66 +154,74 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
         </div>
       )}
 
-      {/* Key Metrics */}
+      {/* Key Metrics - Practical UI: consistent card styling */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ArrowTrendingUpIcon className="h-8 w-8 text-success" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <ArrowTrendingUpIcon className="h-6 w-6 text-success" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Performance score</p>
-              <p className="text-2xl font-semibold text-text-primary">{integration.performanceMetrics.productivity[0]?.velocityScore || 0}/100</p>
-              <p className="text-xs text-text-tertiary">+{integration.performanceMetrics.productivity[0]?.benchmarkComparison || 0}% vs benchmark</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Performance score</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{integration.performanceMetrics.productivity[0]?.velocityScore || 0}/100</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">+{integration.performanceMetrics.productivity[0]?.benchmarkComparison || 0}% vs benchmark</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <HeartIcon className="h-8 w-8 text-navy" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <HeartIcon className="h-6 w-6 text-navy" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Cultural fit</p>
-              <p className="text-2xl font-semibold text-text-primary">{integration.culturalIntegration.culturalFitScore}/100</p>
-              <p className="text-xs text-text-tertiary">Above expectations</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Cultural fit</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{integration.culturalIntegration.culturalFitScore}/100</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">Above expectations</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CurrencyDollarIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <CurrencyDollarIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">ROI progress</p>
-              <p className="text-2xl font-semibold text-text-primary">{integration.businessResults.roiMetrics[0]?.roi || 0}%</p>
-              <p className="text-xs text-text-tertiary">{integration.businessResults.roiMetrics[0]?.paybackPeriod || 0} month payback</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">ROI progress</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{integration.businessResults.roiMetrics[0]?.roi || 0}%</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">{integration.businessResults.roiMetrics[0]?.paybackPeriod || 0} month payback</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CalendarDaysIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <CalendarDaysIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Milestones</p>
-              <p className="text-2xl font-semibold text-text-primary">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Milestones</p>
+              <p className="text-xl font-bold text-text-primary mt-1">
                 {integration.milestones.filter(m => m.status === 'completed').length}/{integration.milestones.length}
               </p>
-              <p className="text-xs text-text-tertiary">On schedule</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">On schedule</span>
           </div>
         </div>
       </div>
 
       {/* Integration Phases */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-6">Integration phases</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-6">Integration phases</h3>
 
         <div className="space-y-4">
           {integration.phases.map((phase, index) => (
@@ -277,8 +285,8 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Individual Performance */}
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-            <UserGroupIcon className="h-5 w-5 mr-2 text-navy" />
+          <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+            <UserGroupIcon className="h-5 w-5 text-navy" aria-hidden="true" />
             Team member performance
           </h3>
 
@@ -331,8 +339,8 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
 
         {/* Business Impact */}
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-            <ChartBarIcon className="h-5 w-5 mr-2 text-success" />
+          <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+            <ChartBarIcon className="h-5 w-5 text-success" aria-hidden="true" />
             Business impact
           </h3>
 
@@ -383,8 +391,8 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
 
       {/* Recent Feedback */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-          <LightBulbIcon className="h-5 w-5 mr-2 text-gold" />
+        <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+          <LightBulbIcon className="h-5 w-5 text-gold" aria-hidden="true" />
           Recent feedback & insights
         </h3>
 
@@ -442,18 +450,18 @@ export function IntegrationDashboard({ integrationId }: IntegrationDashboardProp
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Check-in scheduled')} className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Check-in scheduled')} className="btn-primary min-h-12 transition-colors duration-fast">
           Schedule check-in
         </button>
-        <button onClick={() => toast.success('Report generated successfully')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Report generated successfully')} className="btn-outline min-h-12 transition-colors duration-fast">
           Generate report
         </button>
-        <button onClick={() => toast.success('Loading detailed analytics...')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Loading detailed analytics...')} className="btn-outline min-h-12 transition-colors duration-fast">
           View detailed analytics
         </button>
-        <button onClick={() => toast.success('Milestones updated')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Milestones updated')} className="btn-outline min-h-12 transition-colors duration-fast">
           Update milestones
         </button>
       </div>

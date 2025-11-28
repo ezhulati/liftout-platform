@@ -70,15 +70,15 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-navy to-gold flex items-center justify-center">
-            <SparklesIcon className="h-5 w-5 text-white" />
+      {/* Header - Practical UI: bold headings, proper spacing */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-gold flex items-center justify-center">
+            <SparklesIcon className="h-6 w-6 text-white" aria-hidden="true" />
           </div>
           <div>
-            <h2 className="text-lg font-medium text-text-primary">AI-powered matching</h2>
-            <p className="text-sm text-text-secondary">
+            <h2 className="text-lg font-bold text-text-primary">AI-powered matching</h2>
+            <p className="text-sm font-normal text-text-secondary mt-1">
               {entityType === 'team'
                 ? 'Discover opportunities perfectly matched to your team\'s capabilities'
                 : 'Find teams that excel in the specific skills you need'
@@ -89,7 +89,7 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
 
         <Button
           variant="outline"
-          leftIcon={<AdjustmentsHorizontalIcon className="h-4 w-4" />}
+          leftIcon={<AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />}
           onClick={() => setShowFilters(!showFilters)}
         >
           Filters
@@ -100,7 +100,7 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
       {showFilters && (
         <div className="card">
           <div className="px-6 py-4">
-            <h3 className="text-lg font-medium text-text-primary mb-4">Matching criteria</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-4">Matching criteria</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="label-text mb-2">
@@ -214,24 +214,24 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
   const RecommendationIcon = recommendationIcons[recommendation];
 
   return (
-    <div className="card hover:shadow-lg transition-shadow duration-base">
+    <div className="card hover:shadow-lg transition-shadow duration-fast">
       <div className="px-6 py-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
             <div className="flex-shrink-0">
-              <div className="h-12 w-12 rounded-full bg-navy-100 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-xl bg-navy-100 flex items-center justify-center">
                 <span className="text-lg font-bold text-navy">#{rank}</span>
               </div>
             </div>
             <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
+              <div className="flex items-center gap-3 mb-2">
                 {entityType === 'team' ? (
-                  <BriefcaseIcon className="h-5 w-5 text-text-tertiary" />
+                  <BriefcaseIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
                 ) : (
-                  <UserGroupIcon className="h-5 w-5 text-text-tertiary" />
+                  <UserGroupIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
                 )}
-                <h3 className="text-lg font-medium text-text-primary">
+                <h3 className="text-lg font-bold text-text-primary">
                   {entityType === 'team' ? opportunity.title : team.name}
                 </h3>
                 <Badge
@@ -255,7 +255,7 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
 
         {/* Score Breakdown */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-text-primary mb-3">Compatibility breakdown</h4>
+          <h4 className="text-sm font-bold text-text-primary mb-3">Compatibility breakdown</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <ScoreBar label="Skills" score={score.breakdown.skillsMatch} max={25} />
             <ScoreBar label="Industry" score={score.breakdown.industryMatch} max={20} />
@@ -268,8 +268,8 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Strengths */}
           <div>
-            <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
-              <CheckCircleIcon className="h-4 w-4 text-success mr-1" />
+            <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
+              <CheckCircleIcon className="h-4 w-4 text-success" aria-hidden="true" />
               Key strengths
             </h4>
             <ul className="text-sm text-text-secondary space-y-1">
@@ -285,8 +285,8 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
           {/* Concerns */}
           {potentialConcerns.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
-                <ExclamationTriangleIcon className="h-4 w-4 text-warning mr-1" />
+              <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
+                <ExclamationTriangleIcon className="h-4 w-4 text-warning" aria-hidden="true" />
                 Considerations
               </h4>
               <ul className="text-sm text-text-secondary space-y-1">
@@ -302,9 +302,9 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         </div>
 
         {/* AI Reasoning */}
-        <div className="mb-6 p-4 bg-bg-alt rounded-lg">
-          <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
-            <SparklesIcon className="h-4 w-4 text-navy mr-1" />
+        <div className="mb-6 p-4 bg-bg-alt rounded-xl">
+          <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
+            <SparklesIcon className="h-4 w-4 text-navy" aria-hidden="true" />
             AI analysis
           </h4>
           <div className="text-sm text-text-secondary space-y-1">
@@ -315,8 +315,8 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-border">
-          <div className="flex items-center space-x-4 text-sm text-text-tertiary">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pt-4 border-t border-border">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
             {entityType === 'team' ? (
               <>
                 <span>{opportunity.location}</span>
@@ -332,10 +332,10 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
             )}
           </div>
 
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-3">
             <Link
               href={entityType === 'team' ? `/app/opportunities/${opportunity.id}` : `/app/teams/${team.id}`}
-              className="btn-outline min-h-12"
+              className="btn-outline min-h-12 transition-colors duration-fast"
             >
               View details
             </Link>
@@ -347,7 +347,7 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
             {!isCompanyUser && entityType === 'team' && (
               <Link
                 href={`/app/opportunities/${opportunity.id}/apply`}
-                className="btn-primary min-h-12"
+                className="btn-primary min-h-12 transition-colors duration-fast"
               >
                 Apply now
               </Link>

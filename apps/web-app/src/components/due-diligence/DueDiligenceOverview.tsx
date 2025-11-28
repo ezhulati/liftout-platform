@@ -96,91 +96,99 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, proper spacing */}
       <div className="card p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-text-primary">Due diligence workflow</h2>
-            <p className="text-text-secondary mt-1">
+            <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">Due diligence workflow</h2>
+            <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
               Strategic Analytics Core × Healthcare AI Innovation Team
             </p>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(workflow.status)}`}>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className={`inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold ${getStatusColor(workflow.status)}`}>
               {workflow.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
             </div>
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getRiskColor(riskLevel)}`}>
+            <div className={`inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold ${getRiskColor(riskLevel)}`}>
               {riskLevel.toUpperCase()} Risk
             </div>
           </div>
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {/* Key Metrics - Practical UI: consistent card styling */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-success" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <CheckCircleIcon className="h-6 w-6 text-success" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Progress</p>
-              <p className="text-2xl font-semibold text-text-primary">{progress.progressPercentage}%</p>
-              <p className="text-xs text-text-tertiary">{progress.completedChecks}/{progress.totalChecks} checks</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Progress</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{progress.progressPercentage}%</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">{progress.completedChecks}/{progress.totalChecks} checks</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ExclamationTriangleIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <ExclamationTriangleIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">High priority</p>
-              <p className="text-2xl font-semibold text-text-primary">{progress.highPriorityCompleted}/{progress.highPriorityTotal}</p>
-              <p className="text-xs text-text-tertiary">Critical checks</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">High priority</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{progress.highPriorityCompleted}/{progress.highPriorityTotal}</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">Critical checks</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ClockIcon className="h-8 w-8 text-navy" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <ClockIcon className="h-6 w-6 text-navy" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Timeline</p>
-              <p className="text-2xl font-semibold text-text-primary">6</p>
-              <p className="text-xs text-text-tertiary">Weeks remaining</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Timeline</p>
+              <p className="text-xl font-bold text-text-primary mt-1">6</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">Weeks remaining</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <DocumentCheckIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <DocumentCheckIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Evidence</p>
-              <p className="text-2xl font-semibold text-text-primary">{workflow.checks.reduce((acc, check) => acc + (check.evidence?.length || 0), 0)}</p>
-              <p className="text-xs text-text-tertiary">Documents collected</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Evidence</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{workflow.checks.reduce((acc, check) => acc + (check.evidence?.length || 0), 0)}</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">Documents collected</span>
           </div>
         </div>
       </div>
 
       {/* Category Progress */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-6">Progress by category</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-6">Progress by category</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {categoryProgress.map(({ category, name, Icon, completed, total, percentage }) => (
             <div key={category} className="text-center">
-              <div className="mx-auto w-16 h-16 bg-bg-alt rounded-lg flex items-center justify-center mb-3">
-                <Icon className="h-8 w-8 text-text-secondary" />
+              <div className="mx-auto w-16 h-16 bg-bg-alt rounded-xl flex items-center justify-center mb-3">
+                <Icon className="h-8 w-8 text-text-secondary" aria-hidden="true" />
               </div>
-              <h4 className="text-base font-medium text-text-primary mb-2">{name}</h4>
+              <h4 className="text-base font-bold text-text-primary mb-2">{name}</h4>
               <div className="relative pt-1">
                 <div className="flex mb-2 items-center justify-between">
                   <div>
@@ -204,7 +212,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
 
       {/* Key Findings */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Key findings</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Key findings</h3>
         <div className="space-y-3">
           {workflow.keyFindings.map((finding, index) => (
             <div key={index} className="flex items-start">
@@ -219,7 +227,7 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
 
       {/* Recommendations */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Recommendations</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Recommendations</h3>
         <div className="space-y-3">
           {workflow.recommendations.map((recommendation, index) => (
             <div key={index} className="flex items-start">
@@ -232,15 +240,15 @@ export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) 
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Loading detailed checklist...')} className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Loading detailed checklist...')} className="btn-primary min-h-12 transition-colors duration-fast">
           View detailed checklist
         </button>
-        <button onClick={() => toast.success('Report generated successfully')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Report generated successfully')} className="btn-outline min-h-12 transition-colors duration-fast">
           Generate report
         </button>
-        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule review meeting
         </button>
       </div>

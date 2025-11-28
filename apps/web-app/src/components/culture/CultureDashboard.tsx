@@ -163,49 +163,49 @@ export function CultureDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header - Practical UI: bold headings, proper spacing */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Culture assessment</h1>
-          <p className="text-text-secondary">Cultural compatibility analysis and integration planning</p>
+          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Culture assessment</h1>
+          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">Cultural compatibility analysis and integration planning</p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setViewMode('overview')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'overview'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Overview
           </button>
           <button
             onClick={() => setViewMode('profiles')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'profiles'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Profiles
           </button>
           <button
             onClick={() => setViewMode('compatibility')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'compatibility'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Compatibility
           </button>
           <button
             onClick={() => setViewMode('integration')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'integration'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Integration
@@ -213,29 +213,25 @@ export function CultureDashboard() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Practical UI: consistent card styling */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
-          <div key={item.name} className="card overflow-hidden">
-            <div className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-base font-medium text-text-tertiary truncate">
-                      {item.name}
-                    </dt>
-                    <dd className="text-lg font-medium text-text-primary">
-                      {item.value}
-                    </dd>
-                  </dl>
-                </div>
+          <div key={item.name} className="card p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+                <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />
               </div>
-              <div className="mt-3">
-                <span className="text-sm text-text-tertiary">{item.change}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-text-tertiary truncate">
+                  {item.name}
+                </p>
+                <p className="text-xl font-bold text-text-primary mt-1">
+                  {item.value}
+                </p>
               </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-border">
+              <span className="text-sm font-normal text-text-tertiary">{item.change}</span>
             </div>
           </div>
         ))}

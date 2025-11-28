@@ -93,75 +93,83 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
 
   return (
     <div className="space-y-8">
-      {/* Header & Performance Grade */}
+      {/* Header & Performance Grade - Practical UI: bold headings, proper spacing */}
       <div className="card p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-text-primary">Liftout analytics dashboard</h2>
-            <p className="text-text-secondary mt-1">
+            <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">Liftout analytics dashboard</h2>
+            <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
               {analytics.reportingPeriod.type.charAt(0).toUpperCase() + analytics.reportingPeriod.type.slice(1)} Report: {new Date(analytics.reportingPeriod.startDate).toLocaleDateString()} - {new Date(analytics.reportingPeriod.endDate).toLocaleDateString()}
             </p>
           </div>
           <div className="text-center">
-            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold ${getGradeColor(performanceGrade)}`}>
+            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl text-2xl font-bold ${getGradeColor(performanceGrade)}`}>
               {performanceGrade}
             </div>
-            <p className="text-base text-text-tertiary mt-2">Performance grade</p>
+            <p className="text-sm font-bold text-text-tertiary mt-2">Performance grade</p>
           </div>
         </div>
       </div>
 
-      {/* Key Metrics Overview */}
+      {/* Key Metrics Overview - Practical UI: consistent card styling */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CurrencyDollarIcon className="h-8 w-8 text-success" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <CurrencyDollarIcon className="h-6 w-6 text-success" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Total ROI</p>
-              <p className="text-2xl font-semibold text-text-primary">{formatPercentage(overallROI)}</p>
-              <p className="text-xs text-text-tertiary">vs {formatPercentage(analytics.roiAnalysis.totalROI)} target</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Total ROI</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{formatPercentage(overallROI)}</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">vs {formatPercentage(analytics.roiAnalysis.totalROI)} target</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-navy" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <CheckCircleIcon className="h-6 w-6 text-navy" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Success rate</p>
-              <p className="text-2xl font-semibold text-text-primary">{formatPercentage(analytics.platformMetrics.successfulLiftouts.successRate)}</p>
-              <p className="text-xs text-text-tertiary">{analytics.platformMetrics.successfulLiftouts.completed} of {analytics.platformMetrics.successfulLiftouts.total} completed</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Success rate</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{formatPercentage(analytics.platformMetrics.successfulLiftouts.successRate)}</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">{analytics.platformMetrics.successfulLiftouts.completed} of {analytics.platformMetrics.successfulLiftouts.total} completed</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <UserGroupIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <UserGroupIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Retention (12mo)</p>
-              <p className="text-2xl font-semibold text-text-primary">{formatPercentage(analytics.platformMetrics.retentionRates.month12)}</p>
-              <p className="text-xs text-text-tertiary">+{formatPercentage(analytics.platformMetrics.retentionRates.industryComparison)} vs industry</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Retention (12mo)</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{formatPercentage(analytics.platformMetrics.retentionRates.month12)}</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">+{formatPercentage(analytics.platformMetrics.retentionRates.industryComparison)} vs industry</span>
           </div>
         </div>
 
         <div className="card p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ClockIcon className="h-8 w-8 text-gold" />
+          <div className="flex items-center gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-bg-alt flex items-center justify-center">
+              <ClockIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             </div>
-            <div className="ml-4">
-              <p className="text-base font-medium text-text-tertiary">Time to hire</p>
-              <p className="text-2xl font-semibold text-text-primary">{analytics.platformMetrics.timeToHire.average}d</p>
-              <p className="text-xs text-text-tertiary">{formatPercentage(analytics.platformMetrics.timeToHire.benchmarkComparison)} vs benchmark</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-tertiary truncate">Time to hire</p>
+              <p className="text-xl font-bold text-text-primary mt-1">{analytics.platformMetrics.timeToHire.average}d</p>
             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-normal text-text-tertiary">{formatPercentage(analytics.platformMetrics.timeToHire.benchmarkComparison)} vs benchmark</span>
           </div>
         </div>
       </div>
@@ -170,8 +178,8 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Impact */}
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-            <ArrowTrendingUpIcon className="h-5 w-5 mr-2 text-success" />
+          <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+            <ArrowTrendingUpIcon className="h-5 w-5 text-success" aria-hidden="true" />
             Revenue impact
           </h3>
 
@@ -221,8 +229,8 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
 
         {/* Performance Metrics */}
         <div className="card p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-            <ChartBarIcon className="h-5 w-5 mr-2 text-navy" />
+          <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+            <ChartBarIcon className="h-5 w-5 text-navy" aria-hidden="true" />
             Performance metrics
           </h3>
 
@@ -272,13 +280,13 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
 
       {/* Key Insights */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center">
-          <LightBulbIcon className="h-5 w-5 mr-2 text-gold" />
+        <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+          <LightBulbIcon className="h-5 w-5 text-gold" aria-hidden="true" />
           Key insights
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="text-sm font-medium text-text-secondary mb-3">Performance analysis</h4>
+            <h4 className="text-sm font-bold text-text-secondary mb-3">Performance analysis</h4>
             <div className="space-y-3">
               {insights.map((insight, index) => (
                 <div key={index} className="flex items-start">
@@ -292,7 +300,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
           </div>
 
           <div>
-            <h4 className="text-sm font-medium text-text-secondary mb-3">Recommendations</h4>
+            <h4 className="text-sm font-bold text-text-secondary mb-3">Recommendations</h4>
             <div className="space-y-3">
               {recommendations.map((recommendation, index) => (
                 <div key={index} className="flex items-start">
@@ -309,7 +317,7 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
 
       {/* Industry Benchmarks */}
       <div className="card p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Industry benchmarks</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-4">Industry benchmarks</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-border">
             <thead className="bg-bg-alt">
@@ -344,18 +352,18 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Report exported successfully')} className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Report exported successfully')} className="btn-primary min-h-12 transition-colors duration-fast">
           Export full report
         </button>
-        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule review meeting
         </button>
-        <button onClick={() => toast.success('Alert preferences saved')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Alert preferences saved')} className="btn-outline min-h-12 transition-colors duration-fast">
           Configure alerts
         </button>
-        <button onClick={() => toast.success('Loading historical data...')} className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Loading historical data...')} className="btn-outline min-h-12 transition-colors duration-fast">
           Historical trends
         </button>
       </div>
