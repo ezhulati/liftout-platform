@@ -69,21 +69,22 @@ export function FAQ() {
               >
                 Frequently asked questions
               </h2>
-              <p className="text-text-secondary leading-relaxed mb-8">
+              {/* Practical UI: 18px body text minimum */}
+              <p className="text-text-secondary text-lg leading-relaxed mb-8">
                 Everything you need to know about team acquisition. Can't find what you're looking for? Our team is here to help.
               </p>
 
-              {/* Support option */}
+              {/* Support option - Practical UI: 48px touch target, proper text sizes */}
               <Link
                 href="/contact"
-                className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-border-hover hover:shadow-sm transition-all group"
+                className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-border-hover hover:shadow-sm transition-all group min-h-12"
               >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-navy transition-colors" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
-                  <EnvelopeIcon className="w-5 h-5 text-navy group-hover:text-on-dark" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-navy transition-colors" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
+                  <EnvelopeIcon className="w-6 h-6 text-navy group-hover:text-on-dark" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="font-semibold text-text-primary text-sm">Contact us</p>
-                  <p className="text-text-secondary text-sm">We respond within 2 hours</p>
+                  <p className="font-semibold text-text-primary text-base">Contact us</p>
+                  <p className="text-text-secondary text-base">We respond within 2 hours</p>
                 </div>
               </Link>
             </div>
@@ -125,8 +126,9 @@ export function FAQ() {
                       openIndex === index ? 'max-h-96' : 'max-h-0'
                     }`}
                   >
+                    {/* Practical UI: 18px body text */}
                     <div className="px-6 pb-6 pt-0">
-                      <p className="text-text-secondary leading-relaxed">
+                      <p className="text-text-secondary text-lg leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>
@@ -135,9 +137,9 @@ export function FAQ() {
               ))}
             </div>
 
-            {/* Additional help text */}
+            {/* Additional help text - Practical UI: 18px body text */}
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.05)' }}>
-              <p className="text-text-secondary">
+              <p className="text-text-secondary text-lg leading-relaxed">
                 <span className="font-semibold text-text-primary">Need help with something specific?</span>
                 {' '}Our team has helped 150+ companies and teams navigate the acquisition process.
                 We're happy to answer any questions before you commit.

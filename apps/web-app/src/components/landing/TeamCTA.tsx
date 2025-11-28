@@ -50,40 +50,41 @@ export function TeamCTA() {
         />
       </div>
 
-      <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      {/* Practical UI: Left-align on desktop for body text readability */}
+      <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
-        <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-gold">
+        <p className="font-semibold tracking-wider uppercase text-base mb-4 text-gold text-center lg:text-left">
           Your team's next chapter awaits
         </p>
 
-        {/* Headline */}
+        {/* Headline - short headlines can be centered */}
         <h2
           id="team-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
         >
           Your next opportunity should not
           <span className="block mt-2 text-gold">break up what you have built</span>
         </h2>
 
-        {/* Description */}
-        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
+        {/* Description - Practical UI: left-align body text, 18px min */}
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mb-8 text-center lg:text-left">
           You have spent years building trust, refining processes, and achieving together.
           Companies value that. Find the right one for your team.
         </p>
 
-        {/* Trust reassurances */}
-        <div className="flex flex-wrap justify-center gap-6 mb-10">
+        {/* Trust reassurances - Practical UI: icons with labels, 18px text */}
+        <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-10">
           {trustReassurances.map((item) => (
             <div key={item.text} className="flex items-center gap-2 text-on-dark-muted">
               <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
-              <span className="text-base font-medium">{item.text}</span>
+              <span className="text-lg font-medium">{item.text}</span>
             </div>
           ))}
         </div>
 
-        {/* CTA buttons - centered per Practical UI */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          {/* Primary CTA - white on dark bg per Practical UI */}
+        {/* CTA buttons - Practical UI: Primary first (left), one primary per section */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+          {/* Primary CTA - white on dark bg */}
           <Link
             href="/auth/signup?type=team"
             className="btn-primary-on-dark gap-3 px-8 py-3 text-lg group"
@@ -92,29 +93,29 @@ export function TeamCTA() {
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
-          {/* Secondary CTA - outline on dark bg */}
+          {/* Tertiary CTA - underlined text for less important action */}
           <Link
             href="/for-companies"
-            className="btn-secondary-on-dark px-8 py-3 text-lg"
+            className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 hover:text-white transition-colors min-h-12"
           >
             Browse teams
           </Link>
         </div>
 
-        {/* Sign in link */}
-        <p className="text-on-dark-muted text-base">
+        {/* Sign in link - Practical UI: tertiary/underlined link */}
+        <p className="text-on-dark-muted text-lg text-center lg:text-left">
           Already have an account?{' '}
           <Link
             href="/auth/signin"
             className="text-gold underline underline-offset-4 transition-colors hover:text-white"
           >
-            Sign in here
+            Sign in
           </Link>
         </p>
 
-        {/* What teams are saying */}
+        {/* What teams are saying - Practical UI: left-aligned testimonials */}
         <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-white/60 text-sm mb-6 uppercase tracking-wider font-semibold">
+          <p className="text-white/60 text-base mb-6 uppercase tracking-wider font-semibold text-center lg:text-left">
             Teams that moved together
           </p>
           <div className="grid sm:grid-cols-3 gap-8 text-left">
@@ -124,10 +125,10 @@ export function TeamCTA() {
                 className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
-                <blockquote className="font-body text-white/80 text-base leading-relaxed mb-3 italic">
+                <blockquote className="font-body text-white/80 text-lg leading-relaxed mb-3 italic">
                   "{item.quote}"
                 </blockquote>
-                <p className="text-white/60 text-sm">{item.team}</p>
+                <p className="text-white/60 text-base font-medium">{item.team}</p>
               </div>
             ))}
           </div>

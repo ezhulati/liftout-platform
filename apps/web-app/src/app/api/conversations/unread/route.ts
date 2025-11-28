@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable } from '@/lib/api-helpers';
 import { getMockConversations } from '@/lib/mock-data';
 
+export const dynamic = 'force-dynamic';
+
 const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
 
 export async function GET(request: NextRequest) {

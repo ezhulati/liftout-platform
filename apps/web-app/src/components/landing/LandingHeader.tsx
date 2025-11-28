@@ -73,32 +73,32 @@ export function LandingHeader() {
             />
           </Link>
 
-          {/* Desktop navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop navigation - Practical UI: 18px text, 48px touch targets */}
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-12 flex items-center"
+                className="text-text-secondary hover:text-text-primary font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Right side */}
+          {/* Right side - Practical UI: Primary button with Verb+Noun label */}
           <div className="flex items-center gap-4">
             <Link
               href="/auth/signin"
-              className="hidden sm:flex text-text-secondary hover:text-text-primary font-medium text-base transition-colors duration-200 min-h-12 items-center"
+              className="hidden sm:flex text-text-secondary hover:text-text-primary font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2"
             >
               Sign in
             </Link>
             <Link
               href="/auth/signup"
-              className="btn-outline min-h-12 px-5 text-base hidden sm:inline-flex"
+              className="btn-primary min-h-12 px-6 text-base hidden sm:inline-flex"
             >
-              Get started
+              Start free
             </Link>
 
             {/* Mobile menu button */}
@@ -138,12 +138,13 @@ export function LandingHeader() {
             : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
       >
+        {/* Practical UI: 18px text, 48px touch targets for mobile */}
         <div className="max-w-7xl mx-auto px-6 py-4 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block w-full px-4 py-3 text-text-primary hover:bg-bg-elevated font-medium rounded-lg transition-colors duration-200"
+              className="block w-full px-4 py-4 text-text-primary hover:bg-bg-elevated font-medium text-lg rounded-lg transition-colors duration-200 min-h-12"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.label}
@@ -153,17 +154,17 @@ export function LandingHeader() {
           <div className="pt-4 border-t border-border mt-4 space-y-3">
             <Link
               href="/auth/signin"
-              className="block w-full px-4 py-3 text-text-secondary hover:bg-bg-elevated font-medium rounded-lg transition-colors duration-200"
+              className="block w-full px-4 py-4 text-text-secondary hover:bg-bg-elevated font-medium text-lg rounded-lg transition-colors duration-200 min-h-12"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Sign in
             </Link>
             <Link
               href="/auth/signup"
-              className="btn-outline w-full min-h-12 justify-center"
+              className="btn-primary w-full min-h-12 justify-center text-lg"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Get started
+              Start free
             </Link>
           </div>
         </div>
