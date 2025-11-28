@@ -1,7 +1,6 @@
 [build]
-  base = "apps/web-app"
-  command = "npm install -g pnpm && cd ../.. && pnpm install && pnpm --filter @liftout/web-app run build"
-  publish = ".next"
+  command = "npm install -g pnpm && pnpm install && pnpm --filter @liftout/web-app run build"
+  publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "20"
