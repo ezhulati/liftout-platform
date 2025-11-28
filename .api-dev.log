@@ -114,7 +114,8 @@ prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
 3:26:56 PM [tsx] forcing restart
 3:27:32 PM [tsx] forcing restart
 3:27:40 PM [tsx] forcing restart
- (socket: 5NxgRC9o52Em5YuqAAEM) {"service":"liftout-api"}
+3:34:01 PM [tsx] forcing restart
+"service":"liftout-api"}
 2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
 2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Zpcj68phglU3MKmdAAEW) {"service":"liftout-api"}
@@ -230,3 +231,10 @@ Error: listen EADDRINUSE: address already in use :::8000
 2025-11-28 15:27:40 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
 2025-11-28 15:27:40 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
 2025-11-28 15:27:40 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+3:34:01 PM [tsx] restarting
+2025-11-28 15:34:01 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 15:34:01 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 15:34:02 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 15:34:02 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 15:34:02 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 15:34:02 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}

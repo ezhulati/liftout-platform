@@ -146,16 +146,26 @@ export const authOptions: NextAuthOptions = {
         ? 'https://liftout.netlify.app'
         : baseUrl;
 
+      // Handle error pages
       if (url.includes('/auth/error') || url.includes('/api/auth/error')) {
         return url;
       }
 
+      // Allow onboarding redirects (for new signups including OAuth)
+      if (url.includes('/app/onboarding')) {
+        if (url.startsWith('/')) return `${prodBaseUrl}${url}`;
+        return url;
+      }
+
+      // Default signin redirect goes to dashboard (returning users)
       if (url.includes('/auth/signin') || url === baseUrl || url === prodBaseUrl) {
         return `${prodBaseUrl}/app/dashboard`;
       }
 
+      // Handle relative paths
       if (url.startsWith('/')) return `${prodBaseUrl}${url}`;
 
+      // Handle same-origin URLs
       try {
         const urlObj = new URL(url);
         const baseUrlObj = new URL(prodBaseUrl);
