@@ -79,18 +79,18 @@ export function ProfileSettings() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg font-medium text-text-primary">Profile information</h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <h3 className="text-lg font-bold text-text-primary">Profile information</h3>
+        <p className="mt-1 text-sm font-normal text-text-secondary leading-relaxed">
           Update your basic profile information. For detailed profile editing, use the dedicated profile page.
         </p>
-        <div className="mt-3">
+        <div className="mt-4">
           <button
             onClick={handleGoToDetailedProfile}
             className="btn-outline min-h-12 inline-flex items-center"
           >
-            <UserIcon className="h-5 w-5 mr-2" />
+            <UserIcon className="h-5 w-5 mr-2" aria-hidden="true" />
             Edit detailed profile
           </button>
         </div>
@@ -172,7 +172,7 @@ export function ProfileSettings() {
 
         {/* Professional Information */}
         <div className="pt-6 border-t border-border space-y-5">
-          <h4 className="text-base font-medium text-text-primary">Professional information</h4>
+          <h4 className="text-base font-bold text-text-primary">Professional information</h4>
 
           <FormField label="Current company" name="companyName">
             <div className="relative">
@@ -229,7 +229,7 @@ export function ProfileSettings() {
 
         {/* Additional Information */}
         <div className="pt-6 border-t border-border space-y-5">
-          <h4 className="text-base font-medium text-text-primary">Additional information</h4>
+          <h4 className="text-base font-bold text-text-primary">Additional information</h4>
 
           <FormField label="Bio" name="bio" hint="Brief description for your profile. Maximum 500 characters.">
             <textarea

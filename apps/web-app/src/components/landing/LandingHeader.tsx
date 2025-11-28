@@ -81,8 +81,8 @@ export function LandingHeader() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled || isMobileMenuOpen
-          ? 'bg-bg-surface border-b border-border'
-          : 'bg-transparent'
+          ? 'bg-bg-surface border-b border-border shadow-sm'
+          : 'bg-bg-surface/95 backdrop-blur-sm'
       } ${
         isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
       }`}

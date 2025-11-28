@@ -1,6 +1,7 @@
 [build]
-  command = "pnpm --filter @liftout/web-app run build"
-  publish = "apps/web-app/.next"
+  base = "apps/web-app"
+  command = "cd ../.. && pnpm --filter @liftout/web-app run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"

@@ -460,10 +460,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     >
       <div className="bg-bg-surface rounded-lg shadow-xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-text-primary">Start new conversation</h2>
+          <h2 className="text-lg font-bold text-text-primary">Start new conversation</h2>
           <button
             onClick={() => setShowNewConversationModal(false)}
-            className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary rounded-lg transition-colors"
+            className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary rounded-xl transition-colors"
+            aria-label="Close modal"
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -506,17 +507,17 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     </div>
   );
 
-  // Conversation List Component
+  // Conversation List Component - Practical UI typography
   const ConversationList = () => (
     <div className="flex flex-col h-full bg-bg-surface">
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold text-text-primary">Messages</h1>
+            <h1 className="text-xl font-bold text-text-primary">Messages</h1>
             <div className="flex items-center gap-1">
               {getConnectionStatusIcon()}
-              <span className={`text-xs ${
+              <span className={`text-xs font-normal ${
                 connectionStatus === 'connected' ? 'text-success' :
                 connectionStatus === 'connecting' ? 'text-gold' : 'text-error'
               }`}>
@@ -528,7 +529,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
             onClick={handleNewConversation}
             className="btn-primary min-h-12 px-4 inline-flex items-center gap-2"
           >
-            <PlusIcon className="h-5 w-5" />
+            <PlusIcon className="h-5 w-5" aria-hidden="true" />
             <span className="hidden sm:inline">New</span>
           </button>
         </div>
@@ -589,11 +590,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
                       <h3 className={`text-base truncate ${
-                        unreadCount > 0 ? 'font-semibold text-text-primary' : 'font-medium text-text-primary'
+                        unreadCount > 0 ? 'font-bold text-text-primary' : 'font-normal text-text-primary'
                       }`}>
                         {conversation.title}
                       </h3>
-                      <span className="text-xs text-text-tertiary flex-shrink-0">
+                      <span className="text-xs font-normal text-text-tertiary flex-shrink-0">
                         {formatTime(conversation.lastActivity)}
                       </span>
                     </div>
@@ -611,11 +612,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
                     {/* Tags */}
                     <div className="flex items-center gap-2 mt-2">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getSecurityBadge(conversation.securityLevel)}`}>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getSecurityBadge(conversation.securityLevel)}`}>
                         {conversation.securityLevel}
                       </span>
                       {conversation.isConfidential && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-error-light text-error-dark">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-error-light text-error-dark">
                           confidential
                         </span>
                       )}
@@ -636,9 +637,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
       return (
         <div className="h-full flex items-center justify-center bg-bg-surface">
           <div className="text-center p-8">
-            <ChatBubbleLeftRightIcon className="h-16 w-16 text-text-tertiary mx-auto mb-4" />
-            <h2 className="text-lg font-medium text-text-primary mb-2">Select a conversation</h2>
-            <p className="text-text-secondary">
+            <div className="w-16 h-16 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+              <ChatBubbleLeftRightIcon className="h-8 w-8 text-text-tertiary" aria-hidden="true" />
+            </div>
+            <h2 className="text-lg font-bold text-text-primary mb-2">Select a conversation</h2>
+            <p className="text-base font-normal text-text-secondary">
               Choose a conversation from the list to start messaging
             </p>
           </div>
@@ -663,11 +666,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 {getSecurityIcon(selectedConversation.securityLevel)}
-                <h2 className="text-lg font-semibold text-text-primary truncate">
+                <h2 className="text-lg font-bold text-text-primary truncate">
                   {selectedConversation.title}
                 </h2>
               </div>
-              <div className="flex items-center gap-3 mt-1 text-sm text-text-secondary">
+              <div className="flex items-center gap-3 mt-1 text-sm font-normal text-text-secondary">
                 <span>{selectedConversation.participants.length} participants</span>
                 {effectiveIsConnected && (
                   <span className="inline-flex items-center gap-1 text-success">
@@ -686,17 +689,17 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
           {/* Security badges */}
           <div className="flex items-center gap-2 mt-3">
-            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getSecurityBadge(selectedConversation.securityLevel)}`}>
+            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${getSecurityBadge(selectedConversation.securityLevel)}`}>
               {selectedConversation.securityLevel} security
             </span>
             {selectedConversation.encryptionEnabled && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-success-light text-success-dark">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold bg-success-light text-success-dark">
                 <LockClosedIcon className="h-3 w-3" />
                 encrypted
               </span>
             )}
             {selectedConversation.isConfidential && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-error-light text-error-dark">
+              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-error-light text-error-dark">
                 confidential
               </span>
             )}
@@ -722,7 +725,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                   {/* Sender name (for received messages) */}
                   {!isOwnMessage && (
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium">{message.senderName}</span>
+                      <span className="text-xs font-bold">{message.senderName}</span>
                       {isUserOnline(message.senderId) && (
                         <span className="w-2 h-2 bg-success rounded-full"></span>
                       )}

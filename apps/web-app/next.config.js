@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   transpilePackages: ['@liftout/database'],
   eslint: {
     // Skip ESLint during production builds - linting is done in CI/development

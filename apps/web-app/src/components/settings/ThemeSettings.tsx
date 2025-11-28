@@ -148,7 +148,7 @@ export function ThemeSettings() {
     <div className="space-y-8">
       {/* Header */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg leading-6 font-medium text-text-primary">Theme & interface</h3>
+        <h3 className="text-lg leading-6 font-bold text-text-primary">Theme & interface</h3>
         <p className="mt-1 text-sm text-text-secondary">
           Customize your Liftout experience with themes, languages, and display preferences.
         </p>
@@ -158,7 +158,7 @@ export function ThemeSettings() {
       <div className="space-y-4">
         <div className="flex items-center">
           <SwatchIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Appearance</h4>
+          <h4 className="text-base font-bold text-text-primary">Appearance</h4>
         </div>
         <p className="text-sm text-text-secondary">
           Choose your preferred theme for the Liftout interface.
@@ -180,7 +180,7 @@ export function ThemeSettings() {
                   <option.icon className="h-8 w-8 text-text-secondary" />
                 </div>
                 <div className="flex items-center">
-                  <h3 className="text-sm font-medium text-text-primary">{option.title}</h3>
+                  <h3 className="text-sm font-bold text-text-primary">{option.title}</h3>
                   {settings.theme.theme === option.value && (
                     <div className="ml-2 flex-shrink-0 text-navy">
                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -200,13 +200,13 @@ export function ThemeSettings() {
       <div className="space-y-4">
         <div className="flex items-center">
           <ViewColumnsIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Interface options</h4>
+          <h4 className="text-base font-bold text-text-primary">Interface options</h4>
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 border border-border rounded-lg">
             <div>
-              <p className="text-sm font-medium text-text-primary">Compact mode</p>
+              <p className="text-sm font-bold text-text-primary">Compact mode</p>
               <p className="text-sm text-text-secondary">Reduce padding and spacing for a denser interface</p>
             </div>
             <ToggleSwitch
@@ -221,12 +221,12 @@ export function ThemeSettings() {
       <div className="space-y-4">
         <div className="flex items-center">
           <LanguageIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Language & region</h4>
+          <h4 className="text-base font-bold text-text-primary">Language & region</h4>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="language" className="block text-sm font-medium text-text-secondary">
+            <label htmlFor="language" className="block text-sm font-bold text-text-secondary">
               Language
             </label>
             <select
@@ -244,7 +244,7 @@ export function ThemeSettings() {
           </div>
 
           <div>
-            <label htmlFor="timezone" className="block text-sm font-medium text-text-secondary">
+            <label htmlFor="timezone" className="block text-sm font-bold text-text-secondary">
               <ClockIcon className="h-4 w-4 inline mr-1" />
               Timezone
             </label>
@@ -266,11 +266,11 @@ export function ThemeSettings() {
 
       {/* Format Preferences */}
       <div className="space-y-4">
-        <h4 className="text-base font-medium text-text-primary">Format preferences</h4>
+        <h4 className="text-base font-bold text-text-primary">Format preferences</h4>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="dateFormat" className="block text-sm font-medium text-text-secondary">
+            <label htmlFor="dateFormat" className="block text-sm font-bold text-text-secondary">
               <CalendarIcon className="h-4 w-4 inline mr-1" />
               Date format
             </label>
@@ -289,7 +289,7 @@ export function ThemeSettings() {
           </div>
 
           <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-text-secondary">
+            <label htmlFor="currency" className="block text-sm font-bold text-text-secondary">
               <CurrencyDollarIcon className="h-4 w-4 inline mr-1" />
               Currency
             </label>
@@ -313,7 +313,7 @@ export function ThemeSettings() {
       <div className="space-y-4">
         <div className="flex items-center">
           <EnvelopeIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Email digest</h4>
+          <h4 className="text-base font-bold text-text-primary">Email digest</h4>
         </div>
         <p className="text-sm text-text-secondary">
           Choose how often you'd like to receive summary emails about platform activity.
@@ -332,7 +332,7 @@ export function ThemeSettings() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-text-primary">{freq.label}</p>
+                  <p className="text-sm font-bold text-text-primary">{freq.label}</p>
                   <p className="text-sm text-text-secondary">{freq.description}</p>
                 </div>
                 {settings.theme.emailDigestFrequency === freq.value && (
@@ -350,10 +350,10 @@ export function ThemeSettings() {
 
       {/* Preview */}
       <div className="bg-bg-elevated rounded-lg p-6">
-        <h4 className="text-base font-medium text-text-primary mb-4">Preview</h4>
+        <h4 className="text-base font-bold text-text-primary mb-4">Preview</h4>
         <div className="bg-bg-surface rounded-lg border border-border p-4">
           <div className="flex items-center justify-between mb-3">
-            <h5 className="text-sm font-medium text-text-primary">Sample liftout opportunity</h5>
+            <h5 className="text-sm font-bold text-text-primary">Sample liftout opportunity</h5>
             <span className="text-xs text-text-tertiary">
               {new Date().toLocaleDateString(
                 settings.theme.language,

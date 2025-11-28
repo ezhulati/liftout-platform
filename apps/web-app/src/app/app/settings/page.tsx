@@ -62,7 +62,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="text-center py-12">
           <Cog6ToothIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-          <h2 className="text-lg font-medium text-text-primary mb-2">Sign in required</h2>
+          <h2 className="text-lg font-bold text-text-primary mb-2">Sign in required</h2>
           <p className="text-text-secondary">Please sign in to access your settings.</p>
         </div>
       </div>
@@ -71,10 +71,10 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header */}
+      {/* Page Header - Practical UI: bold headings, regular body */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">Settings</h1>
-        <p className="mt-1 text-base text-text-secondary">
+        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Settings</h1>
+        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
           Manage your account settings and preferences
         </p>
       </div>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
                     aria-hidden="true"
                   />
                   <div>
-                    <span className="block text-base font-medium">{tab.name}</span>
+                    <span className="block text-base font-bold">{tab.name}</span>
                     <span className={`block text-sm ${isActive ? 'text-navy-600' : 'text-text-tertiary'}`}>
                       {tab.description}
                     </span>

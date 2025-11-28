@@ -155,24 +155,24 @@ export default function TeamManagePage() {
 
   return (
     <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      {/* Header */}
+      {/* Header - Practical UI: tertiary back link, bold headings */}
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-text-secondary hover:text-text-primary mb-4"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center mb-4"
         >
-          <ArrowLeftIcon className="h-5 w-5 mr-2" />
-          Back to Team Profile
+          <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+          Back to team profile
         </button>
-        
+
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-              <UserGroupIcon className="h-6 w-6 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="h-14 w-14 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
+              <UserGroupIcon className="h-7 w-7 text-white" aria-hidden="true" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-text-primary">Team Management</h1>
-              <p className="text-text-secondary">{teamData.teamName}</p>
+              <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Team Management</h1>
+              <p className="text-base font-normal text-text-secondary mt-1">{teamData.teamName}</p>
             </div>
           </div>
 
@@ -181,87 +181,87 @@ export default function TeamManagePage() {
               onClick={() => setShowInviteForm(true)}
               className="btn-primary min-h-12 flex items-center"
             >
-              <PlusIcon className="h-5 w-5 mr-2" />
+              <PlusIcon className="h-5 w-5 mr-2" aria-hidden="true" />
               Invite member
             </button>
           )}
         </div>
       </div>
 
-      {/* Team Overview */}
+      {/* Team Overview - Practical UI: bold section headings, consistent typography */}
       <div className="card mb-6">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-medium text-text-primary">Team Overview</h2>
+          <h2 className="text-lg font-bold text-text-primary">Team Overview</h2>
         </div>
         <div className="px-6 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
               <div className="text-2xl font-bold text-navy">{teamData.teamSize}</div>
-              <div className="text-sm text-text-secondary">Current Members</div>
+              <div className="text-sm font-normal text-text-secondary mt-1">Current members</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-success">{teamData.pendingInvitations.length}</div>
-              <div className="text-sm text-text-secondary">Pending Invitations</div>
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
+              <div className="text-2xl font-bold text-gold">{teamData.pendingInvitations.length}</div>
+              <div className="text-sm font-normal text-text-secondary mt-1">Pending invites</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
               <div className="text-2xl font-bold text-navy">{teamData.maxTeamSize}</div>
-              <div className="text-sm text-text-secondary">Max Team Size</div>
+              <div className="text-sm font-normal text-text-secondary mt-1">Max team size</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gold-600">
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
+              <div className="text-2xl font-bold text-success">
                 {teamData.maxTeamSize - teamData.teamSize}
               </div>
-              <div className="text-sm text-text-secondary">Available Spots</div>
+              <div className="text-sm font-normal text-text-secondary mt-1">Available spots</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Current Members */}
+      {/* Current Members - Practical UI: bold section heading, proper typography hierarchy */}
       <div className="card mb-6">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-medium text-text-primary">Team Members ({allMembers.length})</h2>
+          <h2 className="text-lg font-bold text-text-primary">Team members ({allMembers.length})</h2>
         </div>
         <div className="px-6 py-6">
           <div className="space-y-4">
             {allMembers.map((member) => (
-              <div key={member.userId} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                    <span className="text-sm font-medium text-white">
+              <div key={member.userId} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-bold text-white">
                       {member.name.split(' ').map(n => n[0]).join('')}
                     </span>
                   </div>
                   <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-medium text-text-primary">{member.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base font-bold text-text-primary">{member.name}</h3>
                       {member.role === 'leader' && (
-                        <CheckBadgeIcon className="h-5 w-5 text-navy" />
+                        <CheckBadgeIcon className="h-5 w-5 text-navy" aria-hidden="true" />
                       )}
                     </div>
-                    <p className="text-sm text-text-secondary">{member.title}</p>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-sm font-normal text-text-secondary">{member.title}</p>
+                    <p className="text-sm font-normal text-text-tertiary">
                       Joined {formatDistanceToNow(member.joinedAt.toDate(), { addSuffix: true })}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    member.role === 'leader' 
-                      ? 'bg-navy-50 text-navy-800' 
-                      : 'bg-bg-alt text-text-primary'
+                <div className="flex items-center gap-3">
+                  <span className={`badge text-xs ${
+                    member.role === 'leader'
+                      ? 'badge-primary'
+                      : 'badge-secondary'
                   }`}>
-                    {member.role === 'leader' ? 'Team Leader' : 'Member'}
+                    {member.role === 'leader' ? 'Team leader' : 'Member'}
                   </span>
 
                   {isLeader && member.role !== 'leader' && (
                     <button
                       onClick={() => handleRemoveMember(member.userId, member.name)}
-                      className="text-text-tertiary hover:text-error p-1"
+                      className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
                       title="Remove member"
                     >
-                      <UserMinusIcon className="h-4 w-4" />
+                      <UserMinusIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                   )}
                 </div>
@@ -271,49 +271,49 @@ export default function TeamManagePage() {
         </div>
       </div>
 
-      {/* Pending Invitations */}
+      {/* Pending Invitations - Practical UI: consistent card styling */}
       {teamData.pendingInvitations.length > 0 && (
         <div className="card mb-6">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary">
-              Pending Invitations ({teamData.pendingInvitations.length})
+            <h2 className="text-lg font-bold text-text-primary">
+              Pending invitations ({teamData.pendingInvitations.length})
             </h2>
           </div>
           <div className="px-6 py-6">
             <div className="space-y-4">
               {teamData.pendingInvitations.map((invitation) => (
-                <div key={invitation.id} className="flex items-center justify-between p-4 border border-gold/30 bg-gold-50 rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    <div className="h-10 w-10 rounded-full bg-gold-100 flex items-center justify-center">
-                      <EnvelopeIcon className="h-5 w-5 text-gold" />
+                <div key={invitation.id} className="flex items-center justify-between p-4 border border-gold/30 bg-gold-50 rounded-xl">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-gold-100 flex items-center justify-center flex-shrink-0">
+                      <EnvelopeIcon className="h-6 w-6 text-gold" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-text-primary">{invitation.invitedEmail}</h3>
-                      <p className="text-sm text-text-secondary">
+                      <h3 className="text-base font-bold text-text-primary">{invitation.invitedEmail}</h3>
+                      <p className="text-sm font-normal text-text-secondary">
                         Invited {formatDistanceToNow(invitation.invitedAt.toDate(), { addSuffix: true })}
                       </p>
-                      <p className="text-xs text-text-tertiary">
+                      <p className="text-sm font-normal text-text-tertiary">
                         Expires {formatDistanceToNow(invitation.expiresAt.toDate(), { addSuffix: true })}
                       </p>
                       {invitation.message && (
-                        <p className="text-sm text-text-secondary mt-1 italic">&ldquo;{invitation.message}&rdquo;</p>
+                        <p className="text-sm font-normal text-text-secondary mt-1 italic">&ldquo;{invitation.message}&rdquo;</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <span className="flex items-center px-2 py-1 text-xs font-medium bg-gold-100 text-gold-800 rounded-full">
-                      <ClockIcon className="h-3 w-3 mr-1" />
+                  <div className="flex items-center gap-3">
+                    <span className="badge badge-warning text-xs flex items-center">
+                      <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                       Pending
                     </span>
 
                     {isLeader && (
                       <button
                         onClick={() => handleCancelInvitation(invitation.id, invitation.invitedEmail)}
-                        className="text-text-tertiary hover:text-error p-1"
+                        className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
                         title="Cancel invitation"
                       >
-                        <XMarkIcon className="h-4 w-4" />
+                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                       </button>
                     )}
                   </div>
@@ -324,16 +324,16 @@ export default function TeamManagePage() {
         </div>
       )}
 
-      {/* Required Skills */}
+      {/* Required Skills - Practical UI: consistent badge styling */}
       {teamData.requiredSkills && teamData.requiredSkills.length > 0 && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary">Skills We&apos;re Looking For</h2>
+            <h2 className="text-lg font-bold text-text-primary">Skills we&apos;re looking for</h2>
           </div>
           <div className="px-6 py-6">
             <div className="flex flex-wrap gap-2">
               {teamData.requiredSkills.map((skill) => (
-                <span key={skill} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
+                <span key={skill} className="badge badge-success text-sm">
                   {skill}
                 </span>
               ))}
@@ -342,24 +342,26 @@ export default function TeamManagePage() {
         </div>
       )}
 
-      {/* Invite Form Modal */}
+      {/* Invite Form Modal - Practical UI: labels on top, primary button left */}
       {showInviteForm && (
-        <div className="fixed inset-0 bg-bg-alt0 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-bg-surface rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-text-primary">Invite Team Member</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-surface rounded-xl p-6 max-w-md w-full shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-text-primary">Invite team member</h3>
               <button
                 onClick={() => setShowInviteForm(false)}
-                className="text-text-tertiary hover:text-text-secondary"
+                className="text-text-tertiary hover:text-text-primary min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-bg-elevated transition-colors duration-fast"
+                aria-label="Close"
               >
-                <XMarkIcon className="h-6 w-6" />
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
 
-            <form onSubmit={handleInvite} className="space-y-4">
+            <form onSubmit={handleInvite} className="space-y-5">
+              {/* Label on TOP per Practical UI */}
               <div>
-                <label htmlFor="inviteEmail" className="block text-sm font-medium text-text-secondary mb-1">
-                  Email Address *
+                <label htmlFor="inviteEmail" className="block text-base font-bold text-text-primary mb-2">
+                  Email address *
                 </label>
                 <input
                   type="email"
@@ -373,8 +375,8 @@ export default function TeamManagePage() {
               </div>
 
               <div>
-                <label htmlFor="inviteMessage" className="block text-sm font-medium text-text-secondary mb-1">
-                  Personal Message (Optional)
+                <label htmlFor="inviteMessage" className="block text-base font-bold text-text-primary mb-2">
+                  Personal message <span className="font-normal text-text-tertiary">(optional)</span>
                 </label>
                 <textarea
                   id="inviteMessage"
@@ -386,7 +388,8 @@ export default function TeamManagePage() {
                 />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4">
+              {/* Practical UI: Primary left, Tertiary right */}
+              <div className="flex items-center gap-4 pt-4">
                 <button
                   type="submit"
                   disabled={isInviting}
@@ -397,7 +400,7 @@ export default function TeamManagePage() {
                 <button
                   type="button"
                   onClick={() => setShowInviteForm(false)}
-                  className="text-link min-h-12 flex items-center"
+                  className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12"
                 >
                   Cancel
                 </button>

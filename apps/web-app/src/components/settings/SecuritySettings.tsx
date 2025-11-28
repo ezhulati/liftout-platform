@@ -288,10 +288,10 @@ export function SecuritySettings() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg font-medium text-text-primary">Security settings</h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <h3 className="text-lg font-bold text-text-primary">Security settings</h3>
+        <p className="mt-1 text-sm font-normal text-text-secondary leading-relaxed">
           Manage your account security and authentication preferences.
         </p>
       </div>
@@ -301,7 +301,7 @@ export function SecuritySettings() {
         <div className="flex items-center">
           <ShieldCheckIcon className="h-8 w-8 text-success mr-3" />
           <div>
-            <h4 className="text-lg font-medium text-text-primary">Security status</h4>
+            <h4 className="text-lg font-bold text-text-primary">Security status</h4>
             <p className="text-sm text-text-secondary">Your account security is good</p>
           </div>
         </div>
@@ -333,7 +333,7 @@ export function SecuritySettings() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <KeyIcon className="h-5 w-5 text-text-tertiary mr-2" />
-              <h4 className="text-base font-medium text-text-primary">Password</h4>
+              <h4 className="text-base font-bold text-text-primary">Password</h4>
             </div>
             <div className="text-sm text-text-tertiary">
               Last changed: {settings.security.passwordLastChanged
@@ -373,13 +373,13 @@ export function SecuritySettings() {
         <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center">
             <DevicePhoneMobileIcon className="h-5 w-5 text-text-tertiary mr-2" />
-            <h4 className="text-base font-medium text-text-primary">Two-factor authentication</h4>
+            <h4 className="text-base font-bold text-text-primary">Two-factor authentication</h4>
           </div>
         </div>
         <div className="px-6 py-4">
           <div className="flex items-center justify-between min-h-16">
             <div className="mr-4">
-              <p className="text-base text-text-primary font-medium">
+              <p className="text-base text-text-primary font-bold">
                 {settings.security.twoFactorEnabled ? 'Enabled' : 'Disabled'}
               </p>
               <p className="text-base text-text-secondary">
@@ -405,7 +405,7 @@ export function SecuritySettings() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <ComputerDesktopIcon className="h-5 w-5 text-text-tertiary mr-2" />
-              <h4 className="text-base font-medium text-text-primary">Active sessions</h4>
+              <h4 className="text-base font-bold text-text-primary">Active sessions</h4>
             </div>
             <button
               onClick={() => setShowSessions(!showSessions)}
@@ -423,7 +423,7 @@ export function SecuritySettings() {
           {showSessions && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-text-primary">
+                <span className="text-sm font-bold text-text-primary">
                   {mockSessions.length} active sessions
                 </span>
                 <button
@@ -447,9 +447,9 @@ export function SecuritySettings() {
                       </div>
                       <div>
                         <div className="flex items-center">
-                          <p className="text-base font-medium text-text-primary">{session.device}</p>
+                          <p className="text-base font-bold text-text-primary">{session.device}</p>
                           {session.current && (
-                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-success-light text-success-dark">
+                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-bold bg-success-light text-success-dark">
                               Current
                             </span>
                           )}
@@ -487,25 +487,23 @@ export function SecuritySettings() {
         </div>
       </div>
 
-      {/* Security Tips */}
-      <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
-        <div className="flex">
+      {/* Security Tips - Practical UI: info callout */}
+      <div className="bg-navy-50 border border-navy-200 rounded-xl p-4">
+        <div className="flex gap-3">
           <div className="flex-shrink-0">
-            <ShieldCheckIcon className="h-5 w-5 text-navy" />
+            <ShieldCheckIcon className="h-5 w-5 text-navy" aria-hidden="true" />
           </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-navy-800">
+          <div>
+            <h3 className="text-sm font-bold text-navy-800">
               Security best practices
             </h3>
-            <div className="mt-2 text-sm text-navy-700">
-              <ul className="list-disc list-inside space-y-1">
-                <li>Use a unique, strong password for your Liftout account</li>
-                <li>Enable two-factor authentication for extra security</li>
-                <li>Review your active sessions regularly</li>
-                <li>Log out from public or shared computers</li>
-                <li>Keep your contact information up to date</li>
-              </ul>
-            </div>
+            <ul className="mt-2 text-sm font-normal text-navy-700 list-disc list-inside space-y-1">
+              <li>Use a unique, strong password for your Liftout account</li>
+              <li>Enable two-factor authentication for extra security</li>
+              <li>Review your active sessions regularly</li>
+              <li>Log out from public or shared computers</li>
+              <li>Keep your contact information up to date</li>
+            </ul>
           </div>
         </div>
       </div>

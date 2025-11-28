@@ -27,9 +27,12 @@ export default function CompanyProfilePage() {
   if (session?.user?.userType !== 'company') {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-text-primary">Access Denied</h1>
-          <p className="mt-2 text-text-secondary">This page is only available to company users.</p>
+        <div className="text-center py-16">
+          <div className="w-16 h-16 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+            <BuildingOfficeIcon className="h-8 w-8 text-text-tertiary" aria-hidden="true" />
+          </div>
+          <h1 className="text-2xl font-bold text-text-primary font-heading">Access denied</h1>
+          <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">This page is only available to company users.</p>
         </div>
       </div>
     );
@@ -37,27 +40,28 @@ export default function CompanyProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      {/* Page Header - Practical UI: bold headings, 48px touch targets */}
       <div className="mb-8">
         <div className="md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-text-primary">Company Profile</h1>
-            <p className="mt-2 text-sm text-text-secondary">
+            <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Company profile</h1>
+            <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
               Manage your company information and liftout requirements
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
+              className="btn-outline min-h-12"
             >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
+              {isEditing ? 'Cancel' : 'Edit profile'}
             </button>
           </div>
         </div>
       </div>
 
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-8">
-        {/* Sidebar */}
+        {/* Sidebar - Practical UI: 48px touch targets */}
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
           <nav className="space-y-1">
             {tabs.map((tab) => (
@@ -66,14 +70,14 @@ export default function CompanyProfilePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`${
                   activeTab === tab.id
-                    ? 'bg-primary-50 border-primary-500 text-primary-700'
-                    : 'border-transparent text-text-primary hover:bg-bg-alt'
-                } group border-l-4 px-3 py-2 flex items-center text-sm font-medium w-full`}
+                    ? 'bg-navy-50 border-navy text-navy-800'
+                    : 'border-transparent text-text-primary hover:bg-bg-alt hover:border-border'
+                } group border-l-4 px-4 py-3 flex items-center text-base font-bold w-full min-h-12 rounded-r-lg transition-colors duration-fast`}
               >
                 <tab.icon
                   className={`${
-                    activeTab === tab.id ? 'text-primary-500' : 'text-text-tertiary'
-                  } flex-shrink-0 -ml-1 mr-3 h-6 w-6`}
+                    activeTab === tab.id ? 'text-navy' : 'text-text-tertiary'
+                  } flex-shrink-0 mr-3 h-5 w-5`}
                   aria-hidden="true"
                 />
                 <span className="truncate">{tab.name}</span>
@@ -116,72 +120,74 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
   if (!isEditing) {
     return (
       <div className="space-y-6">
-        <div className="bg-bg-surface shadow rounded-lg p-6">
-          <div className="flex items-center space-x-4 mb-6">
-            <div className="h-16 w-16 bg-primary-100 rounded-lg flex items-center justify-center">
-              <BuildingOfficeIcon className="h-8 w-8 text-primary-600" />
+        {/* Company Header Card - Practical UI: rounded-xl, proper spacing */}
+        <div className="card p-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-16 w-16 bg-navy-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <BuildingOfficeIcon className="h-8 w-8 text-navy" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-text-primary">{formData.name}</h2>
-              <p className="text-text-secondary">{formData.industry}</p>
+              <p className="text-base font-normal text-text-secondary">{formData.industry}</p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="flex items-center space-x-3">
-              <UsersIcon className="h-5 w-5 text-text-tertiary" />
+            <div className="flex items-center gap-3">
+              <UsersIcon className="h-5 w-5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
               <div>
-                <p className="text-sm font-medium text-text-primary">Company Size</p>
-                <p className="text-sm text-text-secondary">{formData.size} employees</p>
+                <p className="text-sm font-bold text-text-primary">Company size</p>
+                <p className="text-sm font-normal text-text-secondary">{formData.size} employees</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <MapPinIcon className="h-5 w-5 text-text-tertiary" />
+            <div className="flex items-center gap-3">
+              <MapPinIcon className="h-5 w-5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
               <div>
-                <p className="text-sm font-medium text-text-primary">Headquarters</p>
-                <p className="text-sm text-text-secondary">{formData.headquarters}</p>
+                <p className="text-sm font-bold text-text-primary">Headquarters</p>
+                <p className="text-sm font-normal text-text-secondary">{formData.headquarters}</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <GlobeAltIcon className="h-5 w-5 text-text-tertiary" />
+            <div className="flex items-center gap-3">
+              <GlobeAltIcon className="h-5 w-5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
               <div>
-                <p className="text-sm font-medium text-text-primary">Website</p>
-                <a href={formData.website} className="text-sm text-primary-600 hover:text-primary-500">
+                <p className="text-sm font-bold text-text-primary">Website</p>
+                <a href={formData.website} className="text-sm font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast">
                   {formData.website}
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-lg font-medium text-text-primary mb-2">About</h3>
-            <p className="text-text-secondary">{formData.description}</p>
+          <div className="mt-6 pt-6 border-t border-border">
+            <h3 className="text-lg font-bold text-text-primary mb-2">About</h3>
+            <p className="text-base font-normal text-text-secondary leading-relaxed">{formData.description}</p>
           </div>
         </div>
 
-        <div className="bg-bg-surface shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4">Company Metrics</h3>
+        {/* Company Metrics Card */}
+        <div className="card p-6">
+          <h3 className="text-lg font-bold text-text-primary mb-6">Company metrics</h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-success-light rounded-full mb-2">
-                <CurrencyDollarIcon className="h-6 w-6 text-success" />
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-success-light rounded-xl mb-3">
+                <CurrencyDollarIcon className="h-6 w-6 text-success" aria-hidden="true" />
               </div>
-              <p className="text-sm font-medium text-text-primary">Annual Revenue</p>
-              <p className="text-lg font-bold text-text-primary">{formData.revenue}</p>
+              <p className="text-sm font-bold text-text-secondary">Annual revenue</p>
+              <p className="text-lg font-bold text-text-primary mt-1">{formData.revenue}</p>
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-full mb-2">
-                <ChartBarIcon className="h-6 w-6 text-navy" />
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-xl mb-3">
+                <ChartBarIcon className="h-6 w-6 text-navy" aria-hidden="true" />
               </div>
-              <p className="text-sm font-medium text-text-primary">Funding Stage</p>
-              <p className="text-lg font-bold text-text-primary">{formData.funding}</p>
+              <p className="text-sm font-bold text-text-secondary">Funding stage</p>
+              <p className="text-lg font-bold text-text-primary mt-1">{formData.funding}</p>
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-full mb-2">
-                <BuildingOfficeIcon className="h-6 w-6 text-navy" />
+            <div className="text-center p-4 bg-bg-alt rounded-xl">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-xl mb-3">
+                <BuildingOfficeIcon className="h-6 w-6 text-navy" aria-hidden="true" />
               </div>
-              <p className="text-sm font-medium text-text-primary">Company Stage</p>
-              <p className="text-lg font-bold text-text-primary">{formData.stage}</p>
+              <p className="text-sm font-bold text-text-secondary">Company stage</p>
+              <p className="text-lg font-bold text-text-primary mt-1">{formData.stage}</p>
             </div>
           </div>
         </div>
@@ -191,88 +197,92 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-bg-surface shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Basic Information</h3>
-        
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-text-secondary">Company Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-            />
+      {/* Edit Form - Practical UI: labels on top, single column layout */}
+      <div className="card p-6">
+        <h3 className="text-lg font-bold text-text-primary mb-6">Basic information</h3>
+
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Company name</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Industry</label>
+              <input
+                type="text"
+                value={formData.industry}
+                onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Company size</label>
+              <select
+                value={formData.size}
+                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                className="input-field"
+              >
+                <option value="1-10">1-10 employees</option>
+                <option value="11-50">11-50 employees</option>
+                <option value="51-200">51-200 employees</option>
+                <option value="201-500">201-500 employees</option>
+                <option value="500-1000">500-1000 employees</option>
+                <option value="1000+">1000+ employees</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Founded</label>
+              <input
+                type="text"
+                value={formData.founded}
+                onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Headquarters</label>
+              <input
+                type="text"
+                value={formData.headquarters}
+                onChange={(e) => setFormData({ ...formData, headquarters: e.target.value })}
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label className="block text-base font-bold text-text-primary mb-2">Website</label>
+              <input
+                type="url"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                className="input-field"
+              />
+            </div>
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-text-secondary">Industry</label>
-            <input
-              type="text"
-              value={formData.industry}
-              onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-secondary">Company Size</label>
-            <select
-              value={formData.size}
-              onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-            >
-              <option value="1-10">1-10 employees</option>
-              <option value="11-50">11-50 employees</option>
-              <option value="51-200">51-200 employees</option>
-              <option value="201-500">201-500 employees</option>
-              <option value="500-1000">500-1000 employees</option>
-              <option value="1000+">1000+ employees</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-secondary">Founded</label>
-            <input
-              type="text"
-              value={formData.founded}
-              onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-secondary">Headquarters</label>
-            <input
-              type="text"
-              value={formData.headquarters}
-              onChange={(e) => setFormData({ ...formData, headquarters: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-secondary">Website</label>
-            <input
-              type="url"
-              value={formData.website}
-              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
+            <label className="block text-base font-bold text-text-primary mb-2">Company description</label>
+            <textarea
+              rows={4}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="input-field"
             />
           </div>
         </div>
 
-        <div className="mt-6">
-          <label className="block text-sm font-medium text-text-secondary">Company Description</label>
-          <textarea
-            rows={4}
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
-          />
-        </div>
-
-        <div className="mt-6 flex justify-end">
+        {/* Practical UI: Primary button left */}
+        <div className="mt-6 pt-6 border-t border-border flex items-center gap-4">
           <button
             type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-navy hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
+            className="btn-primary min-h-12"
           >
-            Save Changes
+            Save changes
           </button>
         </div>
       </div>
@@ -291,18 +301,19 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
   if (!isEditing) {
     return (
       <div className="space-y-6">
-        <div className="bg-bg-surface shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-text-primary mb-4">Company Culture</h3>
-          <p className="text-text-secondary mb-6">{cultureData.cultureDescription}</p>
-          
+        {/* Culture Card - Practical UI styling */}
+        <div className="card p-6">
+          <h3 className="text-lg font-bold text-text-primary mb-4">Company culture</h3>
+          <p className="text-base font-normal text-text-secondary leading-relaxed mb-6">{cultureData.cultureDescription}</p>
+
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <h4 className="text-base font-medium text-text-primary mb-2">Core Values</h4>
+              <h4 className="text-base font-bold text-text-primary mb-3">Core values</h4>
               <div className="flex flex-wrap gap-2">
                 {cultureData.values.map((value, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800"
+                    className="badge badge-primary text-sm"
                   >
                     {value}
                   </span>
@@ -310,20 +321,20 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
               </div>
             </div>
             <div>
-              <h4 className="text-base font-medium text-text-primary mb-2">Work Style</h4>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark">
+              <h4 className="text-base font-bold text-text-primary mb-3">Work style</h4>
+              <span className="badge badge-success text-sm">
                 {cultureData.workStyle}
               </span>
             </div>
           </div>
 
-          <div className="mt-6">
-            <h4 className="text-base font-medium text-text-primary mb-2">Benefits & Perks</h4>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="mt-6 pt-6 border-t border-border">
+            <h4 className="text-base font-bold text-text-primary mb-3">Benefits & perks</h4>
+            <div className="grid grid-cols-2 gap-3">
               {cultureData.benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center">
-                  <div className="h-2 w-2 bg-primary-500 rounded-full mr-2"></div>
-                  <span className="text-sm text-text-secondary">{benefit}</span>
+                  <div className="h-2 w-2 bg-navy rounded-full mr-3 flex-shrink-0"></div>
+                  <span className="text-sm font-normal text-text-secondary">{benefit}</span>
                 </div>
               ))}
             </div>
@@ -334,7 +345,7 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
   }
 
   // Editing mode would be similar to overview editing
-  return <div>Culture editing form would go here...</div>;
+  return <div className="card p-6"><p className="text-text-secondary">Culture editing form would go here...</p></div>;
 }
 
 function LiftoutHistory() {
@@ -370,46 +381,48 @@ function LiftoutHistory() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-bg-surface shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Liftout History</h3>
-        
+      {/* Liftout History Card - Practical UI styling */}
+      <div className="card p-6">
+        <h3 className="text-lg font-bold text-text-primary mb-6">Liftout history</h3>
+
         <div className="space-y-4">
           {liftoutHistory.map((liftout) => (
-            <div key={liftout.id} className="border border-border rounded-lg p-4">
+            <div key={liftout.id} className="border border-border rounded-xl p-4 hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-base font-medium text-text-primary">{liftout.team}</h4>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  liftout.outcome === 'Successful' 
-                    ? 'bg-success-light text-success-dark'
-                    : 'bg-gold-100 text-gold-800'
+                <h4 className="text-base font-bold text-text-primary">{liftout.team}</h4>
+                <span className={`badge text-xs ${
+                  liftout.outcome === 'Successful'
+                    ? 'badge-success'
+                    : 'badge-warning'
                 }`}>
                   {liftout.outcome}
                 </span>
               </div>
-              <p className="text-sm text-text-secondary mb-2">
+              <p className="text-sm font-normal text-text-tertiary mb-2">
                 From {liftout.fromCompany} • {liftout.size} team members • {liftout.date}
               </p>
-              <p className="text-sm text-text-primary">{liftout.impact}</p>
+              <p className="text-sm font-normal text-text-secondary">{liftout.impact}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-bg-surface shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Liftout Success Metrics</h3>
-        
+      {/* Success Metrics Card */}
+      <div className="card p-6">
+        <h3 className="text-lg font-bold text-text-primary mb-6">Liftout success metrics</h3>
+
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="text-center">
-            <p className="text-3xl font-bold text-text-primary">19</p>
-            <p className="text-sm text-text-secondary">Total Liftouts</p>
+          <div className="text-center p-4 bg-bg-alt rounded-xl">
+            <p className="text-3xl font-bold text-navy">19</p>
+            <p className="text-sm font-bold text-text-secondary mt-1">Total liftouts</p>
           </div>
-          <div className="text-center">
+          <div className="text-center p-4 bg-bg-alt rounded-xl">
             <p className="text-3xl font-bold text-success">89%</p>
-            <p className="text-sm text-text-secondary">Success Rate</p>
+            <p className="text-sm font-bold text-text-secondary mt-1">Success rate</p>
           </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-primary-600">156</p>
-            <p className="text-sm text-text-secondary">Team Members Acquired</p>
+          <div className="text-center p-4 bg-bg-alt rounded-xl">
+            <p className="text-3xl font-bold text-navy">156</p>
+            <p className="text-sm font-bold text-text-secondary mt-1">Team members acquired</p>
           </div>
         </div>
       </div>
@@ -430,17 +443,18 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-bg-surface shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Ideal Team Profile</h3>
-        
+      {/* Ideal Team Profile Card - Practical UI styling */}
+      <div className="card p-6">
+        <h3 className="text-lg font-bold text-text-primary mb-6">Ideal team profile</h3>
+
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Target Industries</h4>
+            <h4 className="text-base font-bold text-text-primary mb-3">Target industries</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.targetIndustries.map((industry, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800"
+                  className="badge badge-primary text-sm"
                 >
                   {industry}
                 </span>
@@ -449,12 +463,12 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Preferred Team Sizes</h4>
+            <h4 className="text-base font-bold text-text-primary mb-3">Preferred team sizes</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.teamSizes.map((size, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-light text-success-dark"
+                  className="badge badge-success text-sm"
                 >
                   {size}
                 </span>
@@ -463,22 +477,22 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Geographic Preference</h4>
-            <p className="text-sm text-text-secondary">{requirements.geographicPreference}</p>
+            <h4 className="text-base font-bold text-text-primary mb-2">Geographic preference</h4>
+            <p className="text-sm font-normal text-text-secondary">{requirements.geographicPreference}</p>
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Experience Level</h4>
-            <p className="text-sm text-text-secondary">{requirements.experienceLevel}</p>
+            <h4 className="text-base font-bold text-text-primary mb-2">Experience level</h4>
+            <p className="text-sm font-normal text-text-secondary">{requirements.experienceLevel}</p>
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Key Specializations</h4>
+            <h4 className="text-base font-bold text-text-primary mb-3">Key specializations</h4>
             <div className="flex flex-wrap gap-2">
               {requirements.specializations.map((spec, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-700"
+                  className="badge badge-secondary text-sm"
                 >
                   {spec}
                 </span>
@@ -487,23 +501,24 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-text-primary mb-2">Budget Range</h4>
-            <p className="text-sm text-text-secondary">{requirements.budget}</p>
+            <h4 className="text-base font-bold text-text-primary mb-2">Budget range</h4>
+            <p className="text-sm font-normal text-text-secondary">{requirements.budget}</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-bg-surface shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-text-primary mb-4">Integration Approach</h3>
-        <div className="space-y-4">
+      {/* Integration Approach Card */}
+      <div className="card p-6">
+        <h3 className="text-lg font-bold text-text-primary mb-6">Integration approach</h3>
+        <div className="space-y-5">
           <div>
-            <h4 className="text-base font-medium text-text-primary">Onboarding Timeline</h4>
-            <p className="text-sm text-text-secondary">{requirements.timeline}</p>
+            <h4 className="text-base font-bold text-text-primary mb-2">Onboarding timeline</h4>
+            <p className="text-sm font-normal text-text-secondary">{requirements.timeline}</p>
           </div>
           <div>
-            <h4 className="text-base font-medium text-text-primary">Integration Philosophy</h4>
-            <p className="text-sm text-text-secondary">
-              Preserve team dynamics while providing resources for accelerated growth. 
+            <h4 className="text-base font-bold text-text-primary mb-2">Integration philosophy</h4>
+            <p className="text-sm font-normal text-text-secondary leading-relaxed">
+              Preserve team dynamics while providing resources for accelerated growth.
               Maintain team autonomy with strategic alignment to company objectives.
             </p>
           </div>

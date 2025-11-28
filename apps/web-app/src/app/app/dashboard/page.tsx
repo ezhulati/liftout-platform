@@ -33,13 +33,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* Page header - Practical UI: bold headings, regular body, 8pt spacing system */}
       <div className="page-header">
-        <h1 className="page-title">
+        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
           Welcome back, {firstName}!
         </h1>
-        <p className="page-subtitle">
-          {isCompanyUser 
+        <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed max-w-2xl">
+          {isCompanyUser
             ? 'Manage your opportunities and find the perfect teams'
             : 'Discover opportunities and connect with amazing teams'
           }

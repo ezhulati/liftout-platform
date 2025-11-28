@@ -87,26 +87,29 @@ export default function ApplicationsPage() {
   if (!applications || applications.length === 0) {
     return (
       <div className="space-y-6">
-        {/* Page header */}
+        {/* Page header - Practical UI: bold headings, regular body */}
         <div className="page-header">
-          <h1 className="page-title">
+          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
             {isCompanyUser ? 'Application Management' : 'My Applications'}
           </h1>
-          <p className="page-subtitle">
-            {isCompanyUser 
+          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
+            {isCompanyUser
               ? 'Review and manage team applications to your liftout opportunities'
               : 'Track your team\'s expressions of interest and application status'
             }
           </p>
         </div>
 
+        {/* Empty state - Practical UI */}
         <div className="text-center py-12">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-          <h3 className="mt-2 text-sm font-medium text-text-primary">
+          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+            <DocumentTextIcon className="h-7 w-7 text-text-tertiary" aria-hidden="true" />
+          </div>
+          <h3 className="text-lg font-bold text-text-primary">
             {isCompanyUser ? 'No applications yet' : 'No applications submitted'}
           </h3>
-          <p className="mt-1 text-sm text-text-tertiary">
-            {isCompanyUser 
+          <p className="mt-2 text-base font-normal text-text-secondary max-w-md mx-auto leading-relaxed">
+            {isCompanyUser
               ? 'Teams will appear here when they express interest in your liftout opportunities.'
               : 'Start by browsing liftout opportunities and expressing interest in ones that match your team.'
             }
@@ -114,7 +117,7 @@ export default function ApplicationsPage() {
           {!isCompanyUser && (
             <div className="mt-6">
               <Link href="/app/opportunities" className="btn-primary min-h-12 inline-flex items-center">
-                <PlusIcon className="h-5 w-5 mr-2" />
+                <PlusIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                 Browse opportunities
               </Link>
             </div>
@@ -126,59 +129,59 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* Page header - Practical UI: bold headings, regular body */}
       <div className="page-header">
-        <h1 className="page-title">
+        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
           {isCompanyUser ? 'Application Management' : 'My Applications'}
         </h1>
-        <p className="page-subtitle">
-          {isCompanyUser 
+        <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
+          {isCompanyUser
             ? 'Review and manage team applications to your liftout opportunities'
             : 'Track your team\'s expressions of interest and application status'
           }
         </p>
       </div>
 
-      {/* Applications list */}
+      {/* Applications list - Practical UI cards */}
       <div className="space-y-4">
         {applications.map((application) => (
-          <div key={application.id} className="card hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between">
-              <div className="flex items-start space-x-4 flex-1">
+          <div key={application.id} className="card hover:shadow-md hover:border-navy/30 transition-all duration-base">
+            <div className="flex items-start justify-between gap-6">
+              <div className="flex items-start gap-4 flex-1">
                 <div className="flex-shrink-0">
-                  <div className="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                  <div className="h-12 w-12 rounded-xl bg-navy-50 flex items-center justify-center text-navy">
                     {getStatusIcon(application.status)}
                   </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-medium text-text-primary">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="text-lg font-bold text-text-primary">
                       {application.opportunity?.title || 'Opportunity'}
                     </h3>
                     <span className={classNames(
-                      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                      'badge text-xs',
                       getStatusColor(application.status)
                     )}>
                       {application.status.replace('_', ' ')}
                     </span>
                   </div>
 
-                  <div className="flex items-center text-sm text-text-tertiary mb-3 space-x-4">
-                    <span className="font-medium">{application.opportunity?.company?.name || 'Company'}</span>
+                  <div className="flex flex-wrap items-center text-sm font-normal text-text-tertiary mb-3 gap-x-4 gap-y-1">
+                    <span className="font-bold text-text-secondary">{application.opportunity?.company?.name || 'Company'}</span>
                     <div className="flex items-center">
-                      <ClockIcon className="h-4 w-4 mr-1" />
+                      <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                       Applied {formatDistanceToNow(new Date(application.submittedAt), { addSuffix: true })}
                     </div>
                   </div>
 
-                  <div className="text-sm text-text-secondary">
+                  <div className="text-sm font-normal text-text-secondary leading-relaxed">
                     <p className="line-clamp-2">
-                      <span className="font-medium">Team:</span> {application.team?.name || 'Team'}
+                      <span className="font-bold">Team:</span> {application.team?.name || 'Team'}
                     </p>
                     {application.coverLetter && (
                       <p className="line-clamp-2 mt-1">
-                        <span className="font-medium">Cover Letter:</span> {application.coverLetter}
+                        <span className="font-bold">Cover Letter:</span> {application.coverLetter}
                       </p>
                     )}
                   </div>
@@ -186,8 +189,8 @@ export default function ApplicationsPage() {
                   {/* Interview info if scheduled */}
                   {application.interviewScheduledAt && (
                     <div className="mt-4 pt-4 border-t border-border">
-                      <h4 className="text-sm font-medium text-text-primary mb-2">Interview Scheduled</h4>
-                      <p className="text-xs text-text-tertiary">
+                      <h4 className="text-sm font-bold text-text-primary mb-1">Interview Scheduled</h4>
+                      <p className="text-sm font-normal text-text-tertiary">
                         {formatDistanceToNow(new Date(application.interviewScheduledAt), { addSuffix: true })}
                       </p>
                     </div>
@@ -195,21 +198,21 @@ export default function ApplicationsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3 ml-6">
+              <div className="flex items-start gap-3 flex-shrink-0">
                 <Link
                   href={`/app/applications/${application.id}`}
                   className="btn-outline min-h-12 flex items-center"
                 >
-                  <EyeIcon className="h-5 w-5 mr-2" />
+                  <EyeIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                   View details
                 </Link>
 
                 {isCompanyUser && application.status === 'submitted' && (
-                  <div className="flex space-x-2">
-                    <button className="btn-outline min-h-12 text-success hover:text-success-dark">
+                  <div className="flex gap-2">
+                    <button className="btn-outline min-h-12 text-success hover:bg-success-light">
                       Review
                     </button>
-                    <button className="btn-outline min-h-12 text-error hover:text-error-dark">
+                    <button className="btn-outline min-h-12 text-error hover:bg-error-light">
                       Decline
                     </button>
                   </div>

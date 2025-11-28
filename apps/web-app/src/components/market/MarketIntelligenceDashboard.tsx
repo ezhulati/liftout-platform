@@ -296,59 +296,59 @@ export function MarketIntelligenceDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header - Practical UI: bold headings, proper spacing */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Market intelligence</h1>
-          <p className="text-text-secondary">Competitive analysis and strategic market insights</p>
+          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Market intelligence</h1>
+          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">Competitive analysis and strategic market insights</p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setViewMode('overview')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'overview'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Overview
           </button>
           <button
             onClick={() => setViewMode('competitors')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'competitors'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Competitors
           </button>
           <button
             onClick={() => setViewMode('trends')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'trends'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Trends
           </button>
           <button
             onClick={() => setViewMode('positioning')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'positioning'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Positioning
           </button>
           <button
             onClick={() => setViewMode('alerts')}
-            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
+            className={`px-4 py-3 text-base font-bold rounded-xl min-h-12 transition-colors duration-fast ${
               viewMode === 'alerts'
-                ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
+                ? 'bg-navy text-white'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-alt border border-border'
             }`}
           >
             Alerts

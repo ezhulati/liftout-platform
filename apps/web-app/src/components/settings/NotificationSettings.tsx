@@ -176,17 +176,17 @@ export function NotificationSettings() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg leading-6 font-medium text-text-primary">Notification preferences</h3>
-        <p className="mt-1 text-sm text-text-secondary">
+        <h3 className="text-lg font-bold text-text-primary">Notification preferences</h3>
+        <p className="mt-1 text-sm font-normal text-text-secondary leading-relaxed">
           Choose how you want to be notified about liftout activities and platform updates.
         </p>
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-bg-alt rounded-lg p-4">
-        <h4 className="text-sm font-medium text-text-primary mb-3">Quick actions</h4>
+      {/* Quick Actions - Practical UI: bold section headings */}
+      <div className="bg-bg-alt rounded-xl p-4">
+        <h4 className="text-sm font-bold text-text-primary mb-3">Quick actions</h4>
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => updateNotificationSettings({
@@ -231,18 +231,18 @@ export function NotificationSettings() {
         </div>
       </div>
 
-      {/* Email Notifications */}
+      {/* Email Notifications - Practical UI: bold headings, regular descriptions */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <EnvelopeIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Email notifications</h4>
+          <EnvelopeIcon className="h-5 w-5 text-text-tertiary mr-2" aria-hidden="true" />
+          <h4 className="text-base font-bold text-text-primary">Email notifications</h4>
         </div>
         <div className="space-y-4">
           {emailNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast min-h-20">
               <div className="flex-1 mr-4">
-                <p className="text-base font-medium text-text-primary">{notification.title}</p>
-                <p className="text-base text-text-secondary">{notification.description}</p>
+                <p className="text-base font-bold text-text-primary">{notification.title}</p>
+                <p className="text-sm font-normal text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.email[notification.key]}
@@ -253,18 +253,18 @@ export function NotificationSettings() {
         </div>
       </div>
 
-      {/* Push Notifications */}
+      {/* Push Notifications - Practical UI: bold headings, regular descriptions */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <DevicePhoneMobileIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">Push notifications</h4>
+          <DevicePhoneMobileIcon className="h-5 w-5 text-text-tertiary mr-2" aria-hidden="true" />
+          <h4 className="text-base font-bold text-text-primary">Push notifications</h4>
         </div>
         <div className="space-y-4">
           {pushNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast min-h-20">
               <div className="flex-1 mr-4">
-                <p className="text-base font-medium text-text-primary">{notification.title}</p>
-                <p className="text-base text-text-secondary">{notification.description}</p>
+                <p className="text-base font-bold text-text-primary">{notification.title}</p>
+                <p className="text-sm font-normal text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.push[notification.key]}
@@ -275,18 +275,18 @@ export function NotificationSettings() {
         </div>
       </div>
 
-      {/* In-App Notifications */}
+      {/* In-App Notifications - Practical UI: bold headings, regular descriptions */}
       <div className="space-y-4">
         <div className="flex items-center">
-          <BellIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-medium text-text-primary">In-app notifications</h4>
+          <BellIcon className="h-5 w-5 text-text-tertiary mr-2" aria-hidden="true" />
+          <h4 className="text-base font-bold text-text-primary">In-app notifications</h4>
         </div>
         <div className="space-y-4">
           {inAppNotifications.map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-bg-alt transition-colors min-h-20">
+            <div key={notification.key} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast min-h-20">
               <div className="flex-1 mr-4">
-                <p className="text-base font-medium text-text-primary">{notification.title}</p>
-                <p className="text-base text-text-secondary">{notification.description}</p>
+                <p className="text-base font-bold text-text-primary">{notification.title}</p>
+                <p className="text-sm font-normal text-text-secondary">{notification.description}</p>
               </div>
               <ToggleSwitch
                 enabled={settings.notifications.inApp[notification.key]}
@@ -297,21 +297,19 @@ export function NotificationSettings() {
         </div>
       </div>
 
-      {/* Information */}
-      <div className="bg-navy-50 border border-navy-200 rounded-lg p-4">
-        <div className="flex">
+      {/* Information - Practical UI: info callout */}
+      <div className="bg-navy-50 border border-navy-200 rounded-xl p-4">
+        <div className="flex gap-3">
           <div className="flex-shrink-0">
-            <BellIcon className="h-5 w-5 text-navy" />
+            <BellIcon className="h-5 w-5 text-navy" aria-hidden="true" />
           </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-navy-900">
+          <div>
+            <h3 className="text-sm font-bold text-navy-900">
               About notifications
             </h3>
-            <div className="mt-2 text-sm text-navy-700">
-              <p>
-                You can adjust these settings at any time. Critical account security notifications will always be sent regardless of your preferences.
-              </p>
-            </div>
+            <p className="mt-1 text-sm font-normal text-navy-700 leading-relaxed">
+              You can adjust these settings at any time. Critical account security notifications will always be sent regardless of your preferences.
+            </p>
           </div>
         </div>
       </div>

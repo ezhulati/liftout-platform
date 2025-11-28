@@ -67,7 +67,7 @@ function ConfirmationModal({
             ) : (
               <CheckCircleIcon className="h-6 w-6 text-info mr-3" />
             )}
-            <h3 className="text-lg font-medium text-text-primary">{title}</h3>
+            <h3 className="text-lg font-bold text-text-primary">{title}</h3>
           </div>
           <p className="mt-2 text-sm text-text-secondary">{description}</p>
         </div>
@@ -133,7 +133,7 @@ function DeleteAccountModal({ isOpen, onClose, onConfirm, userEmail }: DeleteAcc
           <div className="px-6 py-5">
             <div className="flex items-center">
               <ExclamationTriangleIcon className="h-6 w-6 text-error mr-3" />
-              <h3 className="text-lg font-medium text-text-primary">Delete account</h3>
+              <h3 className="text-lg font-bold text-text-primary">Delete account</h3>
             </div>
             <p className="mt-2 text-sm text-text-secondary">
               This will permanently delete your account and all associated data. This action cannot be undone.
@@ -339,7 +339,7 @@ export function AccountSettings() {
     <div className="space-y-6">
       {/* Header */}
       <div className="pb-4 border-b border-border">
-        <h3 className="text-lg font-medium text-text-primary">Account management</h3>
+        <h3 className="text-lg font-bold text-text-primary">Account management</h3>
         <p className="mt-1 text-sm text-text-secondary">
           Manage your account preferences, data, and account status.
         </p>
@@ -348,7 +348,7 @@ export function AccountSettings() {
       {/* Account Information */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
-          <h4 className="text-base font-medium text-text-primary flex items-center">
+          <h4 className="text-base font-bold text-text-primary flex items-center">
             <UserIcon className="h-5 w-5 text-text-tertiary mr-2" />
             Account information
           </h4>
@@ -356,7 +356,7 @@ export function AccountSettings() {
         <div className="px-6 py-4">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-medium text-text-tertiary flex items-center">
+              <dt className="text-sm font-bold text-text-tertiary flex items-center">
                 <EnvelopeIcon className="h-4 w-4 mr-1" />
                 Email
               </dt>
@@ -370,7 +370,7 @@ export function AccountSettings() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary flex items-center">
+              <dt className="text-sm font-bold text-text-tertiary flex items-center">
                 <PhoneIcon className="h-4 w-4 mr-1" />
                 Phone
               </dt>
@@ -384,7 +384,7 @@ export function AccountSettings() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary flex items-center">
+              <dt className="text-sm font-bold text-text-tertiary flex items-center">
                 <CalendarIcon className="h-4 w-4 mr-1" />
                 Member since
               </dt>
@@ -393,7 +393,7 @@ export function AccountSettings() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary flex items-center">
+              <dt className="text-sm font-bold text-text-tertiary flex items-center">
                 <ClockIcon className="h-4 w-4 mr-1" />
                 Last login
               </dt>
@@ -405,9 +405,9 @@ export function AccountSettings() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary">Account status</dt>
+              <dt className="text-sm font-bold text-text-tertiary">Account status</dt>
               <dd className="mt-1">
-                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                <span className={`inline-flex px-2 py-1 text-xs font-bold rounded-full ${
                   settings.account.accountStatus === 'active'
                     ? 'bg-success-light text-success-dark'
                     : settings.account.accountStatus === 'pending'
@@ -419,7 +419,7 @@ export function AccountSettings() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary">Profile completion</dt>
+              <dt className="text-sm font-bold text-text-tertiary">Profile completion</dt>
               <dd className="mt-1 text-sm text-text-primary">
                 {settings.account.profileCompletion}%
               </dd>
@@ -431,7 +431,7 @@ export function AccountSettings() {
       {/* Data Management */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
-          <h4 className="text-base font-medium text-text-primary flex items-center">
+          <h4 className="text-base font-bold text-text-primary flex items-center">
             <DocumentTextIcon className="h-5 w-5 text-text-tertiary mr-2" />
             Data management
           </h4>
@@ -440,7 +440,7 @@ export function AccountSettings() {
           {/* Export Data */}
           <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
             <div className="mr-4">
-              <h5 className="text-base font-medium text-text-primary">Export account data</h5>
+              <h5 className="text-base font-bold text-text-primary">Export account data</h5>
               <p className="text-base text-text-secondary">
                 Download a copy of your account data including profile, applications, and messages.
               </p>
@@ -467,7 +467,7 @@ export function AccountSettings() {
           {/* Import Settings */}
           <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
             <div className="mr-4">
-              <h5 className="text-base font-medium text-text-primary">Import settings</h5>
+              <h5 className="text-base font-bold text-text-primary">Import settings</h5>
               <p className="text-base text-text-secondary">
                 Import your settings from a previously exported file.
               </p>
@@ -494,14 +494,14 @@ export function AccountSettings() {
           {/* Reset Settings */}
           <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
             <div className="mr-4">
-              <h5 className="text-base font-medium text-text-primary">Reset settings</h5>
+              <h5 className="text-base font-bold text-text-primary">Reset settings</h5>
               <p className="text-base text-text-secondary">
                 Reset all settings to their default values. This cannot be undone.
               </p>
             </div>
             <button
               onClick={() => setShowResetModal(true)}
-              className="flex items-center px-4 py-3 text-base font-medium text-error-dark bg-error-light border border-error rounded-lg hover:bg-error/20 transition-colors duration-fast min-h-12"
+              className="flex items-center px-4 py-3 text-base font-bold text-error-dark bg-error-light border border-error rounded-lg hover:bg-error/20 transition-colors duration-fast min-h-12"
             >
               <Cog6ToothIcon className="h-5 w-5 mr-2" />
               Reset settings
@@ -513,12 +513,12 @@ export function AccountSettings() {
       {/* Privacy Preferences */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
-          <h4 className="text-base font-medium text-text-primary">Privacy preferences</h4>
+          <h4 className="text-base font-bold text-text-primary">Privacy preferences</h4>
         </div>
         <div className="px-6 py-4">
           <div className="flex items-center justify-between min-h-16">
             <div className="mr-4">
-              <h5 className="text-base font-medium text-text-primary">Marketing communications</h5>
+              <h5 className="text-base font-bold text-text-primary">Marketing communications</h5>
               <p className="text-base text-text-secondary">
                 Receive emails about new features, product updates, and industry insights.
               </p>
@@ -546,7 +546,7 @@ export function AccountSettings() {
           <div className="px-6 py-4">
             <div className="flex items-center justify-between min-h-20">
               <div className="mr-4">
-                <h4 className="text-base font-medium text-text-primary flex items-center">
+                <h4 className="text-base font-bold text-text-primary flex items-center">
                   <PauseIcon className="h-5 w-5 text-gold mr-2" />
                   Deactivate account
                 </h4>
@@ -556,7 +556,7 @@ export function AccountSettings() {
               </div>
               <button
                 onClick={() => setShowDeactivateModal(true)}
-                className="bg-gold text-white px-4 py-3 rounded-lg text-base font-medium hover:bg-gold-700 transition-colors duration-fast focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold min-h-12"
+                className="bg-gold text-white px-4 py-3 rounded-lg text-base font-bold hover:bg-gold-700 transition-colors duration-fast focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold min-h-12"
               >
                 Deactivate
               </button>
@@ -569,7 +569,7 @@ export function AccountSettings() {
           <div className="px-6 py-4">
             <div className="flex items-center justify-between min-h-20">
               <div className="mr-4">
-                <h4 className="text-base font-medium text-error-dark flex items-center">
+                <h4 className="text-base font-bold text-error-dark flex items-center">
                   <TrashIcon className="h-5 w-5 text-error mr-2" />
                   Delete account
                 </h4>
