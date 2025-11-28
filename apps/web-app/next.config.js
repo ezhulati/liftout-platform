@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  transpilePackages: ['@liftout/database'],
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
   },

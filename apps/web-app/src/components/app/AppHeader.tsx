@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect, useRef } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
@@ -19,12 +19,55 @@ interface AppHeaderProps {
   user: User;
 }
 
+function useScrollDirection() {
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    const threshold = 5;
+
+    const updateVisibility = () => {
+      const scrollY = window.scrollY;
+      const difference = scrollY - lastScrollY.current;
+
+      if (Math.abs(difference) >= threshold) {
+        if (scrollY <= 0) {
+          setIsVisible(true);
+        } else if (difference > 0) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+        lastScrollY.current = scrollY;
+      }
+      ticking.current = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking.current) {
+        requestAnimationFrame(updateVisibility);
+        ticking.current = true;
+      }
+    };
+
+    lastScrollY.current = window.scrollY;
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return isVisible;
+}
+
 const userNavigation = [
   { name: 'Your profile', href: '/app/profile' },
   { name: 'Settings', href: '/app/settings' },
 ];
 
 export function AppHeader({ user }: AppHeaderProps) {
+  const isVisible = useScrollDirection();
+
   const handleSignOut = async () => {
     try {
       await signOut({ callbackUrl: '/' });
@@ -40,8 +83,13 @@ export function AppHeader({ user }: AppHeaderProps) {
   const initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
 
   return (
-    <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
-      <div className="flex h-16 items-center gap-x-4 border-b border-border bg-bg-surface px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none lg:border-0">
+    <header
+      className={`sticky top-0 z-40 bg-bg-surface transition-transform duration-300 ease-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
+      <div className="lg:mx-auto lg:max-w-7xl lg:px-8">
+        <div className="flex h-16 items-center gap-x-4 border-b border-border bg-bg-surface px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none lg:border-0">
         <button
           type="button"
           className="min-h-12 min-w-12 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-elevated rounded-lg lg:hidden transition-colors duration-fast"
@@ -171,7 +219,8 @@ export function AppHeader({ user }: AppHeaderProps) {
             </Menu>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const navLinks = [
@@ -13,12 +13,45 @@ const navLinks = [
 
 export function LandingHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    const threshold = 5;
+
+    const updateHeader = () => {
+      const scrollY = window.scrollY;
+      const difference = scrollY - lastScrollY.current;
+
+      // Update background state
+      setIsScrolled(scrollY > 20);
+
+      // Update visibility state (hide on scroll down, show on scroll up)
+      if (Math.abs(difference) >= threshold) {
+        if (scrollY <= 0) {
+          setIsVisible(true);
+        } else if (difference > 0 && scrollY > 100) {
+          // Scrolling down past threshold
+          setIsVisible(false);
+        } else if (difference < 0) {
+          // Scrolling up
+          setIsVisible(true);
+        }
+        lastScrollY.current = scrollY;
+      }
+      ticking.current = false;
     };
+
+    const handleScroll = () => {
+      if (!ticking.current) {
+        requestAnimationFrame(updateHeader);
+        ticking.current = true;
+      }
+    };
+
+    lastScrollY.current = window.scrollY;
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -46,10 +79,12 @@ export function LandingHeader() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled || isMobileMenuOpen
           ? 'bg-bg-surface border-b border-border'
           : 'bg-transparent'
+      } ${
+        isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
       <nav className={`max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-300 ${
