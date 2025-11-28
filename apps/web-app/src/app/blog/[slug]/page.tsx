@@ -206,7 +206,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Dark with proper contrast */}
-        <section className="bg-navy-darkest pt-32 pb-16">
+        <section className="bg-[#0f172a] pt-32 pb-16">
           <div className="max-w-4xl mx-auto px-4 lg:px-10">
             {/* Back link - Tertiary button style */}
             <div className="mb-4">

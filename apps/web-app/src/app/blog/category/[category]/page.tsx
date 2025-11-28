@@ -140,7 +140,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
-        <section className="bg-navy-darkest pt-32 pb-16">
+        <section className="bg-[#0f172a] pt-32 pb-16">
           <div className="max-w-7xl mx-auto px-4 lg:px-10">
             {/* Back link - 48px touch target */}
             <div className="mb-4">

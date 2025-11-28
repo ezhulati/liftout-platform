@@ -144,7 +144,7 @@ export default function BlogPage() {
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
-        <section className="bg-navy-darkest pt-32 pb-16">
+        <section className="bg-[#0f172a] pt-32 pb-16">
           <div className="max-w-7xl mx-auto px-4 lg:px-10">
             <div className="max-w-3xl">
               {/* H1 - 44px bold, tight line height */}
