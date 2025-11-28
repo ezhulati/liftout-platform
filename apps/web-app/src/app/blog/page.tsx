@@ -144,15 +144,15 @@ export default function BlogPage() {
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
-        <section className="bg-[#0f172a] pt-32 pb-16">
+        <section className="bg-[#0f172a] pt-40 pb-20">
           <div className="max-w-7xl mx-auto px-4 lg:px-10">
             <div className="max-w-3xl">
               {/* H1 - 44px bold, tight line height */}
-              <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-3 leading-tight tracking-tight">
+              <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-4 leading-tight tracking-tight">
                 Insights
               </h1>
               {/* Body text - 18px, 1.5 line height */}
-              <p className="text-lg text-white/80 leading-normal max-w-prose">
+              <p className="text-lg md:text-xl text-white/80 leading-relaxed max-w-prose">
                 Expert perspectives on team liftouts, hiring strategies, employment law, and
                 building high-performing teams. Stay ahead with the latest trends in team-based
                 recruitment.

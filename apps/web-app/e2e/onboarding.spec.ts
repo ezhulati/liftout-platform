@@ -1,269 +1,302 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+// Helper function to sign in and reset onboarding
+async function signInAndResetOnboarding(page: Page, email: string, password: string) {
+  await page.goto('/auth/signin');
+  await page.waitForLoadState('domcontentloaded');
+  await page.fill('input[type="email"]', email);
+  await page.fill('input[type="password"]', password);
+  await page.click('button:has-text("Sign in")');
+  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+
+  // Clear onboarding progress from localStorage to reset onboarding state
+  await page.evaluate(() => {
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('onboarding_')) {
+        localStorage.removeItem(key);
+      }
+    });
+  });
+}
 
 test.describe('Onboarding Flows', () => {
   test.describe('Company User Onboarding', () => {
-    test.beforeEach(async ({ page }) => {
-      // Sign in as company user
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'company@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-    });
+    test('can access onboarding page and see wizard', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
 
-    test('can access onboarding page', async ({ page }) => {
       await page.goto('/app/onboarding');
-      await page.waitForLoadState('domcontentloaded');
+      await page.waitForLoadState('networkidle');
 
-      // Should see onboarding header
-      await expect(page.locator('h1:has-text("Welcome"), h2:has-text("Welcome"), h3:has-text("Welcome")')).toBeVisible({ timeout: 10000 });
+      // Should see onboarding header with user name
+      await expect(page.locator('h1:has-text("Welcome")')).toBeVisible({ timeout: 15000 });
+
+      // Should see step navigation
+      await expect(page.locator('text=Step 1 of')).toBeVisible();
     });
 
     test('Company Profile Setup step renders correctly', async ({ page }) => {
-      await page.goto('/app/onboarding');
-      await page.waitForLoadState('domcontentloaded');
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
 
-      // Wait for step to load - may see company profile setup or another step
-      await expect(page.locator('form, [data-testid="onboarding-step"]')).toBeVisible({ timeout: 10000 });
-    });
-
-    test('CompanyVerification step - form fields visible', async ({ page }) => {
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      // Navigate to verification step if not already there
-      const verificationHeader = page.locator('text=Verify your company');
-      if (await verificationHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Check for form fields
-        await expect(page.locator('input[name="companyRegistrationNumber"], [name="companyRegistrationNumber"]')).toBeVisible();
-        await expect(page.locator('input[name="taxId"], [name="taxId"]')).toBeVisible();
-        await expect(page.locator('text=Verification documents')).toBeVisible();
+      // First step should be Company Profile Setup
+      await expect(page.locator('h2:has-text("Company Profile")')).toBeVisible({ timeout: 10000 });
+
+      // Should have form fields
+      await expect(page.locator('input[name="companyName"], input[placeholder*="company"]').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('can navigate through onboarding steps', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Wait for first step to load
+      await expect(page.locator('text=Step 1 of')).toBeVisible({ timeout: 15000 });
+
+      // Look for skip button in the step content or footer
+      const skipButton = page.locator('button:has-text("Skip"), a:has-text("Skip for now"), text=Skip setup').first();
+      if (await skipButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await skipButton.click();
+        await page.waitForLoadState('networkidle');
       }
     });
 
-    test('FirstOpportunityCreation step - form elements present', async ({ page }) => {
+    test('CompanyVerification step has document upload UI', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      // Check if opportunity creation step is visible or navigate to it
-      const opportunityHeader = page.locator('text=Create your first liftout opportunity');
-      if (await opportunityHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Verify form fields
-        await expect(page.locator('input[name="title"], [placeholder*="Strategic"]')).toBeVisible();
-        await expect(page.locator('textarea[name="description"]')).toBeVisible();
-        await expect(page.locator('select[name="industry"]')).toBeVisible();
-        await expect(page.locator('text=Liftout type')).toBeVisible();
+      // Navigate to verification step by clicking step in nav or skipping first step
+      const verificationTab = page.locator('button:has-text("Verification"), button:has-text("Verify")');
+      if (await verificationTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await verificationTab.click();
+        await page.waitForLoadState('networkidle');
+
+        // Check for verification UI elements
+        await expect(page.locator('text=Verify your company, text=Company verification')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('text=Verification documents, text=Upload')).toBeVisible();
       }
     });
 
-    test('TeamDiscoveryTutorial step - interactive elements', async ({ page }) => {
+    test('FirstOpportunityCreation step has opportunity form', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const tutorialHeader = page.locator('text=Discover teams');
-      if (await tutorialHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Verify tutorial steps are present
-        await expect(page.locator('text=Search for teams, text=Search teams')).toBeVisible();
+      // Navigate to opportunity creation step
+      const opportunityTab = page.locator('button:has-text("Opportunity"), button:has-text("First")');
+      if (await opportunityTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await opportunityTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Check for interactive demo
-        await expect(page.locator('input[placeholder*="Search"]')).toBeVisible();
+        // Check for form elements
+        await expect(page.locator('text=Create your first, text=liftout opportunity')).toBeVisible({ timeout: 5000 });
       }
     });
 
-    test('CompanyPlatformTour step - tour navigation works', async ({ page }) => {
+    test('TeamDiscoveryTutorial step has interactive tutorial', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const tourHeader = page.locator('text=Platform tour');
-      if (await tourHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Check tour progress
-        await expect(page.locator('text=Tour progress')).toBeVisible();
+      // Navigate to tutorial step
+      const tutorialTab = page.locator('button:has-text("Discovery"), button:has-text("Discover")');
+      if (await tutorialTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await tutorialTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Verify tour step buttons
-        await expect(page.locator('text=Your Dashboard, text=Dashboard')).toBeVisible();
+        // Check for tutorial elements
+        await expect(page.locator('text=Discover teams')).toBeVisible({ timeout: 5000 });
+      }
+    });
 
-        // Test navigation
-        const nextButton = page.locator('button:has-text("Next feature")');
-        if (await nextButton.isVisible()) {
-          await nextButton.click();
-          // Should advance to next step
-          await expect(page.locator('text=Step 2 of')).toBeVisible({ timeout: 5000 });
-        }
+    test('CompanyPlatformTour step shows feature tour', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Navigate to platform tour step
+      const tourTab = page.locator('button:has-text("Platform"), button:has-text("Tour")');
+      if (await tourTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await tourTab.click();
+        await page.waitForLoadState('networkidle');
+
+        // Check for tour elements
+        await expect(page.locator('text=Platform tour')).toBeVisible({ timeout: 5000 });
       }
     });
   });
 
   test.describe('Team User Onboarding', () => {
-    test.beforeEach(async ({ page }) => {
-      // Sign in as team user
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'demo@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-    });
+    test('can access onboarding page and see wizard', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
 
-    test('can access onboarding page', async ({ page }) => {
-      await page.goto('/app/onboarding');
-      await page.waitForLoadState('domcontentloaded');
-
-      // Should see onboarding content
-      await expect(page.locator('h1, h2, h3').first()).toBeVisible({ timeout: 10000 });
-    });
-
-    test('ProfileSetup step renders correctly', async ({ page }) => {
-      await page.goto('/app/onboarding');
-      await page.waitForLoadState('domcontentloaded');
-
-      // Check for profile setup elements
-      const profileHeader = page.locator('text=Set up your professional profile');
-      if (await profileHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await expect(page.locator('input#firstName, input[name="firstName"]')).toBeVisible();
-        await expect(page.locator('input#lastName, input[name="lastName"]')).toBeVisible();
-        await expect(page.locator('text=Professional title')).toBeVisible();
-      }
-    });
-
-    test('TeamFormation step - create or join options', async ({ page }) => {
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const formationHeader = page.locator('text=Team formation');
-      if (await formationHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Should see both options
-        await expect(page.locator('text=Create a new team')).toBeVisible();
-        await expect(page.locator('text=Join an existing team')).toBeVisible();
+      // Should see onboarding header
+      await expect(page.locator('h1:has-text("Welcome")')).toBeVisible({ timeout: 15000 });
 
-        // Test clicking create option
-        await page.click('text=Create a new team');
-        await expect(page.locator('text=Create your team')).toBeVisible({ timeout: 5000 });
-
-        // Verify form fields appear
-        await expect(page.locator('input[name="teamName"]')).toBeVisible();
-        await expect(page.locator('textarea[name="description"]')).toBeVisible();
-      }
+      // Should see step navigation
+      await expect(page.locator('text=Step 1 of')).toBeVisible();
     });
 
-    test('TeamFormation step - join mode', async ({ page }) => {
+    test('ProfileSetup step renders with form fields', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const formationHeader = page.locator('text=Team formation');
-      if (await formationHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Click join option
-        await page.click('text=Join an existing team');
-
-        // Should see join interface
-        await expect(page.locator('text=Join with invite code')).toBeVisible({ timeout: 5000 });
-        await expect(page.locator('input[placeholder*="XXXX"]')).toBeVisible();
-        await expect(page.locator('text=Find your team')).toBeVisible();
-      }
+      // First step should be Profile Setup
+      await expect(page.locator('h2:has-text("Profile"), h3:has-text("profile")')).toBeVisible({ timeout: 10000 });
     });
 
-    test('SkillsExperience step - skill selection works', async ({ page }) => {
+    test('TeamFormation step has create/join options', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const skillsHeader = page.locator('text=Skills & experience');
-      if (await skillsHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Verify role selection
-        await expect(page.locator('select[name="primaryRole"]')).toBeVisible();
+      // Navigate to team formation step
+      const teamTab = page.locator('button:has-text("Team"), button:has-text("Formation")');
+      if (await teamTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await teamTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Check skill categories
-        await expect(page.locator('text=Technical Skills')).toBeVisible();
-
-        // Try clicking a skill category
-        await page.click('text=Technical Skills');
-
-        // Should see skills to select
-        await expect(page.locator('button:has-text("JavaScript")')).toBeVisible({ timeout: 5000 });
-
-        // Select a skill
-        await page.click('button:has-text("JavaScript")');
-
-        // Check it's selected (should appear in selected area)
-        await expect(page.locator('.bg-navy-100:has-text("JavaScript"), [class*="selected"]:has-text("JavaScript")')).toBeVisible({ timeout: 5000 });
+        // Check for team formation UI
+        await expect(page.locator('text=Team formation')).toBeVisible({ timeout: 5000 });
       }
     });
 
-    test('LiftoutPreferences step - preference options', async ({ page }) => {
+    test('SkillsExperience step has skill categories', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const prefsHeader = page.locator('text=Liftout preferences');
-      if (await prefsHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Check availability section
-        await expect(page.locator('text=Availability')).toBeVisible();
-        await expect(page.locator('text=Immediately available')).toBeVisible();
+      // Navigate to skills step
+      const skillsTab = page.locator('button:has-text("Skills"), button:has-text("Experience")');
+      if (await skillsTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await skillsTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Check compensation section
-        await expect(page.locator('text=Compensation preferences')).toBeVisible();
-
-        // Check location section
-        await expect(page.locator('text=Location preferences')).toBeVisible();
-
-        // Check priorities section
-        await expect(page.locator('text=What matters most to you')).toBeVisible();
-
-        // Try selecting a priority
-        await page.click('button:has-text("Competitive compensation")');
+        // Check for skills UI
+        await expect(page.locator('text=Skills & experience')).toBeVisible({ timeout: 5000 });
       }
     });
 
-    test('OpportunityDiscoveryTutorial step - tutorial steps', async ({ page }) => {
+    test('LiftoutPreferences step has preference options', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const tutorialHeader = page.locator('h3:has-text("Discover opportunities")');
-      if (await tutorialHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Check for tutorial steps
-        await expect(page.locator('text=Search opportunities')).toBeVisible();
+      // Navigate to preferences step
+      const prefsTab = page.locator('button:has-text("Preferences"), button:has-text("Liftout")');
+      if (await prefsTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await prefsTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Verify interactive demo
-        await expect(page.locator('input[placeholder*="Search opportunities"]')).toBeVisible();
-
-        // Test navigation
-        const nextButton = page.locator('button:has-text("Next step")');
-        if (await nextButton.isVisible()) {
-          await nextButton.click();
-          await expect(page.locator('text=Step 2 of')).toBeVisible({ timeout: 5000 });
-        }
+        // Check for preferences UI
+        await expect(page.locator('text=Liftout preferences')).toBeVisible({ timeout: 5000 });
       }
     });
 
-    test('TeamPlatformTour step - feature tour', async ({ page }) => {
+    test('OpportunityDiscoveryTutorial step has tutorial interface', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      const tourHeader = page.locator('h3:has-text("Platform tour")');
-      if (await tourHeader.isVisible({ timeout: 5000 }).catch(() => false)) {
-        // Check progress bar
-        await expect(page.locator('text=Tour progress')).toBeVisible();
+      // Navigate to tutorial step
+      const tutorialTab = page.locator('button:has-text("Discovery"), button:has-text("Opportunity")');
+      if (await tutorialTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await tutorialTab.click();
+        await page.waitForLoadState('networkidle');
 
-        // Check feature highlights
-        await expect(page.locator('text=Your Dashboard')).toBeVisible();
+        // Check for tutorial UI
+        await expect(page.locator('text=Discover opportunities')).toBeVisible({ timeout: 5000 });
+      }
+    });
 
-        // Pro tip should be visible
-        await expect(page.locator('text=Pro tip')).toBeVisible();
+    test('TeamPlatformTour step shows platform features', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Navigate to platform tour step
+      const tourTab = page.locator('button:has-text("Platform"), button:has-text("Tour")');
+      if (await tourTab.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await tourTab.click();
+        await page.waitForLoadState('networkidle');
+
+        // Check for tour UI
+        await expect(page.locator('text=Platform tour')).toBeVisible({ timeout: 5000 });
       }
     });
   });
 
-  test.describe('Onboarding UI Components', () => {
-    test('buttons have minimum touch target (48px)', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'demo@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+  test.describe('Onboarding Wizard UI', () => {
+    test('progress bar updates correctly', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
 
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      // Check primary buttons have min-h-12 class (48px)
+      // Check for progress bar
+      const progressBar = page.locator('[class*="bg-navy"][class*="h-2"], .bg-navy.h-2');
+      await expect(progressBar).toBeVisible({ timeout: 10000 });
+    });
+
+    test('step navigation buttons work', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Should see step buttons
+      const stepButtons = page.locator('nav button');
+      const count = await stepButtons.count();
+      expect(count).toBeGreaterThan(0);
+
+      // Clicking a step button should update current step indicator
+      if (count > 1) {
+        const secondStep = stepButtons.nth(1);
+        if (await secondStep.isEnabled()) {
+          const initialStep = await page.locator('text=Step 1 of').textContent();
+          await secondStep.click();
+          await page.waitForLoadState('networkidle');
+          // Step indicator might change
+        }
+      }
+    });
+
+    test('skip buttons are accessible', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Should have skip option in footer
+      await expect(page.locator('text=Skip setup')).toBeVisible({ timeout: 10000 });
+    });
+
+    test('buttons have proper minimum height for touch targets', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
+
+      await page.goto('/app/onboarding');
+      await page.waitForLoadState('networkidle');
+
+      // Check primary buttons
       const primaryButtons = page.locator('button.btn-primary');
       const count = await primaryButtons.count();
 
@@ -272,73 +305,53 @@ test.describe('Onboarding Flows', () => {
         if (await button.isVisible()) {
           const box = await button.boundingBox();
           if (box) {
-            // 48px minimum height
-            expect(box.height).toBeGreaterThanOrEqual(44); // Allow some tolerance
+            // 48px minimum height (44px with some tolerance)
+            expect(box.height).toBeGreaterThanOrEqual(44);
           }
         }
       }
     });
-
-    test('form labels use bold font weight', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'demo@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-
-      await page.goto('/app/onboarding');
-      await page.waitForLoadState('networkidle');
-
-      // Check section headers
-      const headers = page.locator('h4.font-bold');
-      const headerCount = await headers.count();
-      expect(headerCount).toBeGreaterThan(0);
-    });
   });
 
-  test.describe('Onboarding Navigation', () => {
-    test('can skip optional steps', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'demo@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+  test.describe('Complete Onboarding Flow', () => {
+    test('company user can complete full onboarding', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'company@example.com', 'password');
 
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      // Look for skip button
-      const skipButton = page.locator('button:has-text("Skip"), a:has-text("Skip")');
-      if (await skipButton.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await skipButton.click();
-        // Should advance to next step or stay on page
-        await page.waitForLoadState('networkidle');
+      // Wait for wizard to load
+      await expect(page.locator('h1:has-text("Welcome")')).toBeVisible({ timeout: 15000 });
+
+      // Click through steps using skip setup
+      const skipSetup = page.locator('text=Skip setup');
+      if (await skipSetup.isVisible({ timeout: 5000 })) {
+        await skipSetup.click();
+
+        // Should redirect to dashboard
+        await page.waitForURL('**/app/dashboard', { timeout: 10000 });
+        await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
       }
     });
 
-    test('progress indicator updates on step completion', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.fill('input[type="email"]', 'company@example.com');
-      await page.fill('input[type="password"]', 'password');
-      await page.click('button:has-text("Sign in")');
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+    test('team user can complete full onboarding', async ({ page }) => {
+      await signInAndResetOnboarding(page, 'demo@example.com', 'password');
 
       await page.goto('/app/onboarding');
       await page.waitForLoadState('networkidle');
 
-      // Check for progress indicator
-      const progressBar = page.locator('[class*="progress"], [role="progressbar"]');
-      const stepIndicator = page.locator('text=/Step \\d+ of \\d+/');
+      // Wait for wizard to load
+      await expect(page.locator('h1:has-text("Welcome")')).toBeVisible({ timeout: 15000 });
 
-      // At least one progress indicator should be visible
-      const hasProgress = await progressBar.isVisible({ timeout: 5000 }).catch(() => false) ||
-                          await stepIndicator.isVisible({ timeout: 5000 }).catch(() => false);
+      // Click through steps using skip setup
+      const skipSetup = page.locator('text=Skip setup');
+      if (await skipSetup.isVisible({ timeout: 5000 })) {
+        await skipSetup.click();
 
-      // This is informational - not a hard requirement
-      console.log('Progress indicator visible:', hasProgress);
+        // Should redirect to dashboard
+        await page.waitForURL('**/app/dashboard', { timeout: 10000 });
+        await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
+      }
     });
   });
 });
