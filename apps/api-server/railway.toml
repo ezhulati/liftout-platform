@@ -1,22 +1,8 @@
-[build]
-builder = "nixpacks"
+# Railway deployment configuration for api-server
+# Build and start commands are set via Railway dashboard/API
 
 [deploy]
-# Railway deployment configuration
-startCommand = "node dist/index.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
-
-[environments.production]
-# Production environment variables should be set in Railway dashboard:
-# - DATABASE_URL: Neon PostgreSQL connection string
-# - REDIS_URL: Upstash Redis connection string
-# - JWT_SECRET: Secure random string
-# - ALLOWED_ORIGINS: https://liftout.netlify.app,https://liftout.com
-# - NODE_ENV: production
-# - LOG_LEVEL: info
-
-[environments.staging]
-# Staging environment for testing
