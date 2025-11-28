@@ -11,12 +11,19 @@ const navLinks = [
   { href: '#how-it-works', label: 'How it works' },
 ];
 
-export function LandingHeader() {
+interface LandingHeaderProps {
+  variant?: 'light' | 'transparent';
+}
+
+export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+
+  // For transparent variant, switch to light style when scrolled
+  const useTransparentStyle = variant === 'transparent' && !isScrolled && !isMobileMenuOpen;
 
   useEffect(() => {
     const threshold = 5;
@@ -80,9 +87,11 @@ export function LandingHeader() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
-        isScrolled || isMobileMenuOpen
-          ? 'bg-white border-b border-border shadow-sm'
-          : 'bg-white/95 backdrop-blur-sm'
+        useTransparentStyle
+          ? 'bg-transparent'
+          : isScrolled || isMobileMenuOpen
+            ? 'bg-white border-b border-border shadow-sm'
+            : 'bg-white/95 backdrop-blur-sm'
       } ${
         isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
       }`}
@@ -99,7 +108,7 @@ export function LandingHeader() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <Image
-              src="/Liftout-logo-dark.png"
+              src={useTransparentStyle ? '/Liftout-logo-white.png' : '/Liftout-logo-dark.png'}
               alt="Liftout"
               width={240}
               height={66}
@@ -114,7 +123,11 @@ export function LandingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-600 hover:text-gray-900 font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2"
+                className={`font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2 ${
+                  useTransparentStyle
+                    ? 'text-white/90 hover:text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
               >
                 {link.label}
               </Link>
@@ -125,13 +138,21 @@ export function LandingHeader() {
           <div className="flex items-center gap-4">
             <Link
               href="/auth/signin"
-              className="hidden sm:flex text-gray-600 hover:text-gray-900 font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2"
+              className={`hidden sm:flex font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2 ${
+                useTransparentStyle
+                  ? 'text-white/90 hover:text-white'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               Sign in
             </Link>
             <Link
               href="/auth/signup"
-              className="btn-primary min-h-12 px-6 text-base hidden sm:inline-flex"
+              className={`min-h-12 px-6 text-base hidden sm:inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-200 ${
+                useTransparentStyle
+                  ? 'bg-white text-navy hover:bg-white/90'
+                  : 'btn-primary'
+              }`}
             >
               Start free
             </Link>
@@ -139,7 +160,11 @@ export function LandingHeader() {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden w-12 h-12 flex items-center justify-center rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
+              className={`md:hidden w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+                useTransparentStyle
+                  ? 'text-white hover:text-white hover:bg-white/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"

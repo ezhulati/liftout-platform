@@ -63,7 +63,7 @@ export default function NickAcimovicPage() {
 
   return (
     <>
-      <LandingHeader />
+      <LandingHeader variant="transparent" />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
         <section className="bg-gradient-navy pt-32 pb-10">
