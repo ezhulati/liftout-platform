@@ -349,13 +349,13 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               />
               
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-text-primary">
                   {profileData.firstName} {profileData.lastName}
                 </h1>
-                <p className="text-lg text-gray-600 mt-1">
+                <p className="text-lg text-text-secondary mt-1">
                   {profileData.headline || profileData.currentPosition || 'Professional'}
                 </p>
-                <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                <div className="flex items-center space-x-4 mt-2 text-sm text-text-tertiary">
                   <div className="flex items-center space-x-1">
                     <MapPinIcon className="h-4 w-4" />
                     <span>{profileData.location || 'Location not set'}</span>
@@ -401,25 +401,25 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-gray-700">Profile Completeness</span>
+                <span className="text-sm font-medium text-text-secondary">Profile completeness</span>
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  completionBadge.color === 'green' ? 'bg-green-100 text-green-800' :
-                  completionBadge.color === 'blue' ? 'bg-blue-100 text-blue-800' :
-                  completionBadge.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
+                  completionBadge.color === 'green' ? 'bg-success-light text-success-dark' :
+                  completionBadge.color === 'blue' ? 'bg-navy-50 text-navy-800' :
+                  completionBadge.color === 'yellow' ? 'bg-gold-100 text-gold-800' :
+                  'bg-error-light text-error-dark'
                 }`}>
                   {completionBadge.icon} {completionBadge.text}
                 </span>
               </div>
-              <span className="text-sm text-gray-500">{completeness}%</span>
+              <span className="text-sm text-text-tertiary">{completeness}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  completeness >= 90 ? 'bg-green-500' :
-                  completeness >= 70 ? 'bg-blue-500' :
-                  completeness >= 40 ? 'bg-yellow-500' :
-                  'bg-red-500'
+            <div className="w-full bg-bg-elevated rounded-full h-2">
+              <div
+                className={`h-2 rounded-full transition-all duration-base ${
+                  completeness >= 90 ? 'bg-success' :
+                  completeness >= 70 ? 'bg-navy' :
+                  completeness >= 40 ? 'bg-gold' :
+                  'bg-error'
                 }`}
                 style={{ width: `${completeness}%` }}
               />
@@ -428,11 +428,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             {/* Recommendations */}
             {completion.recommendations.length > 0 && (
               <div className="mt-3">
-                <p className="text-xs text-gray-600 mb-2">Next steps to improve your profile:</p>
-                <ul className="text-xs text-gray-500 space-y-1">
+                <p className="text-xs text-text-secondary mb-2">Next steps to improve your profile:</p>
+                <ul className="text-xs text-text-tertiary space-y-1">
                   {completion.recommendations.slice(0, 3).map((rec, index) => (
                     <li key={index} className="flex items-start space-x-1">
-                      <span className="text-blue-500">•</span>
+                      <span className="text-navy">•</span>
                       <span>{rec}</span>
                     </li>
                   ))}
@@ -444,7 +444,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'overview', label: 'Overview', icon: UserIcon },
@@ -456,10 +456,10 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm min-h-[48px] ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
               <tab.icon className="h-5 w-5 mr-2" />
@@ -475,17 +475,20 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           {/* Basic Information */}
           <div className="lg:col-span-2 space-y-6">
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Basic information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
+                    <label className="label-text mb-1">
+                      First name
                     </label>
                     {isEditing ? (
                       <div>
+                        {validationErrors.firstName && (
+                          <p className="mb-1 text-sm text-error">{validationErrors.firstName}</p>
+                        )}
                         <input
                           type="text"
                           value={profileData.firstName}
@@ -494,23 +497,23 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                             setProfileData(prev => ({ ...prev, firstName: value }));
                             validateProfileField('firstName', value);
                           }}
-                          className={`input-field ${validationErrors.firstName ? 'border-red-300' : ''}`}
+                          className={`input-field ${validationErrors.firstName ? 'border-error' : ''}`}
                         />
-                        {validationErrors.firstName && (
-                          <p className="mt-1 text-sm text-red-600">{validationErrors.firstName}</p>
-                        )}
                       </div>
                     ) : (
-                      <p className="text-gray-900">{profileData.firstName || 'Not set'}</p>
+                      <p className="text-text-primary">{profileData.firstName || 'Not set'}</p>
                     )}
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
+                    <label className="label-text mb-1">
+                      Last name
                     </label>
                     {isEditing ? (
                       <div>
+                        {validationErrors.lastName && (
+                          <p className="mb-1 text-sm text-error">{validationErrors.lastName}</p>
+                        )}
                         <input
                           type="text"
                           value={profileData.lastName}
@@ -519,21 +522,18 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                             setProfileData(prev => ({ ...prev, lastName: value }));
                             validateProfileField('lastName', value);
                           }}
-                          className={`input-field ${validationErrors.lastName ? 'border-red-300' : ''}`}
+                          className={`input-field ${validationErrors.lastName ? 'border-error' : ''}`}
                         />
-                        {validationErrors.lastName && (
-                          <p className="mt-1 text-sm text-red-600">{validationErrors.lastName}</p>
-                        )}
                       </div>
                     ) : (
-                      <p className="text-gray-900">{profileData.lastName || 'Not set'}</p>
+                      <p className="text-text-primary">{profileData.lastName || 'Not set'}</p>
                     )}
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Professional Headline
+                  <label className="label-text mb-1">
+                    Professional headline
                   </label>
                   {isEditing ? (
                     <input
@@ -544,12 +544,12 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                       placeholder="Senior Software Engineer | Full-Stack Developer"
                     />
                   ) : (
-                    <p className="text-gray-900">{profileData.headline || 'Not set'}</p>
+                    <p className="text-text-primary">{profileData.headline || 'Not set'}</p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="label-text mb-1">
                     Bio
                   </label>
                   {isEditing ? (
@@ -561,7 +561,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                       placeholder="Tell us about yourself, your experience, and what drives you professionally..."
                     />
                   ) : (
-                    <p className="text-gray-900">{profileData.bio || 'Not set'}</p>
+                    <p className="text-text-primary">{profileData.bio || 'Not set'}</p>
                   )}
                 </div>
               </div>
@@ -571,48 +571,48 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           {/* Contact & Social */}
           <div className="space-y-6">
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Contact Information</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex items-center space-x-3">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{user.email}</span>
+                  <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{user.email}</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
-                  <PhoneIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{profileData.phone || 'Not set'}</span>
+                  <PhoneIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{profileData.phone || 'Not set'}</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
-                  <MapPinIcon className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-900">{profileData.location || 'Not set'}</span>
+                  <MapPinIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className="text-text-primary">{profileData.location || 'Not set'}</span>
                 </div>
               </div>
             </div>
-            
+
             {/* Quick Stats */}
             <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Quick Stats</h3>
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-medium text-text-primary">Quick stats</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Years Experience</span>
-                  <span className="font-medium">{profileData.yearsExperience}</span>
+                  <span className="text-text-secondary">Years experience</span>
+                  <span className="font-medium text-text-primary">{profileData.yearsExperience}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Skills</span>
-                  <span className="font-medium">{profileData.skills.length}</span>
+                  <span className="text-text-secondary">Skills</span>
+                  <span className="font-medium text-text-primary">{profileData.skills.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Projects</span>
-                  <span className="font-medium">{profileData.portfolio.length}</span>
+                  <span className="text-text-secondary">Projects</span>
+                  <span className="font-medium text-text-primary">{profileData.portfolio.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Achievements</span>
-                  <span className="font-medium">{profileData.achievements.length}</span>
+                  <span className="text-text-secondary">Achievements</span>
+                  <span className="font-medium text-text-primary">{profileData.achievements.length}</span>
                 </div>
               </div>
             </div>
@@ -623,30 +623,30 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       {/* Other tab content would go here */}
       {activeTab === 'skills' && (
         <div className="card">
-          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Skills & Expertise</h3>
+          <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+            <h3 className="text-lg font-medium text-text-primary">Skills & expertise</h3>
             {isEditing && (
               <button
                 onClick={addSkill}
                 className="btn-secondary text-sm"
               >
                 <PlusIcon className="h-4 w-4 mr-1" />
-                Add Skill
+                Add skill
               </button>
             )}
           </div>
           <div className="px-6 py-6">
             {profileData.skills.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No skills added yet.</p>
+              <p className="text-text-tertiary text-center py-8">No skills added yet.</p>
             ) : (
               <div className="space-y-4">
                 {profileData.skills.map((skill, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div key={index} className="border border-border rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Skill Name
+                          <label className="label-text mb-1">
+                            Skill name
                           </label>
                           {isEditing ? (
                             <input
@@ -661,13 +661,13 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                               placeholder="React, Python, Project Management..."
                             />
                           ) : (
-                            <p className="font-medium">{skill.name}</p>
+                            <p className="font-medium text-text-primary">{skill.name}</p>
                           )}
                         </div>
-                        
+
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Proficiency Level
+                          <label className="label-text mb-1">
+                            Proficiency level
                           </label>
                           {isEditing ? (
                             <select
@@ -686,19 +686,19 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                             </select>
                           ) : (
                             <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                              skill.level === 'Expert' ? 'bg-purple-100 text-purple-800' :
-                              skill.level === 'Advanced' ? 'bg-blue-100 text-blue-800' :
-                              skill.level === 'Intermediate' ? 'bg-green-100 text-green-800' :
-                              'bg-gray-100 text-gray-800'
+                              skill.level === 'Expert' ? 'bg-gold-100 text-gold-800' :
+                              skill.level === 'Advanced' ? 'bg-navy-50 text-navy-800' :
+                              skill.level === 'Intermediate' ? 'bg-success-light text-success-dark' :
+                              'bg-bg-alt text-text-secondary'
                             }`}>
                               {skill.level}
                             </span>
                           )}
                         </div>
-                        
+
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Years Experience
+                          <label className="label-text mb-1">
+                            Years experience
                           </label>
                           {isEditing ? (
                             <input
@@ -714,15 +714,15 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                               max="50"
                             />
                           ) : (
-                            <p>{skill.yearsExperience} years</p>
+                            <p className="text-text-primary">{skill.yearsExperience} years</p>
                           )}
                         </div>
                       </div>
-                      
+
                       {isEditing && (
                         <button
                           onClick={() => removeSkill(index)}
-                          className="ml-4 text-red-600 hover:text-red-800"
+                          className="ml-4 text-error hover:text-error-dark touch-target transition-colors duration-fast"
                         >
                           <XMarkIcon className="h-5 w-5" />
                         </button>

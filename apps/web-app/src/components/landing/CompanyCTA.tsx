@@ -1,9 +1,37 @@
+'use client';
+
 import Link from 'next/link';
+import { ArrowRightIcon, ShieldCheckIcon, ClockIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
+const trustReassurances = [
+  { icon: ShieldCheckIcon, text: 'NDA-protected conversations' },
+  { icon: ClockIcon, text: 'Free to explore' },
+  { icon: CreditCardIcon, text: 'No credit card required' },
+];
+
+const valueProps = [
+  {
+    title: 'Immediate impact',
+    description: 'Teams hit the ground running with established collaboration patterns.',
+  },
+  {
+    title: 'Verified quality',
+    description: 'Every team comes with documented performance history and references.',
+  },
+  {
+    title: 'Confidential process',
+    description: 'Discrete exploration protects all parties throughout negotiations.',
+  },
+];
 
 export function CompanyCTA() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
     <section
-      className="relative py-20 lg:py-28 bg-navy overflow-hidden"
+      ref={ref as React.RefObject<HTMLElement>}
+      className="relative py-20 lg:py-28 bg-navy-900 overflow-hidden"
       aria-labelledby="company-cta-heading"
     >
       {/* Background decorative elements */}
@@ -22,7 +50,7 @@ export function CompanyCTA() {
         />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
+      <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
           Ready to Transform Your Talent Strategy?
@@ -31,35 +59,37 @@ export function CompanyCTA() {
         {/* Headline */}
         <h2
           id="company-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6"
         >
           Acquire the teams that will
           <span className="block text-gold mt-2">drive your next phase of growth</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-white/80 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
           Stop building teams from scratch. Access proven, intact teams with verified track records
           who are ready to deliver immediate impact.
         </p>
 
+        {/* Trust reassurances */}
+        <div className="flex flex-wrap justify-center gap-6 mb-10">
+          {trustReassurances.map((item) => (
+            <div key={item.text} className="flex items-center gap-2 text-white/80">
+              <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
+              <span className="text-sm font-medium">{item.text}</span>
+            </div>
+          ))}
+        </div>
+
         {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           {/* Primary CTA */}
           <Link
             href="/auth/signup?type=company"
-            className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
+            className="group btn-secondary min-h-[52px] px-10 py-4 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Acquire teams
-            <svg
-              className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            Browse verified teams
+            <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
           {/* Secondary CTA */}
@@ -83,24 +113,13 @@ export function CompanyCTA() {
         </p>
 
         {/* Value props summary */}
-        <div className="mt-16 pt-8 border-t border-white/20">
+        <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="grid sm:grid-cols-3 gap-8 text-left">
-            {[
-              {
-                title: 'Immediate impact',
-                description: 'Teams hit the ground running with established collaboration patterns.',
-              },
-              {
-                title: 'Verified quality',
-                description: 'Every team comes with documented performance history and references.',
-              },
-              {
-                title: 'Confidential process',
-                description: 'Discrete exploration protects all parties throughout negotiations.',
-              },
-            ].map((item) => (
+            {valueProps.map((item, index) => (
               <div
                 key={item.title}
+                className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
                 <h3 className="font-heading text-lg font-bold text-white mb-2">{item.title}</h3>
                 <p className="font-body text-white/70 text-sm leading-relaxed">{item.description}</p>

@@ -51,34 +51,34 @@ const MetricCard: React.FC<MetricCardProps> = ({
   color = 'blue'
 }) => {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    yellow: 'bg-yellow-50 text-yellow-600',
-    red: 'bg-red-50 text-red-600',
-    purple: 'bg-purple-50 text-purple-600'
+    blue: 'bg-navy-50 text-navy',
+    green: 'bg-success-light text-success-dark',
+    yellow: 'bg-gold-100 text-gold-800',
+    red: 'bg-error-light text-error-dark',
+    purple: 'bg-gold-100 text-gold-800'
   };
 
-  const trendIcon = trend?.direction === 'up' 
-    ? <ArrowUpIcon className="h-4 w-4 text-green-500" />
+  const trendIcon = trend?.direction === 'up'
+    ? <ArrowUpIcon className="h-4 w-4 text-success" />
     : trend?.direction === 'down'
-    ? <ArrowDownIcon className="h-4 w-4 text-red-500" />
-    : <MinusIcon className="h-4 w-4 text-gray-500" />;
+    ? <ArrowDownIcon className="h-4 w-4 text-error" />
+    : <MinusIcon className="h-4 w-4 text-text-tertiary" />;
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+    <div className="card p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm font-medium text-text-secondary mb-1">{title}</p>
+          <p className="text-2xl font-bold text-text-primary">{value}</p>
           {subtitle && (
-            <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-sm text-text-tertiary mt-1">{subtitle}</p>
           )}
           {trend && (
             <div className="flex items-center mt-2 text-sm">
               {trendIcon}
               <span className={`ml-1 ${
-                trend.direction === 'up' ? 'text-green-600' : 
-                trend.direction === 'down' ? 'text-red-600' : 'text-gray-600'
+                trend.direction === 'up' ? 'text-success' :
+                trend.direction === 'down' ? 'text-error' : 'text-text-secondary'
               }`}>
                 {Math.abs(trend.value)}% {trend.period}
               </span>
@@ -139,13 +139,13 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="h-8 bg-bg-alt rounded w-1/4 mb-6"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+              <div key={i} className="h-32 bg-bg-alt rounded-lg"></div>
             ))}
           </div>
-          <div className="h-64 bg-gray-200 rounded-lg"></div>
+          <div className="h-64 bg-bg-alt rounded-lg"></div>
         </div>
       </div>
     );
@@ -154,9 +154,9 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
   if (!analytics) {
     return (
       <div className="text-center py-12">
-        <ChartBarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No Analytics Available</h3>
-        <p className="text-gray-500">Analytics data is not available for this team yet.</p>
+        <ChartBarIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-text-primary mb-2">No analytics available</h3>
+        <p className="text-text-secondary">Analytics data is not available for this team yet.</p>
       </div>
     );
   }
@@ -167,17 +167,17 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Team Analytics</h2>
+        <h2 className="text-2xl font-bold text-text-primary">Team analytics</h2>
         <button
           onClick={loadAnalytics}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          className="btn-secondary min-h-[44px]"
         >
-          Refresh Data
+          Refresh data
         </button>
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'overview', label: 'Overview' },
@@ -188,10 +188,10 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-1 border-b-2 font-medium text-sm min-h-[44px] ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-navy text-navy'
+                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
               }`}
             >
               {tab.label}
@@ -286,20 +286,20 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
           </div>
 
           {/* Role Distribution */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Team Composition</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-medium text-text-primary mb-4">Team composition</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-600">{metrics.membersByRole.leader}</div>
-                <div className="text-sm text-gray-600">Leaders</div>
+                <div className="text-2xl font-bold text-gold">{metrics.membersByRole.leader}</div>
+                <div className="text-sm text-text-secondary">Leaders</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{metrics.membersByRole.admin}</div>
-                <div className="text-sm text-gray-600">Admins</div>
+                <div className="text-2xl font-bold text-navy">{metrics.membersByRole.admin}</div>
+                <div className="text-sm text-text-secondary">Admins</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-600">{metrics.membersByRole.member}</div>
-                <div className="text-sm text-gray-600">Members</div>
+                <div className="text-2xl font-bold text-text-secondary">{metrics.membersByRole.member}</div>
+                <div className="text-sm text-text-secondary">Members</div>
               </div>
             </div>
           </div>
@@ -310,50 +310,50 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
       {activeTab === 'performance' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Client Satisfaction</h3>
+            <div className="card p-6">
+              <h3 className="text-lg font-medium text-text-primary mb-4">Client satisfaction</h3>
               <div className="flex items-center">
-                <div className="text-3xl font-bold text-gray-900">{metrics.clientSatisfaction.toFixed(1)}</div>
+                <div className="text-3xl font-bold text-text-primary">{metrics.clientSatisfaction.toFixed(1)}</div>
                 <div className="ml-2 flex">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <StarIcon
                       key={star}
                       className={`h-5 w-5 ${
-                        star <= metrics.clientSatisfaction ? 'text-yellow-400' : 'text-gray-300'
+                        star <= metrics.clientSatisfaction ? 'text-gold' : 'text-border'
                       }`}
                     />
                   ))}
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mt-2">Based on recent client feedback</p>
+              <p className="text-sm text-text-secondary mt-2">Based on recent client feedback</p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Communication Score</h3>
-              <div className="text-3xl font-bold text-gray-900">{metrics.communicationScore}/100</div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full" 
+            <div className="card p-6">
+              <h3 className="text-lg font-medium text-text-primary mb-4">Communication score</h3>
+              <div className="text-3xl font-bold text-text-primary">{metrics.communicationScore}/100</div>
+              <div className="w-full bg-bg-alt rounded-full h-2 mt-2">
+                <div
+                  className="bg-navy h-2 rounded-full"
                   style={{ width: `${metrics.communicationScore}%` }}
                 ></div>
               </div>
-              <p className="text-sm text-gray-600 mt-2">Team collaboration effectiveness</p>
+              <p className="text-sm text-text-secondary mt-2">Team collaboration effectiveness</p>
             </div>
           </div>
 
           {/* Performance History */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Performance History</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-medium text-text-primary mb-4">Recent performance history</h3>
             <div className="space-y-3">
               {analytics.performanceHistory.slice(0, 5).map((event, index) => (
-                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                <div key={index} className="flex items-center justify-between py-2 border-b border-border last:border-b-0">
                   <div>
-                    <div className="text-sm font-medium text-gray-900">{event.description}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm font-medium text-text-primary">{event.description}</div>
+                    <div className="text-xs text-text-tertiary">
                       {formatDistanceToNow(new Date(event.recordedAt), { addSuffix: true })}
                     </div>
                   </div>
-                  <div className="text-sm font-semibold text-green-600">
+                  <div className="text-sm font-semibold text-success">
                     {event.metricType === 'liftout' ? formatCurrency(event.value) : event.value}
                   </div>
                 </div>
@@ -366,31 +366,31 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
       {/* Benchmarks Tab */}
       {activeTab === 'benchmarks' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Industry Benchmarks</h3>
-              <p className="text-sm text-gray-600">How your team compares to industry standards</p>
+          <div className="card overflow-hidden">
+            <div className="px-6 py-4 border-b border-border">
+              <h3 className="text-lg font-medium text-text-primary">Industry benchmarks</h3>
+              <p className="text-sm text-text-secondary">How your team compares to industry standards</p>
             </div>
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-border">
               {benchmarks.map((benchmark, index) => (
                 <div key={index} className="px-6 py-4">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-sm font-medium text-gray-900 capitalize">
+                    <div className="text-sm font-medium text-text-primary capitalize">
                       {benchmark.metric.replace(/([A-Z])/g, ' $1').trim()}
                     </div>
-                    <div className="text-sm text-gray-500">{benchmark.percentile}th percentile</div>
+                    <div className="text-sm text-text-tertiary">{benchmark.percentile}th percentile</div>
                   </div>
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
-                      <div className="text-gray-600">Your Team</div>
-                      <div className="font-semibold text-blue-600">
+                      <div className="text-text-secondary">Your team</div>
+                      <div className="font-semibold text-navy">
                         {benchmark.metric.includes('Rate') || benchmark.metric.includes('Cohesion')
                           ? formatPercentage(benchmark.value)
                           : formatCurrency(benchmark.value)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-600">Industry Avg</div>
+                      <div className="text-text-secondary">Industry avg</div>
                       <div className="font-semibold">
                         {benchmark.metric.includes('Rate') || benchmark.metric.includes('Cohesion')
                           ? formatPercentage(benchmark.industryAverage)
@@ -398,8 +398,8 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-600">Top Performer</div>
-                      <div className="font-semibold text-green-600">
+                      <div className="text-text-secondary">Top performer</div>
+                      <div className="font-semibold text-success">
                         {benchmark.metric.includes('Rate') || benchmark.metric.includes('Cohesion')
                           ? formatPercentage(benchmark.topPerformer)
                           : formatCurrency(benchmark.topPerformer)}
@@ -418,15 +418,15 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Liftout Performance Trend */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Liftout Performance</h3>
+            <div className="card p-6">
+              <h3 className="text-lg font-medium text-text-primary mb-4">Liftout performance</h3>
               <div className="space-y-3">
                 {analytics.trends.liftoutPerformance.map((period, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">{period.period}</span>
+                    <span className="text-sm text-text-secondary">{period.period}</span>
                     <div className="text-right">
                       <div className="text-sm font-medium">{period.count} liftouts</div>
-                      <div className="text-xs text-gray-500">{formatCurrency(period.value)}</div>
+                      <div className="text-xs text-text-tertiary">{formatCurrency(period.value)}</div>
                     </div>
                   </div>
                 ))}
@@ -434,15 +434,15 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
             </div>
 
             {/* Engagement Trends */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Engagement Trends</h3>
+            <div className="card p-6">
+              <h3 className="text-lg font-medium text-text-primary mb-4">Engagement trends</h3>
               <div className="space-y-3">
                 {analytics.trends.engagementTrends.map((period, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">{period.period}</span>
+                    <span className="text-sm text-text-secondary">{period.period}</span>
                     <div className="text-right">
                       <div className="text-sm font-medium">{period.views} views</div>
-                      <div className="text-xs text-gray-500">{period.interest} interests</div>
+                      <div className="text-xs text-text-tertiary">{period.interest} interests</div>
                     </div>
                   </div>
                 ))}

@@ -2,6 +2,8 @@ import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { CompanyHero } from '@/components/landing/CompanyHero';
 import { CompanyFeatures } from '@/components/landing/CompanyFeatures';
+import { TrustIndicators } from '@/components/landing/TrustIndicators';
+import { FAQ } from '@/components/landing/FAQ';
 import { CompanyCTA } from '@/components/landing/CompanyCTA';
 
 export const metadata = {
@@ -16,6 +18,8 @@ export default function ForCompaniesPage() {
       <main className="bg-bg">
         <CompanyHero />
         <CompanyFeatures />
+        <TrustIndicators />
+        <FAQ />
         <CompanyCTA />
       </main>
       <LandingFooter />

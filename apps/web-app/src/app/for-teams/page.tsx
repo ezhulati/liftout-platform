@@ -2,6 +2,8 @@ import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { TeamHero } from '@/components/landing/TeamHero';
 import { TeamFeatures } from '@/components/landing/TeamFeatures';
+import { TrustIndicators } from '@/components/landing/TrustIndicators';
+import { FAQ } from '@/components/landing/FAQ';
 import { TeamCTA } from '@/components/landing/TeamCTA';
 
 export const metadata = {
@@ -16,6 +18,8 @@ export default function ForTeamsPage() {
       <main className="bg-bg">
         <TeamHero />
         <TeamFeatures />
+        <TrustIndicators />
+        <FAQ />
         <TeamCTA />
       </main>
       <LandingFooter />

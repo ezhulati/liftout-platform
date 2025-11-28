@@ -1,9 +1,37 @@
+'use client';
+
 import Link from 'next/link';
+import { ArrowRightIcon, ShieldCheckIcon, ClockIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
+const trustReassurances = [
+  { icon: ShieldCheckIcon, text: 'NDA-protected conversations' },
+  { icon: ClockIcon, text: 'Free to explore' },
+  { icon: CreditCardIcon, text: 'No credit card required' },
+];
+
+const teamTestimonials = [
+  {
+    quote: 'After 5 years together, we were not willing to split up. Found a company that valued our unit.',
+    team: 'Engineering team, 6 members',
+  },
+  {
+    quote: 'The confidential process meant we could explore without risking our current positions.',
+    team: 'Analytics team, 4 members',
+  },
+  {
+    quote: 'Our collective negotiation secured better terms than any of us could individually.',
+    team: 'Design team, 5 members',
+  },
+];
 
 export function TeamCTA() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
     <section
-      className="relative py-20 lg:py-28 bg-navy overflow-hidden"
+      ref={ref as React.RefObject<HTMLElement>}
+      className="relative py-20 lg:py-28 bg-navy-900 overflow-hidden"
       aria-labelledby="team-cta-heading"
     >
       {/* Background decorative elements */}
@@ -22,7 +50,7 @@ export function TeamCTA() {
         />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
+      <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
           Your team's next chapter awaits
@@ -31,35 +59,37 @@ export function TeamCTA() {
         {/* Headline */}
         <h2
           id="team-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-4xl font-bold text-white tracking-tight leading-tight mb-6"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6"
         >
           Your next opportunity should not
           <span className="block text-gold mt-2">break up what you have built</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-white/80 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
           You have spent years building trust, refining processes, and achieving together.
           Companies value that. Find the right one for your team.
         </p>
 
+        {/* Trust reassurances */}
+        <div className="flex flex-wrap justify-center gap-6 mb-10">
+          {trustReassurances.map((item) => (
+            <div key={item.text} className="flex items-center gap-2 text-white/80">
+              <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
+              <span className="text-sm font-medium">{item.text}</span>
+            </div>
+          ))}
+        </div>
+
         {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           {/* Primary CTA */}
           <Link
             href="/auth/signup?type=team"
-            className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
+            className="group btn-secondary min-h-[52px] px-10 py-4 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Register team
-            <svg
-              className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            Register your team
+            <ArrowRightIcon className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
           {/* Secondary CTA */}
@@ -67,7 +97,7 @@ export function TeamCTA() {
             href="/for-companies"
             className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
           >
-            Acquire teams
+            Browse teams
           </Link>
         </div>
 
@@ -83,27 +113,16 @@ export function TeamCTA() {
         </p>
 
         {/* What teams are saying */}
-        <div className="mt-16 pt-8 border-t border-white/20">
+        <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <p className="text-white/60 text-xs mb-6 uppercase tracking-wider font-semibold">
             Teams that moved together
           </p>
           <div className="grid sm:grid-cols-3 gap-8 text-left">
-            {[
-              {
-                quote: 'After 5 years together, we were not willing to split up. Found a company that valued our unit.',
-                team: 'Engineering team, 6 members',
-              },
-              {
-                quote: 'The confidential process meant we could explore without risking our current positions.',
-                team: 'Analytics team, 4 members',
-              },
-              {
-                quote: 'Our collective negotiation secured better terms than any of us could individually.',
-                team: 'Design team, 5 members',
-              },
-            ].map((item) => (
+            {teamTestimonials.map((item, index) => (
               <div
                 key={item.team}
+                className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
               >
                 <blockquote className="font-body text-white/80 text-sm leading-relaxed mb-3 italic">
                   "{item.quote}"

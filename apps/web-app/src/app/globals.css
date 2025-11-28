@@ -363,6 +363,43 @@
     @apply opacity-50 cursor-not-allowed;
   }
 
+  /* Danger Button - For destructive actions */
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--error);
+    color: var(--text-inverse);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-danger:hover {
+    background-color: hsl(0, 65%, 45%);
+    color: var(--text-inverse);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px hsl(0 65% 50% / 0.3);
+  }
+
+  .btn-danger:active {
+    transform: translateY(0);
+    color: var(--text-inverse);
+  }
+
+  .btn-danger:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0 65% 50% / 0.4);
+    color: var(--text-inverse);
+  }
+
+  .btn-danger:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+    color: var(--text-inverse);
+  }
+
   /* Text Link - For cancel/tertiary actions
      Practical UI "tertiary" - underlined text, no button styling */
   .text-link {
@@ -792,6 +829,40 @@
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+
+  /* Scroll-triggered animation base (use with IntersectionObserver) */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered scroll animations for children */
+  .animate-on-scroll.is-visible .stagger-child:nth-child(1) { transition-delay: 0.1s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(2) { transition-delay: 0.2s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(3) { transition-delay: 0.3s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(4) { transition-delay: 0.4s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(5) { transition-delay: 0.5s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(6) { transition-delay: 0.6s; }
+
+  .stagger-child {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-on-scroll.is-visible .stagger-child {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   /* GPU acceleration for smooth animations */
   .will-change-transform {

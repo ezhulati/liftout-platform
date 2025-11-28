@@ -1,3 +1,5 @@
+'use client';
+
 import {
   UserGroupIcon,
   SparklesIcon,
@@ -6,6 +8,7 @@ import {
   HeartIcon,
   TruckIcon,
 } from '@heroicons/react/24/outline';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
@@ -40,7 +43,33 @@ const features = [
   },
 ];
 
+const steps = [
+  {
+    step: '01',
+    title: 'Create your profile',
+    description: 'Showcase your team achievements, dynamics, and collective expertise.',
+  },
+  {
+    step: '02',
+    title: 'Get matched',
+    description: 'AI connects you with companies seeking teams with your skills.',
+  },
+  {
+    step: '03',
+    title: 'Evaluate opportunities',
+    description: 'Explore companies, assess culture fit, and review terms confidentially.',
+  },
+  {
+    step: '04',
+    title: 'Move together',
+    description: 'Transition as a unit with coordinated onboarding and support.',
+  },
+];
+
 export function TeamFeatures() {
+  const { ref: featuresRef, isVisible: featuresVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: stepsRef, isVisible: stepsVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
     <section
       id="features"
@@ -49,7 +78,10 @@ export function TeamFeatures() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+        <div
+          ref={featuresRef as React.RefObject<HTMLDivElement>}
+          className={`text-center max-w-3xl mx-auto mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        >
           {/* Eyebrow */}
           <p className="text-gold-700 font-semibold tracking-wider uppercase text-xs mb-4">
             Platform features
@@ -72,13 +104,18 @@ export function TeamFeatures() {
 
         {/* Features grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <article
               key={feature.name}
-              className="group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-gold/40 transition-all duration-base ease-out-quart hover:shadow-lg"
+              className={`group relative bg-bg-surface rounded-xl p-8 border border-border hover:border-gold/40 transition-all duration-500 ease-out-quart hover:shadow-lg ${
+                featuresVisible
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-14 h-14 rounded-lg bg-gold flex items-center justify-center mb-6 transition-all duration-base ease-out-quart group-hover:bg-gold-dark group-hover:shadow-gold">
+              <div className="w-14 h-14 rounded-lg bg-gold flex items-center justify-center mb-6 transition-all duration-base ease-out-quart group-hover:bg-gold-dark group-hover:shadow-gold group-hover:scale-105">
                 <feature.icon className="w-7 h-7 text-navy-900" aria-hidden="true" />
               </div>
 
@@ -102,8 +139,11 @@ export function TeamFeatures() {
         </div>
 
         {/* How it works section */}
-        <div className="mt-20 lg:mt-28">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+        <div
+          ref={stepsRef as React.RefObject<HTMLDivElement>}
+          className="mt-20 lg:mt-28"
+        >
+          <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-500 ${stepsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
               Your journey to the next chapter
             </h3>
@@ -113,31 +153,15 @@ export function TeamFeatures() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'Create your profile',
-                description: 'Showcase your team achievements, dynamics, and collective expertise.',
-              },
-              {
-                step: '02',
-                title: 'Get matched',
-                description: 'AI connects you with companies seeking teams with your skills.',
-              },
-              {
-                step: '03',
-                title: 'Evaluate opportunities',
-                description: 'Explore companies, assess culture fit, and review terms confidentially.',
-              },
-              {
-                step: '04',
-                title: 'Move together',
-                description: 'Transition as a unit with coordinated onboarding and support.',
-              },
-            ].map((item) => (
+            {steps.map((item, index) => (
               <div
                 key={item.step}
-                className="text-center"
+                className={`text-center transition-all duration-500 ${
+                  stepsVisible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-6'
+                }`}
+                style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
                 <div className="w-16 h-16 rounded-full bg-gold mx-auto mb-4 flex items-center justify-center shadow-gold">

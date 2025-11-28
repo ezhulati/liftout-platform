@@ -1,9 +1,22 @@
+'use client';
+
 import Link from 'next/link';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ShieldCheckIcon, ClockIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+
+const trustReassurances = [
+  { icon: ShieldCheckIcon, text: 'NDA-protected conversations' },
+  { icon: ClockIcon, text: 'Free to explore' },
+  { icon: CreditCardIcon, text: 'No credit card required' },
+];
 
 export function LandingCTA() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
     <section
-      className="relative py-20 lg:py-28 bg-navy overflow-hidden"
+      ref={ref as React.RefObject<HTMLElement>}
+      className="relative py-20 lg:py-28 bg-navy-900 overflow-hidden"
       aria-labelledby="cta-heading"
     >
       {/* Background decorative elements */}
@@ -22,7 +35,7 @@ export function LandingCTA() {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <div className={`relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Eyebrow */}
         <p className="text-gold font-semibold tracking-wider uppercase text-xs mb-4">
           Ready to transform your growth?
@@ -33,40 +46,32 @@ export function LandingCTA() {
           id="cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6 max-w-3xl mx-auto"
         >
-          Join the future of
-          <span className="block text-gold mt-2">strategic talent acquisition</span>
+          Start acquiring proven teams
+          <span className="block text-gold mt-2">today</span>
         </h2>
 
         {/* Description */}
-        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
           Whether you are a company seeking proven teams or a high-performing team exploring new opportunities, Liftout connects you with the right strategic partnerships.
         </p>
 
-        {/* Dual CTA buttons - centered */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-12 justify-center">
-          {/* Primary CTA - Gold */}
-          <Link
-            href="/auth/signup?type=company"
-            className="group btn-secondary min-h-[52px] px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3"
-          >
-            Acquire Proven Teams
-            <svg
-              className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+        {/* Trust reassurances - horizontal on desktop */}
+        <div className="flex flex-wrap justify-center gap-6 mb-10">
+          {trustReassurances.map((item) => (
+            <div key={item.text} className="flex items-center gap-2 text-white/80">
+              <item.icon className="w-5 h-5 text-gold" aria-hidden="true" />
+              <span className="text-sm font-medium">{item.text}</span>
+            </div>
+          ))}
+        </div>
 
-          {/* Secondary CTA - White outline */}
+        {/* Single focused CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
           <Link
-            href="/auth/signup?type=team"
-            className="group min-h-[52px] px-8 py-3 rounded-lg text-lg font-semibold inline-flex items-center justify-center gap-3 border-2 border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 transition-all duration-fast ease-out-quart"
+            href="/auth/signup"
+            className="group btn-secondary min-h-[52px] px-10 py-4 text-lg font-semibold inline-flex items-center justify-center gap-3"
           >
-            Join as a Team
+            Create free account
             <svg
               className="w-5 h-5 transition-transform duration-fast ease-out-quart group-hover:translate-x-1"
               fill="none"
@@ -91,7 +96,7 @@ export function LandingCTA() {
         </p>
 
         {/* Trust indicators section */}
-        <div className="mt-16 pt-8 border-t border-white/20">
+        <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <p className="text-white/60 text-xs mb-6 uppercase tracking-wider font-semibold">
             Trusted by forward-thinking organizations
           </p>

@@ -17,6 +17,7 @@ import {
   TrophyIcon,
   LightBulbIcon,
 } from '@heroicons/react/24/outline';
+import { Button, Badge, EmptyState, Skeleton } from '@/components/ui';
 import type { TeamOpportunityMatch, MatchingFilters } from '@/lib/services/matchingService';
 
 interface MatchingDashboardProps {
@@ -25,11 +26,11 @@ interface MatchingDashboardProps {
 }
 
 const recommendationColors = {
-  excellent: 'bg-green-100 text-green-800',
-  good: 'bg-blue-100 text-blue-800',
-  fair: 'bg-yellow-100 text-yellow-800',
-  poor: 'bg-red-100 text-red-800',
-};
+  excellent: 'success',
+  good: 'info',
+  fair: 'warning',
+  poor: 'error',
+} as const;
 
 const recommendationIcons = {
   excellent: TrophyIcon,
@@ -72,38 +73,38 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-purple-500 to-blue-600 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-navy to-gold flex items-center justify-center">
             <SparklesIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-medium text-gray-900">AI-Powered Matching</h2>
-            <p className="text-sm text-gray-600">
-              {entityType === 'team' 
-                ? 'Discover opportunities perfectly matched to your team\'s capabilities' 
+            <h2 className="text-lg font-medium text-text-primary">AI-powered matching</h2>
+            <p className="text-sm text-text-secondary">
+              {entityType === 'team'
+                ? 'Discover opportunities perfectly matched to your team\'s capabilities'
                 : 'Find teams that excel in the specific skills you need'
               }
             </p>
           </div>
         </div>
-        
-        <button
+
+        <Button
+          variant="outline"
+          leftIcon={<AdjustmentsHorizontalIcon className="h-4 w-4" />}
           onClick={() => setShowFilters(!showFilters)}
-          className="btn-secondary flex items-center"
         >
-          <AdjustmentsHorizontalIcon className="h-4 w-4 mr-2" />
           Filters
-        </button>
+        </Button>
       </div>
 
       {/* Filter Panel */}
       {showFilters && (
         <div className="card">
           <div className="px-6 py-4">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Matching Criteria</h3>
+            <h3 className="text-lg font-medium text-text-primary mb-4">Matching criteria</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Minimum Match Score
+                <label className="label-text mb-2">
+                  Minimum match score
                 </label>
                 <select
                   value={filters.minScore}
@@ -116,10 +117,10 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
                   <option value={80}>80% - Excellent matches</option>
                 </select>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Maximum Results
+                <label className="label-text mb-2">
+                  Maximum results
                 </label>
                 <select
                   value={filters.maxResults}
@@ -135,8 +136,8 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
 
               {entityType === 'company' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Team Size Range
+                  <label className="label-text mb-2">
+                    Team size range
                   </label>
                   <select
                     value={filters.teamSizeRange ? `${filters.teamSizeRange.min}-${filters.teamSizeRange.max}` : ''}
@@ -167,8 +168,8 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
       {isLoading && (
         <div className="card">
           <div className="px-6 py-12 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-sm text-gray-500">Analyzing compatibility...</p>
+            <div className="loading-spinner mx-auto"></div>
+            <p className="mt-4 text-sm text-text-tertiary">Analyzing compatibility...</p>
           </div>
         </div>
       )}
@@ -178,13 +179,11 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
         <div className="space-y-4">
           {matches.length === 0 ? (
             <div className="card">
-              <div className="px-6 py-12 text-center">
-                <LightBulbIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No matches found</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Try adjusting your filters to find more potential matches.
-                </p>
-              </div>
+              <EmptyState
+                icon={<LightBulbIcon className="w-12 h-12" />}
+                title="No matches found"
+                description="Try adjusting your filters to find more potential matches."
+              />
             </div>
           ) : (
             matches.map((match, index) => (
@@ -215,46 +214,48 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
   const RecommendationIcon = recommendationIcons[recommendation];
 
   return (
-    <div className="card hover:shadow-lg transition-shadow">
+    <div className="card hover:shadow-lg transition-shadow duration-base">
       <div className="px-6 py-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
-              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
-                <span className="text-lg font-bold text-purple-600">#{rank}</span>
+              <div className="h-12 w-12 rounded-full bg-navy-100 flex items-center justify-center">
+                <span className="text-lg font-bold text-navy">#{rank}</span>
               </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
                 {entityType === 'team' ? (
-                  <BriefcaseIcon className="h-5 w-5 text-gray-400" />
+                  <BriefcaseIcon className="h-5 w-5 text-text-tertiary" />
                 ) : (
-                  <UserGroupIcon className="h-5 w-5 text-gray-400" />
+                  <UserGroupIcon className="h-5 w-5 text-text-tertiary" />
                 )}
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="text-lg font-medium text-text-primary">
                   {entityType === 'team' ? opportunity.title : team.name}
                 </h3>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${recommendationColors[recommendation]}`}>
-                  <RecommendationIcon className="h-3 w-3 mr-1" />
+                <Badge
+                  variant={recommendationColors[recommendation]}
+                  icon={<RecommendationIcon className="h-3 w-3" />}
+                >
                   {recommendation}
-                </span>
+                </Badge>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-text-secondary">
                 {entityType === 'team' ? opportunity.companyName : `${team.size} members • ${team.industry.join(', ')}`}
               </p>
             </div>
           </div>
-          
+
           <div className="text-right">
-            <div className="text-2xl font-bold text-purple-600">{score.total}%</div>
-            <div className="text-xs text-gray-500">match score</div>
+            <div className="text-2xl font-bold text-navy">{score.total}%</div>
+            <div className="text-xs text-text-tertiary">match score</div>
           </div>
         </div>
 
         {/* Score Breakdown */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">Compatibility Breakdown</h4>
+          <h4 className="text-sm font-medium text-text-primary mb-3">Compatibility breakdown</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <ScoreBar label="Skills" score={score.breakdown.skillsMatch} max={25} />
             <ScoreBar label="Industry" score={score.breakdown.industryMatch} max={20} />
@@ -267,14 +268,14 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Strengths */}
           <div>
-            <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
-              <CheckCircleIcon className="h-4 w-4 text-green-500 mr-1" />
-              Key Strengths
+            <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
+              <CheckCircleIcon className="h-4 w-4 text-success mr-1" />
+              Key strengths
             </h4>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <ul className="text-sm text-text-secondary space-y-1">
               {keyStrengths.map((strength, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                  <span className="w-1.5 h-1.5 bg-success rounded-full mt-2 mr-2 flex-shrink-0"></span>
                   {strength}
                 </li>
               ))}
@@ -284,14 +285,14 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
           {/* Concerns */}
           {potentialConcerns.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
-                <ExclamationTriangleIcon className="h-4 w-4 text-yellow-500 mr-1" />
+              <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
+                <ExclamationTriangleIcon className="h-4 w-4 text-warning mr-1" />
                 Considerations
               </h4>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <ul className="text-sm text-text-secondary space-y-1">
                 {potentialConcerns.map((concern, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                    <span className="w-1.5 h-1.5 bg-warning rounded-full mt-2 mr-2 flex-shrink-0"></span>
                     {concern}
                   </li>
                 ))}
@@ -301,12 +302,12 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         </div>
 
         {/* AI Reasoning */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
-            <SparklesIcon className="h-4 w-4 text-purple-500 mr-1" />
-            AI Analysis
+        <div className="mb-6 p-4 bg-bg-alt rounded-lg">
+          <h4 className="text-sm font-medium text-text-primary mb-2 flex items-center">
+            <SparklesIcon className="h-4 w-4 text-navy mr-1" />
+            AI analysis
           </h4>
-          <div className="text-sm text-gray-600 space-y-1">
+          <div className="text-sm text-text-secondary space-y-1">
             {score.reasoning.map((reason, index) => (
               <p key={index}>• {reason}</p>
             ))}
@@ -314,8 +315,8 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
+          <div className="flex items-center space-x-4 text-sm text-text-tertiary">
             {entityType === 'team' ? (
               <>
                 <span>{opportunity.location}</span>
@@ -330,25 +331,25 @@ function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
               </>
             )}
           </div>
-          
+
           <div className="flex space-x-3">
             <Link
               href={entityType === 'team' ? `/app/opportunities/${opportunity.id}` : `/app/teams/${team.id}`}
-              className="btn-secondary text-sm"
+              className="btn-outline text-sm"
             >
-              View Details
+              View details
             </Link>
             {isCompanyUser && entityType === 'company' && (
-              <button className="btn-primary text-sm">
-                Express Interest
-              </button>
+              <Button variant="primary" size="sm">
+                Express interest
+              </Button>
             )}
             {!isCompanyUser && entityType === 'team' && (
               <Link
                 href={`/app/opportunities/${opportunity.id}/apply`}
                 className="btn-primary text-sm"
               >
-                Apply Now
+                Apply now
               </Link>
             )}
           </div>
@@ -366,20 +367,20 @@ interface ScoreBarProps {
 
 function ScoreBar({ label, score, max }: ScoreBarProps) {
   const percentage = (score / max) * 100;
-  
+
   return (
     <div>
-      <div className="flex justify-between text-xs text-gray-600 mb-1">
+      <div className="flex justify-between text-xs text-text-secondary mb-1">
         <span>{label}</span>
         <span>{score}/{max}</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-bg-elevated rounded-full h-2">
         <div
-          className={`h-2 rounded-full transition-all duration-300 ${
-            percentage >= 80 ? 'bg-green-500' :
-            percentage >= 60 ? 'bg-blue-500' :
-            percentage >= 40 ? 'bg-yellow-500' :
-            'bg-red-500'
+          className={`h-2 rounded-full transition-all duration-base ${
+            percentage >= 80 ? 'bg-success' :
+            percentage >= 60 ? 'bg-navy' :
+            percentage >= 40 ? 'bg-warning' :
+            'bg-error'
           }`}
           style={{ width: `${percentage}%` }}
         />

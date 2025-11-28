@@ -133,12 +133,14 @@ const config: Config = {
         '4xl': ['3.052rem', { lineHeight: '1.1' }],
         '5xl': ['3.815rem', { lineHeight: '1.1' }],
       },
-      // Line heights
+      // Contextual line heights (Elite UI/UX - different for each element type)
       lineHeight: {
-        'tight': '1.1',
-        'snug': '1.3',
-        'normal': '1.5',
-        'relaxed': '1.6',
+        'none': '1',
+        'tight': '1.1',      // Display headings
+        'snug': '1.25',      // Subheadings, subtitles
+        'normal': '1.5',     // Body text, paragraphs
+        'relaxed': '1.6',    // Long-form content, code
+        'loose': '1.75',     // Extra readable content
       },
       // Letter spacing
       letterSpacing: {
@@ -209,12 +211,19 @@ const config: Config = {
       },
       animation: {
         'fade-in': 'fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        'fade-in-up': 'fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'fade-in-down': 'fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         'scale-in': 'scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         'slide-in-left': 'slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         'pulse-soft': 'pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        // Staggered animations for lists/grids (Elite UI/UX pattern)
+        'fade-in-up-1': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards',
+        'fade-in-up-2': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards',
+        'fade-in-up-3': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards',
+        'fade-in-up-4': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards',
+        'fade-in-up-5': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards',
+        'fade-in-up-6': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards',
       },
       keyframes: {
         fadeIn: {
