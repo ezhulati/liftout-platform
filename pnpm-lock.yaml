@@ -287,7 +287,7 @@ importers:
         specifier: ^6.7.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.9.2)
       eslint:
-        specifier: ^8.50.0
+        specifier: ^8.57.1
         version: 8.57.1
       eslint-config-next:
         specifier: ^14.0.0

@@ -221,7 +221,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
         savedProfile.bio &&
         savedProfile.experiences?.length > 0;
 
-      if (hasCompleteProfile) {
+      if (hasCompleteProfile && savedProfile) {
         setProfileData(savedProfile);
         setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || null);
         setIsInitialized(true);
