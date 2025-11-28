@@ -79,6 +79,7 @@ function RelatedArticleCard({ article }: { article: BlogArticle }) {
 }
 
 // Practical UI: Prose content with proper typography
+// H2: 28px bold, H3: 22px bold, Body: 18px, Line height: 1.5+
 function ArticleContent({ content }: { content: string }) {
   const processContent = (text: string) => {
     const lines = text.split('\n');
@@ -91,7 +92,7 @@ function ArticleContent({ content }: { content: string }) {
         elements.push(
           <ul
             key={`list-${elements.length}`}
-            className="list-disc pl-6 space-y-2 my-4 text-text-secondary text-base leading-normal"
+            className="list-disc pl-6 space-y-3 my-6 text-text-secondary text-lg leading-relaxed"
           >
             {currentList.map((item, i) => (
               <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
@@ -111,7 +112,7 @@ function ArticleContent({ content }: { content: string }) {
         elements.push(
           <h2
             key={index}
-            className="font-heading text-2xl font-bold text-text-primary mt-10 mb-3 leading-tight"
+            className="font-heading text-2xl md:text-[28px] font-bold text-text-primary mt-12 mb-4 leading-tight"
           >
             {trimmedLine.replace('## ', '')}
           </h2>
@@ -121,7 +122,7 @@ function ArticleContent({ content }: { content: string }) {
         elements.push(
           <h3
             key={index}
-            className="font-heading text-xl font-bold text-text-primary mt-8 mb-2 leading-snug"
+            className="font-heading text-xl md:text-[22px] font-bold text-text-primary mt-10 mb-3 leading-snug"
           >
             {trimmedLine.replace('### ', '')}
           </h3>
@@ -130,7 +131,7 @@ function ArticleContent({ content }: { content: string }) {
         inList = true;
         const text = trimmedLine
           .replace(/^[-*]\s+/, '')
-          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary">$1</strong>');
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary font-semibold">$1</strong>');
         currentList.push(text);
       } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
         inList = true;
@@ -140,15 +141,15 @@ function ArticleContent({ content }: { content: string }) {
         const num = trimmedLine.match(/^\d+/)?.[0];
         const text = trimmedLine.replace(/^\d+\.\s+/, '');
         elements.push(
-          <div key={index} className="flex gap-3 my-2">
-            <span className="text-navy font-semibold flex-shrink-0">{num}.</span>
-            <span className="text-text-secondary text-base leading-normal">{text}</span>
+          <div key={index} className="flex gap-4 my-3">
+            <span className="text-navy font-semibold text-lg flex-shrink-0">{num}.</span>
+            <span className="text-text-secondary text-lg leading-relaxed">{text}</span>
           </div>
         );
       } else if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
         flushList();
         elements.push(
-          <p key={index} className="font-semibold text-text-primary my-4 text-base">
+          <p key={index} className="font-semibold text-text-primary my-6 text-lg">
             {trimmedLine.replace(/\*\*/g, '')}
           </p>
         );
@@ -157,7 +158,7 @@ function ArticleContent({ content }: { content: string }) {
         elements.push(
           <p
             key={index}
-            className="text-sm text-text-tertiary italic my-6 p-4 bg-navy-lightest rounded-lg border border-border"
+            className="text-base text-text-tertiary italic my-8 p-5 bg-navy-lightest rounded-lg border border-border"
           >
             {trimmedLine.replace(/^\*/, '').replace(/\*$/, '')}
           </p>
@@ -167,12 +168,12 @@ function ArticleContent({ content }: { content: string }) {
       } else {
         flushList();
         const processedLine = trimmedLine
-          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary">$1</strong>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary font-semibold">$1</strong>')
           .replace(/\*(.*?)\*/g, '<em>$1</em>');
         elements.push(
           <p
             key={index}
-            className="text-text-secondary text-base leading-normal my-4 max-w-prose"
+            className="text-text-secondary text-lg leading-relaxed my-5"
             dangerouslySetInnerHTML={{ __html: processedLine }}
           />
         );
@@ -183,7 +184,7 @@ function ArticleContent({ content }: { content: string }) {
     return elements;
   };
 
-  return <div className="prose-article">{processContent(content)}</div>;
+  return <div className="prose-article max-w-prose">{processContent(content)}</div>;
 }
 
 export default async function BlogArticlePage({ params }: PageProps) {
@@ -256,23 +257,23 @@ export default async function BlogArticlePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Article Content */}
-        <article className="py-10 md:py-16">
-          <div className="max-w-4xl mx-auto px-4 lg:px-10">
-            <div className="bg-white rounded-lg p-6 md:p-10 shadow-sm border border-border">
+        {/* Article Content - XL spacing (48pt) */}
+        <article className="py-12 md:py-20">
+          <div className="max-w-3xl mx-auto px-4 lg:px-10">
+            <div className="bg-white rounded-lg p-6 md:p-12 shadow-sm border border-border">
               <ArticleContent content={article.content} />
 
-              {/* Tags */}
-              <div className="mt-10 pt-6 border-t border-border">
-                <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-3">
+              {/* Tags - XL spacing above */}
+              <div className="mt-12 pt-8 border-t border-border">
+                <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
                   Tags
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {article.tags.map((tag) => (
                     <Link
                       key={tag}
                       href={`/blog/tag/${encodeURIComponent(tag.toLowerCase())}`}
-                      className="min-h-[40px] px-3 inline-flex items-center text-sm bg-navy-lightest text-text-secondary rounded-full hover:bg-navy-light hover:text-navy transition-colors duration-200"
+                      className="min-h-[48px] px-4 inline-flex items-center text-base bg-navy-lightest text-text-secondary rounded-full hover:bg-navy-light hover:text-navy transition-colors duration-200"
                     >
                       {tag}
                     </Link>
@@ -280,20 +281,20 @@ export default async function BlogArticlePage({ params }: PageProps) {
                 </div>
               </div>
 
-              {/* Author Bio */}
+              {/* Author Bio - M spacing (24pt) */}
               {article.author.bio && (
-                <div className="mt-6 p-6 bg-navy-lightest rounded-lg">
-                  <div className="flex items-start gap-4">
+                <div className="mt-8 p-6 md:p-8 bg-navy-lightest rounded-lg">
+                  <div className="flex items-start gap-5">
                     {article.author.avatar ? (
                       <Image
                         src={article.author.avatar}
                         alt={article.author.name}
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                        width={72}
+                        height={72}
+                        className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-full object-cover flex-shrink-0"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full bg-navy-light flex items-center justify-center flex-shrink-0">
+                      <div className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-full bg-navy-light flex items-center justify-center flex-shrink-0">
                         <span className="text-navy font-semibold text-2xl">
                           {article.author.name.charAt(0)}
                         </span>
@@ -302,22 +303,22 @@ export default async function BlogArticlePage({ params }: PageProps) {
                     <div className="flex-1">
                       <Link
                         href="/blog/author/nick-acimovic"
-                        className="font-heading font-bold text-text-primary text-lg hover:text-navy transition-colors"
+                        className="font-heading font-bold text-text-primary text-xl hover:text-navy transition-colors"
                       >
                         About {article.author.name}
                       </Link>
-                      <p className="text-text-secondary text-base leading-normal mt-1 mb-3">
+                      <p className="text-text-secondary text-base md:text-lg leading-relaxed mt-2 mb-4">
                         {article.author.bio}
                       </p>
                       {/* Social links - 48px touch targets */}
                       {article.author.social && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           {article.author.social.linkedin && (
                             <a
                               href={article.author.social.linkedin}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-10 h-10 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors"
+                              className="w-12 h-12 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors rounded-lg hover:bg-white/50"
                               aria-label="LinkedIn"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -330,7 +331,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
                               href={article.author.social.twitter}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-10 h-10 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors"
+                              className="w-12 h-12 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors rounded-lg hover:bg-white/50"
                               aria-label="Twitter"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -343,7 +344,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
                               href={article.author.social.instagram}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-10 h-10 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors"
+                              className="w-12 h-12 inline-flex items-center justify-center text-text-tertiary hover:text-navy transition-colors rounded-lg hover:bg-white/50"
                               aria-label="Instagram"
                             >
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
