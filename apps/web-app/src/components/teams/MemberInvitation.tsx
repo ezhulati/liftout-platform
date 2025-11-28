@@ -186,11 +186,11 @@ export function MemberInvitation({
             {!isInviting && (
               <button
                 onClick={() => setIsInviting(true)}
-                className="btn-primary flex items-center"
+                className="btn-primary min-h-12 flex items-center"
                 disabled={!isTeamLead}
               >
-                <UserPlusIcon className="h-4 w-4 mr-2" />
-                Send Invitation
+                <UserPlusIcon className="h-5 w-5 mr-2" />
+                Send invitation
               </button>
             )}
           </div>
@@ -405,9 +405,9 @@ export function MemberInvitation({
               <div className="mt-6">
                 <button
                   onClick={() => setIsInviting(true)}
-                  className="btn-primary"
+                  className="btn-primary min-h-12"
                 >
-                  Send First Invitation
+                  Send first invitation
                 </button>
               </div>
             )}

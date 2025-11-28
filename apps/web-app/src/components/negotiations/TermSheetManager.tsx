@@ -106,8 +106,8 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
               {getStatusIcon(deal.currentTermSheet.status)}
               <span className="ml-2">{deal.currentTermSheet.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
             </div>
-            <button className="btn-primary inline-flex items-center">
-              <PencilSquareIcon className="h-4 w-4 mr-2" />
+            <button className="btn-primary min-h-12 inline-flex items-center">
+              <PencilSquareIcon className="h-5 w-5 mr-2" />
               Edit term sheet
             </button>
           </div>
@@ -346,17 +346,17 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
       </div>
 
       {/* Actions - Primary button first per Practical UI */}
-      <div className="flex flex-wrap gap-3">
-        <button className="btn-primary">
+      <div className="flex flex-wrap gap-4">
+        <button className="btn-primary min-h-12">
           Accept term sheet
         </button>
-        <button className="btn-outline">
+        <button className="btn-outline min-h-12">
           Request changes
         </button>
-        <button className="btn-outline">
+        <button className="btn-outline min-h-12">
           Generate counter-proposal
         </button>
-        <button className="btn-outline">
+        <button className="btn-outline min-h-12">
           Export PDF
         </button>
       </div>

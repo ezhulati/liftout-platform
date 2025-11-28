@@ -289,7 +289,7 @@ export function CreateTeamForm() {
                   <button
                     type="button"
                     onClick={() => addSkill(index, skillInput[index] || '')}
-                    className="btn-outline"
+                    className="btn-outline min-h-12"
                   >
                     Add
                   </button>
@@ -349,7 +349,7 @@ export function CreateTeamForm() {
           <button
             type="submit"
             disabled={createTeamMutation.isPending}
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
             {createTeamMutation.isPending ? 'Creating...' : 'Create team'}
           </button>

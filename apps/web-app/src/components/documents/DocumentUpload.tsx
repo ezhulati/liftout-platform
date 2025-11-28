@@ -444,7 +444,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
             <button
               type="submit"
               disabled={createDocumentMutation.isPending || !selectedFile}
-              className="btn-primary"
+              className="btn-primary min-h-12"
             >
               {createDocumentMutation.isPending ? 'Uploading...' : 'Upload document'}
             </button>
