@@ -177,8 +177,8 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               <p className="text-lg font-bold text-text-primary">{formData.funding}</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-purple-100 rounded-full mb-2">
-                <BuildingOfficeIcon className="h-6 w-6 text-purple-600" />
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-navy-50 rounded-full mb-2">
+                <BuildingOfficeIcon className="h-6 w-6 text-navy" />
               </div>
               <p className="text-sm font-medium text-text-primary">Company Stage</p>
               <p className="text-lg font-bold text-text-primary">{formData.stage}</p>
@@ -478,7 +478,7 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
               {requirements.specializations.map((spec, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-700"
                 >
                   {spec}
                 </span>

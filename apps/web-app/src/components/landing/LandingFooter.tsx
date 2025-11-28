@@ -6,7 +6,7 @@ export function LandingFooter() {
 
   return (
     <footer className="" style={{ backgroundColor: 'hsl(220, 70%, 10%)' }} role="contentinfo">
-      {/* Pre-sale support banner */}
+      {/* Pre-sale support banner (#12) */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -15,7 +15,7 @@ export function LandingFooter() {
                 Questions before signing up?
               </p>
               <p className="text-white/60 text-base">
-                Our team is here to help you find the right solution.
+                Our team responds within 2 hours during business hours.
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
@@ -46,7 +46,7 @@ export function LandingFooter() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
 
-          {/* Brand column */}
+          {/* Brand column with personality (#29, #35, #100) */}
           <div className="lg:col-span-2">
             <Link
               href="/"
@@ -66,6 +66,23 @@ export function LandingFooter() {
               The strategic alternative to individual hiring and costly acquisitions.
               Connect with proven teams ready for new challenges.
             </p>
+
+            {/* Founder note - adds personality (#29, #35) */}
+            <div className="bg-white/5 rounded-xl p-5 mb-6 max-w-md">
+              <p className="text-white/70 text-sm leading-relaxed mb-4">
+                "We started Liftout because we saw too many great teams broken apart
+                by individual job changes. There had to be a better way."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                  <span className="font-semibold text-gold text-sm">JL</span>
+                </div>
+                <div>
+                  <p className="text-white font-medium text-sm">James Liu</p>
+                  <p className="text-white/50 text-xs">Founder & CEO</p>
+                </div>
+              </div>
+            </div>
 
             {/* Social links */}
             <div className="flex gap-4">
@@ -166,14 +183,29 @@ export function LandingFooter() {
                 </Link>
               </li>
             </ul>
+
+            {/* Trust badges */}
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Trusted by</p>
+              <div className="flex items-center gap-2 text-white/50 text-xs">
+                <span>150+ teams</span>
+                <span className="text-white/30">|</span>
+                <span>12 industries</span>
+              </div>
+            </div>
           </nav>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-base">
-            &copy; {currentYear} Liftout. All rights reserved.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-white/40 text-base">
+              &copy; {currentYear} Liftout. All rights reserved.
+            </p>
+            <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 bg-white/5 rounded text-white/40 text-xs">
+              Founded 2024
+            </span>
+          </div>
           <div className="flex items-center gap-6 text-white/40 text-sm">
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

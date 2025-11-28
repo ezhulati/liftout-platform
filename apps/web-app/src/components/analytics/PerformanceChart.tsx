@@ -45,25 +45,25 @@ export function PerformanceChart({
       primary: 'bg-success-light0',
       light: 'bg-success-light',
       text: 'text-success',
-      border: 'border-green-500'
+      border: 'border-success'
     },
     yellow: {
       primary: 'bg-gold-500',
       light: 'bg-gold-100',
       text: 'text-gold',
-      border: 'border-yellow-500'
+      border: 'border-gold'
     },
     red: {
-      primary: 'bg-error-light0',
+      primary: 'bg-error',
       light: 'bg-error-light',
       text: 'text-error',
-      border: 'border-red-500'
+      border: 'border-error'
     },
     purple: {
-      primary: 'bg-purple-500',
-      light: 'bg-purple-100',
-      text: 'text-purple-600',
-      border: 'border-purple-500'
+      primary: 'bg-navy',
+      light: 'bg-navy-50',
+      text: 'text-navy',
+      border: 'border-navy'
     }
   };
 

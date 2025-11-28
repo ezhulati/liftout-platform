@@ -323,7 +323,7 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
           <p className="text-text-secondary">{team.company}</p>
         </div>
         <div className="flex items-center space-x-1">
-          <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
+          <StarIcon className="h-4 w-4 text-gold fill-current" />
           <span className="text-sm font-medium text-text-secondary">{team.rating}</span>
         </div>
       </div>
@@ -367,7 +367,7 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
             team.availability === 'Open to Opportunities' 
               ? 'bg-success-light text-success-dark'
               : team.availability === 'Selective'
-              ? 'bg-gold-100 text-yellow-800'
+              ? 'bg-gold-100 text-gold-700'
               : 'bg-bg-alt text-text-primary'
           }`}>
             {team.availability}
@@ -396,7 +396,7 @@ function OpportunityCard({ opportunity }: { opportunity: any }) {
           opportunity.urgency === 'High' 
             ? 'bg-red-100 text-red-800'
             : opportunity.urgency === 'Medium'
-            ? 'bg-gold-100 text-yellow-800'
+            ? 'bg-gold-100 text-gold-700'
             : 'bg-success-light text-success-dark'
         }`}>
           {opportunity.urgency} Priority

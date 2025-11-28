@@ -49,13 +49,13 @@ function getDocumentTypeColor(type: string) {
     case 'team_profile':
       return 'bg-navy-50 text-navy-800';
     case 'legal_document':
-      return 'bg-purple-100 text-purple-800';
+      return 'bg-navy-100 text-navy-700';
     case 'term_sheet':
-      return 'bg-success-light text-success-dark';
+      return 'bg-success-light text-success';
     case 'nda':
-      return 'bg-gold-100 text-gold-800';
+      return 'bg-gold-100 text-gold-700';
     case 'presentation':
-      return 'bg-pink-100 text-pink-800';
+      return 'bg-gold-50 text-gold-700';
     default:
       return 'bg-bg-alt text-text-secondary';
   }
@@ -352,7 +352,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
                     <>
                       <Link
                         href={`/app/documents/${document.id}/share`}
-                        className="p-2 text-text-tertiary hover:text-purple-600 transition-colors duration-fast touch-target"
+                        className="p-2 text-text-tertiary hover:text-navy transition-colors duration-fast touch-target"
                         title="Share"
                       >
                         <ShareIcon className="h-5 w-5" />

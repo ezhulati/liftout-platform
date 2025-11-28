@@ -381,7 +381,7 @@ export function SecureDocumentViewer({
                     {doc.canShare && (
                       <button
                         onClick={() => handleDocumentAction(doc, 'share')}
-                        className="btn-sm bg-green-600 text-white hover:bg-green-700 inline-flex items-center"
+                        className="btn-sm bg-success text-white hover:bg-success/90 inline-flex items-center"
                       >
                         <ShareIcon className="h-4 w-4 mr-1" />
                         Share
@@ -393,9 +393,9 @@ export function SecureDocumentViewer({
 
               {/* Legal and Compliance Notices */}
               {doc.canView && doc.isLegalPrivileged && (
-                <div className="mt-3 p-3 bg-error-light border border-red-200 rounded-lg">
+                <div className="mt-3 p-3 bg-error-light border border-error/20 rounded-lg">
                   <div className="flex">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-2" />
+                    <ExclamationTriangleIcon className="h-5 w-5 text-error mr-2" />
                     <div className="text-sm text-error-dark">
                       <p className="font-medium">Legally Privileged Document</p>
                       <p className="mt-1">

@@ -211,14 +211,14 @@ function RoleChangeModal({
 
                   {/* Warning for role changes */}
                   {selectedRole !== member.role && (
-                    <div className="bg-gold-50 border border-yellow-200 rounded-md p-3">
+                    <div className="bg-gold-50 border border-gold/30 rounded-md p-3">
                       <div className="flex">
                         <ExclamationTriangleIcon className="h-5 w-5 text-gold flex-shrink-0" />
                         <div className="ml-3">
                           <h3 className="text-sm font-medium text-gold-800">
                             Role Change Impact
                           </h3>
-                          <p className="mt-1 text-sm text-yellow-700">
+                          <p className="mt-1 text-sm text-gold-700">
                             Changing roles will immediately update the member's permissions and access level.
                             This action will be recorded in the team's audit log.
                           </p>

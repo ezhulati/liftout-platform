@@ -121,11 +121,11 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
   const getStatusColor = (status: TeamInvitation['status']) => {
     switch (status) {
       case 'pending':
-        return 'text-yellow-700 bg-gold-100';
+        return 'text-gold-700 bg-gold-100';
       case 'accepted':
-        return 'text-green-700 bg-success-light';
+        return 'text-success bg-success-light';
       case 'declined':
-        return 'text-red-700 bg-error-light';
+        return 'text-error bg-error-light';
       case 'expired':
       case 'revoked':
         return 'text-text-secondary bg-bg-alt';
@@ -283,8 +283,8 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                 {/* Expiry Warning */}
                 {isExpired(invitation) && (
                   <div className="mt-3 ml-8">
-                    <div className="bg-gold-50 border border-yellow-200 rounded-md px-3 py-2">
-                      <p className="text-sm text-yellow-700">
+                    <div className="bg-gold-50 border border-gold/30 rounded-md px-3 py-2">
+                      <p className="text-sm text-gold-700">
                         This invitation has expired and will be automatically updated soon.
                       </p>
                     </div>

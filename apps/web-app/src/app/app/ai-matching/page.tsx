@@ -83,13 +83,13 @@ export default function AIMatchingPage() {
       {/* Page Header */}
       <div className="page-header">
         <div className="flex items-center space-x-4">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-purple-500 to-blue-600 flex items-center justify-center">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center">
             <CpuChipIcon className="h-6 w-6 text-white" />
           </div>
           <div>
             <h1 className="page-title flex items-center">
               AI-Powered Matching
-              <SparklesIcon className="h-6 w-6 ml-2 text-purple-500" />
+              <SparklesIcon className="h-6 w-6 ml-2 text-gold" />
             </h1>
             <p className="page-subtitle">
               Discover perfect team-opportunity matches using advanced compatibility analysis
@@ -118,7 +118,7 @@ export default function AIMatchingPage() {
                       value="team"
                       checked={selectedEntityType === 'team'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'team')}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-border"
+                      className="h-4 w-4 text-navy focus:ring-navy border-border"
                     />
                     <div className="ml-3 flex items-center">
                       <UserGroupIcon className="h-5 w-5 text-text-tertiary mr-2" />
@@ -136,7 +136,7 @@ export default function AIMatchingPage() {
                       value="opportunity"
                       checked={selectedEntityType === 'opportunity'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'opportunity')}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-border"
+                      className="h-4 w-4 text-navy focus:ring-navy border-border"
                     />
                     <div className="ml-3 flex items-center">
                       <BriefcaseIcon className="h-5 w-5 text-text-tertiary mr-2" />
@@ -224,7 +224,7 @@ export default function AIMatchingPage() {
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
                 <h2 className="text-lg font-medium text-text-primary flex items-center">
-                  <SparklesIcon className="h-5 w-5 mr-2 text-purple-500" />
+                  <SparklesIcon className="h-5 w-5 mr-2 text-gold" />
                   Recommended Teams
                 </h2>
                 <p className="text-sm text-text-secondary mt-1">
@@ -274,7 +274,7 @@ export default function AIMatchingPage() {
             <div className="px-6 py-4">
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-purple-500 rounded-full mt-2"></div>
+                  <div className="h-2 w-2 bg-navy rounded-full mt-2"></div>
                   <div>
                     <h4 className="font-medium text-text-primary">Smart Compatibility Scoring</h4>
                     <p className="text-sm text-text-secondary">
@@ -282,9 +282,9 @@ export default function AIMatchingPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-navy-500 rounded-full mt-2"></div>
+                  <div className="h-2 w-2 bg-gold rounded-full mt-2"></div>
                   <div>
                     <h4 className="font-medium text-text-primary">Predictive Analysis</h4>
                     <p className="text-sm text-text-secondary">
@@ -292,9 +292,9 @@ export default function AIMatchingPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-success-light0 rounded-full mt-2"></div>
+                  <div className="h-2 w-2 bg-success rounded-full mt-2"></div>
                   <div>
                     <h4 className="font-medium text-text-primary">Risk Assessment</h4>
                     <p className="text-sm text-text-secondary">
@@ -304,12 +304,12 @@ export default function AIMatchingPage() {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+              <div className="mt-6 p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
-                  <ChartBarIcon className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm font-medium text-purple-900">Success Rate</span>
+                  <ChartBarIcon className="h-4 w-4 text-navy" />
+                  <span className="text-sm font-medium text-navy-900">Success Rate</span>
                 </div>
-                <p className="text-sm text-purple-700">
+                <p className="text-sm text-navy-700">
                   Teams with 85%+ match scores have a 3x higher success rate in liftout negotiations.
                 </p>
               </div>

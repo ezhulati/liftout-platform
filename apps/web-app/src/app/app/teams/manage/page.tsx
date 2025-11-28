@@ -204,11 +204,11 @@ export default function TeamManagePage() {
               <div className="text-sm text-text-secondary">Pending Invitations</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{teamData.maxTeamSize}</div>
+              <div className="text-2xl font-bold text-navy">{teamData.maxTeamSize}</div>
               <div className="text-sm text-text-secondary">Max Team Size</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">
+              <div className="text-2xl font-bold text-gold-600">
                 {teamData.maxTeamSize - teamData.teamSize}
               </div>
               <div className="text-sm text-text-secondary">Available Spots</div>
@@ -282,9 +282,9 @@ export default function TeamManagePage() {
           <div className="px-6 py-6">
             <div className="space-y-4">
               {teamData.pendingInvitations.map((invitation) => (
-                <div key={invitation.id} className="flex items-center justify-between p-4 border border-yellow-200 bg-gold-50 rounded-lg">
+                <div key={invitation.id} className="flex items-center justify-between p-4 border border-gold/30 bg-gold-50 rounded-lg">
                   <div className="flex items-center space-x-4">
-                    <div className="h-10 w-10 rounded-full bg-yellow-200 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-full bg-gold-100 flex items-center justify-center">
                       <EnvelopeIcon className="h-5 w-5 text-gold" />
                     </div>
                     <div>

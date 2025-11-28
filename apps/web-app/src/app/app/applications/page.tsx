@@ -22,15 +22,15 @@ function getStatusColor(status: string) {
     case 'submitted':
       return 'bg-navy-50 text-navy-800';
     case 'under_review':
-      return 'bg-gold-100 text-gold-800';
+      return 'bg-gold-100 text-gold-700';
     case 'interview_scheduled':
-      return 'bg-purple-100 text-purple-800';
+      return 'bg-navy-100 text-navy-700';
     case 'offer_made':
-      return 'bg-success-light text-success-dark';
+      return 'bg-success-light text-success';
     case 'accepted':
-      return 'bg-success-light text-success-dark';
+      return 'bg-success-light text-success';
     case 'rejected':
-      return 'bg-error-light text-error-dark';
+      return 'bg-error-light text-error';
     default:
       return 'bg-bg-alt text-text-primary';
   }
