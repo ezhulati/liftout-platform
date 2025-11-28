@@ -31,6 +31,82 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
+// Team member avatar stack component
+interface TeamMemberAvatarsProps {
+  members: Array<{
+    name: string;
+    avatar?: string;
+  }>;
+  size?: 'sm' | 'md' | 'lg';
+  maxDisplay?: number;
+}
+
+function TeamMemberAvatars({ members, size = 'md', maxDisplay = 5 }: TeamMemberAvatarsProps) {
+  const displayMembers = members.slice(0, maxDisplay);
+  const remainingCount = members.length - maxDisplay;
+
+  const sizeClasses = {
+    sm: 'h-8 w-8 text-xs',
+    md: 'h-10 w-10 text-sm',
+    lg: 'h-12 w-12 text-base',
+  };
+
+  const overlapClasses = {
+    sm: '-ml-2',
+    md: '-ml-3',
+    lg: '-ml-4',
+  };
+
+  // Demo avatar URLs (professional headshots from UI Faces / randomuser)
+  const demoAvatars = [
+    'https://randomuser.me/api/portraits/women/44.jpg',
+    'https://randomuser.me/api/portraits/men/32.jpg',
+    'https://randomuser.me/api/portraits/women/68.jpg',
+    'https://randomuser.me/api/portraits/men/75.jpg',
+    'https://randomuser.me/api/portraits/women/90.jpg',
+    'https://randomuser.me/api/portraits/men/86.jpg',
+  ];
+
+  return (
+    <div className="flex items-center">
+      {displayMembers.map((member, index) => (
+        <div
+          key={member.name || index}
+          className={classNames(
+            sizeClasses[size],
+            index > 0 ? overlapClasses[size] : '',
+            'rounded-full ring-2 ring-white bg-gradient-to-br from-navy-100 to-navy-200 flex items-center justify-center overflow-hidden'
+          )}
+          title={member.name}
+        >
+          {member.avatar || demoAvatars[index % demoAvatars.length] ? (
+            <img
+              src={member.avatar || demoAvatars[index % demoAvatars.length]}
+              alt={member.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="font-medium text-navy">
+              {member.name?.charAt(0)?.toUpperCase() || '?'}
+            </span>
+          )}
+        </div>
+      ))}
+      {remainingCount > 0 && (
+        <div
+          className={classNames(
+            sizeClasses[size],
+            overlapClasses[size],
+            'rounded-full ring-2 ring-white bg-navy-100 flex items-center justify-center'
+          )}
+        >
+          <span className="font-medium text-navy">+{remainingCount}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function TeamsPage() {
   const { data: session, status } = useSession();
   const [searchValue, setSearchValue] = useState('');
@@ -197,24 +273,32 @@ export default function TeamsPage() {
         {/* Team Profile Card - Practical UI: Bold for emphasis, regular for body */}
         <div className="card">
           <div className="p-6">
+            {/* Team Member Avatars - overlapping stack */}
+            <div className="mb-6">
+              <TeamMemberAvatars
+                members={[
+                  { name: 'Alex Chen' },
+                  { name: 'Sarah Park' },
+                  { name: 'Marcus Johnson' },
+                  { name: 'Emily Rodriguez' },
+                ]}
+                size="lg"
+                maxDisplay={5}
+              />
+            </div>
+
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-              <div className="flex items-start gap-4">
-                {/* Team Avatar - 64px */}
-                <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
-                  <UserGroupIcon className="h-8 w-8 text-white" aria-hidden="true" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">TechFlow Data Science Team</h2>
-                  <p className="text-base font-normal text-text-secondary mt-1">Led by Alex Chen · 4 Members · 3.5 Years Together</p>
-                  {/* Badges */}
-                  <div className="flex flex-wrap items-center mt-3 gap-2">
-                    <span className="badge badge-success text-xs">
-                      Available for Liftout
-                    </span>
-                    <span className="badge badge-primary text-xs">
-                      Verified Team
-                    </span>
-                  </div>
+              <div>
+                <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">TechFlow Data Science Team</h2>
+                <p className="text-base font-normal text-text-secondary mt-1">Led by Alex Chen · 4 Members · 3.5 Years Together</p>
+                {/* Badges */}
+                <div className="flex flex-wrap items-center mt-3 gap-2">
+                  <span className="badge badge-success text-xs">
+                    Available for Liftout
+                  </span>
+                  <span className="badge badge-primary text-xs">
+                    Verified Team
+                  </span>
                 </div>
               </div>
             </div>
@@ -413,36 +497,40 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
     )}>
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1 min-w-0">
-          {/* Header with avatar */}
-          <div className="flex items-start gap-4 mb-4">
-            <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
-              <UserGroupIcon className="h-7 w-7 text-white" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-2 leading-snug">
-                <Link href={`/app/teams/${team.id}`} className="hover:text-navy transition-colors duration-fast">
-                  {team.name}
-                </Link>
-                <CheckBadgeIconSolid className="h-5 w-5 text-navy flex-shrink-0" aria-label="Verified" />
-                {featured && (
-                  <StarIcon className="h-5 w-5 text-gold fill-current flex-shrink-0" aria-label="Featured" />
-                )}
-              </h3>
-              {/* Meta info */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm font-normal text-text-tertiary">
-                <span className="flex items-center">
-                  <UserGroupIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                  {team.size} members
-                </span>
-                <span className="flex items-center">
-                  <CalendarDaysIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                  {team.yearsWorking} years together
-                </span>
-                <span className="flex items-center">
-                  <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                  Added {formatDistanceToNow(new Date(team.createdAt), { addSuffix: true })}
-                </span>
-              </div>
+          {/* Team Member Avatars */}
+          <div className="mb-4">
+            <TeamMemberAvatars
+              members={team.members.map((m: any) => ({ name: m.name, avatar: m.avatar }))}
+              size="md"
+              maxDisplay={5}
+            />
+          </div>
+
+          {/* Header */}
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-2 leading-snug">
+              <Link href={`/app/teams/${team.id}`} className="hover:text-navy transition-colors duration-fast">
+                {team.name}
+              </Link>
+              <CheckBadgeIconSolid className="h-5 w-5 text-navy flex-shrink-0" aria-label="Verified" />
+              {featured && (
+                <StarIcon className="h-5 w-5 text-gold fill-current flex-shrink-0" aria-label="Featured" />
+              )}
+            </h3>
+            {/* Meta info */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm font-normal text-text-tertiary">
+              <span className="flex items-center">
+                <UserGroupIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                {team.size} members
+              </span>
+              <span className="flex items-center">
+                <CalendarDaysIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                {team.yearsWorking} years together
+              </span>
+              <span className="flex items-center">
+                <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                Added {formatDistanceToNow(new Date(team.createdAt), { addSuffix: true })}
+              </span>
             </div>
           </div>
 

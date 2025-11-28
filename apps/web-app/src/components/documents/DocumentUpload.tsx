@@ -221,8 +221,8 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
   return (
     <div className="card max-w-4xl">
       <div className="px-6 py-4 border-b border-border">
-        <h2 className="text-lg font-medium text-text-primary">Upload document</h2>
-        <p className="text-sm text-text-secondary">
+        <h2 className="text-lg font-bold text-text-primary">Upload document</h2>
+        <p className="text-sm font-normal text-text-secondary">
           Share documents securely for liftout discussions and due diligence
         </p>
       </div>
@@ -238,7 +238,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
 
           {!selectedFile ? (
             <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors min-h-[160px] flex flex-col items-center justify-center ${
+              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors duration-fast min-h-[160px] flex flex-col items-center justify-center ${
                 dragActive
                   ? 'border-navy bg-navy-50'
                   : 'border-border hover:border-navy-300'
@@ -249,10 +249,10 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
               onDrop={handleDrop}
               onClick={() => document.getElementById('file-input')?.click()}
             >
-              <CloudArrowUpIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+              <CloudArrowUpIcon className="mx-auto h-12 w-12 text-text-tertiary" aria-hidden="true" />
               <div className="mt-4">
                 <p className="text-sm text-text-secondary">
-                  <span className="font-medium text-navy">Click to upload</span> or drag and drop
+                  <span className="font-bold text-navy">Click to upload</span> or drag and drop
                 </p>
                 <p className="text-xs text-text-tertiary mt-1">
                   PDF, Word, Excel, PowerPoint (max 10MB)
@@ -267,12 +267,12 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
               />
             </div>
           ) : (
-            <div className="border border-border rounded-lg p-4 bg-bg-alt">
+            <div className="border border-border rounded-xl p-4 bg-bg-alt">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <DocumentTextIcon className="h-8 w-8 text-navy" />
+                <div className="flex items-center gap-3">
+                  <DocumentTextIcon className="h-8 w-8 text-navy" aria-hidden="true" />
                   <div>
-                    <p className="text-sm font-medium text-text-primary">{selectedFile.name}</p>
+                    <p className="text-sm font-bold text-text-primary">{selectedFile.name}</p>
                     <p className="text-xs text-text-tertiary">
                       {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                     </p>
@@ -281,10 +281,10 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="text-text-tertiary hover:text-error touch-target"
+                  className="p-2 min-h-10 min-w-10 text-text-tertiary hover:text-error transition-colors duration-fast rounded-lg hover:bg-bg-elevated"
                   aria-label="Remove file"
                 >
-                  <XMarkIcon className="h-5 w-5" />
+                  <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -326,7 +326,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
 
         {/* Access Control */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Access control</h3>
+          <h3 className="text-lg font-bold text-text-primary">Access control</h3>
 
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -344,7 +344,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
             {accessTypes.map((type) => {
               const Icon = type.icon;
               return (
-                <label key={type.value} className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg border border-border hover:bg-bg-alt transition-colors">
+                <label key={type.value} className="flex items-start gap-3 cursor-pointer p-3 rounded-xl border border-border hover:bg-bg-alt transition-colors duration-fast">
                   <input
                     {...register('accessType')}
                     type="radio"
@@ -352,9 +352,9 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
                     className="mt-1 h-5 w-5 text-navy focus:ring-navy border-border"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2">
-                      <Icon className="h-5 w-5 text-text-tertiary" />
-                      <span className="text-sm font-medium text-text-primary">{type.label}</span>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
+                      <span className="text-sm font-bold text-text-primary">{type.label}</span>
                     </div>
                     <p className="text-sm text-text-tertiary">{type.description}</p>
                   </div>
@@ -421,7 +421,7 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
 
         {/* Metadata */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Metadata</h3>
+          <h3 className="text-lg font-bold text-text-primary">Metadata</h3>
 
           <FormField
             label="Tags"
