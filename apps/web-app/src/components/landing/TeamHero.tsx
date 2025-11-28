@@ -59,32 +59,32 @@ export function TeamHero() {
               actively seeking proven teams like yours.
             </p>
 
-            {/* Confidentiality callout (#47 - reduce risk) */}
+            {/* Confidentiality callout - Practical UI: icons with labels, proper text size */}
             <div className="flex items-center gap-4 mb-8 p-4 bg-bg-elevated rounded-lg border border-border">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gold/20">
-                <ShieldCheckIcon className="w-5 h-5 text-gold-dark" aria-hidden="true" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
+                <ShieldCheckIcon className="w-6 h-6 text-gold-dark" aria-hidden="true" />
               </div>
               <div>
-                <p className="font-semibold text-text-primary">100% Confidential</p>
-                <p className="text-text-secondary text-sm">Your current employer will never know you're exploring</p>
+                <p className="font-semibold text-text-primary text-lg">100% Confidential</p>
+                <p className="text-text-secondary text-base">Your current employer will never know you're exploring</p>
               </div>
             </div>
 
-            {/* USPs with stats */}
-            <div className="space-y-3 mb-10">
+            {/* USPs with stats - Practical UI: 16px min for small text, proper spacing */}
+            <div className="space-y-2 mb-10">
               {usps.map((usp, index) => (
                 <div
                   key={usp.text}
-                  className={`flex items-center justify-between gap-4 p-3 rounded-lg bg-bg-surface border border-border transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  className={`flex items-center justify-between gap-4 p-4 rounded-lg bg-bg-surface border border-border transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                   style={{ transitionDelay: `${(index + 2) * 100}ms` }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
-                      <CheckIcon className="w-3 h-3 text-gold-dark" aria-hidden="true" />
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-gold/20">
+                      <CheckIcon className="w-4 h-4 text-gold-dark" aria-hidden="true" />
                     </div>
-                    <span className="text-text-secondary text-sm leading-snug">{usp.text}</span>
+                    <span className="text-text-secondary text-base leading-snug">{usp.text}</span>
                   </div>
-                  <span className="font-semibold text-sm whitespace-nowrap text-gold-dark">{usp.stat}</span>
+                  <span className="font-semibold text-base whitespace-nowrap text-gold-dark">{usp.stat}</span>
                 </div>
               ))}
             </div>
@@ -126,17 +126,17 @@ export function TeamHero() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy-900/20 via-transparent to-transparent" />
             </div>
 
-            {/* Floating testimonial card (#83 - strategic positioning) */}
-            <div className={`absolute -bottom-6 -left-6 bg-bg-surface rounded-xl p-5 border border-border shadow-lg max-w-xs transition-all duration-700 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex px-2 py-0.5 bg-success/10 text-success text-xs font-semibold rounded-full">
+            {/* Floating testimonial card - Practical UI: proper text sizes */}
+            <div className={`absolute -bottom-6 -left-6 bg-bg-surface rounded-xl p-6 border border-border shadow-lg max-w-sm transition-all duration-700 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex px-3 py-1 bg-success/10 text-success text-sm font-semibold rounded-full">
                   40% compensation increase
                 </span>
               </div>
-              <blockquote className="text-text-secondary text-sm leading-relaxed mb-2">
+              <blockquote className="text-text-secondary text-base leading-relaxed mb-3">
                 "We had worked together for 4 years. Liftout helped us find a company that valued what we built together."
               </blockquote>
-              <p className="text-text-tertiary text-xs">
+              <p className="text-text-tertiary text-sm font-medium">
                 — Marcus Johnson, Engineering Team Lead
               </p>
             </div>
@@ -144,7 +144,7 @@ export function TeamHero() {
             {/* Stats card - top right */}
             <div className={`absolute -top-4 -right-4 bg-gold rounded-xl p-4 shadow-lg transition-all duration-700 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <p className="font-bold text-2xl text-on-gold">150+</p>
-              <p className="text-xs text-navy-900/70">teams matched</p>
+              <p className="text-sm text-navy-900/70">teams matched</p>
             </div>
           </div>
         </div>
