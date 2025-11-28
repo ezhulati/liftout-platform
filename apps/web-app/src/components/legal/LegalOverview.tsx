@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import {
   DocumentTextIcon,
   ShieldCheckIcon,
@@ -118,7 +119,7 @@ export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewP
           ))}
         </div>
         {documents.length > 5 && (
-          <button className="text-link mt-4">
+          <button onClick={() => toast.success('Loading all documents...')} className="text-link mt-4">
             View all {documents.length} documents
           </button>
         )}

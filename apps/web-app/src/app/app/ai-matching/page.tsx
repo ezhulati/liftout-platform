@@ -301,28 +301,28 @@ export default function AIMatchingPage() {
       {/* Quick Recommendations */}
       {!selectedEntityId && !isDemoUser && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recommended Teams (for company users) */}
+          {/* Recommended Teams (for company users) - Practical UI typography */}
           {isCompanyUser && recommendedTeams && recommendedTeams.length > 0 && (
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h2 className="text-lg font-medium text-text-primary flex items-center">
-                  <SparklesIcon className="h-5 w-5 mr-2 text-gold" />
+                <h2 className="text-lg font-bold text-text-primary flex items-center">
+                  <SparklesIcon className="h-5 w-5 mr-2 text-gold" aria-hidden="true" />
                   Recommended Teams
                 </h2>
-                <p className="text-sm text-text-secondary mt-1">
+                <p className="text-sm font-normal text-text-secondary mt-1 leading-relaxed">
                   Teams that match your company&apos;s hiring patterns
                 </p>
               </div>
               <div className="px-6 py-4">
                 <div className="space-y-4">
                   {recommendedTeams.slice(0, 3).map((team) => (
-                    <div key={team.id} className="flex items-center space-x-4 p-3 border border-border rounded-lg hover:bg-bg-alt">
-                      <div className="h-10 w-10 rounded-full bg-navy-50 flex items-center justify-center">
-                        <UserGroupIcon className="h-5 w-5 text-navy" />
+                    <div key={team.id} className="flex items-center gap-4 p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
+                      <div className="h-12 w-12 rounded-xl bg-navy-50 flex items-center justify-center flex-shrink-0">
+                        <UserGroupIcon className="h-6 w-6 text-navy" aria-hidden="true" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-text-primary">{team.name}</h3>
-                        <p className="text-sm text-text-secondary">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base font-bold text-text-primary">{team.name}</h3>
+                        <p className="text-sm font-normal text-text-secondary">
                           {team.size} members • {'industry' in team ? (team.industry as string[]).join(', ') : (team as any).specialization || 'Technology'}
                         </p>
                       </div>
@@ -334,7 +334,7 @@ export default function AIMatchingPage() {
                             setSelectedEntityId(userOpportunities.opportunities[0].id);
                           }
                         }}
-                        className="btn-outline min-h-12 text-base"
+                        className="btn-outline min-h-12"
                       >
                         Analyze match
                       </button>
@@ -345,53 +345,53 @@ export default function AIMatchingPage() {
             </div>
           )}
 
-          {/* AI Insights */}
+          {/* AI Insights - Practical UI typography */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-medium text-text-primary flex items-center">
-                <LightBulbIcon className="h-5 w-5 mr-2 text-gold" />
+              <h2 className="text-lg font-bold text-text-primary flex items-center">
+                <LightBulbIcon className="h-5 w-5 mr-2 text-gold" aria-hidden="true" />
                 AI Insights
               </h2>
             </div>
             <div className="px-6 py-4">
               <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-navy rounded-full mt-2"></div>
+                <div className="flex items-start gap-3">
+                  <div className="h-2 w-2 bg-navy rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <h4 className="font-medium text-text-primary">Smart Compatibility Scoring</h4>
-                    <p className="text-sm text-text-secondary">
+                    <h4 className="text-base font-bold text-text-primary">Smart Compatibility Scoring</h4>
+                    <p className="text-sm font-normal text-text-secondary leading-relaxed">
                       Our AI analyzes 7 key dimensions including skills, industry experience, team dynamics, and compensation alignment.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-gold rounded-full mt-2"></div>
+                <div className="flex items-start gap-3">
+                  <div className="h-2 w-2 bg-gold rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <h4 className="font-medium text-text-primary">Predictive Analysis</h4>
-                    <p className="text-sm text-text-secondary">
+                    <h4 className="text-base font-bold text-text-primary">Predictive Analysis</h4>
+                    <p className="text-sm font-normal text-text-secondary leading-relaxed">
                       Machine learning models trained on successful liftout outcomes to identify the highest-potential matches.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <div className="h-2 w-2 bg-success rounded-full mt-2"></div>
+                <div className="flex items-start gap-3">
+                  <div className="h-2 w-2 bg-success rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <h4 className="font-medium text-text-primary">Risk Assessment</h4>
-                    <p className="text-sm text-text-secondary">
+                    <h4 className="text-base font-bold text-text-primary">Risk Assessment</h4>
+                    <p className="text-sm font-normal text-text-secondary leading-relaxed">
                       Identifies potential challenges and provides actionable recommendations to improve match success.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <ChartBarIcon className="h-4 w-4 text-navy" />
-                  <span className="text-sm font-medium text-navy-900">Success Rate</span>
+              <div className="mt-6 p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <ChartBarIcon className="h-5 w-5 text-navy" aria-hidden="true" />
+                  <span className="text-base font-bold text-navy-900">Success Rate</span>
                 </div>
-                <p className="text-sm text-navy-700">
+                <p className="text-sm font-normal text-navy-700 leading-relaxed">
                   Teams with 85%+ match scores have a 3x higher success rate in liftout negotiations.
                 </p>
               </div>
@@ -400,13 +400,15 @@ export default function AIMatchingPage() {
         </div>
       )}
 
-      {/* Getting Started */}
+      {/* Getting Started - Practical UI empty state */}
       {!selectedEntityId && !isDemoUser && (isTeamUser && !userTeams?.length || isCompanyUser && !userOpportunities?.opportunities.length) && (
         <div className="card">
           <div className="px-6 py-8 text-center">
-            <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-            <h3 className="mt-4 text-lg font-medium text-text-primary">Get Started with AI Matching</h3>
-            <p className="mt-2 text-sm text-text-secondary max-w-2xl mx-auto">
+            <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+              <MagnifyingGlassIcon className="h-7 w-7 text-text-tertiary" aria-hidden="true" />
+            </div>
+            <h3 className="text-lg font-bold text-text-primary">Get Started with AI Matching</h3>
+            <p className="mt-2 text-base font-normal text-text-secondary max-w-lg mx-auto leading-relaxed">
               {isTeamUser
                 ? 'Create a comprehensive team profile to discover opportunities that perfectly match your skills and experience.'
                 : 'Post liftout opportunities to find teams with exactly the expertise you need.'
@@ -427,22 +429,22 @@ export default function AIMatchingPage() {
         </div>
       )}
 
-      {/* Demo Mode Quick Recommendations */}
+      {/* Demo Mode Quick Recommendations - Practical UI typography */}
       {isDemoUser && !aiAnalysis && (
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary flex items-center">
-              <RocketLaunchIcon className="h-5 w-5 mr-2 text-gold" />
+            <h2 className="text-lg font-bold text-text-primary flex items-center">
+              <RocketLaunchIcon className="h-5 w-5 mr-2 text-gold" aria-hidden="true" />
               Quick Start - Demo Mode
             </h2>
           </div>
           <div className="px-6 py-4">
-            <p className="text-text-secondary mb-4">
+            <p className="text-base font-normal text-text-secondary mb-4 leading-relaxed">
               Click "Run AI Analysis" on any match below to see Claude analyze the compatibility in real-time.
             </p>
-            <div className="p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-lg">
-              <p className="text-sm text-navy-700">
-                <strong>Pro tip:</strong> The AI considers team cohesion, skills alignment, industry fit, compensation expectations, and cultural compatibility to generate actionable insights.
+            <div className="p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-xl">
+              <p className="text-sm font-normal text-navy-700 leading-relaxed">
+                <span className="font-bold">Pro tip:</span> The AI considers team cohesion, skills alignment, industry fit, compensation expectations, and cultural compatibility to generate actionable insights.
               </p>
             </div>
           </div>
@@ -510,22 +512,22 @@ function DemoAIMatchingResults({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header - Practical UI typography */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-navy to-gold flex items-center justify-center">
-            <SparklesIcon className="h-5 w-5 text-white" />
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-gold flex items-center justify-center flex-shrink-0">
+            <SparklesIcon className="h-6 w-6 text-white" aria-hidden="true" />
           </div>
           <div>
-            <h2 className="text-lg font-medium text-text-primary">AI-Powered Matches</h2>
-            <p className="text-sm text-text-secondary">
+            <h2 className="text-lg font-bold text-text-primary">AI-Powered Matches</h2>
+            <p className="text-sm font-normal text-text-secondary">
               {isTeamUser
                 ? 'Opportunities matched to your team\'s profile'
                 : 'Teams matched to your opportunity requirements'}
             </p>
           </div>
         </div>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
+        <span className="badge badge-warning text-xs">
           Demo Mode
         </span>
       </div>
@@ -535,41 +537,41 @@ function DemoAIMatchingResults({
         <AIAnalysisCard analysis={aiAnalysis.analysis} match={selectedMatch} />
       )}
 
-      {/* Match Cards */}
+      {/* Match Cards - Practical UI */}
       <div className="space-y-4">
         {matches.map((match, index) => (
           <div
             key={`${match.team.id || match.team.name}-${match.opportunity.id}`}
-            className="card hover:shadow-lg transition-shadow"
+            className="card hover:shadow-md hover:border-navy/30 transition-all duration-base"
           >
             <div className="px-6 py-6">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
-                    <div className="h-12 w-12 rounded-full bg-navy-100 flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-xl bg-navy-100 flex items-center justify-center">
                       <span className="text-lg font-bold text-navy">#{index + 1}</span>
                     </div>
                   </div>
                   <div>
-                    <div className="flex items-center space-x-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1">
                       {isTeamUser ? (
-                        <BriefcaseIcon className="h-5 w-5 text-text-tertiary" />
+                        <BriefcaseIcon className="h-5 w-5 text-gold" aria-hidden="true" />
                       ) : (
-                        <UserGroupIcon className="h-5 w-5 text-text-tertiary" />
+                        <UserGroupIcon className="h-5 w-5 text-navy" aria-hidden="true" />
                       )}
-                      <h3 className="text-lg font-medium text-text-primary">
+                      <h3 className="text-lg font-bold text-text-primary">
                         {isTeamUser ? match.opportunity.title : match.team.name}
                       </h3>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                        match.baseScore >= 85 ? 'bg-success-light text-success-dark' :
-                        match.baseScore >= 70 ? 'bg-navy-50 text-navy-800' :
-                        'bg-gold-100 text-gold-800'
+                      <span className={`badge text-xs ${
+                        match.baseScore >= 85 ? 'badge-success' :
+                        match.baseScore >= 70 ? 'badge-primary' :
+                        'badge-warning'
                       }`}>
                         {match.baseScore >= 85 ? 'Excellent' : match.baseScore >= 70 ? 'Good' : 'Fair'}
                       </span>
                     </div>
-                    <p className="text-sm text-text-secondary">
+                    <p className="text-sm font-normal text-text-secondary">
                       {isTeamUser
                         ? `${match.opportunity.company} • ${match.opportunity.location}`
                         : `${match.team.size} members • ${'specialization' in match.team ? (match.team as any).specialization : 'Technology'}`}
@@ -578,68 +580,68 @@ function DemoAIMatchingResults({
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-navy">{match.baseScore}%</div>
-                  <div className="text-xs text-text-tertiary">base score</div>
+                  <div className="text-xs font-normal text-text-tertiary">base score</div>
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              {/* Quick Stats - Practical UI typography */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 {isTeamUser ? (
                   <>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.opportunity.teamSize}</div>
-                      <div className="text-xs text-text-tertiary">Team Size</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.opportunity.teamSize}</div>
+                      <div className="text-xs font-normal text-text-tertiary">Team Size</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.opportunity.compensation}</div>
-                      <div className="text-xs text-text-tertiary">Compensation</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.opportunity.compensation}</div>
+                      <div className="text-xs font-normal text-text-tertiary">Compensation</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.opportunity.timeline}</div>
-                      <div className="text-xs text-text-tertiary">Timeline</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.opportunity.timeline}</div>
+                      <div className="text-xs font-normal text-text-tertiary">Timeline</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.opportunity.urgent ? 'Urgent' : 'Flexible'}</div>
-                      <div className="text-xs text-text-tertiary">Priority</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.opportunity.urgent ? 'Urgent' : 'Flexible'}</div>
+                      <div className="text-xs font-normal text-text-tertiary">Priority</div>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.team.yearsWorking} yrs</div>
-                      <div className="text-xs text-text-tertiary">Together</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.team.yearsWorking} yrs</div>
+                      <div className="text-xs font-normal text-text-tertiary">Together</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{match.team.cohesionScore}%</div>
-                      <div className="text-xs text-text-tertiary">Cohesion</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{match.team.cohesionScore}%</div>
+                      <div className="text-xs font-normal text-text-tertiary">Cohesion</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{('successRate' in match.team ? match.team.successRate : 90)}%</div>
-                      <div className="text-xs text-text-tertiary">Success Rate</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{('successRate' in match.team ? match.team.successRate : 90)}%</div>
+                      <div className="text-xs font-normal text-text-tertiary">Success Rate</div>
                     </div>
-                    <div className="text-center p-3 bg-bg-alt rounded-lg">
-                      <div className="text-sm font-medium text-text-primary">{'responseTime' in match.team ? match.team.responseTime : '< 24 hours'}</div>
-                      <div className="text-xs text-text-tertiary">Response</div>
+                    <div className="text-center p-3 bg-bg-alt rounded-xl">
+                      <div className="text-sm font-bold text-text-primary">{'responseTime' in match.team ? match.team.responseTime : '< 24 hours'}</div>
+                      <div className="text-xs font-normal text-text-tertiary">Response</div>
                     </div>
                   </>
                 )}
               </div>
 
               {/* Description */}
-              <p className="text-sm text-text-secondary mb-4 line-clamp-2">
+              <p className="text-sm font-normal text-text-secondary mb-4 line-clamp-2 leading-relaxed">
                 {isTeamUser ? match.opportunity.description : ('description' in match.team ? match.team.description : 'High-performing team with proven track record.')}
               </p>
 
-              {/* Actions */}
+              {/* Actions - Practical UI: badges and touch targets */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-wrap items-center gap-1.5">
                   {(isTeamUser ? match.opportunity.requirements : match.team.skills)?.slice(0, 3).map((skill: string, i: number) => (
-                    <span key={i} className="inline-flex items-center px-2 py-1 rounded text-xs bg-bg-alt text-text-secondary">
+                    <span key={i} className="badge badge-secondary text-xs">
                       {skill}
                     </span>
                   ))}
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex gap-3">
                   <button
                     onClick={() => handleRunAnalysis(match)}
                     disabled={isAnalyzing}
@@ -647,12 +649,12 @@ function DemoAIMatchingResults({
                   >
                     {isAnalyzing && selectedMatch?.team.name === match.team.name ? (
                       <>
-                        <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                        <ArrowPathIcon className="h-5 w-5 animate-spin" aria-hidden="true" />
                         Analyzing...
                       </>
                     ) : (
                       <>
-                        <SparklesIcon className="h-4 w-4" />
+                        <SparklesIcon className="h-5 w-5" aria-hidden="true" />
                         Run AI Analysis
                       </>
                     )}
@@ -667,28 +669,28 @@ function DemoAIMatchingResults({
   );
 }
 
-// AI Analysis Result Card
+// AI Analysis Result Card - Practical UI typography
 function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any; opportunity: any } }) {
   return (
-    <div className="card border-2 border-gold">
-      <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-navy-50 to-gold-50">
+    <div className="card border-2 border-gold rounded-xl">
+      <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-navy-50 to-gold-50 rounded-t-xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <SparklesIcon className="h-6 w-6 text-gold" />
+          <div className="flex items-center gap-3">
+            <SparklesIcon className="h-6 w-6 text-gold" aria-hidden="true" />
             <div>
-              <h3 className="text-lg font-semibold text-text-primary">AI Analysis Complete</h3>
-              <p className="text-sm text-text-secondary">
+              <h3 className="text-lg font-bold text-text-primary">AI Analysis Complete</h3>
+              <p className="text-sm font-normal text-text-secondary">
                 Powered by Claude AI
               </p>
             </div>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-navy">{analysis.overallScore}%</div>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              analysis.recommendation === 'excellent' ? 'bg-success-light text-success-dark' :
-              analysis.recommendation === 'good' ? 'bg-navy-50 text-navy-800' :
-              analysis.recommendation === 'fair' ? 'bg-gold-100 text-gold-800' :
-              'bg-error-light text-error-dark'
+            <span className={`badge ${
+              analysis.recommendation === 'excellent' ? 'badge-success' :
+              analysis.recommendation === 'good' ? 'badge-primary' :
+              analysis.recommendation === 'fair' ? 'badge-warning' :
+              'badge-error'
             }`}>
               {analysis.recommendation.charAt(0).toUpperCase() + analysis.recommendation.slice(1)} Match
             </span>
@@ -699,21 +701,21 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
       <div className="px-6 py-6 space-y-6">
         {/* Executive Summary */}
         <div>
-          <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center">
-            <LightBulbIcon className="h-4 w-4 mr-2 text-gold" />
+          <h4 className="text-base font-bold text-text-primary mb-2 flex items-center">
+            <LightBulbIcon className="h-5 w-5 mr-2 text-gold" aria-hidden="true" />
             Executive Summary
           </h4>
-          <p className="text-text-secondary">{analysis.summary}</p>
+          <p className="text-base font-normal text-text-secondary leading-relaxed">{analysis.summary}</p>
         </div>
 
         {/* Compatibility Breakdown */}
         <div>
-          <h4 className="text-sm font-semibold text-text-primary mb-3">Compatibility Breakdown</h4>
+          <h4 className="text-base font-bold text-text-primary mb-3">Compatibility Breakdown</h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Object.entries(analysis.compatibility).map(([key, value]: [string, any]) => (
-              <div key={key} className="p-3 bg-bg-alt rounded-lg">
+              <div key={key} className="p-3 bg-bg-alt rounded-xl">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-text-primary capitalize">{key}</span>
+                  <span className="text-sm font-bold text-text-primary capitalize">{key}</span>
                   <span className="text-sm font-bold text-navy">{value.score}/{key === 'skills' ? 25 : key === 'industry' ? 20 : key === 'experience' || key === 'compensation' || key === 'culture' ? 15 : 10}</span>
                 </div>
                 <div className="w-full bg-bg-elevated rounded-full h-2 mb-2">
@@ -726,7 +728,7 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
                     style={{ width: `${(value.score / (key === 'skills' ? 25 : key === 'industry' ? 20 : key === 'experience' || key === 'compensation' || key === 'culture' ? 15 : 10)) * 100}%` }}
                   />
                 </div>
-                <p className="text-xs text-text-tertiary line-clamp-2">{value.analysis}</p>
+                <p className="text-xs font-normal text-text-tertiary line-clamp-2">{value.analysis}</p>
               </div>
             ))}
           </div>
@@ -735,13 +737,13 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
         {/* Strengths & Concerns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center">
-              <CheckCircleIcon className="h-4 w-4 mr-2 text-success" />
+            <h4 className="text-base font-bold text-text-primary mb-2 flex items-center">
+              <CheckCircleIcon className="h-5 w-5 mr-2 text-success" aria-hidden="true" />
               Key Strengths
             </h4>
             <ul className="space-y-2">
               {analysis.strengths.map((strength: string, i: number) => (
-                <li key={i} className="flex items-start text-sm text-text-secondary">
+                <li key={i} className="flex items-start text-sm font-normal text-text-secondary leading-relaxed">
                   <span className="w-1.5 h-1.5 bg-success rounded-full mt-2 mr-2 flex-shrink-0" />
                   {strength}
                 </li>
@@ -749,13 +751,13 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center">
-              <ExclamationTriangleIcon className="h-4 w-4 mr-2 text-warning" />
+            <h4 className="text-base font-bold text-text-primary mb-2 flex items-center">
+              <ExclamationTriangleIcon className="h-5 w-5 mr-2 text-warning" aria-hidden="true" />
               Considerations
             </h4>
             <ul className="space-y-2">
               {analysis.concerns.map((concern: string, i: number) => (
-                <li key={i} className="flex items-start text-sm text-text-secondary">
+                <li key={i} className="flex items-start text-sm font-normal text-text-secondary leading-relaxed">
                   <span className="w-1.5 h-1.5 bg-warning rounded-full mt-2 mr-2 flex-shrink-0" />
                   {concern}
                 </li>
@@ -766,13 +768,13 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
 
         {/* Recommendations */}
         <div>
-          <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center">
-            <RocketLaunchIcon className="h-4 w-4 mr-2 text-navy" />
+          <h4 className="text-base font-bold text-text-primary mb-2 flex items-center">
+            <RocketLaunchIcon className="h-5 w-5 mr-2 text-navy" aria-hidden="true" />
             Recommendations
           </h4>
           <ul className="space-y-2">
             {analysis.recommendations.map((rec: string, i: number) => (
-              <li key={i} className="flex items-start text-sm text-text-secondary">
+              <li key={i} className="flex items-start text-sm font-normal text-text-secondary leading-relaxed">
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-navy-50 text-navy text-xs font-bold mr-2 flex-shrink-0">
                   {i + 1}
                 </span>
@@ -783,20 +785,20 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
         </div>
 
         {/* Negotiation Insights */}
-        <div className="p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-lg">
-          <h4 className="text-sm font-semibold text-navy-900 mb-2 flex items-center">
-            <TrophyIcon className="h-4 w-4 mr-2 text-gold" />
+        <div className="p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-xl">
+          <h4 className="text-base font-bold text-navy-900 mb-2 flex items-center">
+            <TrophyIcon className="h-5 w-5 mr-2 text-gold" aria-hidden="true" />
             Negotiation Insights
           </h4>
-          <p className="text-sm text-navy-700">{analysis.negotiationInsights}</p>
+          <p className="text-sm font-normal text-navy-700 leading-relaxed">{analysis.negotiationInsights}</p>
         </div>
 
         {/* Risk & Timeline */}
         <div className="flex items-center justify-between pt-4 border-t border-border">
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center gap-6">
             <div>
-              <span className="text-xs text-text-tertiary">Integration Risk</span>
-              <div className={`text-sm font-medium ${
+              <span className="text-xs font-normal text-text-tertiary">Integration Risk</span>
+              <div className={`text-sm font-bold ${
                 analysis.integrationRisk === 'low' ? 'text-success' :
                 analysis.integrationRisk === 'medium' ? 'text-gold' :
                 'text-error'
@@ -805,11 +807,11 @@ function AIAnalysisCard({ analysis, match }: { analysis: any; match: { team: any
               </div>
             </div>
             <div>
-              <span className="text-xs text-text-tertiary">Time to Productivity</span>
-              <div className="text-sm font-medium text-text-primary">{analysis.timeToProductivity}</div>
+              <span className="text-xs font-normal text-text-tertiary">Time to Productivity</span>
+              <div className="text-sm font-bold text-text-primary">{analysis.timeToProductivity}</div>
             </div>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex gap-3">
             <button className="btn-outline min-h-12">Save Analysis</button>
             <button className="btn-primary min-h-12">Start Conversation</button>
           </div>
