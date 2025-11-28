@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import PhotoUpload from './PhotoUpload';
@@ -166,8 +167,12 @@ interface CompanyProfileProps {
 }
 
 export default function CompanyProfile({ readonly = false, companyId }: CompanyProfileProps) {
-  const { user, updateProfile } = useAuth();
+  const { data: session } = useSession();
+  const { user, updateProfile, isUserLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+
+  // Use session data as fallback
+  const sessionUser = session?.user as any;
   const [activeTab, setActiveTab] = useState<'overview' | 'culture' | 'team' | 'benefits' | 'hiring' | 'achievements'>('overview');
   const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(null);
   const [profileData, setProfileData] = useState<CompanyProfileData>({
@@ -212,26 +217,27 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
     clientTestimonials: [],
   });
 
-  // Initialize profile data
+  // Initialize profile data from session first, then user
   useEffect(() => {
-    if (user) {
-      setProfileData(prev => ({
-        ...prev,
-        companyName: user.companyName || '',
-        contactEmail: user.email || '',
-        contactPhone: user.phone || '',
-        headquarters: user.location || '',
-        industry: user.industry || '',
-        stats: {
-          ...prev.stats,
-          yearsInBusiness: new Date().getFullYear() - prev.foundedYear,
-        },
-      }));
-      
-      // Set current logo URL
-      setCurrentLogoUrl(user.photoURL || null);
-    }
-  }, [user]);
+    const companyName = user?.companyName || sessionUser?.name || '';
+    const email = user?.email || sessionUser?.email || '';
+
+    setProfileData(prev => ({
+      ...prev,
+      companyName: companyName,
+      contactEmail: email,
+      contactPhone: user?.phone || '',
+      headquarters: user?.location || '',
+      industry: user?.industry || '',
+      stats: {
+        ...prev.stats,
+        yearsInBusiness: new Date().getFullYear() - prev.foundedYear,
+      },
+    }));
+
+    // Set current logo URL
+    setCurrentLogoUrl(user?.photoURL || sessionUser?.image || null);
+  }, [user, sessionUser]);
 
   const handleSave = async () => {
     try {
@@ -342,9 +348,9 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
 
   const completeness = calculateProfileCompleteness();
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  // Use session as fallback - don't require Firestore user
+  // Don't block on isUserLoading - just show the page with session data
+  const displayUser = user || sessionUser;
 
   return (
     <div className="space-y-6">
@@ -356,11 +362,11 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
               {/* Company Logo Upload */}
               <PhotoUpload
                 currentPhotoUrl={currentLogoUrl || undefined}
-                userId={user.id}
+                userId={user?.id || sessionUser?.id || 'temp'}
                 type="company-logo"
                 onPhotoUpdate={handleLogoUpdate}
                 size="xl"
-                disabled={readonly}
+                disabled={readonly || !user}
                 className="rounded-lg"
               />
               

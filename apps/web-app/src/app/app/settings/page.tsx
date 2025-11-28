@@ -34,8 +34,8 @@ export default function SettingsPage() {
     { id: 'account', name: 'Account', icon: Cog6ToothIcon, description: 'Plan and account actions' },
   ];
 
-  // Show loading while session is loading
-  if (status === 'loading' || isUserLoading) {
+  // Show loading only while session is loading (not Firestore)
+  if (status === 'loading') {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="animate-pulse">

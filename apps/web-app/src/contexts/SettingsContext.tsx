@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import {
   UserSettings,
@@ -11,6 +11,7 @@ import {
   AccountSettings,
   DEFAULT_USER_SETTINGS,
 } from '@/types/settings';
+import { settingsService } from '@/lib/services/settingsService';
 import { toast } from 'react-hot-toast';
 
 interface SettingsContextType {
@@ -33,68 +34,84 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load settings when user changes
-  useEffect(() => {
-    if (user) {
-      loadUserSettings();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  // Load user settings from storage
-  const loadUserSettings = async () => {
+  // Load user settings from Firestore
+  const loadUserSettings = useCallback(async () => {
     if (!user) return;
 
     setIsLoading(true);
     try {
-      // In a real app, this would fetch from your API/database
-      // For now, use localStorage with user-specific keys
-      const storedSettings = localStorage.getItem(`settings_${user.id}`);
-      
-      if (storedSettings) {
-        const parsed = JSON.parse(storedSettings);
+      // Fetch from Firestore
+      const firestoreSettings = await settingsService.getUserSettings(user.id);
+
+      if (firestoreSettings) {
         // Merge with defaults to ensure new settings are included
         setSettings({
           ...DEFAULT_USER_SETTINGS,
-          ...parsed,
-          notifications: { ...DEFAULT_USER_SETTINGS.notifications, ...parsed.notifications },
-          privacy: { ...DEFAULT_USER_SETTINGS.privacy, ...parsed.privacy },
-          security: { ...DEFAULT_USER_SETTINGS.security, ...parsed.security },
-          theme: { ...DEFAULT_USER_SETTINGS.theme, ...parsed.theme },
-          account: { ...DEFAULT_USER_SETTINGS.account, ...parsed.account },
+          ...firestoreSettings,
+          notifications: { ...DEFAULT_USER_SETTINGS.notifications, ...firestoreSettings.notifications },
+          privacy: { ...DEFAULT_USER_SETTINGS.privacy, ...firestoreSettings.privacy },
+          security: { ...DEFAULT_USER_SETTINGS.security, ...firestoreSettings.security },
+          theme: { ...DEFAULT_USER_SETTINGS.theme, ...firestoreSettings.theme },
+          account: { ...DEFAULT_USER_SETTINGS.account, ...firestoreSettings.account },
         });
       } else {
         // Initialize with defaults for new users
-        const initialSettings = {
-          ...DEFAULT_USER_SETTINGS,
+        const initialSettings = await settingsService.initializeUserSettings(user.id, {
           account: {
             ...DEFAULT_USER_SETTINGS.account,
             memberSince: new Date(),
             emailVerified: user.verified || false,
             profileCompletion: 20, // Basic signup info
           },
-        };
+        });
         setSettings(initialSettings);
-        await saveSettings(initialSettings);
       }
     } catch (error) {
-      console.error('Failed to load user settings:', error);
-      setSettings(DEFAULT_USER_SETTINGS);
+      console.error('Failed to load user settings from Firestore:', error);
+      // Fall back to localStorage if Firestore fails
+      try {
+        const storedSettings = localStorage.getItem(`settings_${user.id}`);
+        if (storedSettings) {
+          const parsed = JSON.parse(storedSettings);
+          setSettings({
+            ...DEFAULT_USER_SETTINGS,
+            ...parsed,
+          });
+        } else {
+          setSettings(DEFAULT_USER_SETTINGS);
+        }
+      } catch {
+        setSettings(DEFAULT_USER_SETTINGS);
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
-  // Save settings to storage
+  // Load settings when user changes
+  useEffect(() => {
+    if (user) {
+      loadUserSettings();
+    }
+  }, [user, loadUserSettings]);
+
+  // Save settings to Firestore
   const saveSettings = async (newSettings: UserSettings) => {
     if (!user) return;
 
     try {
-      // In a real app, this would save to your API/database
-      localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
+      // Optimistic update
       setSettings(newSettings);
+
+      // Save to Firestore
+      await settingsService.saveUserSettings(user.id, newSettings);
+
+      // Also save to localStorage as backup
+      localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      console.error('Failed to save settings to Firestore:', error);
+      // Still save to localStorage as fallback
+      localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
       throw error;
     }
   };

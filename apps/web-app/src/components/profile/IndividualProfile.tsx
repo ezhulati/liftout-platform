@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { useIndividualProfileCompletion } from '@/hooks/useProfileCompletion';
@@ -131,8 +132,12 @@ interface IndividualProfileProps {
 }
 
 export default function IndividualProfile({ readonly = false, userId }: IndividualProfileProps) {
-  const { user, updateProfile } = useAuth();
+  const { data: session } = useSession();
+  const { user, updateProfile, isUserLoading } = useAuth();
   const completion = useIndividualProfileCompletion();
+
+  // Use session data as fallback
+  const sessionUser = session?.user as any;
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'experience' | 'skills' | 'portfolio' | 'preferences'>('overview');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -163,24 +168,26 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
 
-  // Initialize profile data
+  // Initialize profile data from session first, then user
   useEffect(() => {
-    if (user) {
-      setProfileData(prev => ({
-        ...prev,
-        firstName: user.name?.split(' ')[0] || '',
-        lastName: user.name?.split(' ')[1] || '',
-        location: user.location || '',
-        phone: user.phone || '',
-        currentCompany: user.companyName || '',
-        currentPosition: user.position || '',
-        industry: user.industry || '',
-      }));
-      
-      // Set current photo URL
-      setCurrentPhotoUrl(user.photoURL || null);
-    }
-  }, [user]);
+    // Use session data as initial fallback
+    const name = user?.name || sessionUser?.name || '';
+    const nameParts = name.split(' ');
+
+    setProfileData(prev => ({
+      ...prev,
+      firstName: user?.name?.split(' ')[0] || nameParts[0] || '',
+      lastName: user?.name?.split(' ').slice(1).join(' ') || nameParts.slice(1).join(' ') || '',
+      location: user?.location || '',
+      phone: user?.phone || '',
+      currentCompany: user?.companyName || '',
+      currentPosition: user?.position || '',
+      industry: user?.industry || '',
+    }));
+
+    // Set current photo URL
+    setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || null);
+  }, [user, sessionUser]);
 
   const handleSave = async () => {
     try {
@@ -327,9 +334,9 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
   const completeness = completion.score;
   const completionBadge = completion.getCompletionBadge();
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  // Use session as fallback - don't require Firestore user
+  // Don't block on isUserLoading - just show the page with session data
+  const displayUser = user || sessionUser;
 
   return (
     <div className="space-y-6">
@@ -341,11 +348,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               {/* Profile Photo Upload */}
               <PhotoUpload
                 currentPhotoUrl={currentPhotoUrl || undefined}
-                userId={user.id}
+                userId={user?.id || sessionUser?.id || 'temp'}
                 type="profile"
                 onPhotoUpdate={handlePhotoUpdate}
                 size="xl"
-                disabled={readonly}
+                disabled={readonly || !user}
               />
               
               <div>
@@ -577,7 +584,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
               <div className="px-6 py-6 space-y-4">
                 <div className="flex items-center space-x-3">
                   <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
-                  <span className="text-text-primary">{user.email}</span>
+                  <span className="text-text-primary">{displayUser?.email || 'Email not set'}</span>
                 </div>
 
                 <div className="flex items-center space-x-3">
