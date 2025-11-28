@@ -87,11 +87,11 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
   const getStatusIcon = (status: TeamInvitation['status']) => {
     switch (status) {
       case 'pending':
-        return <ClockIcon className="h-5 w-5 text-yellow-500" />;
+        return <ClockIcon className="h-5 w-5 text-gold" />;
       case 'accepted':
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+        return <CheckCircleIcon className="h-5 w-5 text-success" />;
       case 'declined':
-        return <XCircleIcon className="h-5 w-5 text-red-500" />;
+        return <XCircleIcon className="h-5 w-5 text-error" />;
       case 'expired':
         return <ExclamationTriangleIcon className="h-5 w-5 text-text-tertiary" />;
       case 'revoked':
@@ -121,16 +121,16 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
   const getStatusColor = (status: TeamInvitation['status']) => {
     switch (status) {
       case 'pending':
-        return 'text-yellow-700 bg-yellow-100';
+        return 'text-yellow-700 bg-gold-100';
       case 'accepted':
-        return 'text-green-700 bg-green-100';
+        return 'text-green-700 bg-success-light';
       case 'declined':
-        return 'text-red-700 bg-red-100';
+        return 'text-red-700 bg-error-light';
       case 'expired':
       case 'revoked':
-        return 'text-text-secondary bg-gray-100';
+        return 'text-text-secondary bg-bg-alt';
       default:
-        return 'text-text-secondary bg-gray-100';
+        return 'text-text-secondary bg-bg-alt';
     }
   };
 
@@ -167,15 +167,15 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
           <h3 className="text-lg font-medium text-text-primary mb-4">Invitation Summary</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600">{summary.pending}</div>
+              <div className="text-2xl font-bold text-gold">{summary.pending}</div>
               <div className="text-sm text-text-secondary">Pending</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{summary.accepted}</div>
+              <div className="text-2xl font-bold text-success">{summary.accepted}</div>
               <div className="text-sm text-text-secondary">Accepted</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-red-600">{summary.declined}</div>
+              <div className="text-2xl font-bold text-error">{summary.declined}</div>
               <div className="text-sm text-text-secondary">Declined</div>
             </div>
             <div className="text-center">
@@ -283,7 +283,7 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
                 {/* Expiry Warning */}
                 {isExpired(invitation) && (
                   <div className="mt-3 ml-8">
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                    <div className="bg-gold-50 border border-yellow-200 rounded-md px-3 py-2">
                       <p className="text-sm text-yellow-700">
                         This invitation has expired and will be automatically updated soon.
                       </p>

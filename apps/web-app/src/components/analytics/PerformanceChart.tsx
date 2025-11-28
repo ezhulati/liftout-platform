@@ -36,27 +36,27 @@ export function PerformanceChart({
 }: PerformanceChartProps) {
   const colorClasses = {
     blue: {
-      primary: 'bg-blue-500',
-      light: 'bg-blue-100',
-      text: 'text-blue-600',
-      border: 'border-blue-500'
+      primary: 'bg-navy-500',
+      light: 'bg-navy-50',
+      text: 'text-navy',
+      border: 'border-navy'
     },
     green: {
-      primary: 'bg-green-500',
-      light: 'bg-green-100',
-      text: 'text-green-600',
+      primary: 'bg-success-light0',
+      light: 'bg-success-light',
+      text: 'text-success',
       border: 'border-green-500'
     },
     yellow: {
-      primary: 'bg-yellow-500',
-      light: 'bg-yellow-100',
-      text: 'text-yellow-600',
+      primary: 'bg-gold-500',
+      light: 'bg-gold-100',
+      text: 'text-gold',
       border: 'border-yellow-500'
     },
     red: {
-      primary: 'bg-red-500',
-      light: 'bg-red-100',
-      text: 'text-red-600',
+      primary: 'bg-error-light0',
+      light: 'bg-error-light',
+      text: 'text-error',
       border: 'border-red-500'
     },
     purple: {
@@ -197,16 +197,16 @@ export function PerformanceChart({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200">
+    <div className="bg-white p-6 rounded-lg border border-border">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <ChartBarIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <ChartBarIcon className="h-5 w-5 text-text-tertiary mr-2" />
+          <h3 className="text-lg font-medium text-text-primary">{title}</h3>
         </div>
         {trend && (
           <div className={`flex items-center text-sm ${
-            trend.isPositive ? 'text-green-600' : 'text-red-600'
+            trend.isPositive ? 'text-success' : 'text-error'
           }`}>
             {trend.isPositive ? (
               <ArrowUpIcon className="h-4 w-4 mr-1" />
@@ -224,7 +224,7 @@ export function PerformanceChart({
       </div>
 
       {/* X-axis labels */}
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-text-tertiary">
         {data.map((point, index) => (
           <span key={index} className="text-center">
             {point.period}
@@ -233,7 +233,7 @@ export function PerformanceChart({
       </div>
 
       {/* Values below labels */}
-      <div className="flex justify-between text-xs font-medium text-gray-700 mt-1">
+      <div className="flex justify-between text-xs font-medium text-text-secondary mt-1">
         {data.map((point, index) => (
           <span key={index} className="text-center">
             {valueFormatter(point.value)}

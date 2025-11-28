@@ -108,7 +108,7 @@ export default function TeamProfilePage() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
-                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center">
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -199,7 +199,7 @@ export default function TeamProfilePage() {
                           <CheckBadgeIconSolid className="h-4 w-4 text-navy" />
                         )}
                         {member.role === 'lead' && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy-50 text-blue-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-navy-50 text-navy-800">
                             Team Lead
                           </span>
                         )}
@@ -242,19 +242,19 @@ export default function TeamProfilePage() {
                   <div className="text-sm text-text-secondary">Success Rate</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{team.performanceMetrics.clientSatisfactionScore}/10</div>
+                  <div className="text-2xl font-bold text-gold-600">{team.performanceMetrics.clientSatisfactionScore}/10</div>
                   <div className="text-sm text-text-secondary">Client Satisfaction</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">{team.performanceMetrics.clientRetentionRate}%</div>
+                  <div className="text-2xl font-bold text-gold">{team.performanceMetrics.clientRetentionRate}%</div>
                   <div className="text-sm text-text-secondary">Client Retention</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-error">{team.performanceMetrics.timeToDelivery}</div>
+                  <div className="text-2xl font-bold text-text-secondary">{team.performanceMetrics.timeToDelivery}</div>
                   <div className="text-sm text-text-secondary">Avg. Delivery (days)</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-indigo-600">${team.performanceMetrics.averageProjectValue.toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-navy">${team.performanceMetrics.averageProjectValue.toLocaleString()}</div>
                   <div className="text-sm text-text-secondary">Avg. Project Value</div>
                 </div>
               </div>
@@ -331,7 +331,7 @@ export default function TeamProfilePage() {
                             <StarIcon
                               key={i}
                               className={`h-4 w-4 ${
-                                i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                i < testimonial.rating ? 'text-gold fill-current' : 'text-text-tertiary'
                               }`}
                             />
                           ))}
@@ -380,7 +380,7 @@ export default function TeamProfilePage() {
             <div className="px-6 py-4">
               <div className="flex flex-wrap gap-2">
                 {team.specializations.map((spec) => (
-                  <span key={spec} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-blue-800">
+                  <span key={spec} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
                     {spec}
                   </span>
                 ))}

@@ -240,24 +240,24 @@ export function SecureDocumentViewer({
   const getSecurityIcon = (level: string) => {
     switch (level) {
       case 'legal_only':
-        return <ShieldCheckIcon className="h-4 w-4 text-red-500" />;
+        return <ShieldCheckIcon className="h-4 w-4 text-error" />;
       case 'confidential':
-        return <LockClosedIcon className="h-4 w-4 text-yellow-500" />;
+        return <LockClosedIcon className="h-4 w-4 text-gold" />;
       default:
-        return <EyeIcon className="h-4 w-4 text-blue-500" />;
+        return <EyeIcon className="h-4 w-4 text-navy" />;
     }
   };
 
   const getSecurityBadgeColor = (level: string) => {
     switch (level) {
       case 'legal_only':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-light text-error-dark';
       case 'confidential':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-gold-100 text-gold-800';
       case 'parties_only':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-navy-50 text-navy-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-alt text-text-primary';
     }
   };
 
@@ -283,7 +283,7 @@ export function SecureDocumentViewer({
     return (
       <div className={`animate-pulse space-y-4 ${className}`}>
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-16 bg-gray-200 rounded-lg" />
+          <div key={i} className="h-16 bg-bg-elevated rounded-lg" />
         ))}
       </div>
     );
@@ -293,13 +293,13 @@ export function SecureDocumentViewer({
     <div className={`space-y-4 ${className}`}>
       {documents.length === 0 ? (
         <div className="text-center py-8">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No documents</h3>
-          <p className="mt-1 text-sm text-gray-500">No documents are available for this conversation.</p>
+          <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
+          <h3 className="mt-2 text-sm font-medium text-text-primary">No documents</h3>
+          <p className="mt-1 text-sm text-text-tertiary">No documents are available for this conversation.</p>
         </div>
       ) : (
         documents.map((doc) => (
-          <div key={doc.id} className="border border-gray-200 rounded-lg">
+          <div key={doc.id} className="border border-border rounded-lg">
             {/* Document Header */}
             <div className="p-4">
               <div className="flex items-start justify-between">
@@ -309,7 +309,7 @@ export function SecureDocumentViewer({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
                       <h3 className={`text-sm font-medium truncate ${
-                        doc.canView ? 'text-gray-900' : 'text-gray-400'
+                        doc.canView ? 'text-text-primary' : 'text-text-tertiary'
                       }`}>
                         {doc.canView ? doc.originalFilename : 'Restricted Document'}
                       </h3>
@@ -317,7 +317,7 @@ export function SecureDocumentViewer({
                       {doc.canView && (
                         <button
                           onClick={() => toggleExpanded(doc.id!)}
-                          className="text-gray-400 hover:text-gray-600"
+                          className="text-text-tertiary hover:text-text-secondary"
                         >
                           {expandedDocs.has(doc.id!) ? (
                             <ChevronDownIcon className="h-4 w-4" />
@@ -338,12 +338,12 @@ export function SecureDocumentViewer({
 
                       {doc.canView && (
                         <>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-text-tertiary">
                             {formatFileSize(doc.fileSize)}
                           </span>
                           
                           {doc.documentType && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
+                            <span className="text-xs px-2 py-1 rounded-full bg-bg-alt text-text-primary">
                               {doc.documentType.replace('_', ' ').toUpperCase()}
                             </span>
                           )}
@@ -352,7 +352,7 @@ export function SecureDocumentViewer({
                     </div>
 
                     {!doc.canView && doc.accessReason && (
-                      <p className="text-xs text-red-600 mt-1">{doc.accessReason}</p>
+                      <p className="text-xs text-error mt-1">{doc.accessReason}</p>
                     )}
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export function SecureDocumentViewer({
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => handleDocumentAction(doc, 'view')}
-                      className="btn-sm bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center"
+                      className="btn-sm bg-navy text-white hover:bg-blue-700 inline-flex items-center"
                     >
                       <EyeIcon className="h-4 w-4 mr-1" />
                       View
@@ -393,10 +393,10 @@ export function SecureDocumentViewer({
 
               {/* Legal and Compliance Notices */}
               {doc.canView && doc.isLegalPrivileged && (
-                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="mt-3 p-3 bg-error-light border border-red-200 rounded-lg">
                   <div className="flex">
                     <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-2" />
-                    <div className="text-sm text-red-800">
+                    <div className="text-sm text-error-dark">
                       <p className="font-medium">Legally Privileged Document</p>
                       <p className="mt-1">
                         This document contains legally privileged information. Access and use are restricted and monitored.
@@ -409,31 +409,31 @@ export function SecureDocumentViewer({
 
             {/* Expanded Details */}
             {doc.canView && expandedDocs.has(doc.id!) && (
-              <div className="border-t border-gray-200 p-4 bg-gray-50">
+              <div className="border-t border-border p-4 bg-bg-alt">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Document Details</h4>
+                    <h4 className="text-sm font-medium text-text-primary mb-2">Document Details</h4>
                     <dl className="space-y-1 text-xs">
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Uploaded by:</dt>
-                        <dd className="text-gray-900">{doc.uploadedBy}</dd>
+                        <dt className="text-text-tertiary">Uploaded by:</dt>
+                        <dd className="text-text-primary">{doc.uploadedBy}</dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Upload date:</dt>
-                        <dd className="text-gray-900">{formatDate(doc.uploadedAt)}</dd>
+                        <dt className="text-text-tertiary">Upload date:</dt>
+                        <dd className="text-text-primary">{formatDate(doc.uploadedAt)}</dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Version:</dt>
-                        <dd className="text-gray-900">{doc.version}</dd>
+                        <dt className="text-text-tertiary">Version:</dt>
+                        <dd className="text-text-primary">{doc.version}</dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Downloads:</dt>
-                        <dd className="text-gray-900">{doc.downloadCount}</dd>
+                        <dt className="text-text-tertiary">Downloads:</dt>
+                        <dd className="text-text-primary">{doc.downloadCount}</dd>
                       </div>
                       {doc.expiresAt && (
                         <div className="flex justify-between">
-                          <dt className="text-gray-500">Expires:</dt>
-                          <dd className="text-gray-900 flex items-center">
+                          <dt className="text-text-tertiary">Expires:</dt>
+                          <dd className="text-text-primary flex items-center">
                             <ClockIcon className="h-3 w-3 mr-1" />
                             {formatDate(doc.expiresAt)}
                           </dd>
@@ -444,16 +444,16 @@ export function SecureDocumentViewer({
 
                   {showAccessControls && doc.sharedWith && doc.sharedWith.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Shared With</h4>
+                      <h4 className="text-sm font-medium text-text-primary mb-2">Shared With</h4>
                       <div className="space-y-1">
                         {doc.sharedWith.slice(0, 3).map((share, index) => (
                           <div key={index} className="flex items-center justify-between text-xs">
-                            <span className="text-gray-900">{share.sharedWithUserId}</span>
-                            <span className="text-gray-500">{share.shareType}</span>
+                            <span className="text-text-primary">{share.sharedWithUserId}</span>
+                            <span className="text-text-tertiary">{share.shareType}</span>
                           </div>
                         ))}
                         {doc.sharedWith.length > 3 && (
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-text-tertiary">
                             +{doc.sharedWith.length - 3} more
                           </p>
                         )}
@@ -464,12 +464,12 @@ export function SecureDocumentViewer({
 
                 {doc.complianceLabels && doc.complianceLabels.length > 0 && (
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Compliance Labels</h4>
+                    <h4 className="text-sm font-medium text-text-primary mb-2">Compliance Labels</h4>
                     <div className="flex flex-wrap gap-1">
                       {doc.complianceLabels.map((label, index) => (
                         <span
                           key={index}
-                          className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800"
+                          className="text-xs px-2 py-1 rounded-full bg-gold-100 text-gold-800"
                         >
                           {label}
                         </span>
@@ -491,7 +491,7 @@ export function SecureDocumentViewer({
               <h3 className="text-lg font-medium">Share Document</h3>
               <button
                 onClick={() => setShareModalDoc(null)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-text-tertiary hover:text-text-secondary"
               >
                 <XMarkIcon className="h-6 w-6" />
               </button>
@@ -499,26 +499,26 @@ export function SecureDocumentViewer({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Recipient Emails (comma-separated)
                 </label>
                 <textarea
                   value={shareOptions.recipientEmails}
                   onChange={(e) => setShareOptions({ ...shareOptions, recipientEmails: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
                   rows={3}
                   placeholder="user1@company.com, user2@company.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Permission Level
                 </label>
                 <select
                   value={shareOptions.shareType}
                   onChange={(e) => setShareOptions({ ...shareOptions, shareType: e.target.value as any })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
                 >
                   <option value="view">View Only</option>
                   <option value="download">View & Download</option>
@@ -527,14 +527,14 @@ export function SecureDocumentViewer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Expires In (days)
                 </label>
                 <input
                   type="number"
                   value={shareOptions.expiresInDays}
                   onChange={(e) => setShareOptions({ ...shareOptions, expiresInDays: parseInt(e.target.value) })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
                   min="1"
                   max="365"
                 />
@@ -546,9 +546,9 @@ export function SecureDocumentViewer({
                     type="checkbox"
                     checked={shareOptions.notifyOnAccess}
                     onChange={(e) => setShareOptions({ ...shareOptions, notifyOnAccess: e.target.checked })}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-border text-navy focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Notify me when accessed</span>
+                  <span className="ml-2 text-sm text-text-secondary">Notify me when accessed</span>
                 </label>
 
                 <label className="flex items-center">
@@ -556,20 +556,20 @@ export function SecureDocumentViewer({
                     type="checkbox"
                     checked={shareOptions.passwordProtected}
                     onChange={(e) => setShareOptions({ ...shareOptions, passwordProtected: e.target.checked })}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-border text-navy focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Password protect link</span>
+                  <span className="ml-2 text-sm text-text-secondary">Password protect link</span>
                 </label>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Custom Message (optional)
                 </label>
                 <textarea
                   value={shareOptions.customMessage}
                   onChange={(e) => setShareOptions({ ...shareOptions, customMessage: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
                   rows={2}
                   placeholder="Add a message for recipients..."
                 />

@@ -59,7 +59,7 @@ export function ThemeSettings() {
       title: 'Light',
       description: 'Clean, bright interface',
       icon: SunIcon,
-      preview: 'bg-white border-gray-200',
+      preview: 'bg-white border-border',
     },
     {
       value: 'dark' as const,

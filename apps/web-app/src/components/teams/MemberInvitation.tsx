@@ -140,11 +140,11 @@ export function MemberInvitation({
   const getStatusIcon = (status: Invitation['status']) => {
     switch (status) {
       case 'pending':
-        return <ClockIcon className="h-5 w-5 text-yellow-500" />;
+        return <ClockIcon className="h-5 w-5 text-gold" />;
       case 'accepted':
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+        return <CheckCircleIcon className="h-5 w-5 text-success" />;
       case 'declined':
-        return <XCircleIcon className="h-5 w-5 text-red-500" />;
+        return <XCircleIcon className="h-5 w-5 text-error" />;
       case 'expired':
         return <ExclamationTriangleIcon className="h-5 w-5 text-text-tertiary" />;
     }
@@ -153,11 +153,11 @@ export function MemberInvitation({
   const getStatusColor = (status: Invitation['status']) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-gold-100 text-gold-800';
       case 'accepted':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-light text-success-dark';
       case 'declined':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-light text-error-dark';
       case 'expired':
         return 'bg-bg-alt text-text-secondary';
     }

@@ -297,7 +297,7 @@ export function MemberManagement({
                           {member.name || 'New Member'}
                         </h4>
                         {member.isLead && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
                             <StarIcon className="h-3 w-3 mr-1" />
                             Team Lead
                           </span>
@@ -457,7 +457,7 @@ export function MemberManagement({
                               key={i}
                               className={`h-4 w-4 ${
                                 i < (member.performance?.rating || 0) 
-                                  ? 'text-yellow-400 fill-current' 
+                                  ? 'text-gold fill-current' 
                                   : 'text-text-tertiary'
                               }`}
                             />

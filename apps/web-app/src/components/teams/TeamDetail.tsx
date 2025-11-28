@@ -166,7 +166,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                   <h1 className="text-2xl font-bold text-text-primary flex items-center">
                     {team.name}
                     {team.openToLiftout && (
-                      <CheckBadgeIconSolid className="h-6 w-6 text-green-500 ml-2" title="Open to liftout opportunities" />
+                      <CheckBadgeIconSolid className="h-6 w-6 text-success ml-2" title="Open to liftout opportunities" />
                     )}
                   </h1>
                   <div className="flex items-center space-x-4 mt-1">

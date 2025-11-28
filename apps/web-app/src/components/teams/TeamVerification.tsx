@@ -31,10 +31,10 @@ const documentTypes = [
 ];
 
 const verificationStatusColors = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  in_progress: 'bg-blue-100 text-blue-800',
-  verified: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
+  pending: 'bg-gold-100 text-gold-800',
+  in_progress: 'bg-navy-50 text-navy-800',
+  verified: 'bg-success-light text-success-dark',
+  rejected: 'bg-error-light text-error-dark',
 };
 
 const verificationStatusIcons = {
