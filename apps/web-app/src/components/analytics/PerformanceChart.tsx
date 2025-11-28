@@ -202,7 +202,7 @@ export function PerformanceChart({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <ChartBarIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h3 className="text-lg font-medium text-text-primary">{title}</h3>
+          <h3 className="text-lg font-bold text-text-primary">{title}</h3>
         </div>
         {trend && (
           <div className={`flex items-center text-sm ${

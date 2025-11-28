@@ -1,3 +1,15 @@
+export interface Author {
+  name: string;
+  email: string;
+  bio?: string;
+  avatar?: string;
+  social?: {
+    linkedin?: string;
+    twitter?: string;
+    instagram?: string;
+  };
+}
+
 export interface BlogArticle {
   slug: string;
   title: string;
@@ -5,28 +17,41 @@ export interface BlogArticle {
   featuredImage: string;
   category: 'Contracts' | 'Liftouts' | 'Teamwork';
   tags: string[];
-  author: {
-    name: string;
-    email: string;
-    bio?: string;
-  };
+  author: Author;
   publishDate: string;
   modifiedDate?: string;
   content: string;
 }
+
+// Authors
+export const authors: Record<string, Author> = {
+  nick: {
+    name: 'Nick Acimovic',
+    email: 'nick@liftout.com',
+    bio: 'In addition to co-founding Liftout.com, Nick leads Resolution Capital\'s consumer finance investment group. He holds a master\'s degree in finance from Florida State University.',
+    avatar: '/images/blog/Nick-Acimovic.png',
+    social: {
+      linkedin: 'https://www.linkedin.com/in/nicholas-acimovic-a6a64b18/',
+      twitter: 'https://twitter.com/Team_Liftout',
+      instagram: 'https://www.instagram.com/liftoutdotcom/',
+    },
+  },
+  team: {
+    name: 'Liftout Team',
+    email: 'admin@liftout.com',
+    bio: 'The Liftout team is dedicated to revolutionizing how companies hire and how teams move together.',
+  },
+};
 
 export const blogArticles: BlogArticle[] = [
   {
     slug: 'steve-jobs-steve-wozniak-apple-teamwork',
     title: 'Steve & Woz: The Original Dream Team',
     metaDescription: 'The story of Steve Jobs and Steve Wozniak, the unlikely duo that sparked a personal computing revolution through complementary skills and constructive conflict.',
-    featuredImage: '/images/blog/steve-jobs-woz-dream-team.jpg',
+    featuredImage: '/images/blog/Steve-Jobs-and-Woz-Dream-Team-1024x768.jpg',
     category: 'Teamwork',
     tags: ['Steve Jobs', 'Steve Wozniak', 'Apple', 'Dream Team'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-22',
     content: `## The Unlikely Friends Who Formed Apple's Original Dream Team
 
@@ -58,13 +83,10 @@ Apple's foundation exemplifies how great partnerships can transform entire indus
     slug: 'state-penalties-non-compete-violations',
     title: 'Steep Fines Await Employers Violating Non-Compete Rules',
     metaDescription: 'A growing number of states impose fines or misdemeanor charges on employers who violate non-compete banning or limitation laws, upping the compliance ante.',
-    featuredImage: '/images/blog/non-compete-fines.jpg',
+    featuredImage: '/images/blog/Non-Compete-Fines-1024x684.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Legal', 'Compliance', 'State Laws'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Careers
 
@@ -98,13 +120,10 @@ Innovation results from empowerment, not restraints. Workers, consumers, and the
     slug: 'new-york-to-ban-non-compete-agreements',
     title: 'New York Poised to Ban Non-Compete Agreements Statewide',
     metaDescription: 'With New York poised to prohibit non-compete agreements, the state joins a small but growing list moving to empower career mobility and dynamism.',
-    featuredImage: '/images/blog/non-compete-agreements.jpg',
+    featuredImage: '/images/blog/Non-Compete-Agreements-1024x778.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'New York', 'Legislation', 'Employee Rights'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `New York is on the verge of joining a small but growing list of states that prohibit non-compete agreements. This would be a major win for employee mobility and career freedom within the state.
 
@@ -138,13 +157,10 @@ Outdated retention models centered on restrictions must evolve as talent mobilit
     slug: 'states-restrict-noncompete-agreements',
     title: 'Momentum Builds Against Non-Compete Agreements',
     metaDescription: 'With more states blocking or limiting non-compete agreements, a future favors worker empowerment and career self-determination rather than legal limitations.',
-    featuredImage: '/images/blog/momentum-non-compete.jpg',
+    featuredImage: '/images/blog/AdobeStock_474582113-1024x683.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'State Laws', 'Employee Mobility'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## Non-Competes Limit Mobility
 
@@ -176,13 +192,10 @@ This trajectory points toward a future where worker potential remains unencumber
     slug: 'north-dakota-strictly-limits-non-compete-agreements',
     title: 'North Dakota Limits Enforceability of Non-Competes',
     metaDescription: 'With only narrow exceptions, North Dakota prohibits restraint of trade agreements like non-competes, signaling a future where merit, not legal limits, determines career paths.',
-    featuredImage: '/images/blog/north-dakota-non-compete.jpg',
+    featuredImage: '/images/blog/AdobeStock_402034033-1024x693.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'North Dakota', 'State Laws'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Careers
 
@@ -216,13 +229,10 @@ As worker freedom expands, retention models centered on restrictions require tra
     slug: 'oklahoma-bans-non-compete-agreements',
     title: 'Oklahoma Strictly Limits Non-Compete Agreements',
     metaDescription: 'Oklahoma law renders most non-compete agreements unenforceable, giving professionals far greater career autonomy and signaling a future with fewer constraints.',
-    featuredImage: '/images/blog/oklahoma-non-compete.jpg',
+    featuredImage: '/images/blog/Liftout-Hire-1024x536.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Oklahoma', 'State Laws'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## Non-Competes Constrain Opportunity
 
@@ -254,13 +264,10 @@ As employee freedom expands, outdated retention models dependent on constraints 
     slug: 'minnesota-law-bans-employment-non-competes',
     title: 'Minnesota Outlaws Most Non-Compete Agreements',
     metaDescription: 'Minnesota\'s strict new ban on post-employment non-compete agreements represents a major win for employee freedom and career mobility within the state.',
-    featuredImage: '/images/blog/minnesota-non-compete.jpg',
+    featuredImage: '/images/blog/AdobeStock_303326413-1024x768.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'Minnesota', 'Legislation'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     modifiedDate: '2023-10-21',
     content: `Minnesota has enacted one of the nation's most restrictive statewide bans on non-compete agreements, prohibiting most post-employment non-competes entered into after July 1, 2023. This legislation marks a significant achievement for worker autonomy.
@@ -295,13 +302,10 @@ As worker freedom expands, restrictive retention tactics must transform. Progres
     slug: 'states-restrict-non-compete-agreements',
     title: 'The Tide Turns Against Non-Compete Agreements',
     metaDescription: 'With increasing state bans and a proposed federal prohibition, non-compete agreements face a pivotal turning point as policymakers aim to empower career mobility.',
-    featuredImage: '/images/blog/tide-turns-non-compete.jpg',
+    featuredImage: '/images/blog/Successful_Team_Liftout-1024x512.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'FTC', 'Federal Ban', 'State Laws'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `A growing number of states have moved to prohibit or restrict non-compete agreements between employers and employees. With the FTC also proposing a nationwide ban, this marks a major shift empowering career mobility.
 
@@ -337,15 +341,12 @@ The future belongs to employers embracing mobility and self-determination. Now i
   },
   {
     slug: 'ftc-non-compete-ban',
-    title: 'FTC: Non-Competes Suppress Economy, Proposes Ban',
+    title: 'FTC Targets Non-Competes in New Rule Proposal',
     metaDescription: 'FTC proposes banning non-compete clauses to empower employee autonomy and spur career mobility and economic growth.',
-    featuredImage: '/images/blog/ftc-non-compete-ban.jpg',
+    featuredImage: '/images/blog/People-Liftout-Hire-together-1024x471.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'FTC', 'Federal Ban', 'Regulation'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## Overview
 
@@ -371,13 +372,10 @@ Several states including California, Oklahoma, Minnesota, and North Dakota have 
     slug: 'california-bans-non-compete-agreements',
     title: 'California Strengthens Ban On Non-Competes, Empowers Workers',
     metaDescription: 'California\'s new legislation bans restrictive employment covenants, representing a seismic shift empowering professionals to take control of their careers.',
-    featuredImage: '/images/blog/california-non-compete.jpg',
+    featuredImage: '/images/blog/Liftout_Hire_Team-1024x536.jpg',
     category: 'Contracts',
     tags: ['Non-Compete', 'California', 'SB 699', 'Employee Rights'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-10-17',
     content: `## California Strengthens Limits on Restrictive Covenants
 
@@ -405,14 +403,10 @@ The evolving landscape favors adaptable talent. As California advances worker em
     slug: 'how-to-ethically-resign-as-a-team',
     title: 'How to Ethically Resign as a Team',
     metaDescription: 'Leaving an employer as a team requires care and planning. But employee mobility is simply the new normal. With empathy and professionalism, liftouts allow teams to take the next step together when the time is right.',
-    featuredImage: '/images/blog/ethically-resign-team.jpg',
+    featuredImage: '/images/blog/Successful_Team_Liftout-1024x512.jpg',
     category: 'Liftouts',
     tags: ['Liftout', 'Resignation', 'Team Transition', 'Career'],
-    author: {
-      name: 'Nick Acimovic',
-      email: 'admin@liftout.com',
-      bio: 'Nick Acimovic co-founded Liftout.com while directing Resolution Capital\'s consumer finance division. He holds a graduate degree in finance from Florida State University.',
-    },
+    author: authors.nick,
     publishDate: '2023-10-15',
     content: `## Why Make a Team Move?
 
@@ -467,13 +461,10 @@ Embrace excitement about this unified fresh start! The essential element involve
     slug: 'employment-contracts',
     title: 'Employment Contracts: Read This Before Signing One',
     metaDescription: 'Navigate employment contracts with our guide on Non-Compete Agreements & NDAs. Protect your career by understanding what to sign and what to avoid.',
-    featuredImage: '/images/blog/employment-contracts.jpg',
+    featuredImage: '/images/blog/Non-Compete-Agreements-1024x778.jpg',
     category: 'Contracts',
     tags: ['Employment Contract', 'NDA', 'Non-Compete', 'Legal'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2023-08-24',
     modifiedDate: '2023-09-27',
     content: `Employment contracts serve as foundational agreements outlining job responsibilities, compensation, and benefits. However, many contain clauses warranting careful review before signature.
@@ -522,14 +513,11 @@ Employment agreements demand scrupulous attention. Understanding implications pr
   {
     slug: 'non-compete-agreements',
     title: 'Navigating Non-Compete and Non-Solicitation Agreements',
-    metaDescription: 'Explore strategies to navigate non-compete and non-solicitation agreements. Connect with top-quality talent and companies looking for teams.',
-    featuredImage: '/images/blog/non-compete-navigation.jpg',
+    metaDescription: 'Non-compete agreements. Connect with top-quality talent and companies looking for teams. Sign up today and start building your dream team.',
+    featuredImage: '/images/blog/Non-Compete-Fines-1024x684.jpg',
     category: 'Liftouts',
     tags: ['Non-Compete', 'Non-Solicitation', 'Career Strategy'],
-    author: {
-      name: 'Nick Acimovic',
-      email: 'admin@liftout.com',
-    },
+    author: authors.nick,
     publishDate: '2022-12-19',
     modifiedDate: '2023-10-09',
     content: `In today's competitive employment landscape, teams of workers transitioning together may encounter legal obstacles through non-compete clauses and non-solicitation agreements. These contractual restrictions can constrain which roles or initiatives a group can pursue.
@@ -579,16 +567,12 @@ Non-compete and non-solicitation agreements present complex legal questions warr
   },
   {
     slug: 'hiring-teams',
-    title: 'The Power of Hiring Teams',
+    title: 'Hiring Teams: Boosting Performance & Satisfaction',
     metaDescription: 'Discover the benefits of hiring teams over individuals: better collaboration, diversity, retention, efficiency, and financial performance with Liftout.',
-    featuredImage: '/images/blog/hiring-teams.jpg',
+    featuredImage: '/images/blog/People-Liftout-Hire-together-1024x471.jpg',
     category: 'Liftouts',
     tags: ['Hiring Teams', 'Team Building', 'Liftout'],
-    author: {
-      name: 'Nick Acimovic',
-      email: 'admin@liftout.com',
-      bio: 'Nick Acimovic co-founded Liftout.com and leads Resolution Capital\'s consumer finance investment group. He holds a master\'s degree in finance from Florida State University.',
-    },
+    author: authors.nick,
     publishDate: '2022-09-29',
     modifiedDate: '2023-09-27',
     content: `## What is Team Hiring?
@@ -625,15 +609,12 @@ In today's collaborative business landscape, team hiring delivers results. Inter
   },
   {
     slug: 'team-lift-out',
-    title: 'What is a Liftout? Why Hiring Full Teams is the Future of Recruitment',
+    title: 'Why Hiring Full Teams is the Future of Recruitment',
     metaDescription: 'Explore team lift-outs, a revolutionary hiring strategy. Learn the benefits, why employees move as a team, and how it\'s changing recruitment.',
-    featuredImage: '/images/blog/what-is-liftout.jpg',
+    featuredImage: '/images/blog/Liftout-Hire-1024x536.jpg',
     category: 'Liftouts',
     tags: ['Liftout', 'Team Hiring', 'Recruitment'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2021-01-16',
     modifiedDate: '2023-09-27',
     content: `## What is a Liftout?
@@ -714,13 +695,10 @@ Join the liftout revolution at Liftout.com – where companies and teams confide
     slug: 'how-lift-outs-work',
     title: 'How Liftouts Work - A Guide for Companies & Teams',
     metaDescription: 'Explore how lift-outs work, a discreet way to hire top-performing teams. From joining Liftout to connecting with employers, learn the step-by-step process.',
-    featuredImage: '/images/blog/how-liftouts-work.jpg',
+    featuredImage: '/images/blog/AdobeStock_474582113-1024x683.jpg',
     category: 'Liftouts',
     tags: ['Liftout', 'Process', 'Guide'],
-    author: {
-      name: 'Liftout Team',
-      email: 'admin@liftout.com',
-    },
+    author: authors.team,
     publishDate: '2021-01-16',
     modifiedDate: '2023-09-27',
     content: `## What Are Liftouts?

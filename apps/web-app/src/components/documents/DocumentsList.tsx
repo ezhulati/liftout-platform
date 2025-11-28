@@ -206,7 +206,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-medium text-text-primary">Documents</h2>
+          <h2 className="text-lg font-bold text-text-primary">Documents</h2>
           <p className="text-base text-text-secondary">
             Secure document sharing for liftout transactions
           </p>
@@ -263,7 +263,7 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-medium text-text-primary truncate">
+                      <h3 className="text-lg font-bold text-text-primary truncate">
                         {document.name}
                       </h3>
                       <span className={classNames(

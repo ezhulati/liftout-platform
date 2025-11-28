@@ -117,7 +117,7 @@ export function CultureDashboard() {
 
     return (
       <div className="text-center">
-        <h4 className="text-base font-medium text-text-primary mb-3">{title}</h4>
+        <h4 className="text-base font-bold text-text-primary mb-3">{title}</h4>
         <svg width={size} height={size} className="mx-auto">
           {gridCircles}
           {axisLines}
@@ -242,7 +242,7 @@ export function CultureDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Culture Radar Charts */}
           <div className="card p-6">
-            <h3 className="text-lg font-medium text-text-primary mb-6">Culture dimensions comparison</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-6">Culture dimensions comparison</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {renderRadarChart(
                 profiles.find(p => p.entityType === 'team')?.cultureDimensions,
@@ -259,7 +259,7 @@ export function CultureDashboard() {
 
           {/* Compatibility Summary */}
           <div className="card p-6">
-            <h3 className="text-lg font-medium text-text-primary mb-6">Compatibility analysis</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-6">Compatibility analysis</h3>
             <div className="space-y-6">
               {/* Overall Score */}
               <div className="text-center">
@@ -332,7 +332,7 @@ export function CultureDashboard() {
           <div className="lg:col-span-2">
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-text-primary">Culture profiles</h3>
+                <h3 className="text-lg font-bold text-text-primary">Culture profiles</h3>
                 <p className="text-sm text-text-tertiary">Detailed cultural assessments for teams and companies</p>
               </div>
               <div className="divide-y divide-border">
@@ -352,7 +352,7 @@ export function CultureDashboard() {
                           ) : (
                             <BuildingOfficeIcon className="h-6 w-6 text-success" />
                           )}
-                          <h4 className="text-lg font-medium text-text-primary">
+                          <h4 className="text-lg font-bold text-text-primary">
                             {profile.entityType === 'team' ? 'Goldman Sachs QIS Team' : 'Blackstone'}
                           </h4>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -416,7 +416,7 @@ export function CultureDashboard() {
             {selectedProfile ? (
               <div className="card">
                 <div className="px-6 py-4 border-b border-border">
-                  <h3 className="text-lg font-medium text-text-primary">Profile details</h3>
+                  <h3 className="text-lg font-bold text-text-primary">Profile details</h3>
                   <p className="text-sm text-text-tertiary capitalize">{selectedProfile.entityType} culture analysis</p>
                 </div>
                 <div className="p-6 space-y-6">
@@ -519,7 +519,7 @@ export function CultureDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Dimension Compatibility */}
           <div className="card p-6">
-            <h3 className="text-lg font-medium text-text-primary mb-6">Dimension compatibility</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-6">Dimension compatibility</h3>
             <div className="space-y-6">
               {compatibility.dimensionCompatibility.map(renderCompatibilityBar)}
             </div>
@@ -529,7 +529,7 @@ export function CultureDashboard() {
           <div className="space-y-6">
             {/* Risks */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Risk areas</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Risk areas</h3>
               <div className="space-y-4">
                 {compatibility.riskAreas.map((risk) => (
                   <div key={risk.id} className="border-l-4 border-gold pl-4">
@@ -557,7 +557,7 @@ export function CultureDashboard() {
 
             {/* Strengths */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Strength areas</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Strength areas</h3>
               <div className="space-y-4">
                 {compatibility.strengthAreas.map((strength) => (
                   <div key={strength.id} className="border-l-4 border-success pl-4">
@@ -587,7 +587,7 @@ export function CultureDashboard() {
           {/* Integration Timeline */}
           <div className="lg:col-span-2">
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-6">Integration plan</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-6">Integration plan</h3>
               <div className="space-y-6">
                 {compatibility.integrationPlan.phases.map((phase, index) => (
                   <div key={phase.id} className="relative">
@@ -601,7 +601,7 @@ export function CultureDashboard() {
                         </div>
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-lg font-medium text-text-primary">{phase.name}</h4>
+                        <h4 className="text-lg font-bold text-text-primary">{phase.name}</h4>
                         <p className="text-sm text-text-secondary mt-1">{phase.description}</p>
                         <div className="mt-3 flex items-center space-x-4">
                           <span className="text-sm text-text-tertiary">
@@ -646,7 +646,7 @@ export function CultureDashboard() {
           <div className="lg:col-span-1 space-y-6">
             {/* Success Metrics */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Success metrics</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Success metrics</h3>
               <div className="space-y-3">
                 {compatibility.integrationPlan.successMetrics.map((metric, index) => (
                   <div key={index} className="flex items-start space-x-2">
@@ -659,7 +659,7 @@ export function CultureDashboard() {
 
             {/* Resources Required */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Resources required</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Resources required</h3>
               <div className="space-y-4">
                 {compatibility.integrationPlan.resources.map((resource, index) => (
                   <div key={index} className="border-l-2 border-gold-200 pl-3">

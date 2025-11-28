@@ -68,7 +68,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     <div className="card p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-text-secondary mb-1">{title}</p>
+          <p className="text-sm font-bold text-text-secondary mb-1">{title}</p>
           <p className="text-2xl font-bold text-text-primary">{value}</p>
           {subtitle && (
             <p className="text-sm text-text-tertiary mt-1">{subtitle}</p>
@@ -156,7 +156,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
     return (
       <div className="text-center py-12">
         <ChartBarIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-text-primary mb-2">No analytics available</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-2">No analytics available</h3>
         <p className="text-text-secondary">Analytics data is not available for this team yet.</p>
       </div>
     );
@@ -288,7 +288,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
 
           {/* Role Distribution */}
           <div className="card p-6">
-            <h3 className="text-lg font-medium text-text-primary mb-4">Team composition</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-4">Team composition</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gold">{metrics.membersByRole.leader}</div>
@@ -312,7 +312,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Client satisfaction</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Client satisfaction</h3>
               <div className="flex items-center">
                 <div className="text-3xl font-bold text-text-primary">{metrics.clientSatisfaction.toFixed(1)}</div>
                 <div className="ml-2 flex">
@@ -330,7 +330,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
             </div>
 
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Communication score</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Communication score</h3>
               <div className="text-3xl font-bold text-text-primary">{metrics.communicationScore}/100</div>
               <div className="w-full bg-bg-alt rounded-full h-2 mt-2">
                 <div
@@ -344,7 +344,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
 
           {/* Performance History */}
           <div className="card p-6">
-            <h3 className="text-lg font-medium text-text-primary mb-4">Recent performance history</h3>
+            <h3 className="text-lg font-bold text-text-primary mb-4">Recent performance history</h3>
             <div className="space-y-3">
               {analytics.performanceHistory.slice(0, 5).map((event, index) => (
                 <div key={index} className="flex items-center justify-between py-2 border-b border-border last:border-b-0">
@@ -369,7 +369,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
         <div className="space-y-6">
           <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-medium text-text-primary">Industry benchmarks</h3>
+              <h3 className="text-lg font-bold text-text-primary">Industry benchmarks</h3>
               <p className="text-sm text-text-secondary">How your team compares to industry standards</p>
             </div>
             <div className="divide-y divide-border">
@@ -420,7 +420,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Liftout Performance Trend */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Liftout performance</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Liftout performance</h3>
               <div className="space-y-3">
                 {analytics.trends.liftoutPerformance.map((period, index) => (
                   <div key={index} className="flex items-center justify-between">
@@ -436,7 +436,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
 
             {/* Engagement Trends */}
             <div className="card p-6">
-              <h3 className="text-lg font-medium text-text-primary mb-4">Engagement trends</h3>
+              <h3 className="text-lg font-bold text-text-primary mb-4">Engagement trends</h3>
               <div className="space-y-3">
                 {analytics.trends.engagementTrends.map((period, index) => (
                   <div key={index} className="flex items-center justify-between">

@@ -329,7 +329,7 @@ export function SecureDocumentUpload({
       {/* Upload Progress */}
       {uploadingFiles.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-text-primary">Upload progress</h4>
+          <h4 className="text-sm font-bold text-text-primary">Upload progress</h4>
 
           {uploadingFiles.map((uploadFile) => (
             <div key={uploadFile.id} className="border border-border rounded-lg p-3">

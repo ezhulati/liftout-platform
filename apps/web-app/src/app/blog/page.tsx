@@ -30,22 +30,14 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
         className="group block bg-bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border"
       >
         <div className="grid md:grid-cols-2 gap-0">
-          <div className="relative aspect-[16/10] md:aspect-auto bg-bg-surface-secondary">
-            <div className="absolute inset-0 flex items-center justify-center text-text-tertiary">
-              <svg
-                className="w-16 h-16 opacity-30"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                />
-              </svg>
-            </div>
+          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[320px] bg-bg-surface-secondary">
+            <Image
+              src={article.featuredImage}
+              alt={article.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
           <div className="p-8 flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
@@ -87,22 +79,14 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
       href={`/blog/${article.slug}`}
       className="group block bg-bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-border"
     >
-      <div className="relative aspect-[16/10] bg-bg-surface-secondary">
-        <div className="absolute inset-0 flex items-center justify-center text-text-tertiary">
-          <svg
-            className="w-12 h-12 opacity-30"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1}
-              d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-            />
-          </svg>
-        </div>
+      <div className="relative aspect-[16/10] bg-bg-surface-secondary overflow-hidden">
+        <Image
+          src={article.featuredImage}
+          alt={article.title}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
       </div>
       <div className="p-6">
         <div className="flex items-center gap-3 mb-3">
