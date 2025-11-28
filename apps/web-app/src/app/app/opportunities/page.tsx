@@ -28,13 +28,13 @@ function OpportunitiesContent() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* Page header - Practical UI: bold headings, regular body */}
       <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="page-title">
+          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
             {isCompanyUser ? 'Liftout Opportunities' : 'Browse Liftout Opportunities'}
           </h1>
-          <p className="page-subtitle">
+          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed max-w-2xl">
             {isCompanyUser
               ? 'Post strategic team acquisition opportunities and manage incoming team expressions of interest'
               : 'Discover strategic opportunities for your team to join new organizations and accelerate growth'
@@ -46,52 +46,52 @@ function OpportunitiesContent() {
             href="/app/opportunities/create"
             className="btn-primary min-h-12 flex items-center"
           >
-            <PlusIcon className="h-5 w-5 mr-2" />
+            <PlusIcon className="h-5 w-5 mr-2" aria-hidden="true" />
             Post liftout opportunity
           </Link>
         )}
       </div>
 
-      {/* Tabs for company users */}
+      {/* Tabs for company users - Practical UI: bold for active, regular for inactive */}
       {isCompanyUser && (
         <div className="border-b border-border">
-          <nav className="-mb-px flex space-x-8">
+          <nav className="-mb-px flex space-x-8" aria-label="Opportunity tabs">
             <Link
               href="/app/opportunities"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 text-base min-h-12 flex items-center transition-colors duration-fast ${
                 activeTab === 'all'
-                  ? 'border-navy text-navy'
-                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
+                  ? 'border-navy text-navy font-bold'
+                  : 'border-transparent text-text-tertiary font-normal hover:text-text-primary hover:border-border'
               }`}
             >
-              All Liftout Opportunities
+              All Opportunities
             </Link>
             <Link
               href="/app/opportunities?tab=active"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 text-base min-h-12 flex items-center transition-colors duration-fast ${
                 activeTab === 'active'
-                  ? 'border-navy text-navy'
-                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
+                  ? 'border-navy text-navy font-bold'
+                  : 'border-transparent text-text-tertiary font-normal hover:text-text-primary hover:border-border'
               }`}
             >
               Active
             </Link>
             <Link
               href="/app/opportunities?tab=applications"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 text-base min-h-12 flex items-center transition-colors duration-fast ${
                 activeTab === 'applications'
-                  ? 'border-navy text-navy'
-                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
+                  ? 'border-navy text-navy font-bold'
+                  : 'border-transparent text-text-tertiary font-normal hover:text-text-primary hover:border-border'
               }`}
             >
               Team Interest
             </Link>
             <Link
               href="/app/opportunities?tab=closed"
-              className={`py-3 px-1 border-b-2 font-medium text-sm min-h-12 transition-colors duration-fast ${
+              className={`py-3 px-1 border-b-2 text-base min-h-12 flex items-center transition-colors duration-fast ${
                 activeTab === 'closed'
-                  ? 'border-navy text-navy'
-                  : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
+                  ? 'border-navy text-navy font-bold'
+                  : 'border-transparent text-text-tertiary font-normal hover:text-text-primary hover:border-border'
               }`}
             >
               Closed

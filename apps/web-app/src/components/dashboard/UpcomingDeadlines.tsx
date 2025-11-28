@@ -119,25 +119,28 @@ export function UpcomingDeadlines() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-semibold text-text-primary font-heading">Upcoming Deadlines</h3>
+      <div className="flex items-center justify-between mb-6">
+        {/* Section heading - Practical UI: bold weight */}
+        <h3 className="text-lg font-bold text-text-primary font-heading">Upcoming Deadlines</h3>
+        {/* Tertiary action - underlined link style */}
         <Link
           href="/app/deadlines"
-          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
         >
           View all
         </Link>
       </div>
 
+      {/* Warning alert - Practical UI: color + icon + text (never color alone) */}
       {urgentDeadlines.length > 0 && (
-        <div className="mb-4 p-3 bg-gold-50 border border-gold/20 rounded-xl">
-          <div className="flex">
-            <ExclamationTriangleIcon className="h-5 w-5 text-gold-700" />
-            <div className="ml-2">
-              <p className="text-base font-semibold text-gold-800">
+        <div className="mb-4 p-4 bg-gold-50 border border-gold/20 rounded-xl">
+          <div className="flex gap-3">
+            <ExclamationTriangleIcon className="h-5 w-5 text-gold-700 flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <p className="text-base font-bold text-gold-800 leading-snug">
                 {urgentDeadlines.length} urgent deadline{urgentDeadlines.length > 1 ? 's' : ''} approaching
               </p>
-              <p className="text-base text-gold-700 mt-0.5">
+              <p className="text-sm font-normal text-gold-700 mt-1 leading-relaxed">
                 Do not miss these important dates!
               </p>
             </div>
@@ -153,20 +156,23 @@ export function UpcomingDeadlines() {
           return (
             <div
               key={deadline.id}
-              className={`relative border rounded-xl p-3 transition-all duration-base hover:shadow-sm ${
-                isUrgent ? priorityBgColors[deadline.priority] : 'border-border hover:border-gold/30'
+              className={`relative border rounded-xl p-4 transition-all duration-base hover:shadow-sm min-h-12 ${
+                isUrgent ? priorityBgColors[deadline.priority] : 'border-border hover:border-navy/30'
               }`}
             >
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0">
-                  <Icon className={`h-5 w-5 ${priorityColors[deadline.priority]}`} />
+              <div className="flex items-start gap-3">
+                {/* Icon with proper sizing */}
+                <div className="flex-shrink-0 mt-0.5">
+                  <Icon className={`h-5 w-5 ${priorityColors[deadline.priority]}`} aria-hidden="true" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-base font-semibold text-text-primary truncate">
+                  <div className="flex items-start justify-between gap-2">
+                    {/* Title - bold weight */}
+                    <h4 className="text-base font-bold text-text-primary leading-snug">
                       {deadline.title}
                     </h4>
-                    <span className={`badge text-sm ${
+                    {/* Badge */}
+                    <span className={`badge text-xs flex-shrink-0 ${
                       deadline.priority === 'high'
                         ? 'badge-error'
                         : deadline.priority === 'medium'
@@ -176,12 +182,14 @@ export function UpcomingDeadlines() {
                       {deadline.priority}
                     </span>
                   </div>
-                  <p className="text-base text-text-secondary mt-1">{deadline.description}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <p className="text-base text-text-tertiary">
+                  {/* Description - regular weight */}
+                  <p className="text-sm font-normal text-text-secondary mt-1 leading-relaxed">{deadline.description}</p>
+                  {/* Date info */}
+                  <div className="flex items-center justify-between mt-2 gap-2">
+                    <p className="text-sm font-normal text-text-tertiary">
                       Due {format(new Date(deadline.dueDate), 'MMM d, yyyy')}
                     </p>
-                    <p className={`text-base font-medium ${
+                    <p className={`text-sm font-bold ${
                       isUrgent ? 'text-error' : 'text-text-tertiary'
                     }`}>
                       {formatDistanceToNow(new Date(deadline.dueDate), { addSuffix: true })}

@@ -99,11 +99,13 @@ export function RecommendedTeams() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-semibold text-text-primary font-heading">Recommended Teams</h3>
+      <div className="flex items-center justify-between mb-6">
+        {/* Section heading - Practical UI: bold weight */}
+        <h3 className="text-lg font-bold text-text-primary font-heading">Recommended Teams</h3>
+        {/* Tertiary action - underlined link style */}
         <Link
           href="/app/search?type=teams"
-          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
         >
           Browse all
         </Link>
@@ -113,66 +115,72 @@ export function RecommendedTeams() {
         {teams?.map((team) => (
           <div
             key={team.id}
-            className="group relative rounded-xl border border-border p-4 hover:border-gold/30 hover:shadow-md transition-all duration-base"
+            className="group relative rounded-xl border border-border p-4 hover:border-navy/30 hover:shadow-md transition-all duration-base"
           >
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start gap-4">
+              {/* Avatar - 48px touch target */}
               <div className="flex-shrink-0">
                 {team.profileImageUrl ? (
                   <Image
-                    className="h-12 w-12 rounded-lg object-cover"
+                    className="h-12 w-12 rounded-xl object-cover"
                     src={team.profileImageUrl}
                     alt={team.name}
                     width={48}
                     height={48}
                   />
                 ) : (
-                  <div className="h-12 w-12 rounded-lg bg-navy-50 flex items-center justify-center">
-                    <UserGroupIcon className="h-6 w-6 text-navy" />
+                  <div className="h-12 w-12 rounded-xl bg-navy-50 flex items-center justify-center">
+                    <UserGroupIcon className="h-6 w-6 text-navy" aria-hidden="true" />
                   </div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-base font-semibold text-text-primary group-hover:text-navy transition-colors duration-fast">
+                <div className="flex items-start justify-between gap-2">
+                  {/* Team name - bold weight */}
+                  <h4 className="text-base font-bold text-text-primary group-hover:text-navy transition-colors duration-fast leading-snug">
                     {team.name}
                   </h4>
-                  <div className="flex items-center">
-                    <StarIcon className="h-4 w-4 text-gold fill-current" />
-                    <span className="ml-1 text-base text-text-secondary">{team.rating}</span>
+                  {/* Rating */}
+                  <div className="flex items-center flex-shrink-0">
+                    <StarIcon className="h-4 w-4 text-gold fill-current" aria-hidden="true" />
+                    <span className="ml-1 text-sm font-bold text-text-primary">{team.rating}</span>
                   </div>
                 </div>
-                <p className="text-base text-text-secondary mt-1 line-clamp-2">
+                {/* Description - regular weight */}
+                <p className="text-sm font-normal text-text-secondary mt-1 line-clamp-2 leading-relaxed">
                   {team.description}
                 </p>
-                <div className="flex flex-wrap items-center mt-2 text-base text-text-tertiary gap-x-4 gap-y-1">
+                {/* Meta info - small text */}
+                <div className="flex flex-wrap items-center mt-2 text-sm font-normal text-text-tertiary gap-x-3 gap-y-1">
                   <div className="flex items-center">
-                    <MapPinIcon className="h-4 w-4 mr-1" />
+                    <MapPinIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                     {team.location}
                   </div>
                   <div className="flex items-center">
-                    <UserGroupIcon className="h-4 w-4 mr-1" />
+                    <UserGroupIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                     {team.size} members
                   </div>
                   <div>{team.yearsWorkingTogether} years together</div>
                 </div>
-                <div className="flex flex-wrap items-center mt-1 text-base text-text-tertiary gap-x-4 gap-y-1">
-                  <div>{team.industry}</div>
-                  <div>•</div>
-                  <div>{team.successfulLiftouts} successful liftouts</div>
-                  <div>•</div>
-                  <div>Currently at {team.currentCompany}</div>
+                <div className="flex flex-wrap items-center mt-1 text-sm font-normal text-text-tertiary gap-x-2 gap-y-1">
+                  <span>{team.industry}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{team.successfulLiftouts} successful liftouts</span>
+                  <span aria-hidden="true">·</span>
+                  <span>Currently at {team.currentCompany}</span>
                 </div>
-                <div className="flex flex-wrap gap-1 mt-2">
+                {/* Skills badges */}
+                <div className="flex flex-wrap gap-1.5 mt-3">
                   {team.skills.slice(0, 3).map((skill) => (
                     <span
                       key={skill}
-                      className="badge badge-secondary text-sm"
+                      className="badge badge-secondary text-xs"
                     >
                       {skill}
                     </span>
                   ))}
                   {team.skills.length > 3 && (
-                    <span className="badge badge-secondary text-sm">
+                    <span className="badge badge-secondary text-xs">
                       +{team.skills.length - 3} more
                     </span>
                   )}

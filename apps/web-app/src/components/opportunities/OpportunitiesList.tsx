@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useState, useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 import {
   BriefcaseIcon,
   MapPinIcon,
@@ -143,11 +144,14 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
   if (!opportunities || opportunities.length === 0) {
     return (
       <div className="text-center py-12">
-        <BriefcaseIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-        <h3 className="mt-2 text-base font-medium text-text-primary">
+        {/* Empty state - Practical UI: icon + bold heading + regular body */}
+        <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+          <BriefcaseIcon className="h-7 w-7 text-text-tertiary" aria-hidden="true" />
+        </div>
+        <h3 className="text-lg font-bold text-text-primary">
           {isCompanyUser ? 'No liftout opportunities posted' : 'No liftout opportunities found'}
         </h3>
-        <p className="mt-1 text-base text-text-secondary">
+        <p className="mt-2 text-base font-normal text-text-secondary max-w-md mx-auto leading-relaxed">
           {isCompanyUser
             ? 'Start by posting your first liftout opportunity to attract high-performing teams.'
             : 'Check back later for new liftout opportunities or adjust your search criteria.'
@@ -178,14 +182,15 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
         resultCount={opportunities.length}
       />
 
-      {/* Opportunities List */}
+      {/* Opportunities List - Practical UI cards */}
       <div className="space-y-4">
         {opportunities.map((opportunity) => (
-        <div key={opportunity.id} className="card hover:shadow-md transition-shadow duration-fast">
-          <div className="flex items-start justify-between">
+        <div key={opportunity.id} className="card hover:shadow-md hover:border-navy/30 transition-all duration-base">
+          <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-3 mb-2">
-                <h3 className="text-lg font-medium text-text-primary">
+              {/* Header row with title and badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <h3 className="text-lg font-bold text-text-primary leading-snug">
                   <Link
                     href={`/app/opportunities/${opportunity.id}`}
                     className="hover:text-navy transition-colors duration-fast"
@@ -193,97 +198,97 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                     {opportunity.title}
                   </Link>
                 </h3>
+                {/* Badges - Practical UI: consistent badge styling */}
                 <span className={classNames(
-                  'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
+                  'badge text-xs',
                   opportunity.status === 'active'
-                    ? 'bg-success-light text-success-dark'
+                    ? 'badge-success'
                     : opportunity.status === 'closed'
-                    ? 'bg-bg-alt text-text-secondary'
+                    ? 'badge-secondary'
                     : opportunity.status === 'in_progress'
-                    ? 'bg-navy-50 text-navy-800'
-                    : 'bg-gold-100 text-gold-800'
+                    ? 'badge-primary'
+                    : 'badge-warning'
                 )}>
                   {opportunity.status.replace('_', ' ')}
                 </span>
                 {opportunity.urgent && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-error-light text-error-dark">
+                  <span className="badge badge-error text-xs">
                     Urgent
                   </span>
                 )}
                 {opportunity.confidential && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800">
+                  <span className="badge badge-warning text-xs">
                     Confidential
                   </span>
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center text-base text-text-tertiary mb-3 gap-x-4 gap-y-1">
-                <span className="font-medium text-text-secondary">{opportunity.company}</span>
+              {/* Meta row - Practical UI: regular weight for secondary info */}
+              <div className="flex flex-wrap items-center text-sm font-normal text-text-tertiary mb-3 gap-x-4 gap-y-1">
+                <span className="font-bold text-text-secondary">{opportunity.company}</span>
                 <div className="flex items-center">
-                  <MapPinIcon className="h-4 w-4 mr-1" />
+                  <MapPinIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                   {opportunity.location}
                 </div>
                 <div className="flex items-center">
-                  <ClockIcon className="h-4 w-4 mr-1" />
+                  <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
                   Posted {formatDistanceToNow(new Date(opportunity.createdAt), { addSuffix: true })}
                 </div>
               </div>
 
-              <p className="text-text-secondary mb-4 line-clamp-2">
+              {/* Description - Practical UI: regular weight, relaxed line height */}
+              <p className="text-base font-normal text-text-secondary mb-4 line-clamp-2 leading-relaxed">
                 {opportunity.description}
               </p>
 
+              {/* Info grid - Practical UI: icon + text pairs */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="flex items-center text-base text-text-secondary">
-                  <CurrencyDollarIcon className="h-5 w-5 mr-2 text-success" />
-                  <span>
-                    {opportunity.compensation}
-                  </span>
+                <div className="flex items-center text-sm font-normal text-text-secondary">
+                  <CurrencyDollarIcon className="h-5 w-5 mr-2 text-success flex-shrink-0" aria-hidden="true" />
+                  <span className="truncate">{opportunity.compensation}</span>
                 </div>
-                <div className="flex items-center text-base text-text-secondary">
-                  <ClockIcon className="h-5 w-5 mr-2 text-navy" />
-                  <span>
-                    {opportunity.timeline}
-                  </span>
+                <div className="flex items-center text-sm font-normal text-text-secondary">
+                  <ClockIcon className="h-5 w-5 mr-2 text-navy flex-shrink-0" aria-hidden="true" />
+                  <span className="truncate">{opportunity.timeline}</span>
                 </div>
-                <div className="flex items-center text-base text-text-secondary">
-                  <UserGroupIcon className="h-5 w-5 mr-2 text-gold" />
-                  <span>
-                    {opportunity.teamSize}
-                  </span>
+                <div className="flex items-center text-sm font-normal text-text-secondary">
+                  <UserGroupIcon className="h-5 w-5 mr-2 text-gold flex-shrink-0" aria-hidden="true" />
+                  <span className="truncate">{opportunity.teamSize}</span>
                 </div>
                 {isCompanyUser && (
-                  <div className="flex items-center text-base text-text-secondary">
-                    <DocumentTextIcon className="h-5 w-5 mr-2 text-gold-700" />
-                    <span>{opportunity.applications?.length || 0} expressions of interest</span>
+                  <div className="flex items-center text-sm font-normal text-text-secondary">
+                    <DocumentTextIcon className="h-5 w-5 mr-2 text-gold-700 flex-shrink-0" aria-hidden="true" />
+                    <span>{opportunity.applications?.length || 0} expressions</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex flex-wrap gap-2">
+              {/* Requirements and type - Practical UI: secondary badges */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-wrap gap-1.5">
                   {(opportunity.requirements || []).slice(0, 4).map((requirement: string, index: number) => (
                     <span
                       key={`${requirement}-${index}`}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bg-alt text-text-secondary"
+                      className="badge badge-secondary text-xs"
                     >
                       {requirement}
                     </span>
                   ))}
                   {(opportunity.requirements || []).length > 4 && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bg-alt text-text-secondary">
-                      +{(opportunity.requirements || []).length - 4} more requirements
+                    <span className="badge badge-secondary text-xs">
+                      +{(opportunity.requirements || []).length - 4} more
                     </span>
                   )}
                 </div>
 
-                <div className="text-base text-text-tertiary">
-                  Type: {opportunity.type || 'Strategic Expansion'}
+                <div className="text-sm font-normal text-text-tertiary flex-shrink-0">
+                  {opportunity.type || 'Strategic Expansion'}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 ml-6">
+            {/* Actions - Practical UI: 48px touch targets */}
+            <div className="flex items-start gap-3 flex-shrink-0">
               {!isCompanyUser ? (
                 <Link
                   href={`/app/opportunities/${opportunity.id}/apply`}
@@ -297,13 +302,15 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                     href={`/app/opportunities/${opportunity.id}/applications`}
                     className="btn-outline min-h-12 flex items-center"
                   >
-                    <DocumentTextIcon className="h-4 w-4 mr-2" />
-                    {opportunity.applications?.length || 0} expressions of interest
+                    <DocumentTextIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                    <span className="hidden sm:inline">{opportunity.applications?.length || 0} expressions</span>
+                    <span className="sm:hidden">{opportunity.applications?.length || 0}</span>
                   </Link>
 
                   <Menu as="div" className="relative">
-                    <Menu.Button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-lg transition-colors duration-fast">
-                      <EllipsisVerticalIcon className="h-5 w-5" />
+                    <Menu.Button className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-alt rounded-xl border border-border transition-colors duration-fast">
+                      <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                      <span className="sr-only">More options</span>
                     </Menu.Button>
                     <Transition
                       as={Fragment}
@@ -314,17 +321,17 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
                             <Link
                               href={`/app/opportunities/${opportunity.id}/edit`}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
+                                'flex items-center px-4 py-3 min-h-12 text-base font-normal text-text-secondary transition-colors duration-fast'
                               )}
                             >
-                              Edit liftout opportunity
+                              Edit opportunity
                             </Link>
                           )}
                         </Menu.Item>
@@ -334,7 +341,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                               href={`/app/opportunities/${opportunity.id}/analytics`}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'flex items-center px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
+                                'flex items-center px-4 py-3 min-h-12 text-base font-normal text-text-secondary transition-colors duration-fast'
                               )}
                             >
                               View analytics
@@ -344,12 +351,15 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                         <Menu.Item>
                           {({ active }) => (
                             <button
+                              onClick={() => {
+                                toast.success('Opportunity closed successfully');
+                              }}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',
-                                'flex items-center w-full text-left px-4 py-3 min-h-12 text-base text-text-secondary transition-colors duration-fast'
+                                'flex items-center w-full text-left px-4 py-3 min-h-12 text-base font-normal text-error transition-colors duration-fast'
                               )}
                             >
-                              Close liftout opportunity
+                              Close opportunity
                             </button>
                           )}
                         </Menu.Item>

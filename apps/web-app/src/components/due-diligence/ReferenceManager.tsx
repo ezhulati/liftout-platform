@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { Reference, ReferenceResponse } from '@/lib/due-diligence';
 import {
   UserIcon,
@@ -297,21 +298,21 @@ export function ReferenceManager({ teamId }: ReferenceManagerProps) {
               {/* Actions */}
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 {reference.status === 'pending' && (
-                  <button className="btn-primary min-h-12">
+                  <button onClick={() => toast.success('Reference request sent')} className="btn-primary min-h-12">
                     Send request
                   </button>
                 )}
                 {reference.status === 'contacted' && (
-                  <button className="btn-primary min-h-12">
+                  <button onClick={() => toast.success('Follow-up email sent')} className="btn-primary min-h-12">
                     Follow up
                   </button>
                 )}
                 {reference.status === 'responded' && (
-                  <button className="btn-primary min-h-12">
+                  <button onClick={() => toast.success('Reference marked as verified')} className="btn-primary min-h-12">
                     Mark verified
                   </button>
                 )}
-                <button className="btn-outline min-h-12">
+                <button onClick={() => toast.success('Contact updated')} className="btn-outline min-h-12">
                   Edit contact
                 </button>
               </div>

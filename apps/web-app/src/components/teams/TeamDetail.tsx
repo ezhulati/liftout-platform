@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import {
   UserGroupIcon,
   CheckBadgeIcon,
@@ -234,10 +234,10 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                     )}
                     {hasExpressedInterest ? 'Interest expressed' : 'Express interest'}
                   </button>
-                  <button className="btn-outline min-h-12 flex items-center">
+                  <Link href="/app/messages" className="btn-outline min-h-12 flex items-center">
                     <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                     Message team
-                  </button>
+                  </Link>
                 </>
               )}
 
@@ -302,13 +302,15 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                         </div>
                         {isTeamOwner && (
                           <div className="flex space-x-1">
-                            <button
+                            <Link
+                              href={`/app/teams/${teamId}/members`}
                               className="min-w-12 min-h-12 p-3 text-navy hover:text-navy-hover hover:bg-navy-50 rounded-lg transition-colors"
                               aria-label="Edit member"
                             >
                               <PencilSquareIcon className="h-5 w-5" />
-                            </button>
+                            </Link>
                             <button
+                              onClick={() => toast.success('Member removed from team')}
                               className="min-w-12 min-h-12 p-3 text-error hover:text-error-dark hover:bg-error-light rounded-lg transition-colors"
                               aria-label="Remove member"
                             >

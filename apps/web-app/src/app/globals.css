@@ -143,21 +143,47 @@
     overflow-x: hidden;
   }
 
-  /* Typography defaults */
+  /* Typography defaults - Practical UI Major Third (1.25) Scale
+     - Use regular (400) + bold (700) weights only
+     - Line height: 1.1-1.3 for headings (decrease as size increases)
+     - Letter spacing: decrease for large headings */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
     color: var(--text-primary);
   }
 
-  h1 { font-size: 3.052rem; }
-  h2 { font-size: 2.441rem; }
-  h3 { font-size: 1.953rem; }
-  h4 { font-size: 1.563rem; }
-  h5 { font-size: 1.25rem; }
-  h6 { font-size: 1rem; }
+  /* Major Third Scale: 44px, 36px, 28px, 22px, 18px, 15px */
+  h1 {
+    font-size: 2.75rem;      /* 44px */
+    line-height: 1.1;
+    letter-spacing: -0.03em; /* Tighter for larger */
+  }
+  h2 {
+    font-size: 2.25rem;      /* 36px */
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-size: 1.75rem;      /* 28px */
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  h4 {
+    font-size: 1.375rem;     /* 22px */
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  h5 {
+    font-size: 1.125rem;     /* 18px - body size */
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+  h6 {
+    font-size: 0.9375rem;    /* 15px - small */
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
 
   p {
     max-width: 65ch;
@@ -543,11 +569,13 @@
     line-height: 1.5;
   }
 
-  /* Label - Above input, close proximity (<8px gap) */
+  /* Label - Above input, close proximity (<8px gap)
+     Practical UI: Use regular + bold only, no semibold */
   .label-text {
-    @apply block font-body font-semibold;
+    @apply block font-body;
+    font-weight: 700; /* Bold, not semibold */
     color: var(--text-primary);
-    font-size: 0.875rem;
+    font-size: 0.9375rem; /* 15px - small text */
     margin-bottom: 4px;
   }
 

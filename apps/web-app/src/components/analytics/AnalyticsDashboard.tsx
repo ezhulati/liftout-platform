@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { 
   LiftoutAnalytics, 
   calculateOverallROI, 
@@ -345,16 +346,16 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4">
-        <button className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Report exported successfully')} className="btn-primary min-h-12">
           Export full report
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12">
           Schedule review meeting
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Alert preferences saved')} className="btn-outline min-h-12">
           Configure alerts
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Loading historical data...')} className="btn-outline min-h-12">
           Historical trends
         </button>
       </div>

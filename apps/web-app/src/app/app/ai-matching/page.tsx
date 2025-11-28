@@ -138,76 +138,78 @@ export default function AIMatchingPage() {
   if (!isAuthenticated) {
     return (
       <div className="text-center py-12">
-        <CpuChipIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-        <h3 className="mt-2 text-sm font-medium text-text-primary">Authentication Required</h3>
-        <p className="mt-1 text-sm text-text-tertiary">Please log in to access AI matching features.</p>
+        <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+          <CpuChipIcon className="h-7 w-7 text-text-tertiary" aria-hidden="true" />
+        </div>
+        <h3 className="text-lg font-bold text-text-primary">Authentication Required</h3>
+        <p className="mt-2 text-base font-normal text-text-secondary">Please log in to access AI matching features.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Page Header - Practical UI: bold headings, regular body */}
       <div className="page-header">
-        <div className="flex items-center space-x-4">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center">
-            <CpuChipIcon className="h-6 w-6 text-white" />
+        <div className="flex items-center gap-4">
+          <div className="h-14 w-14 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
+            <CpuChipIcon className="h-7 w-7 text-white" aria-hidden="true" />
           </div>
           <div>
-            <h1 className="page-title flex items-center">
+            <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight flex items-center">
               AI-Powered Matching
-              <SparklesIcon className="h-6 w-6 ml-2 text-gold" />
+              <SparklesIcon className="h-6 w-6 ml-2 text-gold" aria-hidden="true" />
             </h1>
-            <p className="page-subtitle">
+            <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
               Discover perfect team-opportunity matches using advanced compatibility analysis
             </p>
           </div>
         </div>
       </div>
 
-      {/* Entity Selection */}
+      {/* Entity Selection - Practical UI: bold section headings */}
       <div className="card">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-medium text-text-primary">Select Analysis Focus</h2>
+          <h2 className="text-lg font-bold text-text-primary">Select Analysis Focus</h2>
         </div>
         <div className="px-6 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Entity Type Selection */}
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-3">
+              <label className="block text-base font-bold text-text-primary mb-3">
                 What would you like to analyze?
               </label>
               <div className="space-y-2">
                 {isTeamUser && (
-                  <label className="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-bg-alt">
+                  <label className="flex items-center p-4 border border-border rounded-xl cursor-pointer hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast min-h-12">
                     <input
                       type="radio"
                       value="team"
                       checked={selectedEntityType === 'team'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'team')}
-                      className="h-4 w-4 text-navy focus:ring-navy border-border"
+                      className="h-5 w-5 text-navy focus:ring-navy border-border"
                     />
                     <div className="ml-3 flex items-center">
-                      <UserGroupIcon className="h-5 w-5 text-text-tertiary mr-2" />
-                      <span className="text-sm font-medium text-text-primary">
+                      <UserGroupIcon className="h-5 w-5 text-navy mr-2" aria-hidden="true" />
+                      <span className="text-base font-normal text-text-primary">
                         Find opportunities for my team
                       </span>
                     </div>
                   </label>
                 )}
-                
+
                 {isCompanyUser && (
-                  <label className="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-bg-alt">
+                  <label className="flex items-center p-4 border border-border rounded-xl cursor-pointer hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast min-h-12">
                     <input
                       type="radio"
                       value="opportunity"
                       checked={selectedEntityType === 'opportunity'}
                       onChange={(e) => setSelectedEntityType(e.target.value as 'opportunity')}
-                      className="h-4 w-4 text-navy focus:ring-navy border-border"
+                      className="h-5 w-5 text-navy focus:ring-navy border-border"
                     />
                     <div className="ml-3 flex items-center">
-                      <BriefcaseIcon className="h-5 w-5 text-text-tertiary mr-2" />
-                      <span className="text-sm font-medium text-text-primary">
+                      <BriefcaseIcon className="h-5 w-5 text-gold mr-2" aria-hidden="true" />
+                      <span className="text-base font-normal text-text-primary">
                         Find teams for my opportunity
                       </span>
                     </div>
@@ -218,7 +220,7 @@ export default function AIMatchingPage() {
 
             {/* Entity Selection */}
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-3">
+              <label className="block text-base font-bold text-text-primary mb-3">
                 {selectedEntityType === 'team' ? 'Select your team' : 'Select your opportunity'}
               </label>
               

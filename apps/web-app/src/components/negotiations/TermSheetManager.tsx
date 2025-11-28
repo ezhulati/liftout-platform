@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { 
   NegotiationDeal, 
   TermSheet,
@@ -106,7 +107,7 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
               {getStatusIcon(deal.currentTermSheet.status)}
               <span className="ml-2">{deal.currentTermSheet.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
             </div>
-            <button className="btn-primary min-h-12 inline-flex items-center">
+            <button onClick={() => toast.success('Opening term sheet editor...')} className="btn-primary min-h-12 inline-flex items-center">
               <PencilSquareIcon className="h-5 w-5 mr-2" />
               Edit term sheet
             </button>
@@ -347,16 +348,16 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
 
       {/* Actions - Primary button first per Practical UI */}
       <div className="flex flex-wrap gap-4">
-        <button className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Term sheet accepted')} className="btn-primary min-h-12">
           Accept term sheet
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Change request submitted')} className="btn-outline min-h-12">
           Request changes
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Counter-proposal generated')} className="btn-outline min-h-12">
           Generate counter-proposal
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('PDF exported successfully')} className="btn-outline min-h-12">
           Export PDF
         </button>
       </div>

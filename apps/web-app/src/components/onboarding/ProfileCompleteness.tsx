@@ -11,6 +11,7 @@ import {
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface ProfileCompletenessProps {
   className?: string;
@@ -241,13 +242,13 @@ function ProfileCompletenessDetails({
         <p className="text-base text-text-secondary mb-3">
           {nextRecommendedAction}
         </p>
-        <button
-          onClick={onStartOnboarding}
+        <Link
+          href="/app/profile"
           className="inline-flex items-center px-4 py-2 text-base font-medium text-primary-700 bg-primary-100 border border-primary-200 rounded-lg hover:bg-primary-200 transition-colors duration-fast"
         >
           Continue setup
           <ArrowRightIcon className="ml-2 h-4 w-4" />
-        </button>
+        </Link>
       </div>
     </div>
   );

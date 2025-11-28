@@ -4,7 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NODE_ENV = "production"
+  # Remove NODE_ENV=production to allow devDependencies to be installed
   NETLIFY_USE_PNPM = "true"
   PNPM_FLAGS = "--shamefully-hoist"
 

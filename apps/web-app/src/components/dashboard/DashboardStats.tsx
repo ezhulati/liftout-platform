@@ -136,23 +136,27 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {displayStats.map((stat) => (
-        <div key={stat.name} className="card group">
-          <div className="flex items-center">
+        <div key={stat.name} className="card group min-h-[120px]">
+          <div className="flex items-start gap-4">
+            {/* Icon container - 48px min touch target */}
             <div className="flex-shrink-0">
-              <div className={`${stat.bgColor} rounded-lg p-3 transition-transform duration-fast group-hover:scale-105`}>
+              <div className={`${stat.bgColor} rounded-xl p-3 min-w-12 min-h-12 flex items-center justify-center transition-transform duration-fast group-hover:scale-105`}>
                 <stat.icon className={`h-6 w-6 ${stat.color}`} aria-hidden="true" />
               </div>
             </div>
-            <div className="ml-4 w-0 flex-1">
+            {/* Content - Practical UI typography */}
+            <div className="flex-1 min-w-0">
               <dl>
-                <dt className="text-base font-medium text-text-secondary truncate">
-                  {stat.name}
-                </dt>
-                <dd className="text-xl font-bold text-text-primary font-heading">
+                {/* Stat value - prominent, bold */}
+                <dd className="text-2xl font-bold text-text-primary font-heading leading-tight">
                   {typeof stat.value === 'string' ? stat.value : stat.value.toLocaleString()}
                 </dd>
+                {/* Stat label - regular weight, secondary color */}
+                <dt className="text-base font-normal text-text-secondary mt-1 leading-snug">
+                  {stat.name}
+                </dt>
               </dl>
             </div>
           </div>

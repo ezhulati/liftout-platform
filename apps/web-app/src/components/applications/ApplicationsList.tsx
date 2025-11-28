@@ -273,10 +273,10 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                         </>
                       )}
 
-                      <button className="btn-outline min-h-12 flex items-center justify-center">
+                      <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
                         <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                         Message
-                      </button>
+                      </Link>
                     </>
                   ) : (
                     <>
@@ -289,10 +289,10 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                         </button>
                       )}
 
-                      <button className="btn-outline min-h-12 flex items-center justify-center">
+                      <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
                         <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                         Message company
-                      </button>
+                      </Link>
 
                       <Link
                         href={`/app/opportunities/${application.opportunityId}`}

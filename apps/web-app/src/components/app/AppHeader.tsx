@@ -2,6 +2,7 @@
 
 import { Fragment, useState, useEffect, useRef } from 'react';
 import { Menu, Transition } from '@headlessui/react';
+import { toast } from 'react-hot-toast';
 import {
   Bars3Icon,
   BellIcon,
@@ -90,16 +91,13 @@ export function AppHeader({ user }: AppHeaderProps) {
     >
       <div className="lg:mx-auto lg:max-w-7xl lg:px-8">
         <div className="flex h-16 items-center gap-x-4 border-b border-border bg-bg-surface px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none lg:border-0">
-        <button
-          type="button"
+        <Link
+          href="/app/dashboard"
           className="min-h-12 min-w-12 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-elevated rounded-lg lg:hidden transition-colors duration-fast"
-          onClick={() => {
-            // This would toggle mobile sidebar - implement with context if needed
-          }}
         >
-          <span className="sr-only">Open sidebar</span>
+          <span className="sr-only">Go to dashboard</span>
           <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-        </button>
+        </Link>
 
         {/* Separator */}
         <div className="h-6 w-px bg-border lg:hidden" aria-hidden="true" />
@@ -125,6 +123,9 @@ export function AppHeader({ user }: AppHeaderProps) {
             <button
               type="button"
               className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-elevated rounded-lg transition-colors duration-fast"
+              onClick={() => {
+                toast('No new notifications', { icon: '🔔' });
+              }}
             >
               <span className="sr-only">View notifications</span>
               <BellIcon className="h-6 w-6" aria-hidden="true" />

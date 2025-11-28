@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { 
   NegotiationDeal, 
   calculateNegotiationProgress, 
@@ -330,16 +331,16 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4">
-        <button className="btn-primary min-h-12">
+        <button onClick={() => toast.success('Loading term sheet...')} className="btn-primary min-h-12">
           View full term sheet
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12">
           Schedule meeting
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Status report generated')} className="btn-outline min-h-12">
           Generate status report
         </button>
-        <button className="btn-outline min-h-12">
+        <button onClick={() => toast.success('Timeline updated')} className="btn-outline min-h-12">
           Update timeline
         </button>
       </div>

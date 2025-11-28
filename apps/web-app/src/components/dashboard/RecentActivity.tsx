@@ -108,11 +108,13 @@ export function RecentActivity() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-semibold text-text-primary font-heading">Recent Activity</h3>
+      <div className="flex items-center justify-between mb-6">
+        {/* Section heading - Practical UI: bold weight */}
+        <h3 className="text-lg font-bold text-text-primary font-heading">Recent Activity</h3>
+        {/* Tertiary action - underlined link style */}
         <Link
           href="/app/activity"
-          className="text-base font-medium text-navy hover:text-gold transition-colors duration-fast"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
         >
           View all
         </Link>
@@ -142,26 +144,28 @@ export function RecentActivity() {
                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                       <div className="min-w-0 flex-1">
                         {activity.href ? (
-                          <Link href={activity.href} className="group">
-                            <p className="text-base font-medium text-text-primary group-hover:text-navy transition-colors duration-fast">
+                          <Link href={activity.href} className="group min-h-12 block">
+                            {/* Practical UI: bold for emphasis, regular for body */}
+                            <p className="text-base font-bold text-text-primary group-hover:text-navy transition-colors duration-fast leading-snug">
                               {activity.title}
                             </p>
-                            <p className="text-base text-text-secondary group-hover:text-text-primary transition-colors duration-fast">
+                            <p className="text-sm font-normal text-text-secondary group-hover:text-text-primary transition-colors duration-fast leading-relaxed mt-0.5">
                               {activity.description}
                             </p>
                           </Link>
                         ) : (
                           <>
-                            <p className="text-base font-medium text-text-primary">
+                            <p className="text-base font-bold text-text-primary leading-snug">
                               {activity.title}
                             </p>
-                            <p className="text-base text-text-secondary">
+                            <p className="text-sm font-normal text-text-secondary leading-relaxed mt-0.5">
                               {activity.description}
                             </p>
                           </>
                         )}
                       </div>
-                      <div className="whitespace-nowrap text-right text-sm text-text-tertiary">
+                      {/* Timestamp - small text */}
+                      <div className="whitespace-nowrap text-right text-sm font-normal text-text-tertiary">
                         {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
                       </div>
                     </div>

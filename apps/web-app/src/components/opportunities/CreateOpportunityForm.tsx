@@ -120,7 +120,7 @@ export function CreateOpportunityForm() {
 
         {/* Basic Information - Single column per Practical UI */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Liftout opportunity details</h3>
+          <h3 className="text-lg font-bold text-text-primary">Liftout opportunity details</h3>
 
           <FormField
             label="Opportunity title"
@@ -217,7 +217,7 @@ export function CreateOpportunityForm() {
 
         {/* Compensation & Logistics */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Compensation and logistics</h3>
+          <h3 className="text-lg font-bold text-text-primary">Compensation and logistics</h3>
 
           <FormField
             label="Total team compensation"
@@ -267,7 +267,7 @@ export function CreateOpportunityForm() {
 
         {/* Requirements */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Team requirements</h3>
+          <h3 className="text-lg font-bold text-text-primary">Team requirements</h3>
 
           <FormField
             label="Requirements"
@@ -321,7 +321,7 @@ export function CreateOpportunityForm() {
 
         {/* What We Offer */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">What we offer</h3>
+          <h3 className="text-lg font-bold text-text-primary">What we offer</h3>
 
           <FormField
             label="Offerings"
@@ -375,7 +375,7 @@ export function CreateOpportunityForm() {
 
         {/* Integration Plan */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Integration plan</h3>
+          <h3 className="text-lg font-bold text-text-primary">Integration plan</h3>
 
           <FormField
             label="Team integration strategy"
@@ -395,7 +395,7 @@ export function CreateOpportunityForm() {
 
         {/* Options */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Opportunity settings</h3>
+          <h3 className="text-lg font-bold text-text-primary">Opportunity settings</h3>
 
           <div className="space-y-2">
             <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 rounded-lg hover:bg-bg-alt transition-colors -mx-2">
