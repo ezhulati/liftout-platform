@@ -178,8 +178,8 @@ export function Dropdown({
                   setIsOpen(false);
                 }}
                 className={`
-                  w-full flex items-center gap-3 px-4 min-h-11
-                  text-sm text-left transition-colors duration-fast
+                  w-full flex items-center gap-3 px-4 min-h-12
+                  text-base text-left transition-colors duration-fast
                   focus-visible:outline-none focus-visible:bg-bg-elevated
                   ${item.danger
                     ? 'text-error hover:bg-error-light'

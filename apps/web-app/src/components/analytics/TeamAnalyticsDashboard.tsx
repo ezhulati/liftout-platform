@@ -189,7 +189,7 @@ export function TeamAnalyticsDashboard({ teamId }: TeamAnalyticsDashboardProps) 
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm min-h-11 ${
+              className={`py-3 px-1 border-b-2 font-medium text-base min-h-12 ${
                 activeTab === tab.id
                   ? 'border-navy text-navy'
                   : 'border-transparent text-text-tertiary hover:text-text-primary hover:border-border'
