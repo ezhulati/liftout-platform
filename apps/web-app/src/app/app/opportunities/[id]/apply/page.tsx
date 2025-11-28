@@ -51,9 +51,9 @@ export default async function ApplyToOpportunityPage({ params }: ApplyToOpportun
           <h3 className="text-lg font-medium text-text-primary mb-4">Application Form</h3>
           <p className="text-text-tertiary">Application form is being developed. Please check back soon.</p>
           <div className="mt-6">
-            <Link href="/app/opportunities" className="btn-primary">
-              <ArrowLeftIcon className="h-4 w-4 mr-2" />
-              Back to Opportunities
+            <Link href="/app/opportunities" className="btn-primary min-h-12 inline-flex items-center">
+              <ArrowLeftIcon className="h-5 w-5 mr-2" />
+              Back to opportunities
             </Link>
           </div>
         </div>

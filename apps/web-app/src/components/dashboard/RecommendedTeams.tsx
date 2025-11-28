@@ -197,9 +197,9 @@ export function RecommendedTeams() {
           </p>
           <Link
             href="/app/profile"
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
-            Complete Profile
+            Complete profile
           </Link>
         </div>
       )}

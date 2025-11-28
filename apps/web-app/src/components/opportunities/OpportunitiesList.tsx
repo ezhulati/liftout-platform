@@ -287,7 +287,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
               {!isCompanyUser ? (
                 <Link
                   href={`/app/opportunities/${opportunity.id}/apply`}
-                  className="btn-primary"
+                  className="btn-primary min-h-12"
                 >
                   Express interest
                 </Link>
@@ -295,7 +295,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                 <>
                   <Link
                     href={`/app/opportunities/${opportunity.id}/applications`}
-                    className="btn-outline flex items-center"
+                    className="btn-outline min-h-12 flex items-center"
                   >
                     <DocumentTextIcon className="h-4 w-4 mr-2" />
                     {opportunity.applications?.length || 0} expressions of interest

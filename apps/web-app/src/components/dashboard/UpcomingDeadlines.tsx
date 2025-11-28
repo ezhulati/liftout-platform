@@ -210,9 +210,9 @@ export function UpcomingDeadlines() {
           </p>
           <Link
             href="/app/opportunities"
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
-            Browse Liftout Opportunities
+            Browse liftout opportunities
           </Link>
         </div>
       )}

@@ -332,12 +332,12 @@ export default function AIMatchingPage() {
             </p>
             <div className="mt-6">
               {isTeamUser ? (
-                <a href="/app/teams/create" className="btn-primary">
-                  Create Team Profile
+                <a href="/app/teams/create" className="btn-primary min-h-12">
+                  Create team profile
                 </a>
               ) : (
-                <a href="/app/opportunities/create" className="btn-primary">
-                  Post Opportunity
+                <a href="/app/opportunities/create" className="btn-primary min-h-12">
+                  Post opportunity
                 </a>
               )}
             </div>

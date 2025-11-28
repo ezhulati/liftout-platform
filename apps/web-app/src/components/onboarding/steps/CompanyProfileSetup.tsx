@@ -327,7 +327,7 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn-primary"
+              className="btn-primary min-h-12"
             >
               {isSubmitting ? (
                 <div className="flex items-center">

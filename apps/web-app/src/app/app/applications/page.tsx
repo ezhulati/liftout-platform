@@ -113,9 +113,9 @@ export default function ApplicationsPage() {
           </p>
           {!isCompanyUser && (
             <div className="mt-6">
-              <Link href="/app/opportunities" className="btn-primary">
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Browse Opportunities
+              <Link href="/app/opportunities" className="btn-primary min-h-12 inline-flex items-center">
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Browse opportunities
               </Link>
             </div>
           )}

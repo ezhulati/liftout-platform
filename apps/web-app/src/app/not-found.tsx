@@ -12,9 +12,9 @@ export default function NotFound() {
         <p className="text-text-secondary mb-8">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        <Link href="/" className="btn-primary inline-flex items-center gap-2">
+        <Link href="/" className="btn-primary min-h-12 inline-flex items-center gap-2">
           <HomeIcon className="w-5 h-5" />
-          Go Home
+          Go home
         </Link>
       </div>
     </div>

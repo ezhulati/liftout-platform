@@ -353,7 +353,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
               <button
                 type="button"
                 onClick={() => addSkill(skillInput)}
-                className="btn-outline"
+                className="btn-outline min-h-12"
               >
                 Add
               </button>
@@ -435,7 +435,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-primary"
+            className="btn-primary min-h-12"
           >
             {isSubmitting ? (
               <div className="flex items-center">

@@ -23,7 +23,7 @@ export function CompanyVerification({ onComplete, onSkip }: StepProps) {
               Skip for now
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Complete verification
           </button>
         </div>
@@ -47,7 +47,7 @@ export function FirstOpportunityCreation({ onComplete, onSkip }: StepProps) {
               Skip for now
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Create opportunity
           </button>
         </div>
@@ -71,7 +71,7 @@ export function TeamDiscoveryTutorial({ onComplete, onSkip }: StepProps) {
               Skip tutorial
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Complete tutorial
           </button>
         </div>
@@ -89,7 +89,7 @@ export function CompanyPlatformTour({ onComplete }: StepProps) {
       </p>
       <div className="space-y-4">
         <p className="text-sm text-text-tertiary">Interactive platform tour would go here</p>
-        <button onClick={onComplete} className="btn-primary">
+        <button onClick={onComplete} className="btn-primary min-h-12">
           Complete tour
         </button>
       </div>
@@ -112,7 +112,7 @@ export function TeamFormation({ onComplete, onSkip }: StepProps) {
               Skip for now
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Complete team setup
           </button>
         </div>
@@ -136,7 +136,7 @@ export function SkillsExperience({ onComplete, onSkip }: StepProps) {
               Skip for now
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Save skills
           </button>
         </div>
@@ -160,7 +160,7 @@ export function LiftoutPreferences({ onComplete, onSkip }: StepProps) {
               Skip for now
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Save preferences
           </button>
         </div>
@@ -184,7 +184,7 @@ export function OpportunityDiscoveryTutorial({ onComplete, onSkip }: StepProps) 
               Skip tutorial
             </button>
           )}
-          <button onClick={onComplete} className="btn-primary">
+          <button onClick={onComplete} className="btn-primary min-h-12">
             Complete tutorial
           </button>
         </div>
@@ -202,7 +202,7 @@ export function TeamPlatformTour({ onComplete }: StepProps) {
       </p>
       <div className="space-y-4">
         <p className="text-sm text-text-tertiary">Interactive tour would go here</p>
-        <button onClick={onComplete} className="btn-primary">
+        <button onClick={onComplete} className="btn-primary min-h-12">
           Complete tour
         </button>
       </div>
