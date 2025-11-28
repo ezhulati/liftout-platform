@@ -31,6 +31,7 @@ const providers: any[] = [
               include: { company: true },
             },
           },
+          // Select 2FA fields for admin users
         });
 
         if (!user) {
@@ -63,6 +64,10 @@ const providers: any[] = [
           emailVerified: user.emailVerified ? new Date() : null,
           image: user.profile?.profilePhotoUrl || null,
           accessToken,
+          // 2FA fields for admin users
+          twoFactorEnabled: user.twoFactorEnabled,
+          // twoFactorVerified is set to false initially - gets updated after 2FA verification
+          twoFactorVerified: false,
         };
       } catch (error) {
         console.error('Auth error:', error);
@@ -116,13 +121,25 @@ export const authOptions: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.userType = user.userType;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
         token.emailVerified = user.emailVerified;
         token.accessToken = user.accessToken;
+        // 2FA fields for admin users
+        token.twoFactorEnabled = user.twoFactorEnabled;
+        token.twoFactorVerified = user.twoFactorVerified;
+      }
+      // Handle session updates (for 2FA verification)
+      if (trigger === 'update' && session) {
+        if (session.twoFactorVerified !== undefined) {
+          token.twoFactorVerified = session.twoFactorVerified;
+        }
+        if (session.twoFactorEnabled !== undefined) {
+          token.twoFactorEnabled = session.twoFactorEnabled;
+        }
       }
       return token;
     },
@@ -221,6 +238,8 @@ declare module 'next-auth' {
     userType: string;
     emailVerified: Date | null;
     accessToken?: string;
+    twoFactorEnabled?: boolean;
+    twoFactorVerified?: boolean;
   }
 }
 
@@ -231,5 +250,7 @@ declare module 'next-auth/jwt' {
     firstName?: string;
     lastName?: string;
     emailVerified?: Date | null;
+    twoFactorEnabled?: boolean;
+    twoFactorVerified?: boolean;
   }
 }

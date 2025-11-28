@@ -641,3 +641,44 @@ AuthorizationError: You do not have access to this conversation
 2025-11-28 15:45:36 [[32MINFO[39M]: Socket authenticated: 8PriZyAEo-AEDnd-AAAB (user: company@example.com) {"service":"liftout-api"}
 2025-11-28 15:45:36 [[32MINFO[39M]: Socket authenticated: UDFvlEdYTdmztwIjAAAF (user: company@example.com) {"service":"liftout-api"}
 2025-11-28 15:45:36 [[32MINFO[39M]: Socket connected: UDFvlEdYTdmztwIjAAAF (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:05 [[32MINFO[39M]: Socket disconnected: UDFvlEdYTdmztwIjAAAF (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:46:07 [[32MINFO[39M]: Socket authenticated: 8LbauHcUOB7FWW7KAAAI (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:07 [[32MINFO[39M]: Socket authenticated: c1iDy9Jel8kBJ3dOAAAM (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:07 [[32MINFO[39M]: Socket connected: c1iDy9Jel8kBJ3dOAAAM (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:36 [[32MINFO[39M]: Socket disconnected: c1iDy9Jel8kBJ3dOAAAM (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:46:38 [[32MINFO[39M]: Socket authenticated: n3u4JLN0ZjRt7UJmAAAP (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:38 [[32MINFO[39M]: Socket authenticated: Y9JieDDk_WrDH4OKAAAT (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:46:38 [[32MINFO[39M]: Socket connected: Y9JieDDk_WrDH4OKAAAT (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:07 [[32MINFO[39M]: Socket disconnected: Y9JieDDk_WrDH4OKAAAT (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:47:08 [[32MINFO[39M]: Socket authenticated: GE8zV10T-4WDOz4XAAAW (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:09 [[32MINFO[39M]: Socket authenticated: 95yAjptkbotkrGrSAAAa (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:09 [[32MINFO[39M]: Socket connected: 95yAjptkbotkrGrSAAAa (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:38 [[32MINFO[39M]: Socket disconnected: 95yAjptkbotkrGrSAAAa (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:47:39 [[32MINFO[39M]: Socket authenticated: g6o0eG-LR5ZvkzwyAAAd (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:40 [[32MINFO[39M]: Socket authenticated: bU55ZAI6iUvQQCOEAAAh (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:47:40 [[32MINFO[39M]: Socket connected: bU55ZAI6iUvQQCOEAAAh (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:09 [[32MINFO[39M]: Socket disconnected: bU55ZAI6iUvQQCOEAAAh (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:48:10 [[32MINFO[39M]: Socket authenticated: yMNhaTQpuQFXTBg-AAAk (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:10 [[32MINFO[39M]: Socket authenticated: NWEAG3j6fZ_Mz-deAAAo (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:10 [[32MINFO[39M]: Socket connected: NWEAG3j6fZ_Mz-deAAAo (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:40 [[32MINFO[39M]: Socket disconnected: NWEAG3j6fZ_Mz-deAAAo (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:48:41 [[32MINFO[39M]: Socket authenticated: o50jUmgz1DX8vGU8AAAr (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:41 [[32MINFO[39M]: Socket authenticated: ojO8AoKDpiJGBengAAAv (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:48:41 [[32MINFO[39M]: Socket connected: ojO8AoKDpiJGBengAAAv (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:11 [[32MINFO[39M]: Socket disconnected: ojO8AoKDpiJGBengAAAv (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:49:12 [[32MINFO[39M]: Socket authenticated: wv0XkZgKP-SHq64JAAAy (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:13 [[32MINFO[39M]: Socket authenticated: zSRmHFZVHz6uPEGsAAA2 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:13 [[32MINFO[39M]: Socket connected: zSRmHFZVHz6uPEGsAAA2 (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:42 [[32MINFO[39M]: Socket disconnected: zSRmHFZVHz6uPEGsAAA2 (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:49:43 [[32MINFO[39M]: Socket authenticated: u1r5POHXmbR5cfGNAAA5 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:44 [[32MINFO[39M]: Socket authenticated: I4xUbII5Rnqt4x24AAA9 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:49:44 [[32MINFO[39M]: Socket connected: I4xUbII5Rnqt4x24AAA9 (user: company@example.com) {"service":"liftout-api"}
+2025-11-28 15:50:13 [[32MINFO[39M]: Socket disconnected: I4xUbII5Rnqt4x24AAA9 (user: company@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:50:22 [[32MINFO[39M]: Socket authenticated: GXlwy5AHenTqi0MjAABA (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:50:23 [[32MINFO[39M]: Socket authenticated: wDiV4QY0GYYt6OD1AABE (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:50:23 [[32MINFO[39M]: Socket connected: wDiV4QY0GYYt6OD1AABE (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:50:52 [[32MINFO[39M]: Socket disconnected: wDiV4QY0GYYt6OD1AABE (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+2025-11-28 15:55:11 [[32MINFO[39M]: Socket authenticated: WhvMqSvvQb9toYrDAABH (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:55:11 [[32MINFO[39M]: Socket authenticated: tcQPLewy1WTMNmkOAABK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:55:11 [[32MINFO[39M]: Socket connected: tcQPLewy1WTMNmkOAABK (user: demo@example.com) {"service":"liftout-api"}
+2025-11-28 15:55:12 [[32MINFO[39M]: Socket disconnected: tcQPLewy1WTMNmkOAABK (user: demo@example.com), reason: transport close {"service":"liftout-api"}

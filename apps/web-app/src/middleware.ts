@@ -25,6 +25,17 @@ const companyOnlyRoutes = [
   '/app/company',
 ];
 
+// Routes only accessible to admin users
+const adminRoutes = [
+  '/admin',
+];
+
+// Admin routes that don't require 2FA (for setup flow)
+const admin2FASetupRoutes = [
+  '/admin/setup-2fa',
+  '/admin/verify-2fa',
+];
+
 // Protected routes that require authentication but are accessible to both user types
 const protectedRoutes = [
   '/app/dashboard',
@@ -64,6 +75,14 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedRoutes.some(route => pathname.startsWith(route));
 }
 
+function isAdminRoute(pathname: string): boolean {
+  return adminRoutes.some(route => pathname.startsWith(route));
+}
+
+function isAdmin2FASetupRoute(pathname: string): boolean {
+  return admin2FASetupRoutes.some(route => pathname.startsWith(route));
+}
+
 export default withAuth(
   function middleware(req: NextRequestWithAuth) {
     const { pathname } = req.nextUrl;
@@ -82,7 +101,32 @@ export default withAuth(
     }
 
     // Get user type from token
-    const userType = token.userType as 'individual' | 'company' | undefined;
+    const userType = token.userType as 'individual' | 'company' | 'admin' | undefined;
+
+    // Check admin routes
+    if (isAdminRoute(pathname)) {
+      // Non-admin users cannot access admin routes
+      if (userType !== 'admin') {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+
+      // Check 2FA status for admin users
+      const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
+      const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
+
+      // If 2FA is not set up and not on setup page, redirect to setup
+      if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
+        return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
+      }
+
+      // If 2FA is enabled but not verified this session (and not on verify/setup page)
+      if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
+        return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
+      }
+
+      // Admin is authenticated and 2FA verified, allow access
+      return NextResponse.next();
+    }
 
     // Check individual-only routes
     if (isIndividualOnlyRoute(pathname)) {
