@@ -23,7 +23,7 @@ const config: Config = {
         // Following Practical UI formula for light interfaces
         navy: {
           DEFAULT: 'hsl(220, 70%, 50%)',     // Primary actions HSB(220,70,80) → hsl approx
-          darkest: 'hsl(220, 60%, 20%)',     // Headings HSB(220,60,20)
+          darkest: 'hsl(220, 50%, 12%)',     // Dark backgrounds - very dark navy
           dark: 'hsl(220, 30%, 45%)',        // Secondary text HSB(220,30,45)
           medium: 'hsl(220, 20%, 66%)',      // Non-decorative borders HSB(220,20,66)
           light: 'hsl(220, 10%, 95%)',       // Decorative borders HSB(220,10,95)
