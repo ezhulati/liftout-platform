@@ -268,7 +268,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
                   {article.author.name}
                 </Link>
                 {article.author.bio && (
-                  <p className="text-white/60 text-sm line-clamp-1">{article.author.bio.slice(0, 50)}...</p>
+                  <p className="text-white/70 text-sm leading-relaxed">{article.author.bio}</p>
                 )}
               </div>
             </div>
