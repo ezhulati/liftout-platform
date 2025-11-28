@@ -66,7 +66,7 @@ export default function NickAcimovicPage() {
       <LandingHeader />
       <main className="bg-bg min-h-screen">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
-        <section className="bg-navy pt-32 pb-10">
+        <section className="bg-navy-darkest pt-32 pb-10">
           <div className="max-w-4xl mx-auto px-4 lg:px-10">
             {/* Back link - 48px touch target */}
             <div className="mb-4">
