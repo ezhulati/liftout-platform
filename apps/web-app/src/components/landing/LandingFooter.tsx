@@ -19,24 +19,24 @@ export function LandingFooter() {
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
-              <a
-                href="mailto:hello@liftout.io"
+              <Link
+                href="/contact"
                 className="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-white/10 hover:bg-white/20 text-white text-base font-medium transition-colors duration-200 min-h-[48px]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                hello@liftout.io
-              </a>
-              <a
-                href="tel:+1-888-LIFTOUT"
+                Contact us
+              </Link>
+              <Link
+                href="/contact"
                 className="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-white text-navy-900 text-base font-medium hover:bg-white/90 transition-colors duration-200 min-h-[48px]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 Schedule a call
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -159,12 +159,12 @@ export function LandingFooter() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="mailto:support@liftout.io"
+                <Link
+                  href="/contact"
                   className="text-white/60 hover:text-white transition-colors duration-200 text-base"
                 >
-                  Contact support
-                </a>
+                  Contact us
+                </Link>
               </li>
               <li>
                 <Link

@@ -48,7 +48,7 @@ export default function CompanyProfilePage() {
           <div className="mt-4 flex md:mt-0 md:ml-4">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium text-text-secondary bg-white hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium text-text-secondary bg-bg-surface hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
             >
               {isEditing ? 'Cancel' : 'Edit Profile'}
             </button>
@@ -116,7 +116,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
   if (!isEditing) {
     return (
       <div className="space-y-6">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-bg-surface shadow rounded-lg p-6">
           <div className="flex items-center space-x-4 mb-6">
             <div className="h-16 w-16 bg-primary-100 rounded-lg flex items-center justify-center">
               <BuildingOfficeIcon className="h-8 w-8 text-primary-600" />
@@ -159,7 +159,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
           </div>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-bg-surface shadow rounded-lg p-6">
           <h3 className="text-lg font-medium text-text-primary mb-4">Company Metrics</h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div className="text-center">
@@ -191,7 +191,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-bg-surface shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-text-primary mb-4">Basic Information</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -201,7 +201,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
@@ -210,7 +210,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               type="text"
               value={formData.industry}
               onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
@@ -218,7 +218,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
             <select
               value={formData.size}
               onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             >
               <option value="1-10">1-10 employees</option>
               <option value="11-50">11-50 employees</option>
@@ -234,7 +234,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               type="text"
               value={formData.founded}
               onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
@@ -243,7 +243,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               type="text"
               value={formData.headquarters}
               onChange={(e) => setFormData({ ...formData, headquarters: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             />
           </div>
           <div>
@@ -252,7 +252,7 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
               type="url"
               value={formData.website}
               onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+              className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
             />
           </div>
         </div>
@@ -263,14 +263,14 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
             rows={4}
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="mt-1 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-border rounded-md"
+            className="mt-1 shadow-sm focus:ring-navy focus:border-navy block w-full sm:text-sm border-border rounded-md"
           />
         </div>
 
         <div className="mt-6 flex justify-end">
           <button
             type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-navy hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
           >
             Save Changes
           </button>
@@ -291,7 +291,7 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
   if (!isEditing) {
     return (
       <div className="space-y-6">
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-bg-surface shadow rounded-lg p-6">
           <h3 className="text-lg font-medium text-text-primary mb-4">Company Culture</h3>
           <p className="text-text-secondary mb-6">{cultureData.cultureDescription}</p>
           
@@ -370,7 +370,7 @@ function LiftoutHistory() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-bg-surface shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-text-primary mb-4">Liftout History</h3>
         
         <div className="space-y-4">
@@ -395,7 +395,7 @@ function LiftoutHistory() {
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-bg-surface shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-text-primary mb-4">Liftout Success Metrics</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -430,7 +430,7 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-bg-surface shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-text-primary mb-4">Ideal Team Profile</h3>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -493,7 +493,7 @@ function TeamRequirements({ isEditing }: { isEditing: boolean }) {
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-bg-surface shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-text-primary mb-4">Integration Approach</h3>
         <div className="space-y-4">
           <div>

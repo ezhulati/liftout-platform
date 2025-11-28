@@ -141,7 +141,7 @@ export default function TeamManagePage() {
   if (error || !teamData) {
     return (
       <div className="text-center py-12">
-        <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-red-400" />
+        <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-error" />
         <h3 className="mt-2 text-sm font-medium text-text-primary">Unable to load team data</h3>
         <p className="mt-1 text-sm text-text-tertiary">
           {error?.message || 'Please try again later.'}
@@ -345,7 +345,7 @@ export default function TeamManagePage() {
       {/* Invite Form Modal */}
       {showInviteForm && (
         <div className="fixed inset-0 bg-bg-alt0 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-bg-surface rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-text-primary">Invite Team Member</h3>
               <button

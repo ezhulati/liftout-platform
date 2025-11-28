@@ -214,7 +214,7 @@ export function InvitationManager({ teamId, onInvitationUpdate }: InvitationMana
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-border">
             {invitations.map((invitation) => (
               <div key={invitation.id} className="px-4 py-4">
                 <div className="flex items-center justify-between">

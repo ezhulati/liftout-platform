@@ -126,7 +126,7 @@ function RoleChangeModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-bg-surface p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title as="h3" className="text-lg font-medium text-text-primary mb-4">
                   Change Role for {member.name}
                 </Dialog.Title>
@@ -233,7 +233,7 @@ function RoleChangeModal({
                       type="button"
                       onClick={onClose}
                       disabled={loading}
-                      className="px-4 py-2 text-sm font-medium text-text-secondary bg-white border border-border rounded-md shadow-sm hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50"
+                      className="px-4 py-2 text-sm font-medium text-text-secondary bg-bg-surface border border-border rounded-md shadow-sm hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy disabled:opacity-50"
                     >
                       Cancel
                     </button>
@@ -389,8 +389,8 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
       </div>
 
       {/* Members List */}
-      <div className="bg-white rounded-lg border border-border overflow-hidden">
-        <div className="divide-y divide-gray-200">
+      <div className="bg-bg-surface rounded-lg border border-border overflow-hidden">
+        <div className="divide-y divide-border">
           {members.map((member) => (
             <div key={member.id} className="p-4">
               <div className="flex items-center justify-between">

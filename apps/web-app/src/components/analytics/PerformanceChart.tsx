@@ -197,7 +197,7 @@ export function PerformanceChart({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-border">
+    <div className="bg-bg-surface p-6 rounded-lg border border-border">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">

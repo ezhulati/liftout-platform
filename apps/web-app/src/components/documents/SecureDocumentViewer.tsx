@@ -486,7 +486,7 @@ export function SecureDocumentViewer({
       {/* Share Modal */}
       {shareModalDoc && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+          <div className="bg-bg-surface rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">Share Document</h3>
               <button
@@ -505,7 +505,7 @@ export function SecureDocumentViewer({
                 <textarea
                   value={shareOptions.recipientEmails}
                   onChange={(e) => setShareOptions({ ...shareOptions, recipientEmails: e.target.value })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
                   rows={3}
                   placeholder="user1@company.com, user2@company.com"
                 />
@@ -518,7 +518,7 @@ export function SecureDocumentViewer({
                 <select
                   value={shareOptions.shareType}
                   onChange={(e) => setShareOptions({ ...shareOptions, shareType: e.target.value as any })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
                 >
                   <option value="view">View Only</option>
                   <option value="download">View & Download</option>
@@ -534,7 +534,7 @@ export function SecureDocumentViewer({
                   type="number"
                   value={shareOptions.expiresInDays}
                   onChange={(e) => setShareOptions({ ...shareOptions, expiresInDays: parseInt(e.target.value) })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
                   min="1"
                   max="365"
                 />
@@ -546,7 +546,7 @@ export function SecureDocumentViewer({
                     type="checkbox"
                     checked={shareOptions.notifyOnAccess}
                     onChange={(e) => setShareOptions({ ...shareOptions, notifyOnAccess: e.target.checked })}
-                    className="rounded border-border text-navy focus:ring-blue-500"
+                    className="rounded border-border text-navy focus:ring-navy"
                   />
                   <span className="ml-2 text-sm text-text-secondary">Notify me when accessed</span>
                 </label>
@@ -556,7 +556,7 @@ export function SecureDocumentViewer({
                     type="checkbox"
                     checked={shareOptions.passwordProtected}
                     onChange={(e) => setShareOptions({ ...shareOptions, passwordProtected: e.target.checked })}
-                    className="rounded border-border text-navy focus:ring-blue-500"
+                    className="rounded border-border text-navy focus:ring-navy"
                   />
                   <span className="ml-2 text-sm text-text-secondary">Password protect link</span>
                 </label>
@@ -569,7 +569,7 @@ export function SecureDocumentViewer({
                 <textarea
                   value={shareOptions.customMessage}
                   onChange={(e) => setShareOptions({ ...shareOptions, customMessage: e.target.value })}
-                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-navy"
+                  className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
                   rows={2}
                   placeholder="Add a message for recipients..."
                 />

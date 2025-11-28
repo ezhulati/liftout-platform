@@ -173,7 +173,7 @@ export default function SearchPage() {
               placeholder={isCompanyUser ? "Search teams by expertise, industry, or company..." : "Search opportunities by title, company, or description..."}
               value={filters.query}
               onChange={(e) => setFilters({ ...filters, query: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-navy focus:border-navy"
             />
           </div>
           <button
@@ -316,7 +316,7 @@ export default function SearchPage() {
 
 function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+    <div className="bg-bg-surface rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-text-primary">{team.name}</h3>
@@ -386,18 +386,18 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
 
 function OpportunityCard({ opportunity }: { opportunity: any }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+    <div className="bg-bg-surface rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-text-primary">{opportunity.title}</h3>
           <p className="text-text-secondary">{opportunity.company}</p>
         </div>
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          opportunity.urgency === 'High' 
-            ? 'bg-red-100 text-red-800'
+          opportunity.urgency === 'High'
+            ? 'bg-error-light text-error'
             : opportunity.urgency === 'Medium'
             ? 'bg-gold-100 text-gold-700'
-            : 'bg-success-light text-success-dark'
+            : 'bg-success-light text-success'
         }`}>
           {opportunity.urgency} Priority
         </span>

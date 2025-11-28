@@ -420,7 +420,7 @@ export default function EditTeamPage() {
                   name="remoteWork"
                   checked={formData.remoteWork}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-navy focus:ring-blue-500 border-border rounded"
+                  className="h-4 w-4 text-navy focus:ring-navy border-border rounded"
                 />
                 <label htmlFor="remoteWork" className="ml-2 block text-sm text-text-primary">
                   Open to remote/hybrid opportunities
@@ -500,7 +500,7 @@ export default function EditTeamPage() {
                 name="confidentialProfile"
                 checked={formData.confidentialProfile}
                 onChange={handleInputChange}
-                className="h-4 w-4 text-navy focus:ring-blue-500 border-border rounded"
+                className="h-4 w-4 text-navy focus:ring-navy border-border rounded"
               />
               <label htmlFor="confidentialProfile" className="ml-2 block text-sm text-text-primary">
                 Make profile confidential (only visible to verified companies)
