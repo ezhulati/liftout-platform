@@ -67,33 +67,33 @@ export function DiscoveryDashboard() {
           <h1 className="text-2xl font-bold text-text-primary">Team discovery engine</h1>
           <p className="text-text-secondary">Market intelligence and strategic team acquisition tracking</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setViewMode('targets')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'targets'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Discovery targets
           </button>
           <button
             onClick={() => setViewMode('market')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'market'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Market intelligence
           </button>
           <button
             onClick={() => setViewMode('signals')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg min-h-11 ${
+            className={`px-4 py-3 text-base font-medium rounded-lg min-h-12 ${
               viewMode === 'signals'
                 ? 'bg-navy-50 text-navy border border-navy-200'
-                : 'text-text-tertiary hover:text-text-primary'
+                : 'text-text-tertiary hover:text-text-primary hover:bg-bg-alt'
             }`}
           >
             Signal analysis
@@ -112,7 +112,7 @@ export function DiscoveryDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-text-tertiary truncate">
+                    <dt className="text-base font-medium text-text-tertiary truncate">
                       {item.name}
                     </dt>
                     <dd className="text-lg font-medium text-text-primary">
@@ -122,7 +122,7 @@ export function DiscoveryDashboard() {
                 </div>
               </div>
               <div className="mt-3">
-                <span className="text-sm text-text-tertiary">{item.change}</span>
+                <span className="text-base text-text-tertiary">{item.change}</span>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function DiscoveryDashboard() {
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
                 <h3 className="text-lg font-medium text-text-primary">Discovery targets</h3>
-                <p className="text-sm text-text-tertiary">Prioritized by strategic value and acquisition opportunity</p>
+                <p className="text-base text-text-tertiary">Prioritized by strategic value and acquisition opportunity</p>
               </div>
               <div className="divide-y divide-border">
                 {prioritizedTargets.map((target) => (
@@ -217,7 +217,7 @@ export function DiscoveryDashboard() {
               <div className="card">
                 <div className="px-6 py-4 border-b border-border">
                   <h3 className="text-lg font-medium text-text-primary">Intelligence report</h3>
-                  <p className="text-sm text-text-tertiary">{selectedTarget.targetTeam}</p>
+                  <p className="text-base text-text-tertiary">{selectedTarget.targetTeam}</p>
                 </div>
                 <div className="p-6 space-y-6">
                   {/* Performance Metrics */}
@@ -304,8 +304,8 @@ export function DiscoveryDashboard() {
               <div className="card p-6">
                 <div className="text-center text-text-tertiary">
                   <EyeIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-                  <h3 className="mt-2 text-sm font-medium text-text-primary">Select a target</h3>
-                  <p className="mt-1 text-sm text-text-tertiary">
+                  <h3 className="mt-2 text-base font-medium text-text-primary">Select a target</h3>
+                  <p className="mt-1 text-base text-text-tertiary">
                     Choose a discovery target to view detailed intelligence
                   </p>
                 </div>
@@ -321,7 +321,7 @@ export function DiscoveryDashboard() {
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
               <h3 className="text-lg font-medium text-text-primary">Market intelligence</h3>
-              <p className="text-sm text-text-tertiary">Industry trends and liftout activity</p>
+              <p className="text-base text-text-tertiary">Industry trends and liftout activity</p>
             </div>
             <div className="p-6">
               <div className="space-y-6">
@@ -394,7 +394,7 @@ export function DiscoveryDashboard() {
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
               <h3 className="text-lg font-medium text-text-primary">Recent market activity</h3>
-              <p className="text-sm text-text-tertiary">Notable team acquisitions in target sectors</p>
+              <p className="text-base text-text-tertiary">Notable team acquisitions in target sectors</p>
             </div>
             <div className="divide-y divide-border">
               <div className="p-6">
@@ -454,7 +454,7 @@ export function DiscoveryDashboard() {
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
             <h3 className="text-lg font-medium text-text-primary">Signal analysis</h3>
-            <p className="text-sm text-text-tertiary">Real-time indicators of liftout opportunities across targets</p>
+            <p className="text-base text-text-tertiary">Real-time indicators of liftout opportunities across targets</p>
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
