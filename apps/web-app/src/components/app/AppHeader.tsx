@@ -44,7 +44,7 @@ export function AppHeader({ user }: AppHeaderProps) {
       <div className="flex h-16 items-center gap-x-4 border-b border-border bg-bg-surface px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none lg:border-0">
         <button
           type="button"
-          className="-m-2.5 p-2.5 text-text-secondary hover:text-text-primary lg:hidden transition-colors duration-fast"
+          className="min-h-12 min-w-12 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-elevated rounded-lg lg:hidden transition-colors duration-fast"
           onClick={() => {
             // This would toggle mobile sidebar - implement with context if needed
           }}
@@ -76,7 +76,7 @@ export function AppHeader({ user }: AppHeaderProps) {
           <div className="flex items-center gap-x-4 lg:gap-x-6">
             <button
               type="button"
-              className="-m-2.5 p-2.5 text-text-tertiary hover:text-text-primary transition-colors duration-fast"
+              className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-elevated rounded-lg transition-colors duration-fast"
             >
               <span className="sr-only">View notifications</span>
               <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -87,7 +87,7 @@ export function AppHeader({ user }: AppHeaderProps) {
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative">
-              <Menu.Button className="-m-1.5 flex items-center p-1.5 rounded-lg hover:bg-bg-elevated transition-colors duration-fast">
+              <Menu.Button className="min-h-12 flex items-center px-2 rounded-lg hover:bg-bg-elevated transition-colors duration-fast">
                 <span className="sr-only">Open user menu</span>
                 {user.photoURL ? (
                   <Image
@@ -138,13 +138,13 @@ export function AppHeader({ user }: AppHeaderProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (
                         <Link
                           href={item.href}
-                          className={`block px-4 py-2 text-sm transition-colors duration-fast ${
+                          className={`flex items-center px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
                             active ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary'
                           }`}
                         >
@@ -158,7 +158,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                     {({ active }) => (
                       <button
                         onClick={handleSignOut}
-                        className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-fast ${
+                        className={`flex items-center w-full text-left px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
                           active ? 'bg-bg-elevated text-error' : 'text-text-secondary'
                         }`}
                       >

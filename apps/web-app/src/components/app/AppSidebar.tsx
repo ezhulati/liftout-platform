@@ -146,7 +146,7 @@ export function AppSidebar() {
                 ) : (
                   <UserGroupIcon className="h-4 w-4 text-gold" />
                 )}
-                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                <span className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
                   {isCompanyUser ? 'Company Account' : 'Team Account'}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export function AppSidebar() {
             {isCompanyUser && (
               <>
                 <div className="pt-6 pb-2">
-                  <h3 className="px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+                  <h3 className="px-3 text-sm font-semibold text-text-tertiary uppercase tracking-wider">
                     Company Tools
                   </h3>
                 </div>
@@ -206,7 +206,7 @@ export function AppSidebar() {
                 ) : (
                   <UserGroupIcon className="h-4 w-4 text-gold" />
                 )}
-                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                <span className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
                   {isCompanyUser ? 'Company Account' : 'Team Account'}
                 </span>
               </div>
@@ -222,7 +222,7 @@ export function AppSidebar() {
             {isCompanyUser && (
               <>
                 <div className="pt-6 pb-2">
-                  <h3 className="px-3 text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+                  <h3 className="px-3 text-sm font-semibold text-text-tertiary uppercase tracking-wider">
                     Company Tools
                   </h3>
                 </div>
