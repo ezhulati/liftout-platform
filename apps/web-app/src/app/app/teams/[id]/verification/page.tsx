@@ -2,7 +2,8 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { TeamVerification } from '@/components/teams/TeamVerification';
 import Link from 'next/link';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { teamService } from '@/lib/firestore';
 
 interface TeamVerificationPageProps {
   params: {
@@ -10,132 +11,228 @@ interface TeamVerificationPageProps {
   };
 }
 
-export default async function TeamVerificationPage({ params }: TeamVerificationPageProps) {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    return null;
-  }
-
-  // Mock team data for demo purposes - simplified version for verification component
-  const mockTeam = {
-    id: params.id,
-    name: 'Elite FinTech Analytics Team',
-    description: 'Experienced quantitative finance team specializing in risk modeling and algorithmic trading',
-    industry: ['Financial Services', 'Technology'],
-    specializations: ['Quantitative Analysis', 'Risk Modeling', 'Algorithmic Trading'],
-    size: 5,
-    location: {
-      primary: 'New York, NY',
-      secondary: ['London', 'Singapore'],
-      remote: true,
+// Fallback mock data in case Firestore is unavailable
+const getFallbackTeam = (teamId: string) => ({
+  id: teamId,
+  name: 'Elite FinTech Analytics Team',
+  description: 'Experienced quantitative finance team specializing in risk modeling and algorithmic trading',
+  industry: ['Financial Services', 'Technology'],
+  specializations: ['Quantitative Analysis', 'Risk Modeling', 'Algorithmic Trading'],
+  size: 5,
+  location: {
+    primary: 'New York, NY',
+    secondary: ['London', 'Singapore'],
+    remote: true,
+  },
+  members: [
+    {
+      id: 'member_1',
+      name: 'Alex Thompson',
+      role: 'Lead Quantitative Analyst',
+      experience: 8,
+      skills: ['Python', 'R', 'Machine Learning', 'Risk Modeling'],
+      bio: 'Former Goldman Sachs quant with expertise in derivatives pricing',
+      education: 'PhD Mathematics, MIT',
+      certifications: ['FRM', 'CQF'],
     },
-    members: [
+  ],
+  leaderId: 'user_1',
+  establishedDate: new Date('2019-03-15'),
+  performanceMetrics: {
+    projectsCompleted: 45,
+    clientSatisfactionScore: 4.8,
+    successRate: 92,
+    avgProjectValue: 2500000,
+    repeatClientRate: 78,
+    teamCohesionScore: 89,
+    avgExperienceYears: 6.5,
+  },
+  portfolioItems: [],
+  dynamics: {
+    communicationStyle: 'Direct and analytical',
+    decisionMakingProcess: 'Data-driven consensus',
+    conflictResolutionApproach: 'Evidence-based discussion',
+    leadershipStyle: 'Collaborative',
+    meetingCadence: 'Daily standups, weekly planning',
+    collaborationTools: ['Slack', 'Jira', 'Git'],
+    workLifeBalance: 'High focus on sustainable pace',
+  },
+  values: ['Data-driven decisions', 'Continuous learning', 'Client success'],
+  workingMethodology: ['Agile', 'Test-driven development', 'Code review'],
+  verification: {
+    status: 'pending' as const,
+    documents: [
       {
-        id: 'member_1',
-        name: 'Alex Thompson',
-        role: 'Lead Quantitative Analyst',
-        experience: 8,
-        skills: ['Python', 'R', 'Machine Learning', 'Risk Modeling'],
-        bio: 'Former Goldman Sachs quant with expertise in derivatives pricing',
-        education: 'PhD Mathematics, MIT',
-        certifications: ['FRM', 'CQF'],
+        type: 'employment_verification',
+        url: 'https://example.com/doc1.pdf',
+        uploadedAt: new Date('2024-01-15'),
+        verified: true,
+      },
+      {
+        type: 'client_testimonial',
+        url: 'https://example.com/doc2.pdf',
+        uploadedAt: new Date('2024-01-20'),
+        verified: false,
       },
     ],
-    leaderId: 'user_1',
-    establishedDate: new Date('2019-03-15'),
+    references: [
+      {
+        name: 'Sarah Chen',
+        title: 'VP of Engineering',
+        company: 'Goldman Sachs',
+        email: 'sarah.chen@gs.com',
+        phone: '+1 (212) 555-0123',
+        relationship: 'former_manager' as const,
+        responseStatus: 'positive' as const,
+        contactedAt: new Date('2024-01-18'),
+        notes: 'Exceptional team with proven track record in quantitative analysis and risk modeling.',
+      },
+      {
+        name: 'Michael Rodriguez',
+        title: 'Managing Director',
+        company: 'JPMorgan Chase',
+        email: 'michael.rodriguez@jpmorgan.com',
+        phone: '+1 (212) 555-0456',
+        relationship: 'client' as const,
+        responseStatus: 'pending' as const,
+      },
+    ],
+    backgroundChecks: [
+      {
+        status: 'clear' as const,
+        provider: 'Sterling Background',
+        completedAt: new Date('2024-01-22'),
+      },
+    ],
+  },
+  testimonials: [],
+  liftoutHistory: {
+    previousLiftouts: [],
+    currentEmployer: {
+      company: 'Acme Financial Services',
+      startDate: new Date('2019-03-15'),
+      position: 'Quantitative Analytics Team',
+      department: 'Risk Management',
+    },
+    availability: {
+      timeline: '3-6 months',
+      noticePeriod: '2 months',
+      constraints: ['Non-compete expires in Q2 2024'],
+      flexibility: 'Open to relocation',
+    },
+    liftoutReadiness: {
+      teamAlignment: true,
+      individualAlignment: [true, true, true, true, true],
+      compensationExpectations: 'Competitive with 20% uplift',
+      culturalFit: ['Innovation-focused', 'Data-driven', 'Collaborative'],
+    },
+  },
+  createdAt: new Date('2024-01-10'),
+  updatedAt: new Date('2024-01-20'),
+});
+
+// Transform Firestore team data to verification page format
+function transformFirestoreTeam(firestoreTeam: any, teamId: string) {
+  return {
+    id: firestoreTeam.id || teamId,
+    name: firestoreTeam.name || 'Unnamed Team',
+    description: firestoreTeam.description || '',
+    industry: [firestoreTeam.industry].filter(Boolean),
+    specializations: firestoreTeam.skills || [],
+    size: firestoreTeam.size || firestoreTeam.memberIds?.length || 1,
+    location: {
+      primary: firestoreTeam.location || 'Not specified',
+      secondary: [],
+      remote: true,
+    },
+    members: [],
+    leaderId: firestoreTeam.leaderId || '',
+    establishedDate: firestoreTeam.createdAt?.toDate?.() || new Date(),
     performanceMetrics: {
-      projectsCompleted: 45,
-      clientSatisfactionScore: 4.8,
-      successRate: 92,
-      avgProjectValue: 2500000,
-      repeatClientRate: 78,
-      teamCohesionScore: 89,
-      avgExperienceYears: 6.5,
+      projectsCompleted: firestoreTeam.experience?.successfulProjects || 0,
+      clientSatisfactionScore: 0,
+      successRate: 0,
+      avgProjectValue: 0,
+      repeatClientRate: 0,
+      teamCohesionScore: 0,
+      avgExperienceYears: firestoreTeam.experience?.yearsWorkedTogether || 0,
     },
     portfolioItems: [],
     dynamics: {
-      communicationStyle: 'Direct and analytical',
-      decisionMakingProcess: 'Data-driven consensus',
-      conflictResolutionApproach: 'Evidence-based discussion',
-      leadershipStyle: 'Collaborative',
-      meetingCadence: 'Daily standups, weekly planning',
-      collaborationTools: ['Slack', 'Jira', 'Git'],
-      workLifeBalance: 'High focus on sustainable pace',
+      communicationStyle: '',
+      decisionMakingProcess: '',
+      conflictResolutionApproach: '',
+      leadershipStyle: '',
+      meetingCadence: '',
+      collaborationTools: [],
+      workLifeBalance: '',
     },
-    values: ['Data-driven decisions', 'Continuous learning', 'Client success'],
-    workingMethodology: ['Agile', 'Test-driven development', 'Code review'],
+    values: [],
+    workingMethodology: [],
     verification: {
-      status: 'pending' as const,
-      documents: [
-        {
-          type: 'employment_verification',
-          url: 'https://example.com/doc1.pdf',
-          uploadedAt: new Date('2024-01-15'),
-          verified: true,
-        },
-        {
-          type: 'client_testimonial',
-          url: 'https://example.com/doc2.pdf',
-          uploadedAt: new Date('2024-01-20'),
-          verified: false,
-        },
-      ],
-      references: [
-        {
-          name: 'Sarah Chen',
-          title: 'VP of Engineering',
-          company: 'Goldman Sachs',
-          email: 'sarah.chen@gs.com',
-          phone: '+1 (212) 555-0123',
-          relationship: 'former_manager' as const,
-          responseStatus: 'positive' as const,
-          contactedAt: new Date('2024-01-18'),
-          notes: 'Exceptional team with proven track record in quantitative analysis and risk modeling.',
-        },
-        {
-          name: 'Michael Rodriguez',
-          title: 'Managing Director',
-          company: 'JPMorgan Chase',
-          email: 'michael.rodriguez@jpmorgan.com',
-          phone: '+1 (212) 555-0456',
-          relationship: 'client' as const,
-          responseStatus: 'pending' as const,
-        },
-      ],
-      backgroundChecks: [
-        {
-          status: 'clear' as const,
-          provider: 'Sterling Background',
-          completedAt: new Date('2024-01-22'),
-        },
-      ],
+      status: firestoreTeam.verificationStatus || 'pending',
+      documents: [],
+      references: [],
+      backgroundChecks: [],
     },
     testimonials: [],
     liftoutHistory: {
       previousLiftouts: [],
       currentEmployer: {
-        company: 'Acme Financial Services',
-        startDate: new Date('2019-03-15'),
-        position: 'Quantitative Analytics Team',
-        department: 'Risk Management',
+        company: '',
+        startDate: new Date(),
+        position: '',
+        department: '',
       },
       availability: {
-        timeline: '3-6 months',
-        noticePeriod: '2 months',
-        constraints: ['Non-compete expires in Q2 2024'],
-        flexibility: 'Open to relocation',
+        timeline: firestoreTeam.availability?.timeframe || '',
+        noticePeriod: firestoreTeam.availability?.preferredNoticeTime
+          ? `${firestoreTeam.availability.preferredNoticeTime} weeks`
+          : '',
+        constraints: [],
+        flexibility: '',
       },
       liftoutReadiness: {
-        teamAlignment: true,
-        individualAlignment: [true, true, true, true, true],
-        compensationExpectations: 'Competitive with 20% uplift',
-        culturalFit: ['Innovation-focused', 'Data-driven', 'Collaborative'],
+        teamAlignment: firestoreTeam.availability?.status === 'available',
+        individualAlignment: [],
+        compensationExpectations: firestoreTeam.compensation
+          ? `${firestoreTeam.compensation.expectations?.min || 0}-${firestoreTeam.compensation.expectations?.max || 0} ${firestoreTeam.compensation.expectations?.currency || 'USD'}`
+          : '',
+        culturalFit: [],
       },
     },
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-20'),
+    createdAt: firestoreTeam.createdAt?.toDate?.() || new Date(),
+    updatedAt: firestoreTeam.updatedAt?.toDate?.() || new Date(),
   };
+}
+
+export default async function TeamVerificationPage({ params }: TeamVerificationPageProps) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return null;
+  }
+
+  let team;
+  let usingFallback = false;
+
+  try {
+    // Try to fetch team from Firestore
+    const firestoreTeam = await teamService.getTeamById(params.id);
+
+    if (firestoreTeam) {
+      team = transformFirestoreTeam(firestoreTeam, params.id);
+    } else {
+      // Team not found in Firestore, use fallback
+      team = getFallbackTeam(params.id);
+      usingFallback = true;
+    }
+  } catch (error) {
+    console.error('Error fetching team from Firestore:', error);
+    // Use fallback data if Firestore fails
+    team = getFallbackTeam(params.id);
+    usingFallback = true;
+  }
 
   const handleUpdate = () => {
     // In a real app, this would trigger a refetch of team data
@@ -159,8 +256,23 @@ export default async function TeamVerificationPage({ params }: TeamVerificationP
         </p>
       </div>
 
+      {/* Demo data notice */}
+      {usingFallback && (
+        <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
+          <div className="flex">
+            <ExclamationTriangleIcon className="h-5 w-5 text-gold-600 mr-3 flex-shrink-0" />
+            <div>
+              <h3 className="text-sm font-medium text-gold-800">Demo Data</h3>
+              <p className="text-sm text-gold-700 mt-1">
+                This team data is for demonstration purposes. Connect to Firestore to see real team verification information.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Team verification component */}
-      <TeamVerification team={mockTeam as any} onUpdate={handleUpdate} />
+      <TeamVerification team={team as any} onUpdate={handleUpdate} />
     </div>
   );
 }

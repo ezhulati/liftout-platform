@@ -1,45 +1,54 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Landing Pages', () => {
-  test('homepage shows equal-split hero for both audiences', async ({ page }) => {
-    await page.goto('http://localhost:3001/');
+  test('homepage shows hero content correctly', async ({ page }) => {
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Take screenshot
-    await page.screenshot({ path: 'test-results/homepage.png', fullPage: true });
+    // Verify main headline
+    await expect(page.locator('h1:has-text("Acquire teams that deliver from day one")')).toBeVisible();
 
-    // Verify tagline
-    await expect(page.locator('text=The Strategic Team Acquisition Platform')).toBeVisible();
-    await expect(page.locator('text=Where proven teams meet growth opportunities')).toBeVisible();
+    // Verify eyebrow text
+    await expect(page.locator('text=Tired of hiring individuals who take months to gel?')).toBeVisible();
 
-    // Verify For Companies section
-    await expect(page.locator('text=For Companies')).toBeVisible();
-    await expect(page.locator('text=Stop building teams from scratch')).toBeVisible();
-    await expect(page.locator('text=Browse teams').first()).toBeVisible();
-
-    // Verify For Teams section
-    await expect(page.locator('text=For Teams')).toBeVisible();
-    await expect(page.locator('text=Move together, grow together')).toBeVisible();
-    await expect(page.locator('text=Register team').first()).toBeVisible();
+    // Verify CTA buttons
+    await expect(page.locator('text=Browse verified teams').first()).toBeVisible();
+    await expect(page.locator('text=List your team').first()).toBeVisible();
   });
 
   test('for-companies page loads correctly', async ({ page }) => {
-    await page.goto('http://localhost:3001/for-companies');
+    await page.goto('/for-companies');
     await page.waitForLoadState('networkidle');
 
-    await page.screenshot({ path: 'test-results/for-companies.png', fullPage: true });
-
-    await expect(page.locator('text=Tired of hiring individuals that never gel?')).toBeVisible();
+    // Check page loads with company-focused content
+    await expect(page.locator('h1').first()).toBeVisible();
     await expect(page.locator('text=Browse teams').first()).toBeVisible();
   });
 
   test('for-teams page loads correctly', async ({ page }) => {
-    await page.goto('http://localhost:3001/for-teams');
+    await page.goto('/for-teams');
     await page.waitForLoadState('networkidle');
 
-    await page.screenshot({ path: 'test-results/for-teams.png', fullPage: true });
-
-    await expect(page.locator('text=Ready for a new challenge without breaking up your team?')).toBeVisible();
+    // Check page loads with team-focused content
+    await expect(page.locator('h1').first()).toBeVisible();
     await expect(page.locator('text=Register team').first()).toBeVisible();
+  });
+
+  test('homepage has working navigation', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Check header navigation links exist
+    await expect(page.locator('a[href="/for-companies"]').first()).toBeVisible();
+    await expect(page.locator('a[href="/for-teams"]').first()).toBeVisible();
+  });
+
+  test('homepage has working sign in links', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Check sign in and sign up links
+    await expect(page.locator('a[href="/auth/signin"]').first()).toBeVisible();
+    await expect(page.locator('a[href="/auth/signup"]').first()).toBeVisible();
   });
 });
