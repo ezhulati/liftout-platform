@@ -7,7 +7,8 @@ import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
-import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline';
+import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 import { FormField, RequiredFieldsNote } from '@/components/ui';
 
 const industries = [
@@ -256,32 +257,46 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'individual' }))}
-                  className={`rounded-xl border-2 p-4 text-center transition-all duration-fast ${
+                  className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'individual'
-                      ? 'border-navy bg-navy-50'
-                      : 'border-border hover:border-border-hover'
+                      ? 'border-navy-600 bg-navy-800 ring-2 ring-navy-600/30 ring-offset-2 shadow-lg'
+                      : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
+                  {formData.userType === 'individual' && (
+                    <CheckCircleIconSolid className="absolute top-2 right-2 w-6 h-6 text-white" />
+                  )}
                   <UserGroupIcon className={`w-8 h-8 mx-auto mb-2 ${
-                    formData.userType === 'individual' ? 'text-navy' : 'text-navy-400'
+                    formData.userType === 'individual' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className="font-semibold text-text-primary text-sm">Individual / Team</div>
-                  <div className="text-text-tertiary text-sm mt-1">Looking for opportunities</div>
+                  <div className={`font-semibold text-sm ${
+                    formData.userType === 'individual' ? 'text-white' : 'text-text-primary'
+                  }`}>Individual / Team</div>
+                  <div className={`text-sm mt-1 ${
+                    formData.userType === 'individual' ? 'text-navy-200' : 'text-text-tertiary'
+                  }`}>Looking for opportunities</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'company' }))}
-                  className={`rounded-xl border-2 p-4 text-center transition-all duration-fast ${
+                  className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'company'
-                      ? 'border-gold bg-gold-50'
-                      : 'border-border hover:border-border-hover'
+                      ? 'border-gold-600 bg-gold-600 ring-2 ring-gold-600/30 ring-offset-2 shadow-lg'
+                      : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
+                  {formData.userType === 'company' && (
+                    <CheckCircleIconSolid className="absolute top-2 right-2 w-6 h-6 text-white" />
+                  )}
                   <BuildingOffice2Icon className={`w-8 h-8 mx-auto mb-2 ${
-                    formData.userType === 'company' ? 'text-gold-600' : 'text-gold-400'
+                    formData.userType === 'company' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className="font-semibold text-text-primary text-sm">Company</div>
-                  <div className="text-text-tertiary text-sm mt-1">Hiring teams</div>
+                  <div className={`font-semibold text-sm ${
+                    formData.userType === 'company' ? 'text-white' : 'text-text-primary'
+                  }`}>Company</div>
+                  <div className={`text-sm mt-1 ${
+                    formData.userType === 'company' ? 'text-gold-100' : 'text-text-tertiary'
+                  }`}>Hiring teams</div>
                 </button>
               </div>
             </div>
