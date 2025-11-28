@@ -44,10 +44,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(false);
 
-  // Derived state
-  const isAuthenticated = !!session && !!user;
+  // Derived state - use session userType as fallback when Firestore user not loaded
+  const isAuthenticated = !!session;
   const isLoading = status === 'loading';
-  const userType = user?.type || null;
+  const userType = user?.type || (session?.user?.userType as 'individual' | 'company') || null;
   const isIndividual = userType === 'individual';
   const isCompany = userType === 'company';
 

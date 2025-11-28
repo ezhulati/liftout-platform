@@ -71,16 +71,13 @@ const typeColors: Record<string, string> = {
 export default function OpportunityDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { userData } = useAuth();
+  const { userData, isCompany: isCompanyUser, isIndividual: isTeamUser } = useAuth();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
 
-  // Determine user role and ownership
-  const isCompanyUser = userData?.type === 'company';
-  const isTeamUser = userData?.type === 'individual';
   // Check if user owns this opportunity (by createdBy field or if company name matches for demo)
   const isOwner = opportunity?.createdBy === userData?.id ||
     (isCompanyUser && opportunity?.company === 'NextGen Financial'); // Demo company user's company

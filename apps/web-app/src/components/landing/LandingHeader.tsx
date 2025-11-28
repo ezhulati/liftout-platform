@@ -81,8 +81,8 @@ export function LandingHeader() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled || isMobileMenuOpen
-          ? 'bg-bg-surface border-b border-border shadow-sm'
-          : 'bg-bg-surface/95 backdrop-blur-sm'
+          ? 'bg-white border-b border-border shadow-sm'
+          : 'bg-white/95 backdrop-blur-sm'
       } ${
         isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
       }`}
@@ -114,7 +114,7 @@ export function LandingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text-secondary hover:text-text-primary font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2"
+                className="text-gray-600 hover:text-gray-900 font-medium text-lg transition-colors duration-200 min-h-12 flex items-center px-2"
               >
                 {link.label}
               </Link>
@@ -125,7 +125,7 @@ export function LandingHeader() {
           <div className="flex items-center gap-4">
             <Link
               href="/auth/signin"
-              className="hidden sm:flex text-text-secondary hover:text-text-primary font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2"
+              className="hidden sm:flex text-gray-600 hover:text-gray-900 font-medium text-lg transition-colors duration-200 min-h-12 items-center px-2"
             >
               Sign in
             </Link>
@@ -139,7 +139,7 @@ export function LandingHeader() {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden w-12 h-12 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-200"
+              className="md:hidden w-12 h-12 flex items-center justify-center rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
