@@ -1,5 +1,5 @@
 [build]
-  command = "npm install -g pnpm && pnpm install && pnpm --filter @liftout/web-app run build"
+  command = "corepack enable && pnpm install && pnpm --filter @liftout/web-app run build"
   publish = "apps/web-app/.next"
 
 [build.environment]
