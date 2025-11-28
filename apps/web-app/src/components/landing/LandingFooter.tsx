@@ -6,36 +6,37 @@ export function LandingFooter() {
 
   return (
     <footer className="dark-section-deep" role="contentinfo">
-      {/* Pre-sale support banner (#12) */}
+      {/* Pre-sale support banner - Practical UI: 18px text, clear hierarchy */}
       <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
-              <p className="text-white font-semibold mb-1">
+              <p className="text-white font-semibold text-xl mb-2">
                 Questions before signing up?
               </p>
-              <p className="text-white/60 text-base">
+              <p className="text-white/70 text-lg">
                 Our team responds within 2 hours during business hours.
               </p>
             </div>
+            {/* Practical UI: Primary first, tertiary second */}
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-white/10 hover:bg-white/20 text-white text-base font-medium transition-colors duration-200 min-h-12"
+                className="btn-primary-on-dark gap-2 px-6 py-3 text-lg"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Contact us
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-white text-gray-900 text-base font-medium hover:bg-white/90 transition-colors duration-200 min-h-12"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 Schedule a call
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-4 py-3 text-lg text-white/80 underline underline-offset-4 hover:text-white transition-colors duration-200 min-h-12"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Send a message
               </Link>
             </div>
           </div>
@@ -62,7 +63,8 @@ export function LandingFooter() {
               />
             </Link>
 
-            <p className="text-white/60 max-w-md leading-relaxed mb-6">
+            {/* Practical UI: 18px body text */}
+            <p className="text-white/70 text-lg max-w-md leading-relaxed mb-6">
               The strategic alternative to individual hiring and costly acquisitions.
               Connect with proven teams ready for new challenges.
             </p>
@@ -94,16 +96,16 @@ export function LandingFooter() {
             </div>
           </div>
 
-          {/* Platform links */}
+          {/* Platform links - Practical UI: 18px text, 48px touch targets */}
           <nav aria-label="Platform navigation">
-            <h3 className="font-semibold text-white mb-4">
+            <h3 className="font-semibold text-white text-lg mb-5">
               Platform
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               <li>
                 <Link
                   href="/for-companies"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   For companies
                 </Link>
@@ -111,7 +113,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/for-teams"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   For teams
                 </Link>
@@ -119,7 +121,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/#features"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   Features
                 </Link>
@@ -127,7 +129,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/#faq"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   FAQ
                 </Link>
@@ -135,16 +137,16 @@ export function LandingFooter() {
             </ul>
           </nav>
 
-          {/* Support links */}
+          {/* Support links - Practical UI: 18px text, 48px touch targets */}
           <nav aria-label="Support navigation">
-            <h3 className="font-semibold text-white mb-4">
+            <h3 className="font-semibold text-white text-lg mb-5">
               Support
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               <li>
                 <Link
                   href="/contact"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   Contact us
                 </Link>
@@ -152,7 +154,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   Privacy policy
                 </Link>
@@ -160,7 +162,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-white/60 hover:text-white transition-colors duration-200 text-base"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
                   Terms of service
                 </Link>
@@ -168,9 +170,9 @@ export function LandingFooter() {
             </ul>
 
             {/* Trust badges */}
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Trusted by</p>
-              <div className="flex items-center gap-2 text-white/50 text-xs">
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <p className="text-white/50 text-sm uppercase tracking-wider mb-3">Trusted by</p>
+              <div className="flex items-center gap-2 text-white/60 text-base">
                 <span>150+ teams</span>
                 <span className="text-white/30">|</span>
                 <span>12 industries</span>
@@ -179,25 +181,25 @@ export function LandingFooter() {
           </nav>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Bottom bar - Practical UI: 16px minimum for small text */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <p className="text-white/40 text-base">
+            <p className="text-white/50 text-base">
               &copy; {currentYear} Liftout. All rights reserved.
             </p>
-            <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 bg-white/5 rounded text-white/40 text-xs">
+            <span className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 bg-white/5 rounded text-white/50 text-sm">
               Founded 2024
             </span>
           </div>
-          <div className="flex items-center gap-6 text-white/40 text-sm">
+          <div className="flex items-center gap-6 text-white/50 text-base">
             <span className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
               256-bit encryption
             </span>
             <span className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               SOC 2 Compliant
