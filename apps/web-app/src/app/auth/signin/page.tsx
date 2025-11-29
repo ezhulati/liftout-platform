@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
@@ -14,6 +14,19 @@ export default function SignInPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const emailParam = params.get('email');
+    const passwordParam = params.get('password');
+    if (emailParam && passwordParam) {
+      setEmail(emailParam);
+      setPassword(passwordParam);
+      const fakeEvent = { preventDefault: () => {} } as unknown as React.FormEvent;
+      handleSubmit(fakeEvent);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount for URL param auto-login
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

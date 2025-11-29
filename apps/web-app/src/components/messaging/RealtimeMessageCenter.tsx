@@ -250,6 +250,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
         leaveConversation(selectedConversationId);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- markAsReadMutation.mutate is stable from react-query
   }, [selectedConversationId, joinConversation, leaveConversation]);
 
   // Handle Escape key to close modal - must be before early returns

@@ -263,6 +263,7 @@ export default function UsersPage() {
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
                         {user.profile?.profilePhotoUrl ? (
+                          /* eslint-disable-next-line @next/next/no-img-element -- Dynamic user avatar */
                           <img
                             src={user.profile.profilePhotoUrl}
                             alt=""

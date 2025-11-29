@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -44,20 +44,20 @@ export default function AIMatchingPage() {
     : isIndividual;
 
   // Demo data for team users
-  const demoTeams = isDemoUser && isTeamUser ? [{
+  const demoTeams = useMemo(() => isDemoUser && isTeamUser ? [{
     id: DEMO_ACCOUNTS.individual.team.id,
     name: DEMO_ACCOUNTS.individual.team.name,
     size: DEMO_ACCOUNTS.individual.team.size,
     industry: ['Financial Services', 'Technology'],
-  }] : [];
+  }] : [], [isDemoUser, isTeamUser]);
 
   // Demo data for company users
-  const demoOpportunities = isDemoUser && isCompanyUser ? DEMO_DATA.opportunities.map(opp => ({
+  const demoOpportunities = useMemo(() => isDemoUser && isCompanyUser ? DEMO_DATA.opportunities.map(opp => ({
     id: opp.id,
     title: opp.title,
     location: opp.location,
     company: opp.company,
-  })) : [];
+  })) : [], [isDemoUser, isCompanyUser]);
 
   // Get user's teams (for team users)
   const { data: userTeams } = useQuery({

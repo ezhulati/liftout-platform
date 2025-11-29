@@ -76,65 +76,19 @@ function ActionBadge({ action }: { action: string }) {
 export default function AuditLogPage() {
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
     async function fetchLogs() {
       try {
+        setLoading(true);
         const response = await fetch('/api/admin/audit');
-        if (response.ok) {
-          const data = await response.json();
-          setLogs(data.logs || []);
-        }
-      } catch (error) {
-        // Use mock data for development
-        setLogs([
-          {
-            id: '1',
-            action: 'user.view',
-            userId: 'admin-1',
-            resourceType: 'user',
-            resourceId: 'user-123',
-            createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-            ipAddress: '192.168.1.1',
-            userAgent: 'Mozilla/5.0',
-            user: { email: 'admin@liftout.com', firstName: 'Admin', lastName: 'User' },
-          },
-          {
-            id: '2',
-            action: 'verification.team.approve',
-            userId: 'admin-1',
-            resourceType: 'team',
-            resourceId: 'team-456',
-            createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-            ipAddress: '192.168.1.1',
-            userAgent: 'Mozilla/5.0',
-            user: { email: 'admin@liftout.com', firstName: 'Admin', lastName: 'User' },
-          },
-          {
-            id: '3',
-            action: 'user.suspend',
-            userId: 'admin-1',
-            resourceType: 'user',
-            resourceId: 'user-789',
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-            ipAddress: '192.168.1.1',
-            userAgent: 'Mozilla/5.0',
-            user: { email: 'admin@liftout.com', firstName: 'Admin', lastName: 'User' },
-            newValues: { reason: 'Violation of terms of service' },
-          },
-          {
-            id: '4',
-            action: 'admin.login',
-            userId: 'admin-1',
-            resourceType: 'session',
-            resourceId: null,
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
-            ipAddress: '192.168.1.1',
-            userAgent: 'Mozilla/5.0',
-            user: { email: 'admin@liftout.com', firstName: 'Admin', lastName: 'User' },
-          },
-        ]);
+        if (!response.ok) throw new Error('Failed to fetch audit logs');
+        const data = await response.json();
+        setLogs(data.logs || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
       }
@@ -197,6 +151,10 @@ export default function AuditLogPage() {
           <div className="p-8 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500 mx-auto"></div>
             <p className="text-gray-400 mt-4">Loading audit logs...</p>
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center">
+            <p className="text-red-400">{error}</p>
           </div>
         ) : filteredLogs.length === 0 ? (
           <div className="p-8 text-center">

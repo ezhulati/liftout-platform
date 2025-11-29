@@ -40,6 +40,7 @@ export default function FlaggedContentPage() {
 
   useEffect(() => {
     fetchFlaggedContent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchFlaggedContent uses page/status which are in deps
   }, [page, status]);
 
   const fetchFlaggedContent = async () => {

@@ -43,6 +43,7 @@ export default function ApplicationsPage() {
 
   useEffect(() => {
     fetchApplications();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchApplications uses page/status which are in deps
   }, [page, status]);
 
   const fetchApplications = async () => {

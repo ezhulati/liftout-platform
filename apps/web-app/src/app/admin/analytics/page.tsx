@@ -1,24 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ChartBarIcon,
   UsersIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  CurrencyDollarIcon,
-  ClockIcon,
+  BriefcaseIcon,
+  BuildingOfficeIcon,
+  DocumentTextIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 
-// Simple bar chart component (using Recharts in production)
+interface AnalyticsData {
+  overview: {
+    totalUsers: number;
+    newUsers: number;
+    userGrowth: number;
+    totalTeams: number;
+    newTeams: number;
+    teamGrowth: number;
+    totalCompanies: number;
+    newCompanies: number;
+    totalOpportunities: number;
+    activeOpportunities: number;
+    totalApplications: number;
+    newApplications: number;
+    applicationGrowth: number;
+    successfulMatches: number;
+    conversionRate: number;
+    activeConversations: number;
+    totalMessages: number;
+    newMessages: number;
+  };
+  charts: {
+    signupTrend: { label: string; value: number }[];
+    userTypeDistribution: { type: string; count: number }[];
+    applicationStatusDistribution: { status: string; count: number }[];
+  };
+  topTeams: { id: string; name: string; applicationCount: number }[];
+  recentActivity: {
+    newUsers: number;
+    newTeams: number;
+    newCompanies: number;
+    newApplications: number;
+    newMessages: number;
+  };
+  period: number;
+}
+
 function SimpleBarChart({ data }: { data: { label: string; value: number }[] }) {
-  const maxValue = Math.max(...data.map((d) => d.value));
+  const maxValue = Math.max(...data.map((d) => d.value), 1);
 
   return (
     <div className="space-y-2">
       {data.map((item, index) => (
         <div key={index} className="flex items-center gap-3">
-          <span className="text-xs text-gray-500 w-8">{item.label}</span>
+          <span className="text-xs text-gray-500 w-12">{item.label}</span>
           <div className="flex-1 h-6 bg-gray-800 rounded overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-red-600 to-red-500 rounded transition-all duration-500"
@@ -85,33 +123,46 @@ function MetricCard({
 }
 
 export default function AnalyticsPage() {
-  const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('30d');
+  const [period, setPeriod] = useState<'7' | '30' | '90'>('30');
+  const [data, setData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data
-  const metrics = {
-    users: { value: 1247, change: '+12.5%', changeType: 'increase' as const },
-    teams: { value: 89, change: '+8.3%', changeType: 'increase' as const },
-    opportunities: { value: 124, change: '-2.1%', changeType: 'decrease' as const },
-    applications: { value: 342, change: '+24.7%', changeType: 'increase' as const },
-  };
+  useEffect(() => {
+    async function fetchAnalytics() {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/admin/analytics?period=${period}`);
+        if (!response.ok) throw new Error('Failed to fetch analytics');
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const userGrowthData = [
-    { label: 'Mon', value: 45 },
-    { label: 'Tue', value: 52 },
-    { label: 'Wed', value: 38 },
-    { label: 'Thu', value: 65 },
-    { label: 'Fri', value: 48 },
-    { label: 'Sat', value: 32 },
-    { label: 'Sun', value: 28 },
-  ];
+    fetchAnalytics();
+  }, [period]);
 
-  const topIndustriesData = [
-    { label: 'Tech', value: 342 },
-    { label: 'Finance', value: 287 },
-    { label: 'Consult', value: 156 },
-    { label: 'Health', value: 98 },
-    { label: 'Legal', value: 67 },
-  ];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-red-400">{error}</p>
+      </div>
+    );
+  }
+
+  const overview = data?.overview;
 
   return (
     <div className="space-y-8">
@@ -124,7 +175,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          {(['7d', '30d', '90d'] as const).map((p) => (
+          {(['7', '30', '90'] as const).map((p) => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
@@ -134,7 +185,7 @@ export default function AnalyticsPage() {
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              {p === '7d' ? '7 days' : p === '30d' ? '30 days' : '90 days'}
+              {p === '7' ? '7 days' : p === '30' ? '30 days' : '90 days'}
             </button>
           ))}
         </div>
@@ -144,35 +195,53 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
           title="Total Users"
-          value={metrics.users.value.toLocaleString()}
-          change={metrics.users.change}
-          changeType={metrics.users.changeType}
-          period={`vs previous ${period}`}
+          value={overview?.totalUsers?.toLocaleString() || '0'}
+          change={`${overview?.userGrowth && overview.userGrowth >= 0 ? '+' : ''}${overview?.userGrowth || 0}%`}
+          changeType={
+            overview?.userGrowth && overview.userGrowth > 0
+              ? 'increase'
+              : overview?.userGrowth && overview.userGrowth < 0
+                ? 'decrease'
+                : 'neutral'
+          }
+          period={`${overview?.newUsers || 0} new in ${period}d`}
           icon={UsersIcon}
         />
         <MetricCard
           title="Active Teams"
-          value={metrics.teams.value}
-          change={metrics.teams.change}
-          changeType={metrics.teams.changeType}
-          period={`vs previous ${period}`}
+          value={overview?.totalTeams?.toLocaleString() || '0'}
+          change={`${overview?.teamGrowth && overview.teamGrowth >= 0 ? '+' : ''}${overview?.teamGrowth || 0}%`}
+          changeType={
+            overview?.teamGrowth && overview.teamGrowth > 0
+              ? 'increase'
+              : overview?.teamGrowth && overview.teamGrowth < 0
+                ? 'decrease'
+                : 'neutral'
+          }
+          period={`${overview?.newTeams || 0} new in ${period}d`}
           icon={ChartBarIcon}
         />
         <MetricCard
-          title="Open Opportunities"
-          value={metrics.opportunities.value}
-          change={metrics.opportunities.change}
-          changeType={metrics.opportunities.changeType}
-          period={`vs previous ${period}`}
-          icon={ClockIcon}
+          title="Companies"
+          value={overview?.totalCompanies?.toLocaleString() || '0'}
+          change={`${overview?.newCompanies || 0} new`}
+          changeType={overview?.newCompanies && overview.newCompanies > 0 ? 'increase' : 'neutral'}
+          period={`${overview?.activeOpportunities || 0} active opportunities`}
+          icon={BuildingOfficeIcon}
         />
         <MetricCard
           title="Applications"
-          value={metrics.applications.value}
-          change={metrics.applications.change}
-          changeType={metrics.applications.changeType}
-          period={`vs previous ${period}`}
-          icon={CurrencyDollarIcon}
+          value={overview?.totalApplications?.toLocaleString() || '0'}
+          change={`${overview?.applicationGrowth && overview.applicationGrowth >= 0 ? '+' : ''}${overview?.applicationGrowth || 0}%`}
+          changeType={
+            overview?.applicationGrowth && overview.applicationGrowth > 0
+              ? 'increase'
+              : overview?.applicationGrowth && overview.applicationGrowth < 0
+                ? 'decrease'
+                : 'neutral'
+          }
+          period={`${overview?.conversionRate || 0}% success rate`}
+          icon={DocumentTextIcon}
         />
       </div>
 
@@ -181,35 +250,136 @@ export default function AnalyticsPage() {
         {/* User registrations chart */}
         <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
           <h3 className="text-lg font-semibold text-white mb-6">Daily User Registrations</h3>
-          <SimpleBarChart data={userGrowthData} />
+          {data?.charts?.signupTrend && data.charts.signupTrend.length > 0 ? (
+            <SimpleBarChart data={data.charts.signupTrend} />
+          ) : (
+            <p className="text-gray-500 text-center py-8">No signup data available</p>
+          )}
         </div>
 
-        {/* Top industries */}
+        {/* User types */}
         <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-          <h3 className="text-lg font-semibold text-white mb-6">Teams by Industry</h3>
-          <SimpleBarChart data={topIndustriesData} />
+          <h3 className="text-lg font-semibold text-white mb-6">Users by Type</h3>
+          {data?.charts?.userTypeDistribution && data.charts.userTypeDistribution.length > 0 ? (
+            <SimpleBarChart
+              data={data.charts.userTypeDistribution.map((item) => ({
+                label: item.type || 'Unknown',
+                value: item.count,
+              }))}
+            />
+          ) : (
+            <p className="text-gray-500 text-center py-8">No user type data available</p>
+          )}
         </div>
       </div>
 
-      {/* Platform health */}
+      {/* Application Status & Top Teams */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Application status distribution */}
+        <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
+          <h3 className="text-lg font-semibold text-white mb-6">Applications by Status</h3>
+          {data?.charts?.applicationStatusDistribution &&
+          data.charts.applicationStatusDistribution.length > 0 ? (
+            <SimpleBarChart
+              data={data.charts.applicationStatusDistribution.map((item) => ({
+                label: item.status,
+                value: item.count,
+              }))}
+            />
+          ) : (
+            <p className="text-gray-500 text-center py-8">No application data available</p>
+          )}
+        </div>
+
+        {/* Top teams */}
+        <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
+          <h3 className="text-lg font-semibold text-white mb-6">Top Teams by Applications</h3>
+          {data?.topTeams && data.topTeams.length > 0 ? (
+            <div className="space-y-3">
+              {data.topTeams.map((team, index) => (
+                <div key={team.id} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-500 text-sm w-6">{index + 1}.</span>
+                    <span className="text-white">{team.name}</span>
+                  </div>
+                  <span className="text-gray-400">{team.applicationCount} apps</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-8">No team data available</p>
+          )}
+        </div>
+      </div>
+
+      {/* Platform activity summary */}
       <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h3 className="text-lg font-semibold text-white mb-6">Platform Health</h3>
+        <h3 className="text-lg font-semibold text-white mb-6">
+          Activity Summary (Last {period} days)
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div>
+            <p className="text-3xl font-bold text-white">{overview?.newUsers || 0}</p>
+            <p className="text-sm text-gray-400 mt-1">New Users</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-white">{overview?.newTeams || 0}</p>
+            <p className="text-sm text-gray-400 mt-1">New Teams</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-white">{overview?.newCompanies || 0}</p>
+            <p className="text-sm text-gray-400 mt-1">New Companies</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-white">{overview?.newApplications || 0}</p>
+            <p className="text-sm text-gray-400 mt-1">Applications</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold text-white">{overview?.newMessages || 0}</p>
+            <p className="text-sm text-gray-400 mt-1">Messages</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Engagement metrics */}
+      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
+        <h3 className="text-lg font-semibold text-white mb-6">Engagement</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div>
-            <p className="text-3xl font-bold text-green-400">99.9%</p>
-            <p className="text-sm text-gray-400 mt-1">Uptime</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-500/10">
+              <ChatBubbleLeftRightIcon className="h-5 w-5 text-blue-400" />
+            </div>
+            <div>
+              <p className="text-xl font-bold text-white">{overview?.activeConversations || 0}</p>
+              <p className="text-sm text-gray-400">Active Conversations</p>
+            </div>
           </div>
-          <div>
-            <p className="text-3xl font-bold text-white">142ms</p>
-            <p className="text-sm text-gray-400 mt-1">Avg. Response Time</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-green-500/10">
+              <DocumentTextIcon className="h-5 w-5 text-green-400" />
+            </div>
+            <div>
+              <p className="text-xl font-bold text-white">{overview?.totalMessages || 0}</p>
+              <p className="text-sm text-gray-400">Total Messages</p>
+            </div>
           </div>
-          <div>
-            <p className="text-3xl font-bold text-white">0</p>
-            <p className="text-sm text-gray-400 mt-1">Error Rate</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-purple-500/10">
+              <BriefcaseIcon className="h-5 w-5 text-purple-400" />
+            </div>
+            <div>
+              <p className="text-xl font-bold text-white">{overview?.activeOpportunities || 0}</p>
+              <p className="text-sm text-gray-400">Active Opportunities</p>
+            </div>
           </div>
-          <div>
-            <p className="text-3xl font-bold text-white">67%</p>
-            <p className="text-sm text-gray-400 mt-1">DAU/MAU Ratio</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-yellow-500/10">
+              <ArrowTrendingUpIcon className="h-5 w-5 text-yellow-400" />
+            </div>
+            <div>
+              <p className="text-xl font-bold text-white">{overview?.successfulMatches || 0}</p>
+              <p className="text-sm text-gray-400">Successful Matches</p>
+            </div>
           </div>
         </div>
       </div>

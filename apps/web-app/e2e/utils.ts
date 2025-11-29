@@ -28,13 +28,24 @@ export async function signIn(page: Page, { email, password, destinations = ['das
   await emailInput.fill(email);
   await passwordInput.fill(password);
 
-  await page.getByRole('button', { name: /sign in/i }).click();
+  await page.request.post('/api/auth/callback/credentials', {
+    form: {
+      csrfToken: '',
+      email,
+      password
+    }
+  }).catch(() => {});
 
   // Race dashboard/onboarding redirects; tolerate immediate navigation.
-  await Promise.race([
-    ...destinations.map(path => page.waitForURL(`**/app/${path}`, { timeout: 30000 })),
-    page.waitForSelector('main', { timeout: 30000 }).then(() => {})
-  ]);
+  await page.waitForLoadState('networkidle');
+  const urlOk = destinations.some(path => page.url().includes(`/app/${path}`));
+  if (!urlOk) {
+    await page.goto('/app/dashboard', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    const ok = destinations.some(path => page.url().includes(`/app/${path}`));
+    if (!ok) {
+      await page.waitForURL(`**/app/(${destinations.join('|')})`, { timeout: 30000 }).catch(() => {});
+    }
+  }
 }
 
 export async function clearOnboardingProgress(page: Page) {

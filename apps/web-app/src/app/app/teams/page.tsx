@@ -80,6 +80,7 @@ function TeamMemberAvatars({ members, size = 'md', maxDisplay = 5 }: TeamMemberA
           title={member.name}
         >
           {member.avatar || demoAvatars[index % demoAvatars.length] ? (
+            /* eslint-disable-next-line @next/next/no-img-element -- Dynamic external avatar URLs */
             <img
               src={member.avatar || demoAvatars[index % demoAvatars.length]}
               alt={member.name}

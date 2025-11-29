@@ -34,7 +34,6 @@ function requireWizard(state: OnboardingState) {
 test.describe('Onboarding Flows', () => {
   test.describe('Company User Onboarding', () => {
     test.beforeEach(async ({ page, request }) => {
-      await request.post('/api/auth/signout');
       const { email } = await createTestUser(request, 'company');
       await signIn(page, { email, password });
       await clearOnboardingProgress(page);
@@ -103,7 +102,6 @@ test.describe('Onboarding Flows', () => {
 
   test.describe('Team User Onboarding', () => {
     test.beforeEach(async ({ page, request }) => {
-      await request.post('/api/auth/signout');
       const { email } = await createTestUser(request, 'individual');
       await signIn(page, { email, password });
       await clearOnboardingProgress(page);
@@ -160,7 +158,6 @@ test.describe('Onboarding Flows', () => {
 
   test.describe('Onboarding Wizard UI Components', () => {
     test.beforeEach(async ({ page, request }) => {
-      await request.post('/api/auth/signout');
       const { email } = await createTestUser(request, 'individual');
       await signIn(page, { email, password });
       await clearOnboardingProgress(page);
@@ -209,7 +206,6 @@ test.describe('Onboarding Flows', () => {
 
   test.describe('Complete Onboarding Flow', () => {
     test('company user can skip entire onboarding', async ({ page, request }) => {
-      await request.post('/api/auth/signout');
       const { email } = await createTestUser(page.request, 'company');
       const state = await prepareOnboarding(page, email, password);
       requireWizard(state);
@@ -225,7 +221,6 @@ test.describe('Onboarding Flows', () => {
     });
 
     test('team user can skip entire onboarding', async ({ page, request }) => {
-      await request.post('/api/auth/signout');
       const { email } = await createTestUser(page.request, 'individual');
       const state = await prepareOnboarding(page, email, password);
       requireWizard(state);
@@ -239,9 +234,6 @@ test.describe('Onboarding Flows', () => {
 
 test.describe('Authentication Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
-  test.beforeEach(async ({ request }) => {
-    await request.post('/api/auth/signout');
-  });
   test('sign in page renders correctly', async ({ page }) => {
     await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
@@ -259,24 +251,12 @@ test.describe('Authentication Flow', () => {
   });
 
   test('company user can sign in successfully', async ({ page }) => {
-    await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
-    await page.locator('input[type="email"]').first().waitFor({ state: 'visible', timeout: 20000 });
-    await page.fill('input[type="email"]', 'company@example.com');
-    await page.fill('input[type="password"]', 'password');
-    await page.click('button:has-text("Sign in")');
-
-    // Should redirect to dashboard or onboarding
+    await signIn(page, { email: 'company@example.com', password: 'password' });
     await expect(page).toHaveURL(/\/app\/(dashboard|onboarding)/, { timeout: 30000 });
   });
 
   test('team user can sign in successfully', async ({ page }) => {
-    await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
-    await page.locator('input[type="email"]').first().waitFor({ state: 'visible', timeout: 20000 });
-    await page.fill('input[type="email"]', 'demo@example.com');
-    await page.fill('input[type="password"]', 'password');
-    await page.click('button:has-text("Sign in")');
-
-    // Should redirect to dashboard or onboarding
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
     await expect(page).toHaveURL(/\/app\/(dashboard|onboarding)/, { timeout: 30000 });
   });
 

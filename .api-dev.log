@@ -116,8 +116,11 @@ prisma:error Error in PostgreSQL connection: Error { kind: Closed, cause: None }
 3:27:40 PM [tsx] forcing restart
 3:34:01 PM [tsx] forcing restart
 3:45:33 PM [tsx] forcing restart
-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: LupKDP1jCmrD07cvAAEP) {"service":"liftout-api"}
-2025-11-28 14:03:24 [[33MWARN[39M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
+4:04:28 PM [tsx] forcing restart
+4:17:24 PM [tsx] forcing restart
+4:37:24 PM [tsx] forcing restart
+sh: line 1: 17753 Killed: 9               tsx watch src/index.ts
+M]: Socket connection rejected: User not found (socket: 57Wr4vOaJaqc1SghAAES) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[33MWARN[39M]: Socket connection rejected: User not found (socket: Zpcj68phglU3MKmdAAEW) {"service":"liftout-api"}
 2025-11-28 14:03:25 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:25 +0000] "GET /health HTTP/1.1" 200 129 "-" "node" {"service":"liftout-api"}
 2025-11-28 14:03:25 [[32MINFO[39M]: ::1 - - [28/Nov/2025:20:03:25 +0000] "GET /api/opportunities HTTP/1.1" 401 42 "-" "node" {"service":"liftout-api"}
@@ -682,3 +685,25 @@ AuthorizationError: You do not have access to this conversation
 2025-11-28 15:55:11 [[32MINFO[39M]: Socket authenticated: tcQPLewy1WTMNmkOAABK (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:55:11 [[32MINFO[39M]: Socket connected: tcQPLewy1WTMNmkOAABK (user: demo@example.com) {"service":"liftout-api"}
 2025-11-28 15:55:12 [[32MINFO[39M]: Socket disconnected: tcQPLewy1WTMNmkOAABK (user: demo@example.com), reason: transport close {"service":"liftout-api"}
+4:04:28 PM [tsx] restarting
+2025-11-28 16:04:28 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 16:04:28 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 16:04:28 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 16:04:28 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 16:04:28 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 16:04:28 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+4:17:24 PM [tsx] restarting
+2025-11-28 16:17:24 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 16:17:24 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 16:17:25 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 16:17:25 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 16:17:25 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 16:17:25 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+4:37:24 PM [tsx] restarting
+2025-11-28 16:37:24 [[32MINFO[39M]: SIGTERM received, shutting down gracefully {"service":"liftout-api"}
+2025-11-28 16:37:24 [[32MINFO[39M]: Process terminated {"service":"liftout-api"}
+c2025-11-28 16:37:24 [[32MINFO[39M]: No REDIS_URL provided, using in-memory adapter (single instance mode) {"service":"liftout-api"}
+2025-11-28 16:37:24 [[32MINFO[39M]: Server running on port 8000 in development mode {"service":"liftout-api"}
+2025-11-28 16:37:24 [[32MINFO[39M]: Health check: http://localhost:8000/health {"service":"liftout-api"}
+2025-11-28 16:37:24 [[32MINFO[39M]: API base URL: http://localhost:8000/api {"service":"liftout-api"}
+sh: line 1: 19149 Killed: 9               tsx watch src/index.ts

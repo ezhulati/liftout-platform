@@ -39,6 +39,7 @@ export default function DataRequestsPage() {
 
   useEffect(() => {
     fetchRequests();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchRequests uses page/statusFilter which are in deps
   }, [page, statusFilter]);
 
   const fetchRequests = async () => {
