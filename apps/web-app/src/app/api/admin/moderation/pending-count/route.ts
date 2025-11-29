@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { withAdminAccess } from '@/lib/admin-middleware';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = withAdminAccess(async () => {
   try {
     const [pendingFlags, pendingTeamVerifications, pendingCompanyVerifications] = await Promise.all([

@@ -21,8 +21,9 @@ COPY apps/web-app ./apps/web-app
 # Install all dependencies from root
 RUN pnpm install --frozen-lockfile
 
-# Build web-app
+# Build web-app with placeholder DATABASE_URL to allow Prisma generate during build
 WORKDIR /app/apps/web-app
+ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder"
 RUN pnpm run build
 
 # Production stage
