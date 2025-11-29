@@ -155,7 +155,7 @@ export async function disable2FA(userId: string): Promise<void> {
     data: {
       twoFactorEnabled: false,
       twoFactorSecret: null,
-      backupCodes: Prisma.JsonNull,
+      backupCodes: Prisma.DbNull,
     },
   });
 }

@@ -28,6 +28,8 @@ import {
 const mainNavigation = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
   { name: 'User Management', href: '/admin/users', icon: UsersIcon },
+  { name: 'Team Management', href: '/admin/teams', icon: UserGroupIcon },
+  { name: 'Company Management', href: '/admin/companies', icon: BuildingOfficeIcon },
 ];
 
 // Verification section

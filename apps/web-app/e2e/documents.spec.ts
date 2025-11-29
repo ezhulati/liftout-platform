@@ -1,18 +1,9 @@
 import { test, expect } from '@playwright/test';
-
-// Helper to sign in
-async function signIn(page: any, email: string, password: string) {
-  await page.goto('/auth/signin');
-  await page.waitForLoadState('domcontentloaded');
-  await page.fill('input[type="email"]', email);
-  await page.fill('input[type="password"]', password);
-  await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-}
+import { signIn } from './utils';
 
 test.describe('Documents', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'password');
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
   });
 
   test('can view documents page', async ({ page }) => {
@@ -60,7 +51,7 @@ test.describe('Documents', () => {
 
 test.describe('Document Security', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'password');
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
   });
 
   test('documents page loads successfully', async ({ page }) => {

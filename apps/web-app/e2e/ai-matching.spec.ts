@@ -1,26 +1,10 @@
 import { test, expect } from '@playwright/test';
-
-// Helper function to sign in as demo user
-async function signInAsDemo(page: import('@playwright/test').Page) {
-  await page.goto('/auth/signin');
-  await page.waitForLoadState('networkidle');
-
-  // Wait for sign-in form to be ready
-  const emailInput = page.locator('input[type="email"]');
-  await expect(emailInput).toBeVisible({ timeout: 10000 });
-
-  await emailInput.fill('demo@example.com');
-  await page.locator('input[type="password"]').fill('password');
-  await page.locator('button:has-text("Sign in")').click();
-
-  // Wait for navigation to dashboard
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-}
+import { signIn } from './utils';
 
 test.describe('AI Matching Page', () => {
   test('page loads and shows UI for authenticated demo user', async ({ page }) => {
     // Sign in as demo user
-    await signInAsDemo(page);
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
 
     // Navigate to AI matching
     await page.goto('/app/ai-matching');
@@ -36,7 +20,7 @@ test.describe('AI Matching Page', () => {
 
   test('page shows demo data for team user', async ({ page }) => {
     // Sign in as demo team user
-    await signInAsDemo(page);
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
 
     await page.goto('/app/ai-matching');
     await page.waitForLoadState('networkidle');
@@ -52,7 +36,7 @@ test.describe('AI Matching Page', () => {
 
   test('AI Analysis button exists in match cards', async ({ page }) => {
     // Sign in as demo team user
-    await signInAsDemo(page);
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
 
     await page.goto('/app/ai-matching');
     await page.waitForLoadState('networkidle');

@@ -1,27 +1,9 @@
 import { test, expect } from '@playwright/test';
-
-// Helper to sign in
-async function signIn(page: any, email: string, password: string) {
-  await page.goto('/auth/signin');
-  await page.waitForLoadState('domcontentloaded');
-  if (page.url().includes('/app/dashboard')) {
-    return;
-  }
-  const emailInput = page.locator('input[type="email"]');
-  const passwordInput = page.locator('input[type="password"]');
-  await emailInput.waitFor({ state: 'visible', timeout: 20000 });
-  await emailInput.fill(email);
-  await passwordInput.fill(password);
-  await page.click('button:has-text("Sign in")');
-  await Promise.race([
-    page.waitForURL('**/app/dashboard', { timeout: 30000 }),
-    page.waitForURL('**/app/onboarding', { timeout: 30000 })
-  ]);
-}
+import { signIn } from './utils';
 
 test.describe('Dashboard - Team User', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'password');
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
   });
 
   test('displays dashboard correctly', async ({ page }) => {
@@ -82,17 +64,22 @@ test.describe('Dashboard - Team User', () => {
 
   test('can sign out', async ({ page }) => {
     // Open user menu and sign out
+    const navigation = page.waitForNavigation({
+      url: url => url.pathname === '/' || url.pathname.startsWith('/auth/signin'),
+      timeout: 20000
+    });
     await page.click('button:has-text("Open user menu"), [aria-label="Open user menu"]');
     await page.click('button:has-text("Sign out")');
 
     // Should redirect to homepage or signin - wait for navigation to complete
-    await page.waitForURL(/\/(auth\/signin)?$/, { timeout: 15000 });
+    await navigation;
+    await page.waitForLoadState('domcontentloaded');
   });
 });
 
 test.describe('Dashboard - Company User', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'company@example.com', 'password');
+    await signIn(page, { email: 'company@example.com', password: 'password' });
   });
 
   test('displays dashboard correctly', async ({ page }) => {

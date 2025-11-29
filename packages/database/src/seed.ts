@@ -98,7 +98,7 @@ async function main() {
   const adminPassword = await hashPassword('admin123!');
   const adminUser = await prisma.user.upsert({
     where: { email: 'admin@liftout.com' },
-    update: {},
+    update: { passwordHash: adminPassword },
     create: {
       email: 'admin@liftout.com',
       passwordHash: adminPassword,
@@ -142,7 +142,7 @@ async function main() {
   // Create documented demo users (demo@example.com / password)
   const demoUser = await prisma.user.upsert({
     where: { email: 'demo@example.com' },
-    update: {},
+    update: { passwordHash: demoPassword },
     create: {
       email: 'demo@example.com',
       passwordHash: demoPassword,
@@ -350,7 +350,7 @@ async function main() {
   // Create documented company demo user (company@example.com / password)
   const demoCompanyUser = await prisma.user.upsert({
     where: { email: 'company@example.com' },
-    update: {},
+    update: { passwordHash: demoPassword },
     create: {
       email: 'company@example.com',
       passwordHash: demoPassword,

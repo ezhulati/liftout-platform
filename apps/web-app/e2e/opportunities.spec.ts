@@ -1,21 +1,9 @@
 import { test, expect } from '@playwright/test';
-
-// Helper to sign in
-async function signIn(page: any, email: string, password: string) {
-  await page.goto('/auth/signin');
-  await page.waitForLoadState('domcontentloaded');
-  if (page.url().includes('/app/dashboard')) {
-    return;
-  }
-  await page.locator('input[type="email"]').fill(email);
-  await page.locator('input[type="password"]').fill(password);
-  await page.click('button:has-text("Sign in")');
-  await page.waitForURL('**/app/dashboard', { timeout: 30000 });
-}
+import { signIn } from './utils';
 
 test.describe('Opportunities - Team User View', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'password');
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
   });
 
   test('can view opportunities list', async ({ page }) => {
@@ -75,7 +63,7 @@ test.describe('Opportunities - Team User View', () => {
 
 test.describe('Opportunities - Company User View', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'company@example.com', 'password');
+    await signIn(page, { email: 'company@example.com', password: 'password' });
   });
 
   test('can view opportunities list', async ({ page }) => {
@@ -104,7 +92,7 @@ test.describe('Opportunities - Company User View', () => {
 
 test.describe('Expression of Interest Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await signIn(page, 'demo@example.com', 'password');
+    await signIn(page, { email: 'demo@example.com', password: 'password' });
   });
 
   test('can express interest in opportunity', async ({ page }) => {

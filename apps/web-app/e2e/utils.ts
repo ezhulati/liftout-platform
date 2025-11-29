@@ -21,8 +21,8 @@ export async function signIn(page: Page, { email, password, destinations = ['das
     return;
   }
 
-  const emailInput = page.getByLabel(/email/i);
-  const passwordInput = page.getByLabel(/password/i);
+  const emailInput = page.locator('input[type="email"]');
+  const passwordInput = page.locator('input[type="password"]');
   await emailInput.waitFor({ state: 'visible', timeout: 20000 });
   await passwordInput.waitFor({ state: 'visible', timeout: 20000 });
   await emailInput.fill(email);

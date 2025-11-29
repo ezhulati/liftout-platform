@@ -249,6 +249,7 @@ test.describe('Onboarding Flows', () => {
 });
 
 test.describe('Authentication Flow', () => {
+  test.use({ storageState: 'empty' });
   test.beforeEach(async ({ request }) => {
     await request.post('/api/auth/signout');
   });
