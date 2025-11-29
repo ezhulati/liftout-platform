@@ -155,7 +155,8 @@ export async function disable2FA(userId: string): Promise<void> {
     data: {
       twoFactorEnabled: false,
       twoFactorSecret: null,
-      backupCodes: null as unknown as Prisma.InputJsonValue,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      backupCodes: null as any,
     },
   });
 }
