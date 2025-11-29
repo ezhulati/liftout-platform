@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { blogArticles, getAllCategories } from '@/lib/blog/articles';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://liftout.netlify.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://liftout.com';
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
