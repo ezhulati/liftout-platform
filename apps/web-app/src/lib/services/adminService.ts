@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import CryptoJS from 'crypto-js';
@@ -154,7 +155,7 @@ export async function disable2FA(userId: string): Promise<void> {
     data: {
       twoFactorEnabled: false,
       twoFactorSecret: null,
-      backupCodes: null,
+      backupCodes: Prisma.JsonNull,
     },
   });
 }
@@ -702,4 +703,426 @@ export async function getActiveImpersonationSessions(adminId: string) {
     },
     orderBy: { startedAt: 'desc' },
   });
+}
+
+// ==================== TEAM MANAGEMENT ====================
+
+/**
+ * Get all teams with filters
+ */
+export async function getTeams(filters?: {
+  query?: string;
+  verificationStatus?: string;
+  status?: 'active' | 'deleted';
+  limit?: number;
+  offset?: number;
+}) {
+  const where: any = {};
+
+  // Handle soft delete filter
+  if (filters?.status === 'deleted') {
+    where.deletedAt = { not: null };
+  } else if (filters?.status === 'active') {
+    where.deletedAt = null;
+  }
+
+  // Search by name or description
+  if (filters?.query) {
+    where.OR = [
+      { name: { contains: filters.query, mode: 'insensitive' } },
+      { description: { contains: filters.query, mode: 'insensitive' } },
+    ];
+  }
+
+  // Filter by verification status
+  if (filters?.verificationStatus) {
+    where.verificationStatus = filters.verificationStatus;
+  }
+
+  const [teams, total] = await Promise.all([
+    prisma.team.findMany({
+      where,
+      include: {
+        creator: {
+          select: { id: true, firstName: true, lastName: true, email: true },
+        },
+        members: {
+          include: {
+            user: {
+              select: { id: true, firstName: true, lastName: true, email: true },
+            },
+          },
+        },
+        _count: {
+          select: { members: true, applications: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: filters?.limit || 20,
+      skip: filters?.offset || 0,
+    }),
+    prisma.team.count({ where }),
+  ]);
+
+  return { teams, total };
+}
+
+/**
+ * Get a single team by ID with full details
+ */
+export async function getTeamById(teamId: string) {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: {
+      creator: {
+        select: { id: true, firstName: true, lastName: true, email: true },
+      },
+      members: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              profile: { select: { profilePhotoUrl: true } },
+            },
+          },
+        },
+      },
+      applications: {
+        include: {
+          opportunity: {
+            select: { id: true, title: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      },
+      _count: {
+        select: { members: true, applications: true },
+      },
+    },
+  });
+
+  if (!team) {
+    throw new Error('Team not found');
+  }
+
+  return team;
+}
+
+/**
+ * Update team details
+ */
+export async function updateTeam(
+  teamId: string,
+  data: {
+    name?: string;
+    description?: string;
+    industry?: string;
+    verificationStatus?: 'pending' | 'verified' | 'rejected';
+  },
+  adminId: string
+) {
+  const updateData: any = { ...data };
+
+  // Handle verification status changes
+  if (data.verificationStatus === 'verified') {
+    updateData.verifiedAt = new Date();
+    updateData.verifiedBy = adminId;
+  } else if (data.verificationStatus === 'rejected' || data.verificationStatus === 'pending') {
+    updateData.verifiedAt = null;
+    updateData.verifiedBy = null;
+  }
+
+  return prisma.team.update({
+    where: { id: teamId },
+    data: updateData,
+  });
+}
+
+/**
+ * Verify a team
+ */
+export async function verifyTeam(teamId: string, adminId: string) {
+  return prisma.team.update({
+    where: { id: teamId },
+    data: {
+      verificationStatus: 'verified',
+      verifiedAt: new Date(),
+      verifiedBy: adminId,
+    },
+  });
+}
+
+/**
+ * Reject team verification
+ */
+export async function rejectTeamVerification(teamId: string, adminId: string, reason?: string) {
+  return prisma.team.update({
+    where: { id: teamId },
+    data: {
+      verificationStatus: 'rejected',
+      verifiedAt: null,
+      verifiedBy: null,
+    },
+  });
+}
+
+/**
+ * Soft delete a team
+ */
+export async function softDeleteTeam(teamId: string, adminId: string): Promise<void> {
+  await prisma.team.update({
+    where: { id: teamId },
+    data: {
+      deletedAt: new Date(),
+      deletedBy: adminId,
+    },
+  });
+}
+
+/**
+ * Restore a soft-deleted team
+ */
+export async function restoreTeam(teamId: string): Promise<void> {
+  await prisma.team.update({
+    where: { id: teamId },
+    data: {
+      deletedAt: null,
+      deletedBy: null,
+    },
+  });
+}
+
+/**
+ * Hard delete a team (permanent)
+ */
+export async function hardDeleteTeam(
+  teamId: string,
+  adminId: string,
+  confirmationName: string
+): Promise<void> {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    select: { name: true },
+  });
+
+  if (!team) {
+    throw new Error('Team not found');
+  }
+
+  if (team.name.toLowerCase() !== confirmationName.toLowerCase()) {
+    throw new Error('Confirmation name does not match');
+  }
+
+  // Delete in order to respect foreign key constraints
+  await prisma.$transaction([
+    prisma.teamMember.deleteMany({ where: { teamId } }),
+    prisma.teamApplication.deleteMany({ where: { teamId } }),
+    prisma.team.delete({ where: { id: teamId } }),
+  ]);
+}
+
+// ==================== COMPANY MANAGEMENT ====================
+
+/**
+ * Get all companies with filters
+ */
+export async function getCompanies(filters?: {
+  query?: string;
+  verificationStatus?: string;
+  status?: 'active' | 'deleted';
+  limit?: number;
+  offset?: number;
+}) {
+  const where: any = {};
+
+  // Handle soft delete filter
+  if (filters?.status === 'deleted') {
+    where.deletedAt = { not: null };
+  } else if (filters?.status === 'active') {
+    where.deletedAt = null;
+  }
+
+  // Search by name
+  if (filters?.query) {
+    where.OR = [
+      { name: { contains: filters.query, mode: 'insensitive' } },
+      { description: { contains: filters.query, mode: 'insensitive' } },
+    ];
+  }
+
+  // Filter by verification status
+  if (filters?.verificationStatus) {
+    where.verificationStatus = filters.verificationStatus;
+  }
+
+  const [companies, total] = await Promise.all([
+    prisma.company.findMany({
+      where,
+      include: {
+        _count: {
+          select: { users: true, opportunities: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: filters?.limit || 20,
+      skip: filters?.offset || 0,
+    }),
+    prisma.company.count({ where }),
+  ]);
+
+  return { companies, total };
+}
+
+/**
+ * Get a single company by ID with full details
+ */
+export async function getCompanyById(companyId: string) {
+  const company = await prisma.company.findUnique({
+    where: { id: companyId },
+    include: {
+      users: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              profile: { select: { profilePhotoUrl: true } },
+            },
+          },
+        },
+      },
+      opportunities: {
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      },
+      _count: {
+        select: { users: true, opportunities: true },
+      },
+    },
+  });
+
+  if (!company) {
+    throw new Error('Company not found');
+  }
+
+  return company;
+}
+
+/**
+ * Update company details
+ */
+export async function updateCompany(
+  companyId: string,
+  data: {
+    name?: string;
+    description?: string;
+    industry?: string;
+    verificationStatus?: 'pending' | 'verified' | 'rejected';
+  },
+  adminId: string
+) {
+  const updateData: any = { ...data };
+
+  // Handle verification status changes
+  if (data.verificationStatus === 'verified') {
+    updateData.verifiedAt = new Date();
+    updateData.verifiedBy = adminId;
+  } else if (data.verificationStatus === 'rejected' || data.verificationStatus === 'pending') {
+    updateData.verifiedAt = null;
+    updateData.verifiedBy = null;
+  }
+
+  return prisma.company.update({
+    where: { id: companyId },
+    data: updateData,
+  });
+}
+
+/**
+ * Verify a company
+ */
+export async function verifyCompany(companyId: string, adminId: string) {
+  return prisma.company.update({
+    where: { id: companyId },
+    data: {
+      verificationStatus: 'verified',
+      verifiedAt: new Date(),
+      verifiedBy: adminId,
+    },
+  });
+}
+
+/**
+ * Reject company verification
+ */
+export async function rejectCompanyVerification(companyId: string, adminId: string, reason?: string) {
+  return prisma.company.update({
+    where: { id: companyId },
+    data: {
+      verificationStatus: 'rejected',
+      verifiedAt: null,
+      verifiedBy: null,
+    },
+  });
+}
+
+/**
+ * Soft delete a company
+ */
+export async function softDeleteCompany(companyId: string, adminId: string): Promise<void> {
+  await prisma.company.update({
+    where: { id: companyId },
+    data: {
+      deletedAt: new Date(),
+      deletedBy: adminId,
+    },
+  });
+}
+
+/**
+ * Restore a soft-deleted company
+ */
+export async function restoreCompany(companyId: string): Promise<void> {
+  await prisma.company.update({
+    where: { id: companyId },
+    data: {
+      deletedAt: null,
+      deletedBy: null,
+    },
+  });
+}
+
+/**
+ * Hard delete a company (permanent)
+ */
+export async function hardDeleteCompany(
+  companyId: string,
+  adminId: string,
+  confirmationName: string
+): Promise<void> {
+  const company = await prisma.company.findUnique({
+    where: { id: companyId },
+    select: { name: true },
+  });
+
+  if (!company) {
+    throw new Error('Company not found');
+  }
+
+  if (company.name.toLowerCase() !== confirmationName.toLowerCase()) {
+    throw new Error('Confirmation name does not match');
+  }
+
+  // Delete in order to respect foreign key constraints
+  await prisma.$transaction([
+    prisma.companyUser.deleteMany({ where: { companyId } }),
+    prisma.opportunity.deleteMany({ where: { companyId } }),
+    prisma.company.delete({ where: { id: companyId } }),
+  ]);
 }
