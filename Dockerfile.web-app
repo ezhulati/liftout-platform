@@ -1,9 +1,10 @@
 # Multi-stage build for the web-app
 # This Dockerfile builds from the monorepo root
 
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
-# Install pnpm
+# Install pnpm and build dependencies
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install -g pnpm@9
 
 WORKDIR /app
@@ -25,10 +26,10 @@ WORKDIR /app/apps/web-app
 RUN pnpm run build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:20-slim AS production
 
-# Install OpenSSL 1.1 for Prisma compatibility
-RUN apk add --no-cache openssl1.1-compat
+# Install OpenSSL for Prisma and curl for healthcheck
+RUN apt-get update && apt-get install -y openssl ca-certificates curl && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g pnpm@9
 
@@ -57,6 +58,6 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+  CMD curl -f http://localhost:3000/ || exit 1
 
 CMD ["pnpm", "run", "start"]
