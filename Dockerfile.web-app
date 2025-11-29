@@ -45,9 +45,11 @@ COPY --from=builder /app/apps/web-app/public ./apps/web-app/public
 COPY --from=builder /app/apps/web-app/prisma ./apps/web-app/prisma
 COPY --from=builder /app/apps/web-app/next.config.js ./apps/web-app/
 
-# Generate Prisma client
+# Copy generated Prisma client from builder (avoid npx installing latest prisma)
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client ./node_modules/@prisma/client
+
 WORKDIR /app/apps/web-app
-RUN npx prisma generate
 
 EXPOSE 3000
 ENV NODE_ENV=production

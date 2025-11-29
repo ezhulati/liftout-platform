@@ -43,9 +43,11 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /app/apps/api-server/dist ./apps/api-server/dist
 COPY --from=builder /app/apps/api-server/prisma ./apps/api-server/prisma
 
-# Generate Prisma client
+# Copy generated Prisma client from builder (avoid npx installing latest prisma)
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client ./node_modules/@prisma/client
+
 WORKDIR /app/apps/api-server
-RUN npx prisma generate
 
 EXPOSE 8000
 ENV NODE_ENV=production
