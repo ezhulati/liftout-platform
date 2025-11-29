@@ -387,3 +387,319 @@ export async function searchUsers(filters: {
 
   return { users, total };
 }
+
+/**
+ * Get a single user by ID with full details
+ */
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      profile: true,
+      teamMemberships: {
+        include: {
+          team: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              verificationStatus: true,
+            },
+          },
+        },
+      },
+      companyMemberships: {
+        include: {
+          company: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              verificationStatus: true,
+            },
+          },
+        },
+      },
+      skills: {
+        include: {
+          skill: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
+}
+
+/**
+ * Update user details
+ */
+export async function updateUser(
+  userId: string,
+  data: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    userType?: 'individual' | 'company' | 'admin';
+    emailVerified?: boolean;
+  },
+  adminId: string
+) {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data,
+  });
+
+  return user;
+}
+
+/**
+ * Soft delete a user (sets deletedAt)
+ */
+export async function softDeleteUser(
+  userId: string,
+  adminId: string,
+  reason?: string
+): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      deletedAt: new Date(),
+      deletedBy: adminId,
+    },
+  });
+}
+
+/**
+ * Hard delete a user (permanent - requires confirmation)
+ */
+export async function hardDeleteUser(
+  userId: string,
+  adminId: string,
+  confirmationEmail: string
+): Promise<void> {
+  // Verify the confirmation email matches
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { email: true },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  if (user.email.toLowerCase() !== confirmationEmail.toLowerCase()) {
+    throw new Error('Confirmation email does not match');
+  }
+
+  // Delete related records first (cascade doesn't handle all)
+  await prisma.$transaction([
+    // Delete team memberships
+    prisma.teamMember.deleteMany({ where: { userId } }),
+    // Delete company memberships
+    prisma.companyUser.deleteMany({ where: { userId } }),
+    // Delete the user
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
+}
+
+/**
+ * Restore a soft-deleted user
+ */
+export async function restoreUser(userId: string, adminId: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      deletedAt: null,
+      deletedBy: null,
+    },
+  });
+}
+
+/**
+ * Force password reset for a user
+ */
+export async function forcePasswordReset(userId: string, adminId: string): Promise<void> {
+  const resetToken = CryptoJS.lib.WordArray.random(32).toString();
+  const resetExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      passwordResetToken: resetToken,
+      passwordResetExpires: resetExpires,
+    },
+  });
+
+  // In production, you'd send an email here
+  // For now, just set the token
+}
+
+/**
+ * Get admin notes for an entity
+ */
+export async function getAdminNotes(entityType: string, entityId: string) {
+  const notes = await prisma.adminNote.findMany({
+    where: {
+      entityType,
+      entityId,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Get admin user details for each note
+  const adminIds = [...new Set(notes.map((n: { createdBy: string }) => n.createdBy))];
+  const admins = await prisma.user.findMany({
+    where: { id: { in: adminIds } },
+    select: { id: true, firstName: true, lastName: true, email: true },
+  });
+
+  const adminMap = new Map(admins.map((a: { id: string; firstName: string; lastName: string; email: string }) => [a.id, a]));
+
+  return notes.map((note: { createdBy: string }) => ({
+    ...note,
+    createdByUser: adminMap.get(note.createdBy) || null,
+  }));
+}
+
+/**
+ * Create an admin note for an entity
+ */
+export async function createAdminNote(
+  entityType: string,
+  entityId: string,
+  note: string,
+  adminId: string
+) {
+  return prisma.adminNote.create({
+    data: {
+      entityType,
+      entityId,
+      note,
+      createdBy: adminId,
+    },
+  });
+}
+
+/**
+ * Delete an admin note
+ */
+export async function deleteAdminNote(noteId: string, adminId: string): Promise<void> {
+  await prisma.adminNote.delete({
+    where: { id: noteId },
+  });
+}
+
+/**
+ * Start an impersonation session
+ */
+export async function startImpersonation(
+  adminId: string,
+  targetUserId: string,
+  reason: string,
+  metadata?: { ipAddress?: string; userAgent?: string }
+): Promise<{ token: string; expiresAt: Date }> {
+  // Don't allow impersonating other admins
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { userType: true, deletedAt: true, bannedAt: true },
+  });
+
+  if (!targetUser) {
+    throw new Error('Target user not found');
+  }
+
+  if (targetUser.userType === 'admin') {
+    throw new Error('Cannot impersonate admin users');
+  }
+
+  if (targetUser.deletedAt) {
+    throw new Error('Cannot impersonate deleted users');
+  }
+
+  if (targetUser.bannedAt) {
+    throw new Error('Cannot impersonate banned users');
+  }
+
+  // Generate unique token
+  const token = CryptoJS.lib.WordArray.random(32).toString();
+  const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+
+  await prisma.impersonationSession.create({
+    data: {
+      adminId,
+      targetUserId,
+      reason,
+      token,
+      expiresAt,
+      ipAddress: metadata?.ipAddress,
+      userAgent: metadata?.userAgent,
+    },
+  });
+
+  return { token, expiresAt };
+}
+
+/**
+ * End an impersonation session
+ */
+export async function endImpersonation(token: string): Promise<void> {
+  await prisma.impersonationSession.update({
+    where: { token },
+    data: { endedAt: new Date() },
+  });
+}
+
+/**
+ * Validate an impersonation token and get session details
+ */
+export async function validateImpersonation(token: string) {
+  const session = await prisma.impersonationSession.findUnique({
+    where: { token },
+    include: {
+      admin: {
+        select: { id: true, firstName: true, lastName: true, email: true },
+      },
+      targetUser: {
+        select: { id: true, firstName: true, lastName: true, email: true, userType: true },
+      },
+    },
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  if (session.endedAt) {
+    return null; // Session already ended
+  }
+
+  if (session.expiresAt < new Date()) {
+    return null; // Session expired
+  }
+
+  return session;
+}
+
+/**
+ * Get active impersonation sessions for an admin
+ */
+export async function getActiveImpersonationSessions(adminId: string) {
+  return prisma.impersonationSession.findMany({
+    where: {
+      adminId,
+      endedAt: null,
+      expiresAt: { gt: new Date() },
+    },
+    include: {
+      targetUser: {
+        select: { id: true, firstName: true, lastName: true, email: true },
+      },
+    },
+    orderBy: { startedAt: 'desc' },
+  });
+}
