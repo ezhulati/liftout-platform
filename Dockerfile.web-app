@@ -39,12 +39,11 @@ COPY --from=builder /app/apps/web-app/.next/standalone ./
 COPY --from=builder /app/apps/web-app/.next/static ./apps/web-app/.next/static
 COPY --from=builder /app/apps/web-app/public ./apps/web-app/public
 
-# Copy Prisma schema for generate
-COPY --from=builder /app/apps/web-app/prisma ./apps/web-app/prisma
+# Copy Prisma client from builder (already generated during build)
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client ./node_modules/@prisma/client
 
-# Generate Prisma client with pinned version (avoid prisma@7 breaking changes)
 WORKDIR /app/apps/web-app
-RUN npx prisma@5.22.0 generate
 
 EXPOSE 3000
 ENV NODE_ENV=production
