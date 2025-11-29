@@ -26,29 +26,21 @@ WORKDIR /app/apps/web-app
 ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder"
 RUN pnpm run build
 
-# Production stage
+# Production stage - using standalone output
 FROM node:20-slim AS production
 
 # Install OpenSSL for Prisma and curl for healthcheck
 RUN apt-get update && apt-get install -y openssl ca-certificates curl && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g pnpm@9
-
 WORKDIR /app
 
-# Copy package files for production install
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-COPY packages ./packages
-COPY apps/web-app/package.json ./apps/web-app/
-
-# Install production dependencies
-RUN pnpm install --frozen-lockfile --prod
-
-# Copy built files from builder
-COPY --from=builder /app/apps/web-app/.next ./apps/web-app/.next
+# Copy standalone build (includes node_modules subset)
+COPY --from=builder /app/apps/web-app/.next/standalone ./
+COPY --from=builder /app/apps/web-app/.next/static ./apps/web-app/.next/static
 COPY --from=builder /app/apps/web-app/public ./apps/web-app/public
+
+# Copy Prisma schema for generate
 COPY --from=builder /app/apps/web-app/prisma ./apps/web-app/prisma
-COPY --from=builder /app/apps/web-app/next.config.js ./apps/web-app/
 
 # Generate Prisma client with pinned version (avoid prisma@7 breaking changes)
 WORKDIR /app/apps/web-app
@@ -61,4 +53,5 @@ ENV PORT=3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/ || exit 1
 
-CMD ["pnpm", "run", "start"]
+# Run the standalone server
+CMD ["node", "server.js"]
