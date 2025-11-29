@@ -43,8 +43,9 @@ COPY --from=builder /app/apps/web-app/public ./apps/web-app/public
 COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client ./node_modules/@prisma/client
 
-# Server.js is at the root of standalone output in monorepo
-WORKDIR /app
+# In monorepo, standalone output preserves the path structure
+# server.js is at apps/web-app/server.js
+WORKDIR /app/apps/web-app
 
 EXPOSE 3000
 ENV NODE_ENV=production
@@ -54,5 +55,5 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/ || exit 1
 
-# Run the standalone server from root
+# Run the standalone server
 CMD ["node", "server.js"]
