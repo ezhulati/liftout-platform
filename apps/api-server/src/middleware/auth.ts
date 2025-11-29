@@ -3,6 +3,14 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 
+interface JwtPayload {
+  userId: string;
+  email: string;
+  userType: string;
+  iat?: number;
+  exp?: number;
+}
+
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
@@ -38,7 +46,7 @@ export const authMiddleware = async (
       });
     }
     
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     
     // Verify user still exists and is active
     const user = await prisma.user.findUnique({
@@ -138,7 +146,7 @@ export const optionalAuth = async (
       const token = authHeader.split(' ')[1];
       
       if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
         const user = await prisma.user.findUnique({
           where: { id: decoded.userId },
         });

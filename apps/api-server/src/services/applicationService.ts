@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { TeamApplication, ExpressionOfInterest, ApplicationStatus, InterestStatus } from '@prisma/client';
+import { TeamApplication, ExpressionOfInterest, ApplicationStatus, Prisma } from '@prisma/client';
 import { getPaginationParams } from '../lib/utils';
 import { NotFoundError, AuthorizationError, ValidationError } from '../middleware/errorHandler';
 import { sendApplicationStatusEmail } from '../lib/email';
@@ -462,7 +462,7 @@ class ApplicationService {
 
     const { page: pageNum, limit: limitNum, skip, take } = getPaginationParams(page, limit);
 
-    const where: any = { teamId };
+    const where: Prisma.TeamApplicationWhereInput = { teamId };
 
     if (filters.status) {
       where.status = filters.status;
@@ -537,7 +537,7 @@ class ApplicationService {
 
     const { page: pageNum, limit: limitNum, skip, take } = getPaginationParams(page, limit);
 
-    const where: any = { opportunityId };
+    const where: Prisma.TeamApplicationWhereInput = { opportunityId };
 
     if (filters.status) {
       where.status = filters.status;
@@ -630,7 +630,7 @@ class ApplicationService {
       throw new ValidationError('Rejection reason is required');
     }
 
-    const updateData: any = {
+    const updateData: Prisma.TeamApplicationUpdateInput = {
       status: data.status,
       ...(data.rejectionReason && { rejectionReason: data.rejectionReason }),
       ...(data.responseMessage && { responseMessage: data.responseMessage }),
@@ -839,6 +839,7 @@ class ApplicationService {
       throw new ValidationError('Can only add feedback for applications in interviewing status');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const currentFeedback = application.interviewFeedback as any;
     const feedbackList = currentFeedback?.feedback || [];
 
@@ -1155,6 +1156,7 @@ class ApplicationService {
     const teamIds = teamMemberships.map((m) => m.teamId);
     const companyId = companyUser?.companyId;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let where: any;
 
     if (type === 'sent') {
@@ -1230,6 +1232,7 @@ class ApplicationService {
       : [];
 
     // Company stats (applications received)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let companyStats: any[] = [];
     if (companyUser) {
       const opportunities = await prisma.opportunity.findMany({
@@ -1239,6 +1242,7 @@ class ApplicationService {
       const oppIds = opportunities.map((o) => o.id);
 
       if (oppIds.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         companyStats = await (prisma.teamApplication.groupBy as any)({
           by: ['status'],
           where: { opportunityId: { in: oppIds } },

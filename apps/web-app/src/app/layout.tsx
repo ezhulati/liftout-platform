@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: 'Liftout',
     images: [
       {
-        url: '/og-image.png',
+        url: '/hero-team.jpeg',
         width: 1200,
         height: 630,
         alt: 'Liftout – Hire verified teams that deliver from day one',
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Liftout – Hire Entire Teams, Not Just Individuals',
     description: 'Skip the 6-month team-building phase. Connect with verified, intact teams who already work well together and deliver from day one.',
-    images: ['/og-image.png'],
+    images: ['/hero-team.jpeg'],
     creator: '@liftout',
   },
   robots: {
@@ -97,7 +97,7 @@ export default function RootLayout({
       <head>
         {/* Google Analytics */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-5KBJEP5P6D"
+          src="https://www.googletagmanager.com/gtag/js?id=G-2X9H3CR9V3"
           strategy="afterInteractive"
         />
         <Script
@@ -108,7 +108,7 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-5KBJEP5P6D');
+              gtag('config', 'G-2X9H3CR9V3');
             `,
           }}
         />

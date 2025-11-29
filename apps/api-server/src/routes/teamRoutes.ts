@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { TeamAvailabilityStatus } from '@prisma/client';
 import { teamService, CreateTeamInput, UpdateTeamInput } from '../services/teamService';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth';
 
@@ -7,14 +8,14 @@ const router = Router();
 // GET /api/teams - List all teams
 router.get('/', async (req, res, next) => {
     try {
-        const { search, industry, location, minSize, maxSize, availability, minExperience, skills, minCohesion } = req.query;
+        const { search, industry, location, minSize, maxSize, availability, minExperience } = req.query;
         const filters = {
             search: search as string,
             industry: industry as string,
             location: location as string,
             minSize: minSize ? Number(minSize) : undefined,
             maxSize: maxSize ? Number(maxSize) : undefined,
-            availabilityStatus: availability as any,
+            availabilityStatus: availability as TeamAvailabilityStatus | undefined,
             minYearsWorkingTogether: minExperience ? Number(minExperience) : undefined,
         };
         const { page, limit } = req.query;

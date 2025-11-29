@@ -40,7 +40,7 @@ export const mockConversations: MockConversation[] = [
     title: 'Goldman Sachs - Strategic FinTech Analytics Discussion',
     participants: [
       { id: '1', name: 'Alex Chen', role: 'Team Lead' },
-      { id: 'gs_001', name: 'Jennifer Walsh', role: 'VP Talent Acquisition', avatar: '/avatars/jennifer.jpg' },
+      { id: 'gs_001', name: 'Jennifer Walsh', role: 'VP Talent Acquisition' },
       { id: 'gs_002', name: 'Michael Torres', role: 'Director of Analytics' }
     ],
     lastMessage: {
@@ -59,7 +59,7 @@ export const mockConversations: MockConversation[] = [
     title: 'MedTech Innovations - Healthcare AI Interview Prep',
     participants: [
       { id: '1', name: 'Alex Chen', role: 'Team Lead' },
-      { id: 'mt_001', name: 'Dr. Sarah Patel', role: 'CTO', avatar: '/avatars/sarah.jpg' }
+      { id: 'mt_001', name: 'Dr. Sarah Patel', role: 'CTO' }
     ],
     lastMessage: {
       content: 'Looking forward to meeting your team on February 5th. Please prepare a brief presentation on your most impactful ML project.',

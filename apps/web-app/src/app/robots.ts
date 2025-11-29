@@ -7,11 +7,24 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: [
+          '/',
+          '/for-companies',
+          '/for-teams',
+          '/blog',
+          '/contact',
+          '/privacy',
+          '/terms',
+          '/auth/signin',
+          '/auth/signup',
+        ],
         disallow: [
-          '/app/',        // Authenticated dashboard routes
-          '/api/',        // API routes
-          '/auth/error',  // Error pages
+          '/app/',              // Authenticated dashboard routes
+          '/admin/',            // Admin panel routes
+          '/api/',              // API routes
+          '/auth/error',        // Error pages
+          '/auth/forgot-password',
+          '/auth/reset-password',
         ],
       },
     ],

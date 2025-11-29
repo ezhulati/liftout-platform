@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 import {
   Cog6ToothIcon,
   ShieldCheckIcon,
@@ -10,33 +11,184 @@ import {
   GlobeAltIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
+import { SectionCard, SettingToggle, LoadingSpinner } from '@/components/admin/shared';
+
+// ============================================
+// TYPES & CONFIGURATION
+// ============================================
+
+interface Settings {
+  requireEmailVerification: boolean;
+  autoApproveTeams: boolean;
+  autoApproveCompanies: boolean;
+  moderationEnabled: boolean;
+  emailNotifications: boolean;
+  slackNotifications: boolean;
+  maintenanceMode: boolean;
+}
+
+interface SettingConfig {
+  key: keyof Settings;
+  title: string;
+  description: string;
+  dangerous?: boolean;
+}
+
+interface SettingsSectionConfig {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconColorClass: string;
+  settings: SettingConfig[];
+}
+
+const SETTINGS_SECTIONS: SettingsSectionConfig[] = [
+  {
+    title: 'Verification Settings',
+    icon: Cog6ToothIcon,
+    iconColorClass: 'text-gray-400',
+    settings: [
+      {
+        key: 'requireEmailVerification',
+        title: 'Require Email Verification',
+        description: 'Users must verify their email before accessing the platform',
+      },
+      {
+        key: 'autoApproveTeams',
+        title: 'Auto-Approve Teams',
+        description: 'Automatically approve team verification requests',
+      },
+      {
+        key: 'autoApproveCompanies',
+        title: 'Auto-Approve Companies',
+        description: 'Automatically approve company verification requests',
+      },
+    ],
+  },
+  {
+    title: 'Moderation Settings',
+    icon: KeyIcon,
+    iconColorClass: 'text-gray-400',
+    settings: [
+      {
+        key: 'moderationEnabled',
+        title: 'Content Moderation',
+        description: 'Enable automated content moderation and flagging',
+      },
+    ],
+  },
+  {
+    title: 'Notification Settings',
+    icon: BellIcon,
+    iconColorClass: 'text-gray-400',
+    settings: [
+      {
+        key: 'emailNotifications',
+        title: 'Email Notifications',
+        description: 'Receive email alerts for critical admin events',
+      },
+      {
+        key: 'slackNotifications',
+        title: 'Slack Notifications',
+        description: 'Send notifications to a Slack channel',
+      },
+    ],
+  },
+  {
+    title: 'Platform Settings',
+    icon: GlobeAltIcon,
+    iconColorClass: 'text-gray-400',
+    settings: [
+      {
+        key: 'maintenanceMode',
+        title: 'Maintenance Mode',
+        description: 'Put the platform in maintenance mode (users will see a maintenance page)',
+        dangerous: true,
+      },
+    ],
+  },
+];
+
+const DEFAULT_SETTINGS: Settings = {
+  requireEmailVerification: true,
+  autoApproveTeams: false,
+  autoApproveCompanies: false,
+  moderationEnabled: true,
+  emailNotifications: true,
+  slackNotifications: false,
+  maintenanceMode: false,
+};
+
+// ============================================
+// MAIN COMPONENT
+// ============================================
 
 export default function AdminSettingsPage() {
   const { data: session } = useSession();
-  const [saved, setSaved] = useState(false);
+  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [originalSettings, setOriginalSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
-  // Settings state
-  const [settings, setSettings] = useState({
-    requireEmailVerification: true,
-    autoApproveTeams: false,
-    autoApproveCompanies: false,
-    moderationEnabled: true,
-    emailNotifications: true,
-    slackNotifications: false,
-    maintenanceMode: false,
-  });
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
-  const handleToggle = (key: keyof typeof settings) => {
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
-    setSaved(false);
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/admin/settings');
+      if (!response.ok) throw new Error('Failed to fetch settings');
+
+      const data = await response.json();
+      const fetchedSettings = { ...DEFAULT_SETTINGS, ...data.settings };
+      setSettings(fetchedSettings);
+      setOriginalSettings(fetchedSettings);
+    } catch (err) {
+      console.error('Settings fetch error:', err);
+      toast.error('Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSave = () => {
-    // In production, save to API
-    console.log('Saving settings:', settings);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleToggle = (key: keyof Settings) => {
+    setSettings((prev) => {
+      const newSettings = { ...prev, [key]: !prev[key] };
+      setHasChanges(JSON.stringify(newSettings) !== JSON.stringify(originalSettings));
+      return newSettings;
+    });
   };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      const response = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings }),
+      });
+
+      if (!response.ok) throw new Error('Failed to save settings');
+
+      setOriginalSettings(settings);
+      setHasChanges(false);
+      toast.success('Settings saved successfully');
+    } catch (err) {
+      console.error('Settings save error:', err);
+      toast.error('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -50,25 +202,29 @@ export default function AdminSettingsPage() {
         </div>
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+          disabled={!hasChanges || saving}
+          className={`flex items-center gap-2 px-4 py-2 font-medium rounded-lg transition-colors ${
+            hasChanges && !saving
+              ? 'bg-red-600 text-white hover:bg-red-700'
+              : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+          }`}
         >
-          {saved ? (
+          {saving ? (
             <>
-              <CheckCircleIcon className="h-4 w-4" />
-              Saved
+              <LoadingSpinner size="sm" />
+              Saving...
             </>
           ) : (
-            'Save Changes'
+            <>
+              {!hasChanges && <CheckCircleIcon className="h-4 w-4" />}
+              {hasChanges ? 'Save Changes' : 'Saved'}
+            </>
           )}
         </button>
       </div>
 
       {/* Account info */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <ShieldCheckIcon className="h-5 w-5 text-red-500" />
-          Admin Account
-        </h2>
+      <SectionCard title="Admin Account" icon={ShieldCheckIcon} iconColorClass="text-red-500">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
@@ -92,127 +248,44 @@ export default function AdminSettingsPage() {
             </p>
           </div>
         </div>
-      </div>
+      </SectionCard>
 
-      {/* Verification settings */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Cog6ToothIcon className="h-5 w-5 text-gray-400" />
-          Verification Settings
-        </h2>
-        <div className="space-y-4">
-          <SettingToggle
-            title="Require Email Verification"
-            description="Users must verify their email before accessing the platform"
-            enabled={settings.requireEmailVerification}
-            onToggle={() => handleToggle('requireEmailVerification')}
-          />
-          <SettingToggle
-            title="Auto-Approve Teams"
-            description="Automatically approve team verification requests"
-            enabled={settings.autoApproveTeams}
-            onToggle={() => handleToggle('autoApproveTeams')}
-          />
-          <SettingToggle
-            title="Auto-Approve Companies"
-            description="Automatically approve company verification requests"
-            enabled={settings.autoApproveCompanies}
-            onToggle={() => handleToggle('autoApproveCompanies')}
-          />
+      {/* Settings sections - rendered from config */}
+      {SETTINGS_SECTIONS.map((section) => (
+        <SectionCard
+          key={section.title}
+          title={section.title}
+          icon={section.icon}
+          iconColorClass={section.iconColorClass}
+        >
+          <div className="space-y-4">
+            {section.settings.map((setting) => (
+              <SettingToggle
+                key={setting.key}
+                title={setting.title}
+                description={setting.description}
+                enabled={settings[setting.key]}
+                onToggle={() => handleToggle(setting.key)}
+                dangerous={setting.dangerous}
+              />
+            ))}
+          </div>
+        </SectionCard>
+      ))}
+
+      {/* Unsaved changes warning */}
+      {hasChanges && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-3 text-yellow-400 text-sm flex items-center gap-2">
+          <span>You have unsaved changes</span>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="ml-2 px-3 py-1 bg-yellow-500 text-black font-medium rounded hover:bg-yellow-400 transition-colors"
+          >
+            {saving ? 'Saving...' : 'Save Now'}
+          </button>
         </div>
-      </div>
-
-      {/* Moderation settings */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <KeyIcon className="h-5 w-5 text-gray-400" />
-          Moderation Settings
-        </h2>
-        <div className="space-y-4">
-          <SettingToggle
-            title="Content Moderation"
-            description="Enable automated content moderation and flagging"
-            enabled={settings.moderationEnabled}
-            onToggle={() => handleToggle('moderationEnabled')}
-          />
-        </div>
-      </div>
-
-      {/* Notification settings */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <BellIcon className="h-5 w-5 text-gray-400" />
-          Notification Settings
-        </h2>
-        <div className="space-y-4">
-          <SettingToggle
-            title="Email Notifications"
-            description="Receive email alerts for critical admin events"
-            enabled={settings.emailNotifications}
-            onToggle={() => handleToggle('emailNotifications')}
-          />
-          <SettingToggle
-            title="Slack Notifications"
-            description="Send notifications to a Slack channel"
-            enabled={settings.slackNotifications}
-            onToggle={() => handleToggle('slackNotifications')}
-          />
-        </div>
-      </div>
-
-      {/* Platform settings */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <GlobeAltIcon className="h-5 w-5 text-gray-400" />
-          Platform Settings
-        </h2>
-        <div className="space-y-4">
-          <SettingToggle
-            title="Maintenance Mode"
-            description="Put the platform in maintenance mode (users will see a maintenance page)"
-            enabled={settings.maintenanceMode}
-            onToggle={() => handleToggle('maintenanceMode')}
-            dangerous
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SettingToggle({
-  title,
-  description,
-  enabled,
-  onToggle,
-  dangerous = false,
-}: {
-  title: string;
-  description: string;
-  enabled: boolean;
-  onToggle: () => void;
-  dangerous?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between py-2">
-      <div>
-        <p className={`text-sm font-medium ${dangerous ? 'text-red-400' : 'text-white'}`}>
-          {title}
-        </p>
-        <p className="text-sm text-gray-500">{description}</p>
-      </div>
-      <button
-        onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-          enabled ? (dangerous ? 'bg-red-600' : 'bg-green-600') : 'bg-gray-700'
-        }`}
-      >
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-            enabled ? 'translate-x-6' : 'translate-x-1'
-          }`}
-        />
-      </button>
+      )}
     </div>
   );
 }

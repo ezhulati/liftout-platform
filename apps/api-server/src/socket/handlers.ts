@@ -240,6 +240,125 @@ export const registerSocketHandlers = (io: SocketIOServer) => {
     });
 
     // ==========================================
+    // Direct Message Sending (via Socket)
+    // ==========================================
+
+    /**
+     * Send a message directly via socket (alternative to REST API)
+     */
+    socket.on('send_message', async (data: {
+      conversationId: string;
+      content: string;
+      messageType?: 'text' | 'file' | 'system' | 'video_invite';
+      replyToId?: string;
+      attachments?: Array<{ url: string; filename: string; fileType: string; fileSize: number }>;
+    }) => {
+      const { conversationId, content, messageType = 'text', replyToId, attachments } = data;
+
+      try {
+        // Verify user has access to this conversation
+        const participant = await prisma.conversationParticipant.findUnique({
+          where: {
+            conversationId_userId: {
+              conversationId,
+              userId: user.id,
+            },
+          },
+        });
+
+        if (!participant || participant.leftAt) {
+          socket.emit('error', {
+            event: 'send_message',
+            message: 'You do not have access to this conversation',
+          });
+          return;
+        }
+
+        // Create the message
+        const message = await prisma.message.create({
+          data: {
+            conversationId,
+            senderId: user.id,
+            senderType: 'team', // Will be determined by user type
+            content,
+            messageType,
+            replyToId,
+            attachments: attachments || [],
+            sentAt: new Date(),
+          },
+          include: {
+            sender: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            replyTo: true,
+          },
+        });
+
+        // Update conversation's last message time and increment message count
+        const conversation = await prisma.conversation.findUnique({
+          where: { id: conversationId },
+          include: {
+            participants: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        });
+
+        if (conversation) {
+          // Update unread counts for all participants except sender
+          const unreadCounts = (conversation.unreadCounts as Record<string, number>) || {};
+          for (const p of conversation.participants) {
+            if (p.userId !== user.id) {
+              unreadCounts[p.userId] = (unreadCounts[p.userId] || 0) + 1;
+            }
+          }
+
+          await prisma.conversation.update({
+            where: { id: conversationId },
+            data: {
+              lastMessageAt: new Date(),
+              messageCount: { increment: 1 },
+              unreadCounts,
+            },
+          });
+        }
+
+        // Broadcast to all participants in the conversation
+        io.to(`conversation:${conversationId}`).emit('new_message', message);
+
+        // Also emit to individual user rooms for offline notification tracking
+        if (conversation) {
+          for (const p of conversation.participants) {
+            if (p.userId !== user.id) {
+              io.to(`user:${p.userId}`).emit('notification', {
+                type: 'new_message',
+                conversationId,
+                messageId: message.id,
+                senderName: `${user.firstName} ${user.lastName}`,
+                preview: content.substring(0, 100),
+              });
+            }
+          }
+        }
+
+        logger.info(`Message sent in conversation ${conversationId} by ${user.email}`);
+      } catch (error) {
+        logger.error('Error sending message via socket:', error);
+        socket.emit('error', {
+          event: 'send_message',
+          message: 'Failed to send message',
+        });
+      }
+    });
+
+    // ==========================================
     // Error Handling
     // ==========================================
 

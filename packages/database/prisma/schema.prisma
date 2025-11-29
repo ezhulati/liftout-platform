@@ -805,7 +805,7 @@ model Subscription {
   amount                Int
   currency              String             @default("USD")
   stripeCustomerId      String?            @map("stripe_customer_id")
-  stripeSubscriptionId  String?            @map("stripe_subscription_id")
+  stripeSubscriptionId  String?            @unique @map("stripe_subscription_id")
   stripePriceId         String?            @map("stripe_price_id")
   trialStart            DateTime?          @map("trial_start")
   trialEnd              DateTime?          @map("trial_end")
@@ -1030,4 +1030,19 @@ model ImpersonationSession {
   @@index([token])
   @@index([expiresAt])
   @@map("impersonation_sessions")
+}
+
+// Platform admin settings (key-value store)
+model AdminSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  description String?
+  category    String   @default("general")
+  updatedBy   String?  @map("updated_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("admin_settings")
 }

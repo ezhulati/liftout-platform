@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { NotFoundError, ValidationError } from '../middleware/errorHandler';
@@ -71,7 +72,7 @@ router.put('/me', async (req: AuthenticatedRequest, res) => {
   const { firstName, lastName, ...profileData } = validatedData;
   
   // Update user basic info
-  const updateUserData: any = {};
+  const updateUserData: Prisma.UserUpdateInput = {};
   if (firstName) updateUserData.firstName = firstName;
   if (lastName) updateUserData.lastName = lastName;
   

@@ -36,36 +36,34 @@ export const GET = withAdminAccess(async (req: NextRequest) => {
       newMessages,
     ] = await Promise.all([
       // Total users
-      prisma.user.count({ where: { deletedAt: null } }),
+      prisma.user.count(),
       // New users in period
       prisma.user.count({
-        where: { createdAt: { gte: startDate }, deletedAt: null },
+        where: { createdAt: { gte: startDate } },
       }),
       // New users in previous period
       prisma.user.count({
         where: {
           createdAt: { gte: previousPeriodStart, lt: startDate },
-          deletedAt: null,
         },
       }),
       // Total teams
-      prisma.team.count({ where: { deletedAt: null } }),
+      prisma.team.count(),
       // New teams in period
       prisma.team.count({
-        where: { createdAt: { gte: startDate }, deletedAt: null },
+        where: { createdAt: { gte: startDate } },
       }),
       // Previous period teams
       prisma.team.count({
         where: {
           createdAt: { gte: previousPeriodStart, lt: startDate },
-          deletedAt: null,
         },
       }),
       // Total companies
-      prisma.company.count({ where: { deletedAt: null } }),
+      prisma.company.count(),
       // New companies in period
       prisma.company.count({
-        where: { createdAt: { gte: startDate }, deletedAt: null },
+        where: { createdAt: { gte: startDate } },
       }),
       // Total opportunities
       prisma.opportunity.count(),
@@ -124,7 +122,6 @@ export const GET = withAdminAccess(async (req: NextRequest) => {
         const count = await prisma.user.count({
           where: {
             createdAt: { gte: dayStart, lte: dayEnd },
-            deletedAt: null,
           },
         });
 
@@ -139,7 +136,6 @@ export const GET = withAdminAccess(async (req: NextRequest) => {
     const userTypeDistribution = await prisma.user.groupBy({
       by: ['userType'],
       _count: true,
-      where: { deletedAt: null },
     });
 
     // Get application status distribution
@@ -150,7 +146,6 @@ export const GET = withAdminAccess(async (req: NextRequest) => {
 
     // Get top performing teams (by applications)
     const topTeams = await prisma.team.findMany({
-      where: { deletedAt: null },
       include: {
         _count: {
           select: { applications: true },

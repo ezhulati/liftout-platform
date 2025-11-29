@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `/blog/category/${category.toLowerCase()}`,
       images: [
         {
-          url: '/og-image.png',
+          url: '/hero-team.jpeg',
           width: 1200,
           height: 630,
           alt: `Liftout ${normalizedCategory} Articles`,
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: `${normalizedCategory} - Insights | Liftout`,
       description,
-      images: ['/og-image.png'],
+      images: ['/hero-team.jpeg'],
     },
   };
 }

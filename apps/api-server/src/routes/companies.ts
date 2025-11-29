@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { AuthenticatedRequest, requireCompanyUser } from '../middleware/auth';
 

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { User } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { ValidationError, AuthenticationError } from '../middleware/errorHandler';
@@ -11,6 +12,14 @@ import {
   sendPasswordResetEmail,
   sendWelcomeEmail,
 } from '../lib/email';
+
+interface JwtPayload {
+  userId: string;
+  email: string;
+  userType: string;
+  iat?: number;
+  exp?: number;
+}
 
 const router = Router();
 
@@ -61,7 +70,7 @@ const generateTokens = (userId: string) => {
   return { accessToken, refreshToken };
 };
 
-const getUserResponse = (user: any) => ({
+const getUserResponse = (user: User) => ({
   id: user.id,
   email: user.email,
   firstName: user.firstName,
@@ -204,7 +213,7 @@ router.post('/refresh', async (req, res) => {
   }
   
   try {
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as any;
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as JwtPayload;
     
     // Check if user still exists
     const user = await prisma.user.findUnique({

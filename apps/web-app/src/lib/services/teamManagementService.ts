@@ -417,20 +417,28 @@ export class TeamManagementService {
 
   // Private method to send invitation email
   private async sendInvitationEmail(invitation: Omit<TeamInvitation, 'id'>, invitationId: string): Promise<void> {
-    // TODO: Implement email sending logic
-    // This would integrate with your email service (SendGrid, AWS SES, etc.)
-    
-    const invitationLink = `${window.location.origin}/app/invitations/${invitationId}`;
-    
-    console.log('Sending invitation email:', {
-      to: invitation.invitedEmail,
-      subject: `Invitation to join ${invitation.teamName}`,
-      invitationLink,
-      message: invitation.message
-    });
-    
-    // For now, just log the invitation details
-    // In production, this would send an actual email
+    // Import dynamically to avoid issues with server/client code
+    try {
+      const { sendTeamInvitationEmail } = await import('@/lib/email');
+
+      const result = await sendTeamInvitationEmail({
+        to: invitation.invitedEmail,
+        inviterName: invitation.inviterName,
+        teamName: invitation.teamName,
+        invitationId,
+        message: invitation.message,
+      });
+
+      if (result.success) {
+        console.log('Invitation email sent successfully:', result.messageId);
+      } else {
+        console.error('Failed to send invitation email:', result.error);
+        // Don't throw - invitation is still created, email just failed
+      }
+    } catch (error) {
+      // Log error but don't fail the invitation creation
+      console.error('Error sending invitation email:', error);
+    }
   }
 }
 

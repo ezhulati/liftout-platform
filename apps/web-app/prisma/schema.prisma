@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -168,6 +167,34 @@ enum EntityType {
   opportunity
 }
 
+// Admin-related enums
+enum ModerationSeverity {
+  low
+  medium
+  high
+  critical
+}
+
+enum ModerationStatus {
+  pending
+  approved
+  rejected
+  escalated
+}
+
+enum GDPRRequestType {
+  export
+  delete
+  access
+}
+
+enum GDPRRequestStatus {
+  pending
+  processing
+  completed
+  failed
+}
+
 // Core Tables
 model User {
   id                String    @id @default(uuid())
@@ -194,6 +221,21 @@ model User {
   passwordResetToken       String?   @map("password_reset_token")
   passwordResetExpires     DateTime? @map("password_reset_expires")
 
+  // Two-factor authentication fields
+  twoFactorEnabled         Boolean   @default(false) @map("two_factor_enabled")
+  twoFactorSecret          String?   @map("two_factor_secret")
+  backupCodes              Json?     @map("backup_codes")
+
+  // Admin-specific fields
+  suspendedAt              DateTime? @map("suspended_at")
+  suspendedBy              String?   @map("suspended_by")
+  suspendedReason          String?   @map("suspended_reason")
+  bannedAt                 DateTime? @map("banned_at")
+  bannedBy                 String?   @map("banned_by")
+  bannedReason             String?   @map("banned_reason")
+  deletedAt                DateTime? @map("deleted_at")
+  deletedBy                String?   @map("deleted_by")
+
   // Relations
   profile                IndividualProfile?
   skills                 UserSkill[]
@@ -210,6 +252,8 @@ model User {
   expressionsOfInterest  ExpressionOfInterest[]
   conversationSenders    ConversationParticipant[]
   savedItems             SavedItem[]
+  impersonationsByAdmin  ImpersonationSession[]   @relation("AdminImpersonator")
+  impersonationsAsTarget ImpersonationSession[]   @relation("ImpersonationTarget")
 
   @@map("users")
 }
@@ -284,6 +328,10 @@ model Company {
   createdAt            DateTime            @default(now()) @map("created_at")
   updatedAt            DateTime            @updatedAt @map("updated_at")
 
+  // Soft delete fields
+  deletedAt            DateTime?           @map("deleted_at")
+  deletedBy            String?             @map("deleted_by")
+
   // Relations
   users         CompanyUser[]
   opportunities Opportunity[]
@@ -352,6 +400,16 @@ model Team {
   metadata                Json                   @default("{}")
   createdAt               DateTime               @default(now()) @map("created_at")
   updatedAt               DateTime               @updatedAt @map("updated_at")
+
+  // Verification fields (for admin)
+  verificationStatus      VerificationStatus     @default(pending) @map("verification_status")
+  verificationDocs        Json                   @default("[]") @map("verification_documents")
+  verifiedAt              DateTime?              @map("verified_at")
+  verifiedBy              String?                @map("verified_by")
+
+  // Soft delete fields
+  deletedAt               DateTime?              @map("deleted_at")
+  deletedBy               String?                @map("deleted_by")
 
   // Relations
   creator      User              @relation("TeamCreator", fields: [createdBy], references: [id])
@@ -747,7 +805,7 @@ model Subscription {
   amount                Int
   currency              String             @default("USD")
   stripeCustomerId      String?            @map("stripe_customer_id")
-  stripeSubscriptionId  String?            @map("stripe_subscription_id")
+  stripeSubscriptionId  String?            @unique @map("stripe_subscription_id")
   stripePriceId         String?            @map("stripe_price_id")
   trialStart            DateTime?          @map("trial_start")
   trialEnd              DateTime?          @map("trial_end")
@@ -799,15 +857,192 @@ model Transaction {
 model AuditLog {
   id           String   @id @default(uuid())
   userId       String?  @map("user_id")
+  adminUserId  String?  @map("admin_user_id")
+  actorType    String   @default("user") @map("actor_type")
   action       String
+  actionCategory String? @map("action_category")
   resourceType String   @map("resource_type")
   resourceId   String?  @map("resource_id")
   oldValues    Json?    @map("old_values")
   newValues    Json?    @map("new_values")
+  sensitiveFields Json? @map("sensitive_fields")
   ipAddress    String?  @map("ip_address")
   userAgent    String?  @map("user_agent")
   sessionId    String?  @map("session_id")
+  requestId    String?  @map("request_id")
+  success      Boolean  @default(true)
+  errorMessage String?  @map("error_message")
   createdAt    DateTime @default(now()) @map("created_at")
 
+  @@index([userId])
+  @@index([adminUserId])
+  @@index([action])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================
+// ADMIN CENTER MODELS
+// ============================================
+
+// Admin notes for internal documentation on users/teams/companies
+model AdminNote {
+  id         String   @id @default(uuid())
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  note       String
+  createdBy  String   @map("created_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([entityType, entityId])
+  @@index([createdBy])
+  @@map("admin_notes")
+}
+
+// Content moderation queue for flagged content
+model ModerationFlag {
+  id          String             @id @default(uuid())
+  contentType String             @map("content_type")
+  contentId   String             @map("content_id")
+  reason      String
+  details     String?
+  severity    ModerationSeverity @default(medium)
+  status      ModerationStatus   @default(pending)
+  reportedBy  String?            @map("reported_by")
+  reviewedBy  String?            @map("reviewed_by")
+  reviewedAt  DateTime?          @map("reviewed_at")
+  resolution  String?
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  @@index([contentType, contentId])
+  @@index([status])
+  @@index([severity])
+  @@index([createdAt])
+  @@map("moderation_flags")
+}
+
+// Platform metrics for analytics tracking
+model PlatformMetrics {
+  id             String   @id @default(uuid())
+  metricType     String   @map("metric_type")
+  metricValue    Decimal  @map("metric_value")
+  dimension      String?
+  dimensionValue String?  @map("dimension_value")
+  period         String   @default("daily")
+  recordedAt     DateTime @default(now()) @map("recorded_at")
+  metadata       Json     @default("{}")
+
+  @@index([metricType, recordedAt])
+  @@index([recordedAt])
+  @@map("platform_metrics")
+}
+
+// Daily analytics snapshots for fast dashboard queries
+model AnalyticsSnapshot {
+  id                    String   @id @default(uuid())
+  snapshotDate          DateTime @map("snapshot_date")
+  period                String   @default("daily")
+
+  // User metrics
+  totalUsers            Int      @default(0) @map("total_users")
+  newUsers              Int      @default(0) @map("new_users")
+  activeUsers           Int      @default(0) @map("active_users")
+  churnedUsers          Int      @default(0) @map("churned_users")
+  individualUsers       Int      @default(0) @map("individual_users")
+  companyUsers          Int      @default(0) @map("company_users")
+
+  // Marketplace metrics
+  totalTeams            Int      @default(0) @map("total_teams")
+  activeTeams           Int      @default(0) @map("active_teams")
+  totalOpportunities    Int      @default(0) @map("total_opportunities")
+  activeOpportunities   Int      @default(0) @map("active_opportunities")
+
+  // Engagement metrics
+  profileViews          Int      @default(0) @map("profile_views")
+  searchQueries         Int      @default(0) @map("search_queries")
+  messagesSent          Int      @default(0) @map("messages_sent")
+  applicationsSubmitted Int      @default(0) @map("applications_submitted")
+  expressionsOfInterest Int      @default(0) @map("expressions_of_interest")
+
+  // Conversion metrics
+  interestToApplication Decimal? @map("interest_to_application")
+  applicationToInterview Decimal? @map("application_to_interview")
+  interviewToHire       Decimal? @map("interview_to_hire")
+
+  // Revenue metrics
+  totalRevenue          Decimal  @default(0) @map("total_revenue")
+  subscriptionRevenue   Decimal  @default(0) @map("subscription_revenue")
+  connectionFeeRevenue  Decimal  @default(0) @map("connection_fee_revenue")
+  successFeeRevenue     Decimal  @default(0) @map("success_fee_revenue")
+
+  metadata              Json     @default("{}")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  @@unique([snapshotDate, period])
+  @@index([snapshotDate])
+  @@map("analytics_snapshots")
+}
+
+// GDPR request tracking for compliance
+model GDPRRequest {
+  id           String            @id @default(uuid())
+  userId       String            @map("user_id")
+  userEmail    String            @map("user_email")
+  requestType  GDPRRequestType   @map("request_type")
+  status       GDPRRequestStatus @default(pending)
+  processedBy  String?           @map("processed_by")
+  processedAt  DateTime?         @map("processed_at")
+  exportUrl    String?           @map("export_url")
+  exportExpiresAt DateTime?      @map("export_expires_at")
+  notes        String?
+  metadata     Json              @default("{}")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("gdpr_requests")
+}
+
+// Admin impersonation sessions for tracking when admins act as users
+model ImpersonationSession {
+  id           String    @id @default(uuid())
+  adminId      String    @map("admin_id")
+  targetUserId String    @map("target_user_id")
+  reason       String
+  token        String    @unique
+  startedAt    DateTime  @default(now()) @map("started_at")
+  endedAt      DateTime? @map("ended_at")
+  expiresAt    DateTime  @map("expires_at")
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+
+  // Relations
+  admin        User      @relation("AdminImpersonator", fields: [adminId], references: [id])
+  targetUser   User      @relation("ImpersonationTarget", fields: [targetUserId], references: [id])
+
+  @@index([adminId])
+  @@index([targetUserId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("impersonation_sessions")
+}
+
+// Platform admin settings (key-value store)
+model AdminSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  description String?
+  category    String   @default("general")
+  updatedBy   String?  @map("updated_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("admin_settings")
 }

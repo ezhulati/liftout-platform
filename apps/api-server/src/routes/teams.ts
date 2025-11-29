@@ -40,6 +40,7 @@ router.get('/', async (req, res) => {
     req.query.limit as string | undefined
   );
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {
     visibility: 'public',
     availabilityStatus: { not: 'not_available' }

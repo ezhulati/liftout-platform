@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { Team, TeamMember, TeamAvailabilityStatus, RemotePreference, TeamVisibility, MemberStatus } from '@prisma/client';
+import { Team, TeamMember, TeamAvailabilityStatus, RemotePreference, TeamVisibility, MemberStatus, SeniorityLevel } from '@prisma/client';
 import { getPaginationParams } from '../lib/utils';
 import { NotFoundError, AuthorizationError } from '../middleware/errorHandler';
 
@@ -43,7 +43,7 @@ export interface CreateTeamMemberInput {
     userId: string;
     role: string;
     specialization?: string;
-    seniorityLevel?: any;
+    seniorityLevel?: SeniorityLevel;
     isAdmin?: boolean;
     isLead?: boolean;
     status?: MemberStatus;
@@ -72,6 +72,7 @@ class TeamService {
   ): Promise<PaginatedTeamsResult> {
     const { page: pageNum, limit: limitNum, skip, take } = getPaginationParams(page, limit);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
     if (filters.search) {
@@ -280,6 +281,7 @@ class TeamService {
       throw new AuthorizationError('You do not have permission to update this team');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { members, ...teamData } = data;
 
     const team = await prisma.team.update({
@@ -384,7 +386,7 @@ class TeamService {
    * Submit verification documents for a team
    * TODO: Implement when verificationDocs field is added to schema
    */
-  async submitVerificationDocuments(teamId: string, files: Express.Multer.File[]): Promise<Team> {
+  async submitVerificationDocuments(teamId: string, _files: Express.Multer.File[]): Promise<Team> {
     // Feature not yet implemented - schema needs verificationDocs field
     const team = await prisma.team.findUnique({
       where: { id: teamId },

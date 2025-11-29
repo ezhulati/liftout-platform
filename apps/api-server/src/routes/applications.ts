@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { ApplicationStatus } from '@prisma/client';
 import { AuthenticatedRequest, authMiddleware, requireCompanyUser } from '../middleware/auth';
 import { applicationService } from '../services/applicationService';
 
@@ -101,7 +102,7 @@ router.get('/', authMiddleware, async (req: AuthenticatedRequest, res) => {
     const result = await applicationService.getApplicationsByTeam(
       teamId as string,
       req.user!.id,
-      { status: status as any },
+      { status: status as ApplicationStatus | undefined },
       page as string,
       limit as string
     );
@@ -117,7 +118,7 @@ router.get('/', authMiddleware, async (req: AuthenticatedRequest, res) => {
     const result = await applicationService.getApplicationsByOpportunity(
       opportunityId as string,
       req.user!.id,
-      { status: status as any },
+      { status: status as ApplicationStatus | undefined },
       page as string,
       limit as string
     );

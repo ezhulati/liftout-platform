@@ -7,8 +7,16 @@ const publicRoutes = [
   '/auth/signin',
   '/auth/signup',
   '/auth/forgot-password',
+  '/auth/reset-password',
+  '/auth/verify-request',
   '/auth/error',
   '/api/auth',
+  '/blog',
+  '/for-teams',
+  '/for-companies',
+  '/contact',
+  '/privacy',
+  '/terms',
 ];
 
 // Routes only accessible to individual users (team members/leaders)
@@ -60,7 +68,12 @@ const protectedRoutes = [
 ];
 
 function isPublicRoute(pathname: string): boolean {
-  return publicRoutes.some(route => pathname === route || pathname.startsWith(route));
+  return publicRoutes.some(route => {
+    // Exact match for root
+    if (route === '/') return pathname === '/';
+    // Prefix match for other routes (e.g., /auth/signin matches /auth/signin?callback=...)
+    return pathname === route || pathname.startsWith(route + '/') || pathname.startsWith(route + '?');
+  });
 }
 
 function isIndividualOnlyRoute(pathname: string): boolean {
@@ -110,18 +123,26 @@ export default withAuth(
         return NextResponse.redirect(new URL('/', req.url));
       }
 
-      // 2FA check temporarily disabled for development
-      // TODO: Re-enable 2FA for production
-      // const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
-      // const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
-      // if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
-      //   return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
-      // }
-      // if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
-      //   return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
-      // }
+      // 2FA enforcement for admin users in production
+      const isProduction = process.env.NODE_ENV === 'production';
+      const enforce2FA = process.env.ENFORCE_ADMIN_2FA === 'true' || isProduction;
 
-      // Admin is authenticated, allow access
+      if (enforce2FA) {
+        const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
+        const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
+
+        // If 2FA is not set up, redirect to setup
+        if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
+          return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
+        }
+
+        // If 2FA is enabled but not verified this session, redirect to verify
+        if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
+          return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
+        }
+      }
+
+      // Admin is authenticated (and 2FA verified if required), allow access
       return NextResponse.next();
     }
 

@@ -4,7 +4,7 @@ import { blogArticles, getAllCategories } from '@/lib/blog/articles';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://liftout.com';
 
-  // Static pages
+  // Static pages - only public-facing pages that should rank in search
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -42,18 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
-    {
-      url: `${baseUrl}/auth/signin`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/auth/signup`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+    // Note: Auth pages intentionally excluded - they're utility pages, not content pages
   ];
 
   // Blog index page

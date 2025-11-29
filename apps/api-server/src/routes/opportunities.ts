@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { OpportunityStatus, RemotePreference, UrgencyLevel, SeniorityLevel } from '@prisma/client';
 import { AuthenticatedRequest, authMiddleware, requireCompanyUser } from '../middleware/auth';
 import { ValidationError } from '../middleware/errorHandler';
 import { opportunityService } from '../services/opportunityService';
@@ -77,15 +78,15 @@ router.get('/', authMiddleware, async (req: AuthenticatedRequest, res) => {
     search: search as string,
     industry: industry as string,
     location: location as string,
-    status: status as any,
+    status: status as OpportunityStatus | undefined,
     companyId: companyId as string,
     minCompensation: minCompensation ? Number(minCompensation) : undefined,
     maxCompensation: maxCompensation ? Number(maxCompensation) : undefined,
     teamSizeMin: teamSizeMin ? Number(teamSizeMin) : undefined,
     teamSizeMax: teamSizeMax ? Number(teamSizeMax) : undefined,
-    remotePolicy: remotePolicy as any,
-    urgency: urgency as any,
-    seniorityLevel: seniorityLevel as any,
+    remotePolicy: remotePolicy as RemotePreference | undefined,
+    urgency: urgency as UrgencyLevel | undefined,
+    seniorityLevel: seniorityLevel as SeniorityLevel | undefined,
     featured: featured === 'true',
   };
 

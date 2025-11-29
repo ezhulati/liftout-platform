@@ -85,6 +85,7 @@ class OpportunityService {
     const { page: pageNum, limit: limitNum, skip, take } = getPaginationParams(page, limit);
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
     // Default to active and not expired

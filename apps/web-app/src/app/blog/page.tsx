@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: '/blog',
     images: [
       {
-        url: '/og-image.png',
+        url: '/hero-team.jpeg',
         width: 1200,
         height: 630,
         alt: 'Liftout Insights - Team Hiring & Liftout Resources',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Insights - Team Hiring & Liftout Resources | Liftout',
     description:
       'Expert insights on team liftouts, hiring strategies, non-compete agreements, and building high-performing teams.',
-    images: ['/og-image.png'],
+    images: ['/hero-team.jpeg'],
   },
 };
 
