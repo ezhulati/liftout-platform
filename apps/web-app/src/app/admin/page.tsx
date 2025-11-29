@@ -261,16 +261,6 @@ export default function AdminDashboard() {
         setMetrics(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-        // Set mock data for development
-        setMetrics({
-          users: { total: 1247, newToday: 23, newThisWeek: 156, activeThisWeek: 834 },
-          teams: { total: 89, verified: 67, pendingVerification: 12 },
-          companies: { total: 45, verified: 38, pendingVerification: 5 },
-          opportunities: { total: 124, active: 78 },
-          applications: { total: 342 },
-          moderation: { pendingFlags: 8 },
-          recentActivity: [],
-        });
       } finally {
         setLoading(false);
       }

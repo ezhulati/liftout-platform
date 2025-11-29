@@ -3,8 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Authentication Flows', () => {
   test.describe('Sign In Page', () => {
     test('displays sign in form correctly', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
       // Check page elements
       await expect(page.locator('h2:has-text("Welcome back")')).toBeVisible();
@@ -17,8 +16,7 @@ test.describe('Authentication Flows', () => {
     });
 
     test('can fill demo credentials for team user', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
       // Open demo credentials section
       await page.click('text=Try demo credentials');
@@ -33,8 +31,7 @@ test.describe('Authentication Flows', () => {
     });
 
     test('can fill demo credentials for company user', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
       // Open demo credentials section
       await page.click('text=Try demo credentials');
@@ -49,8 +46,7 @@ test.describe('Authentication Flows', () => {
     });
 
     test('team user can sign in and reach dashboard', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
       // Fill credentials
       await page.fill('input[type="email"]', 'demo@example.com');
@@ -60,7 +56,7 @@ test.describe('Authentication Flows', () => {
       await page.click('button:has-text("Sign in")');
 
       // Wait for navigation to dashboard
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+      await expect(page).toHaveURL(/\/app\/dashboard/, { timeout: 30000 });
 
       // Verify dashboard loaded - use first() to avoid strict mode violation
       await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible({ timeout: 10000 });
@@ -78,7 +74,7 @@ test.describe('Authentication Flows', () => {
       await page.click('button:has-text("Sign in")');
 
       // Wait for navigation to dashboard
-      await page.waitForURL('**/app/dashboard', { timeout: 30000 });
+      await expect(page).toHaveURL(/\/app\/dashboard/, { timeout: 30000 });
 
       // Verify dashboard loaded - use first() to avoid strict mode violation
       await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible({ timeout: 10000 });
@@ -102,8 +98,7 @@ test.describe('Authentication Flows', () => {
 
   test.describe('Sign Up Page', () => {
     test('displays sign up form correctly', async ({ page }) => {
-      await page.goto('/auth/signup');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signup', { waitUntil: 'domcontentloaded' });
 
       // Check page elements
       await expect(page.locator('h2:has-text("Create your account")')).toBeVisible();
@@ -114,8 +109,7 @@ test.describe('Authentication Flows', () => {
     });
 
     test('has link to sign in page', async ({ page }) => {
-      await page.goto('/auth/signup');
-      await page.waitForLoadState('domcontentloaded');
+      await page.goto('/auth/signup', { waitUntil: 'domcontentloaded' });
 
       await expect(page.locator('a:has-text("Sign in")')).toBeVisible();
       await page.click('a:has-text("Sign in")');
@@ -125,7 +119,7 @@ test.describe('Authentication Flows', () => {
 
   test.describe('Protected Routes', () => {
     test('redirects unauthenticated users to signin', async ({ page }) => {
-      await page.goto('/app/dashboard');
+      await page.goto('/app/dashboard', { waitUntil: 'domcontentloaded' });
 
       // Should redirect to signin
       await page.waitForURL('**/auth/signin**', { timeout: 10000 });

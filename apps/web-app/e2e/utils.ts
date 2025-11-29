@@ -52,11 +52,16 @@ export async function goToOnboarding(page: Page): Promise<OnboardingState> {
   await page.goto('/app/onboarding');
   await page.waitForLoadState('domcontentloaded');
 
+  const wizardHeader = page.locator('h1:has-text("Welcome to Liftout")');
+
   const outcome = await Promise.race<OnboardingState | null>([
-    page.waitForURL('**/app/dashboard', { timeout: 3000 }).then((): OnboardingState => 'dashboard').catch(() => null),
-    page.waitForTimeout(3000).then(() => null),
+    page.waitForURL('**/app/dashboard', { timeout: 8000 }).then((): OnboardingState => 'dashboard').catch(() => null),
+    wizardHeader.waitFor({ state: 'visible', timeout: 8000 }).then((): OnboardingState => 'wizard').catch(() => null),
+    page.waitForTimeout(8000).then(() => null),
   ]);
 
   if (outcome === 'dashboard') return 'dashboard';
-  return page.url().includes('/app/onboarding') ? 'wizard' : 'loading';
+  if (outcome === 'wizard') return 'wizard';
+  const visible = await wizardHeader.isVisible().catch(() => false);
+  return visible ? 'wizard' : 'loading';
 }

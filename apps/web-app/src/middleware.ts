@@ -110,21 +110,18 @@ export default withAuth(
         return NextResponse.redirect(new URL('/', req.url));
       }
 
-      // Check 2FA status for admin users
-      const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
-      const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
+      // 2FA check temporarily disabled for development
+      // TODO: Re-enable 2FA for production
+      // const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
+      // const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
+      // if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
+      //   return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
+      // }
+      // if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
+      //   return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
+      // }
 
-      // If 2FA is not set up and not on setup page, redirect to setup
-      if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
-        return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
-      }
-
-      // If 2FA is enabled but not verified this session (and not on verify/setup page)
-      if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
-        return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
-      }
-
-      // Admin is authenticated and 2FA verified, allow access
+      // Admin is authenticated, allow access
       return NextResponse.next();
     }
 

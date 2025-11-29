@@ -174,6 +174,12 @@ export const authOptions: NextAuthOptions = {
         return url;
       }
 
+      // Allow admin redirects
+      if (url.includes('/admin')) {
+        if (url.startsWith('/')) return `${prodBaseUrl}${url}`;
+        return url;
+      }
+
       // Default signin redirect goes to dashboard (returning users)
       if (url.includes('/auth/signin') || url === baseUrl || url === prodBaseUrl) {
         return `${prodBaseUrl}/app/dashboard`;
