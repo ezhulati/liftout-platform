@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import CryptoJS from 'crypto-js';
@@ -155,7 +154,7 @@ export async function disable2FA(userId: string): Promise<void> {
     data: {
       twoFactorEnabled: false,
       twoFactorSecret: null,
-      backupCodes: Prisma.DbNull,
+      backupCodes: null,
     },
   });
 }
