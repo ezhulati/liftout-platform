@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { migrationRunner } from '@/scripts/migration-runner';
 import { withAuth } from '@/lib/api-middleware';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/admin/migrations - Get migration status
 export const GET = withAuth(async (req: NextRequest, user) => {
   try {

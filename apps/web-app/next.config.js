@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   transpilePackages: ['next-auth'],
   eslint: {
     // Skip ESLint during production builds - linting is done in CI/development

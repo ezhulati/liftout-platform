@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { withAdminAccess } from '@/lib/admin-middleware';
 import { getAdminDashboardMetrics } from '@/lib/services/adminService';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = withAdminAccess(async () => {
   try {
     const metrics = await getAdminDashboardMetrics();

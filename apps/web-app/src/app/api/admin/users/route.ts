@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAccess } from '@/lib/admin-middleware';
 import { searchUsers } from '@/lib/services/adminService';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = withAdminAccess(async (req: NextRequest) => {
   try {
     const { searchParams } = new URL(req.url);

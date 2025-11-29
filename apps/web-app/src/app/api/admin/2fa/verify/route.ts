@@ -3,6 +3,8 @@ import { getToken } from 'next-auth/jwt';
 import { verify2FACode, verifyBackupCode } from '@/lib/services/adminService';
 import { logAdminAction } from '@/lib/services/auditService';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req });

@@ -4,6 +4,8 @@ import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generate2FASecret } from '@/lib/services/adminService';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req });
