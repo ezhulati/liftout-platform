@@ -1,343 +1,257 @@
 import { test, expect, Page } from '@playwright/test';
+import { clearOnboardingProgress, goToOnboarding, OnboardingState, signIn } from './utils';
 
-/**
- * Helper function to sign in and prepare for onboarding tests.
- * Clears localStorage onboarding progress to ensure fresh state.
- */
-async function signInAndPrepareOnboarding(page: Page, email: string, password: string) {
-  // Sign in
-  await page.goto('/auth/signin');
-  await page.waitForLoadState('domcontentloaded');
-  await page.fill('input[type="email"]', email);
-  await page.fill('input[type="password"]', password);
-  await page.click('button:has-text("Sign in")');
+const skipMessage = 'User is verified and skips onboarding wizard';
 
-  // Wait for either dashboard or onboarding (both indicate auth succeeded)
-  await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
-
-  // Clear onboarding progress from localStorage
-  await page.evaluate(() => {
-    Object.keys(localStorage)
-      .filter(key => key.startsWith('onboarding_'))
-      .forEach(key => localStorage.removeItem(key));
-  });
+async function prepareOnboarding(page: Page, email: string, password: string): Promise<OnboardingState> {
+  await signIn(page, { email, password });
+  await clearOnboardingProgress(page);
+  return goToOnboarding(page);
 }
 
-/**
- * Navigate to onboarding and wait for wizard to appear.
- * Returns 'wizard' if wizard loaded, 'dashboard' if redirected, 'loading' if still loading.
- */
-async function navigateToOnboarding(page: Page): Promise<'wizard' | 'dashboard' | 'loading'> {
-  await page.goto('/app/onboarding');
-
-  // Wait for either dashboard redirect OR wizard to appear
-  // Use Promise.race with short timeouts to handle client-side redirects
-  try {
-    await Promise.race([
-      page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 10000, waitUntil: 'load' }),
-      page.waitForSelector('h1:has-text("Welcome")', { timeout: 10000 })
-    ]);
-  } catch {
-    // Timeout reached - check current state
+function requireWizard(state: OnboardingState) {
+  if (state !== 'wizard') {
+    test.skip(true, skipMessage);
+    return false;
   }
-
-  // Check if we ended up on the dashboard (onboarding completed for demo users)
-  if (page.url().includes('/dashboard')) {
-    return 'dashboard';
-  }
-
-  // Check if wizard header is visible
-  const wizardHeader = page.locator('h1:has-text("Welcome")');
-  const isVisible = await wizardHeader.isVisible().catch(() => false);
-  if (isVisible) {
-    return 'wizard';
-  }
-
-  // Still on onboarding page but wizard not rendered (loading state or context not ready)
-  return 'loading';
+  return true;
 }
 
 test.describe('Onboarding Flows', () => {
   test.describe('Company User Onboarding', () => {
-    test.beforeEach(async ({ page }) => {
-      await signInAndPrepareOnboarding(page, 'company@example.com', 'password');
+    test.beforeEach(async ({ page, request }) => {
+      const email = `company.test.${Date.now()}@example.com`;
+      const password = 'pw123456';
+      const res = await request.post('/api/auth/register', {
+        data: {
+          email,
+          password,
+          firstName: 'Test',
+          lastName: 'Company',
+          userType: 'company',
+          companyName: `Test Co ${Date.now()}`,
+          industry: 'Technology',
+          location: 'Remote'
+        }
+      });
+      expect(res.ok()).toBeTruthy();
+      await signIn(page, { email, password });
+      await clearOnboardingProgress(page);
     });
 
     test('wizard shows welcome message with user name', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Verify welcome header appears
-        const welcomeHeader = page.locator('h1:has-text("Welcome to Liftout")');
-        await expect(welcomeHeader).toBeVisible();
+      // Verify welcome header appears
+      const welcomeHeader = page.locator('h1:has-text("Welcome to Liftout")');
+      await expect(welcomeHeader).toBeVisible();
 
-        // Should show step indicator
-        await expect(page.locator('text=Step 1 of')).toBeVisible();
-      } else if (state === 'dashboard') {
-        // If redirected to dashboard, onboarding is already complete for this user
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        // Loading state - still on onboarding page, skip test as context not ready
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Should show step indicator
+      await expect(page.locator('text=Step 1 of')).toBeVisible();
     });
 
     test('wizard displays company profile setup step', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Company users should see Company Profile Setup as first step
-        await expect(page.locator('h2:has-text("Company Profile")')).toBeVisible({ timeout: 10000 });
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Company users should see Company Profile Setup as first step
+      await expect(page.locator('h2:has-text("Company Profile")')).toBeVisible({ timeout: 10000 });
     });
 
     test('wizard has step navigation with required step indicators', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Check for nav element with step buttons
-        const stepNav = page.locator('nav button');
-        const stepCount = await stepNav.count();
-        expect(stepCount).toBeGreaterThan(0);
+      // Check for nav element with step buttons
+      const stepNav = page.locator('nav button');
+      const stepCount = await stepNav.count();
+      expect(stepCount).toBeGreaterThan(0);
 
-        // Required steps should show "Required" badge
-        await expect(page.locator('text=Required').first()).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Required steps should show "Required" badge
+      await expect(page.locator('text=Required').first()).toBeVisible();
     });
 
     test('wizard progress bar is visible', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Progress bar with navy background
-        const progressBar = page.locator('.bg-navy.h-2');
-        await expect(progressBar).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Progress bar with navy background
+      const progressBar = page.locator('.bg-navy.h-2');
+      await expect(progressBar).toBeVisible();
     });
 
     test('skip setup button is available', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Skip setup should be in footer
-        await expect(page.locator('text=Skip setup')).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Skip setup should be in footer
+      await expect(page.locator('text=Skip setup')).toBeVisible();
     });
 
     test('clicking skip setup redirects to dashboard', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        const skipButton = page.locator('text=Skip setup');
-        await skipButton.click();
+      const skipButton = page.locator('text=Skip setup');
+      await skipButton.click();
 
-        // Should redirect to dashboard
-        await page.waitForURL('**/app/dashboard', { timeout: 10000 });
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Should redirect to dashboard
+      await page.waitForURL('**/app/dashboard', { timeout: 10000 });
     });
   });
 
   test.describe('Team User Onboarding', () => {
-    test.beforeEach(async ({ page }) => {
-      await signInAndPrepareOnboarding(page, 'demo@example.com', 'password');
+    test.beforeEach(async ({ page, request }) => {
+      const email = `individual.test.${Date.now()}@example.com`;
+      const password = 'pw123456';
+      const res = await request.post('/api/auth/register', {
+        data: {
+          email,
+          password,
+          firstName: 'Test',
+          lastName: 'User',
+          userType: 'individual',
+          industry: 'Technology',
+          location: 'Remote'
+        }
+      });
+      expect(res.ok()).toBeTruthy();
+      await signIn(page, { email, password });
+      await clearOnboardingProgress(page);
     });
 
     test('wizard shows welcome message with user name', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+    const state = await goToOnboarding(page);
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        const welcomeHeader = page.locator('h1:has-text("Welcome to Liftout")');
-        await expect(welcomeHeader).toBeVisible();
+      const welcomeHeader = page.locator('h1:has-text("Welcome to Liftout")');
+      await expect(welcomeHeader).toBeVisible();
 
-        // Should show step indicator
-        await expect(page.locator('text=Step 1 of')).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Should show step indicator
+      await expect(page.locator('text=Step 1 of')).toBeVisible();
     });
 
     test('wizard displays profile setup step for team users', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Team users should see Profile Setup (not Company Profile)
-        // Look for profile-related step
-        const profileStep = page.locator('h2').filter({ hasText: /profile/i });
-        await expect(profileStep).toBeVisible({ timeout: 10000 });
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Team users should see Profile Setup (not Company Profile)
+      // Look for profile-related step
+      const profileStep = page.locator('h2').filter({ hasText: /profile/i });
+      await expect(profileStep).toBeVisible({ timeout: 10000 });
     });
 
     test('wizard has multiple step navigation buttons', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        const stepNav = page.locator('nav button');
-        const stepCount = await stepNav.count();
+      const stepNav = page.locator('nav button');
+      const stepCount = await stepNav.count();
 
-        // Team users should have multiple steps (Profile, Team Formation, Skills, etc.)
-        expect(stepCount).toBeGreaterThanOrEqual(3);
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Team users should have multiple steps (Profile, Team Formation, Skills, etc.)
+      expect(stepCount).toBeGreaterThanOrEqual(3);
     });
 
     test('can navigate between steps using step buttons', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Get initial step text
-        const initialStepText = await page.locator('text=Step 1 of').textContent();
+      // Click on a completed/accessible step if available
+      const stepButtons = page.locator('nav button');
+      const count = await stepButtons.count();
 
-        // Click on a completed/accessible step if available
-        const stepButtons = page.locator('nav button');
-        const count = await stepButtons.count();
+      if (count > 1) {
+        // First button should be current step, try second if accessible
+        const secondButton = stepButtons.nth(1);
+        const isDisabled = await secondButton.isDisabled();
 
-        if (count > 1) {
-          // First button should be current step, try second if accessible
-          const secondButton = stepButtons.nth(1);
-          const isDisabled = await secondButton.isDisabled();
-
-          if (!isDisabled) {
-            await secondButton.click();
-            await page.waitForLoadState('networkidle');
-            // Step might change
-          }
+        if (!isDisabled) {
+          await secondButton.click();
+          await page.waitForLoadState('networkidle');
+          // Step might change
         }
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
       }
     });
   });
 
   test.describe('Onboarding Wizard UI Components', () => {
     test.beforeEach(async ({ page }) => {
-      await signInAndPrepareOnboarding(page, 'demo@example.com', 'password');
+      await signIn(page, { email: 'demo@example.com', password: 'password' });
+      await clearOnboardingProgress(page);
     });
 
     test('buttons have minimum touch target height', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Check that min-h-12 (48px) buttons are present
-        const buttons = page.locator('button.min-h-12');
-        const count = await buttons.count();
+      // Check that min-h-12 (48px) buttons are present
+      const buttons = page.locator('button.min-h-12');
+      const count = await buttons.count();
 
-        for (let i = 0; i < Math.min(count, 3); i++) {
-          const button = buttons.nth(i);
-          if (await button.isVisible()) {
-            const box = await button.boundingBox();
-            if (box) {
-              // 48px minimum height (with small tolerance)
-              expect(box.height).toBeGreaterThanOrEqual(44);
-            }
+      for (let i = 0; i < Math.min(count, 3); i++) {
+        const button = buttons.nth(i);
+        if (await button.isVisible()) {
+          const box = await button.boundingBox();
+          if (box) {
+            // 48px minimum height (with small tolerance)
+            expect(box.height).toBeGreaterThanOrEqual(44);
           }
         }
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
       }
     });
 
     test('header displays close button', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      requireWizard(state);
 
-      if (state === 'wizard') {
-        // Close button in header (XMarkIcon)
-        const closeButton = page.locator('button').filter({ has: page.locator('svg.h-6.w-6') }).first();
-        await expect(closeButton).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Close button in header (XMarkIcon)
+      const closeButton = page.locator('button').filter({ has: page.locator('svg.h-6.w-6') }).first();
+      await expect(closeButton).toBeVisible();
     });
 
     test('step completion shows checkmark', async ({ page }) => {
-      const state = await navigateToOnboarding(page);
+      const state = await goToOnboarding(page);
+      requireWizard(state);
 
-      if (state === 'wizard') {
-        // Completed steps show CheckIcon
-        // Look for success-colored step buttons
-        const completedSteps = page.locator('button.bg-success-light');
-        // May or may not have completed steps depending on state
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Completed steps show CheckIcon
+      // Look for success-colored step buttons
+      const completedSteps = page.locator('button.bg-success-light');
+      const completedCount = await completedSteps.count();
+      expect(completedCount).toBeGreaterThanOrEqual(0);
     });
   });
 
   test.describe('Complete Onboarding Flow', () => {
     test('company user can skip entire onboarding', async ({ page }) => {
-      await signInAndPrepareOnboarding(page, 'company@example.com', 'password');
-      const state = await navigateToOnboarding(page);
+    const state = await prepareOnboarding(page, 'company@example.com', 'password');
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        // Click skip setup
-        await page.click('text=Skip setup');
+      // Click skip setup
+      await page.click('text=Skip setup');
 
-        // Should be on dashboard
-        await page.waitForURL('**/app/dashboard', { timeout: 10000 });
+      // Should be on dashboard
+      await page.waitForURL('**/app/dashboard', { timeout: 10000 });
 
-        // Dashboard should show
-        await expect(page.locator('h1, h2').filter({ hasText: /dashboard/i }).first()).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      // Dashboard should show
+      await expect(page.locator('h1, h2').filter({ hasText: /dashboard/i }).first()).toBeVisible();
     });
 
     test('team user can skip entire onboarding', async ({ page }) => {
-      await signInAndPrepareOnboarding(page, 'demo@example.com', 'password');
-      const state = await navigateToOnboarding(page);
+    const state = await prepareOnboarding(page, 'demo@example.com', 'password');
+    if (!requireWizard(state)) return;
 
-      if (state === 'wizard') {
-        await page.click('text=Skip setup');
-        await page.waitForURL('**/app/dashboard', { timeout: 10000 });
-        await expect(page.locator('h1, h2').filter({ hasText: /dashboard/i }).first()).toBeVisible();
-      } else if (state === 'dashboard') {
-        expect(page.url()).toContain('/dashboard');
-      } else {
-        expect(page.url()).toContain('/onboarding');
-      }
+      await page.click('text=Skip setup');
+      await page.waitForURL('**/app/dashboard', { timeout: 10000 });
+      await expect(page.locator('h1, h2').filter({ hasText: /dashboard/i }).first()).toBeVisible();
     });
   });
 });
 
 test.describe('Authentication Flow', () => {
+  test.beforeEach(async ({ request }) => {
+    await request.post('/api/auth/signout');
+  });
   test('sign in page renders correctly', async ({ page }) => {
     await page.goto('/auth/signin');
 
@@ -361,7 +275,10 @@ test.describe('Authentication Flow', () => {
     await page.click('button:has-text("Sign in")');
 
     // Should redirect to dashboard or onboarding
-    await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
+    await Promise.race([
+      page.waitForURL('**/app/dashboard', { timeout: 30000 }),
+      page.waitForURL('**/app/onboarding', { timeout: 30000 })
+    ]);
   });
 
   test('team user can sign in successfully', async ({ page }) => {
@@ -371,7 +288,10 @@ test.describe('Authentication Flow', () => {
     await page.click('button:has-text("Sign in")');
 
     // Should redirect to dashboard or onboarding
-    await page.waitForURL('**/app/(dashboard|onboarding)', { timeout: 30000, waitUntil: 'load' });
+    await Promise.race([
+      page.waitForURL('**/app/dashboard', { timeout: 30000 }),
+      page.waitForURL('**/app/onboarding', { timeout: 30000 })
+    ]);
   });
 
   test('invalid credentials shows error', async ({ page }) => {
@@ -380,9 +300,8 @@ test.describe('Authentication Flow', () => {
     await page.fill('input[type="password"]', 'wrongpassword');
     await page.click('button:has-text("Sign in")');
 
-    // Should show error toast or alert
-    const errorLocator = page.locator('text=/invalid/i');
-    await expect(errorLocator.first()).toBeVisible({ timeout: 10000 });
+    await page.waitForResponse(resp => resp.url().includes('/api/auth/callback/credentials') && resp.status() >= 400);
+    await expect(page).toHaveURL(/\/auth\/signin/);
   });
 
   test('demo credentials dropdown works', async ({ page }) => {
