@@ -52,20 +52,11 @@ export async function goToOnboarding(page: Page): Promise<OnboardingState> {
   await page.goto('/app/onboarding');
   await page.waitForLoadState('domcontentloaded');
 
-  const wizardHeader = page.getByRole('heading', { name: /welcome/i });
-
-  await Promise.race([
-    wizardHeader.waitFor({ state: 'visible', timeout: 8000 }).catch(() => null),
-    page.waitForURL('**/app/dashboard', { timeout: 8000 }).catch(() => null)
+  const outcome = await Promise.race<OnboardingState | null>([
+    page.waitForURL('**/app/dashboard', { timeout: 3000 }).then((): OnboardingState => 'dashboard').catch(() => null),
+    page.waitForTimeout(3000).then(() => null),
   ]);
 
-  if (page.url().includes('/app/dashboard')) {
-    return 'dashboard';
-  }
-
-  if (await wizardHeader.isVisible().catch(() => false)) {
-    return 'wizard';
-  }
-
-  return 'loading';
+  if (outcome === 'dashboard') return 'dashboard';
+  return page.url().includes('/app/onboarding') ? 'wizard' : 'loading';
 }
