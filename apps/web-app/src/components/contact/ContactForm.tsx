@@ -95,19 +95,29 @@ export function ContactForm() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // Simulate form submission - replace with actual API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        inquiryType: 'general',
-        subject: '',
-        message: '',
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-      setErrors({});
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          inquiryType: 'general',
+          subject: '',
+          message: '',
+        });
+        setErrors({});
+      } else {
+        setSubmitStatus('error');
+      }
     } catch {
       setSubmitStatus('error');
     } finally {
@@ -320,7 +330,7 @@ export function ContactForm() {
             <ExclamationCircleIcon className="w-5 h-5 text-error flex-shrink-0" />
             <p className="text-error text-sm">
               Something went wrong. Please try again or email us directly at{' '}
-              <a href="mailto:hello@liftout.io" className="underline">hello@liftout.io</a>
+              <a href="mailto:enrizhulati@gmail.com" className="underline">enrizhulati@gmail.com</a>
             </p>
           </div>
         )}
