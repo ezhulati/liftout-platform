@@ -421,7 +421,7 @@ export function MemberRoles({ teamId, onMemberUpdate }: MemberRolesProps) {
                       </span>
                       <span className="text-xs text-text-tertiary">
                         Joined {formatDistanceToNow(
-                          member.joinedAt instanceof Date ? member.joinedAt : member.joinedAt.toDate(), 
+                          member.joinedAt instanceof Date ? member.joinedAt : new Date(member.joinedAt),
                           { addSuffix: true }
                         )}
                       </span>

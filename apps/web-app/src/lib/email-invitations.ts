@@ -1,17 +1,3 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDocs, 
-  query, 
-  where, 
-  serverTimestamp,
-  deleteDoc,
-  getDoc
-} from 'firebase/firestore';
-import { db } from './firebase';
-
 export interface TeamInvitation {
   id?: string;
   teamId: string;
@@ -39,9 +25,26 @@ export interface InvitationSummary {
   total: number;
 }
 
+// Demo invitation data
+const DEMO_INVITATIONS: TeamInvitation[] = [
+  {
+    id: 'demo-invite-001',
+    teamId: 'demo-team-001',
+    teamName: 'TechFlow Data Science Team',
+    inviterEmail: 'demo@example.com',
+    inviterName: 'Alex Chen',
+    inviteeEmail: 'david.park@gmail.com',
+    role: 'member',
+    status: 'pending',
+    message: "Hi David! We'd love to have you join our data science team.",
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+  },
+];
+
 class EmailInvitationService {
-  private readonly COLLECTION_NAME = 'team_invitations';
-  private readonly EXPIRY_DAYS = 7; // Invitations expire after 7 days
+  private readonly EXPIRY_DAYS = 7;
 
   /**
    * Check if this is a demo-related invitation
@@ -57,47 +60,28 @@ class EmailInvitationService {
    * Send a team invitation via email
    */
   async sendInvitation(invitation: Omit<TeamInvitation, 'id' | 'status' | 'createdAt' | 'updatedAt' | 'expiresAt'>): Promise<string> {
-    // Handle demo invitations (simulate success)
+    // Handle demo invitations
     if (this.isDemoInvitation(invitation.teamId, invitation.inviterEmail)) {
       const demoId = `demo-invite-${Date.now()}`;
       console.log(`[Demo] Sending invitation to ${invitation.inviteeEmail} for team ${invitation.teamName}`);
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 300));
       return demoId;
     }
 
     try {
-      // Check if invitation already exists for this email and team
-      const existingInvitation = await this.getExistingInvitation(invitation.teamId, invitation.inviteeEmail);
-
-      if (existingInvitation && existingInvitation.status === 'pending') {
-        throw new Error('An invitation for this email address is already pending for this team');
-      }
-
-      // Create expiration date
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + this.EXPIRY_DAYS);
-
-      // Create invitation document
-      const invitationData: Omit<TeamInvitation, 'id'> = {
-        ...invitation,
-        status: 'pending',
-        expiresAt,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      // Add to Firestore
-      const docRef = await addDoc(collection(db, this.COLLECTION_NAME), {
-        ...invitationData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        expiresAt: expiresAt,
+      const response = await fetch('/api/teams/invitations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(invitation),
       });
 
-      // Send email notification (in production, this would integrate with an email service)
-      await this.sendInvitationEmail(docRef.id, invitationData);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send invitation');
+      }
 
-      return docRef.id;
+      const result = await response.json();
+      return result.invitationId || result.data?.invitationId || '';
     } catch (error) {
       console.error('Error sending team invitation:', error);
       throw error;
@@ -105,68 +89,27 @@ class EmailInvitationService {
   }
 
   /**
-   * Get existing invitation for email and team
-   */
-  private async getExistingInvitation(teamId: string, email: string): Promise<TeamInvitation | null> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_NAME),
-        where('teamId', '==', teamId),
-        where('inviteeEmail', '==', email),
-        where('status', '==', 'pending')
-      );
-
-      const querySnapshot = await getDocs(q);
-      
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        return { id: doc.id, ...doc.data() } as TeamInvitation;
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Error checking existing invitation:', error);
-      return null;
-    }
-  }
-
-  /**
    * Accept a team invitation
    */
   async acceptInvitation(invitationId: string, userEmail: string): Promise<void> {
+    // Handle demo invitations
+    if (invitationId.startsWith('demo-')) {
+      console.log(`[Demo] Accepting invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return;
+    }
+
     try {
-      const invitationRef = doc(db, this.COLLECTION_NAME, invitationId);
-      const invitationDoc = await getDoc(invitationRef);
-
-      if (!invitationDoc.exists()) {
-        throw new Error('Invitation not found');
-      }
-
-      const invitation = invitationDoc.data() as TeamInvitation;
-
-      // Validate invitation
-      if (invitation.inviteeEmail !== userEmail) {
-        throw new Error('Invitation email does not match user email');
-      }
-
-      if (invitation.status !== 'pending') {
-        throw new Error(`Invitation is ${invitation.status} and cannot be accepted`);
-      }
-
-      if (new Date() > invitation.expiresAt) {
-        throw new Error('Invitation has expired');
-      }
-
-      // Update invitation status
-      await updateDoc(invitationRef, {
-        status: 'accepted',
-        acceptedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'accept', userEmail }),
       });
 
-      // Add user to team (this would integrate with team management service)
-      await this.addUserToTeam(invitation.teamId, userEmail, invitation.role);
-
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to accept invitation');
+      }
     } catch (error) {
       console.error('Error accepting invitation:', error);
       throw error;
@@ -177,29 +120,24 @@ class EmailInvitationService {
    * Decline a team invitation
    */
   async declineInvitation(invitationId: string, userEmail: string): Promise<void> {
+    // Handle demo invitations
+    if (invitationId.startsWith('demo-')) {
+      console.log(`[Demo] Declining invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return;
+    }
+
     try {
-      const invitationRef = doc(db, this.COLLECTION_NAME, invitationId);
-      const invitationDoc = await getDoc(invitationRef);
-
-      if (!invitationDoc.exists()) {
-        throw new Error('Invitation not found');
-      }
-
-      const invitation = invitationDoc.data() as TeamInvitation;
-
-      if (invitation.inviteeEmail !== userEmail) {
-        throw new Error('Invitation email does not match user email');
-      }
-
-      if (invitation.status !== 'pending') {
-        throw new Error(`Invitation is ${invitation.status} and cannot be declined`);
-      }
-
-      await updateDoc(invitationRef, {
-        status: 'declined',
-        updatedAt: serverTimestamp(),
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'decline', userEmail }),
       });
 
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to decline invitation');
+      }
     } catch (error) {
       console.error('Error declining invitation:', error);
       throw error;
@@ -210,30 +148,24 @@ class EmailInvitationService {
    * Revoke a team invitation
    */
   async revokeInvitation(invitationId: string, revokerEmail: string): Promise<void> {
+    // Handle demo invitations
+    if (invitationId.startsWith('demo-')) {
+      console.log(`[Demo] Revoking invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return;
+    }
+
     try {
-      const invitationRef = doc(db, this.COLLECTION_NAME, invitationId);
-      const invitationDoc = await getDoc(invitationRef);
-
-      if (!invitationDoc.exists()) {
-        throw new Error('Invitation not found');
-      }
-
-      const invitation = invitationDoc.data() as TeamInvitation;
-
-      if (invitation.inviterEmail !== revokerEmail) {
-        throw new Error('Only the inviter can revoke this invitation');
-      }
-
-      if (invitation.status !== 'pending') {
-        throw new Error(`Invitation is ${invitation.status} and cannot be revoked`);
-      }
-
-      await updateDoc(invitationRef, {
-        status: 'revoked',
-        revokedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ revokerEmail }),
       });
 
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to revoke invitation');
+      }
     } catch (error) {
       console.error('Error revoking invitation:', error);
       throw error;
@@ -244,18 +176,20 @@ class EmailInvitationService {
    * Get all invitations for a team
    */
   async getTeamInvitations(teamId: string): Promise<TeamInvitation[]> {
+    // Handle demo teams
+    if (teamId.startsWith('demo-') || teamId.includes('demo')) {
+      return DEMO_INVITATIONS.filter(inv => inv.teamId === teamId || teamId.includes('demo'));
+    }
+
     try {
-      const q = query(
-        collection(db, this.COLLECTION_NAME),
-        where('teamId', '==', teamId)
-      );
+      const response = await fetch(`/api/teams/invitations?teamId=${teamId}`);
 
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamInvitation[];
+      if (!response.ok) {
+        throw new Error('Failed to get team invitations');
+      }
 
+      const result = await response.json();
+      return (result.invitations || result.data?.invitations || []).map(this.parseInvitation);
     } catch (error) {
       console.error('Error getting team invitations:', error);
       throw error;
@@ -266,23 +200,25 @@ class EmailInvitationService {
    * Get invitations for a user email
    */
   async getUserInvitations(email: string): Promise<TeamInvitation[]> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_NAME),
-        where('inviteeEmail', '==', email),
-        where('status', '==', 'pending')
+    // Handle demo users
+    if (email === 'demo@example.com' || email === 'company@example.com') {
+      return DEMO_INVITATIONS.filter(inv =>
+        inv.inviteeEmail === email &&
+        inv.status === 'pending' &&
+        new Date() <= inv.expiresAt
       );
+    }
 
-      const querySnapshot = await getDocs(q);
-      
-      // Filter out expired invitations
-      const invitations = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamInvitation[];
+    try {
+      const response = await fetch('/api/teams/invitations');
 
-      return invitations.filter(invitation => new Date() <= invitation.expiresAt);
+      if (!response.ok) {
+        throw new Error('Failed to get user invitations');
+      }
 
+      const result = await response.json();
+      const invitations = (result.invitations || result.data?.invitations || []).map(this.parseInvitation);
+      return invitations.filter((inv: TeamInvitation) => new Date() <= inv.expiresAt);
     } catch (error) {
       console.error('Error getting user invitations:', error);
       throw error;
@@ -295,7 +231,7 @@ class EmailInvitationService {
   async getInvitationSummary(teamId: string): Promise<InvitationSummary> {
     try {
       const invitations = await this.getTeamInvitations(teamId);
-      
+
       const summary: InvitationSummary = {
         teamId,
         pending: 0,
@@ -325,27 +261,22 @@ class EmailInvitationService {
    * Send reminder for pending invitations
    */
   async sendReminder(invitationId: string): Promise<void> {
+    // Handle demo invitations
+    if (invitationId.startsWith('demo-')) {
+      console.log(`[Demo] Sending reminder for invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return;
+    }
+
     try {
-      const invitationRef = doc(db, this.COLLECTION_NAME, invitationId);
-      const invitationDoc = await getDoc(invitationRef);
+      const response = await fetch(`/api/teams/invitations/${invitationId}/reminder`, {
+        method: 'POST',
+      });
 
-      if (!invitationDoc.exists()) {
-        throw new Error('Invitation not found');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send reminder');
       }
-
-      const invitation = invitationDoc.data() as TeamInvitation;
-
-      if (invitation.status !== 'pending') {
-        throw new Error('Can only send reminders for pending invitations');
-      }
-
-      if (new Date() > invitation.expiresAt) {
-        throw new Error('Cannot send reminder for expired invitation');
-      }
-
-      // Send reminder email
-      await this.sendReminderEmail(invitationId, invitation);
-
     } catch (error) {
       console.error('Error sending reminder:', error);
       throw error;
@@ -353,66 +284,17 @@ class EmailInvitationService {
   }
 
   /**
-   * Cleanup expired invitations
+   * Parse invitation from API response
    */
-  async cleanupExpiredInvitations(): Promise<number> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_NAME),
-        where('status', '==', 'pending')
-      );
-
-      const querySnapshot = await getDocs(q);
-      const expiredInvitations = querySnapshot.docs.filter(doc => {
-        const invitation = doc.data() as TeamInvitation;
-        return new Date() > invitation.expiresAt;
-      });
-
-      // Update expired invitations
-      const updatePromises = expiredInvitations.map(doc => 
-        updateDoc(doc.ref, {
-          status: 'expired',
-          updatedAt: serverTimestamp(),
-        })
-      );
-
-      await Promise.all(updatePromises);
-      return expiredInvitations.length;
-
-    } catch (error) {
-      console.error('Error cleaning up expired invitations:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Send invitation email (placeholder for email service integration)
-   */
-  private async sendInvitationEmail(invitationId: string, invitation: Omit<TeamInvitation, 'id'>): Promise<void> {
-    // In production, this would integrate with an email service like SendGrid, AWS SES, etc.
-    console.log(`Sending invitation email to ${invitation.inviteeEmail} for team ${invitation.teamName}`);
-    
-    // Email template would include:
-    // - Team name and inviter information
-    // - Invitation message
-    // - Accept/Decline links with invitation ID
-    // - Expiration date
-    // - Link to create account if needed
-  }
-
-  /**
-   * Send reminder email
-   */
-  private async sendReminderEmail(invitationId: string, invitation: TeamInvitation): Promise<void> {
-    console.log(`Sending reminder email to ${invitation.inviteeEmail} for team ${invitation.teamName}`);
-  }
-
-  /**
-   * Add user to team (placeholder for team service integration)
-   */
-  private async addUserToTeam(teamId: string, userEmail: string, role: string): Promise<void> {
-    console.log(`Adding user ${userEmail} to team ${teamId} with role ${role}`);
-    // This would integrate with the team management service
+  private parseInvitation(inv: Record<string, unknown>): TeamInvitation {
+    return {
+      ...inv,
+      expiresAt: new Date(inv.expiresAt as string),
+      createdAt: new Date(inv.createdAt as string),
+      updatedAt: new Date(inv.updatedAt as string),
+      acceptedAt: inv.acceptedAt ? new Date(inv.acceptedAt as string) : undefined,
+      revokedAt: inv.revokedAt ? new Date(inv.revokedAt as string) : undefined,
+    } as TeamInvitation;
   }
 }
 

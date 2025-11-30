@@ -77,8 +77,8 @@ export function RoleChangeNotification({
       // Sort by most recent first
       const sortedHistory = roleHistory.sort(
         (a, b) => {
-          const dateA = a.changedAt instanceof Date ? a.changedAt : a.changedAt.toDate();
-          const dateB = b.changedAt instanceof Date ? b.changedAt : b.changedAt.toDate();
+          const dateA = a.changedAt instanceof Date ? a.changedAt : new Date(a.changedAt);
+          const dateB = b.changedAt instanceof Date ? b.changedAt : new Date(b.changedAt);
           return dateB.getTime() - dateA.getTime();
         }
       );
@@ -204,7 +204,7 @@ export function RoleChangeNotification({
 
                   <div className="text-xs text-text-tertiary">
                     {formatDistanceToNow(
-                      change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate(),
+                      change.changedAt instanceof Date ? change.changedAt : new Date(change.changedAt),
                       { addSuffix: true }
                     )}
                   </div>
@@ -262,7 +262,7 @@ export function RoleChangeAlert({ teamId }: { teamId: string }) {
       
       const recent = history.filter(
         change => {
-          const changeDate = change.changedAt instanceof Date ? change.changedAt : change.changedAt.toDate();
+          const changeDate = change.changedAt instanceof Date ? change.changedAt : new Date(change.changedAt);
           return changeDate > yesterday;
         }
       ).slice(0, 3);
