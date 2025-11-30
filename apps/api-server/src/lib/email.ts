@@ -1,8 +1,18 @@
 import { Resend } from 'resend';
 import { logger } from '../utils/logger';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-initialized Resend client (to avoid crash when API key is missing)
+let resend: Resend | null = null;
+
+function getResendClient(): Resend | null {
+  if (!process.env.RESEND_API_KEY) {
+    return null;
+  }
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 // Configuration
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Liftout <noreply@liftout.com>';
@@ -33,7 +43,11 @@ export async function sendVerificationEmail(params: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: 'Verify your Liftout email address',
@@ -98,7 +112,11 @@ export async function sendPasswordResetEmail(params: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: 'Reset your Liftout password',
@@ -168,7 +186,11 @@ export async function sendWelcomeEmail(params: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: `Welcome to Liftout, ${firstName}!`,
@@ -258,7 +280,11 @@ export async function sendTeamInvitationEmail(params: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: `${inviterName} invited you to join ${teamName} on Liftout`,
@@ -364,7 +390,11 @@ export async function sendApplicationStatusEmail(params: {
   const config = statusConfig[status];
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: config.subject,
@@ -432,7 +462,11 @@ export async function sendNewMessageEmail(params: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject: `New message from ${senderName}${conversationSubject ? `: ${conversationSubject}` : ''}`,
@@ -506,7 +540,11 @@ export async function sendExpressionOfInterestEmail(params: {
     : `${interestedPartyName} is interested in your opportunity`;
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient();
+    if (!client) {
+      return { success: false, error: 'Email client not configured' };
+    }
+    const { data, error } = await client.emails.send({
       from: FROM_EMAIL,
       to,
       subject,
