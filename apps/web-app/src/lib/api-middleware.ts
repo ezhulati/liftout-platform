@@ -2,17 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { User } from '@/types/firebase';
 
+// Type for route params from Next.js
+export type RouteParams = Record<string, string | string[]> | undefined;
+
 // Type for API handler functions
 export type ApiHandler = (
   req: NextRequest,
-  params?: any
+  params?: RouteParams
 ) => Promise<NextResponse>;
 
 // Type for authenticated API handler functions
 export type AuthenticatedApiHandler = (
   req: NextRequest,
   user: User,
-  params?: any
+  params?: RouteParams
 ) => Promise<NextResponse>;
 
 // Error response helper
@@ -21,13 +24,13 @@ function errorResponse(message: string, status: number = 400) {
 }
 
 // Success response helper
-export function successResponse(data: any, status: number = 200) {
+export function successResponse<T>(data: T, status: number = 200) {
   return NextResponse.json(data, { status });
 }
 
 // Middleware to require authentication
 export function withAuth(handler: AuthenticatedApiHandler): ApiHandler {
-  return async (req: NextRequest, params?: any) => {
+  return async (req: NextRequest, params?: RouteParams) => {
     try {
       const token = await getToken({ req });
       
@@ -71,7 +74,7 @@ export function withUserType(
   userType: 'individual' | 'company',
   handler: AuthenticatedApiHandler
 ): ApiHandler {
-  return withAuth(async (req: NextRequest, user: User, params?: any) => {
+  return withAuth(async (req: NextRequest, user: User, params?: RouteParams) => {
     if (user.type !== userType) {
       return errorResponse(
         `Access denied. ${userType} user access required.`,
@@ -101,7 +104,7 @@ export function withRateLimit(
   windowMs: number = 60000 // 1 minute
 ) {
   return function rateLimitMiddleware(handler: ApiHandler): ApiHandler {
-    return async (req: NextRequest, params?: any) => {
+    return async (req: NextRequest, params?: RouteParams) => {
       const identifier = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
       const now = Date.now();
       
@@ -131,7 +134,7 @@ export function withCors(
   allowedMethods: string[] = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 ) {
   return function corsMiddleware(handler: ApiHandler): ApiHandler {
-    return async (req: NextRequest, params?: any) => {
+    return async (req: NextRequest, params?: RouteParams) => {
       const origin = req.headers.get('origin');
       
       // Handle preflight requests
@@ -167,10 +170,10 @@ export function withCors(
 
 // Input validation middleware
 export function withValidation<T>(
-  schema: (data: any) => T,
-  handler: (req: NextRequest, validatedData: T, user?: User, params?: any) => Promise<NextResponse>
+  schema: (data: unknown) => T,
+  handler: (req: NextRequest, validatedData: T, user?: User, params?: RouteParams) => Promise<NextResponse>
 ): ApiHandler {
-  return async (req: NextRequest, params?: any) => {
+  return async (req: NextRequest, params?: RouteParams) => {
     try {
       const body = await req.json();
       const validatedData = schema(body);
@@ -196,7 +199,7 @@ export function compose(...middlewares: Array<(handler: ApiHandler) => ApiHandle
 
 // Security headers middleware
 export function withSecurityHeaders(handler: ApiHandler): ApiHandler {
-  return async (req: NextRequest, params?: any) => {
+  return async (req: NextRequest, params?: RouteParams) => {
     const response = await handler(req, params);
     
     // Add security headers
@@ -211,7 +214,7 @@ export function withSecurityHeaders(handler: ApiHandler): ApiHandler {
 
 // Request logging middleware
 export function withLogging(handler: ApiHandler): ApiHandler {
-  return async (req: NextRequest, params?: any) => {
+  return async (req: NextRequest, params?: RouteParams) => {
     const start = Date.now();
     const method = req.method;
     const url = req.url;
@@ -239,23 +242,25 @@ export function withLogging(handler: ApiHandler): ApiHandler {
 }
 
 // Example usage combinations
+// Note: withAuth family of functions take AuthenticatedApiHandler but return ApiHandler,
+// so we cast them for compose compatibility
 export const withStandardAuth = compose(
   withSecurityHeaders,
   withLogging,
   withRateLimit(100, 60000),
-  withAuth
+  withAuth as unknown as (handler: ApiHandler) => ApiHandler
 );
 
 export const withIndividualAuth = compose(
   withSecurityHeaders,
   withLogging,
   withRateLimit(100, 60000),
-  withIndividualAccess
+  withIndividualAccess as unknown as (handler: ApiHandler) => ApiHandler
 );
 
 export const withCompanyAuth = compose(
   withSecurityHeaders,
   withLogging,
   withRateLimit(100, 60000),
-  withCompanyAccess
+  withCompanyAccess as unknown as (handler: ApiHandler) => ApiHandler
 );

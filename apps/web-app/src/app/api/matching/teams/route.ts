@@ -2,6 +2,61 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import type { Decimal, JsonValue } from '@prisma/client/runtime/library';
+
+// Types for matching calculations
+interface TeamMember {
+  user: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    skills?: Array<{ skill: { name: string } }>;
+    profile?: { title?: string | null; yearsExperience?: number | null; location?: string | null } | null;
+  };
+}
+
+interface TeamWithMembers {
+  id: string;
+  name: string;
+  description: string | null;
+  industry: string | null;
+  specialization: string | null;
+  location: string | null;
+  remoteStatus: string | null;
+  size: number | null;
+  yearsWorkingTogether: Decimal | number | string | null;
+  availabilityStatus: string | null;
+  verificationStatus: string | null;
+  salaryExpectationMin: number | null;
+  salaryExpectationMax: number | null;
+  members: TeamMember[];
+  _count: { applications: number; members: number };
+}
+
+interface OpportunityWithCompany {
+  id: string;
+  title: string;
+  industry: string | null;
+  location: string | null;
+  remotePolicy: string | null;
+  teamSizeMin: number | null;
+  teamSizeMax: number | null;
+  compensationMin: number | null;
+  compensationMax: number | null;
+  requiredSkills: JsonValue;
+  preferredSkills: JsonValue;
+  company: { id: string; name: string; industry: string | null };
+}
+
+interface ScoreBreakdown {
+  skillsMatch: number;
+  industryMatch: number;
+  locationMatch: number;
+  sizeMatch: number;
+  compensationMatch: number;
+  experienceMatch: number;
+  availabilityMatch: number;
+}
 
 // GET /api/matching/teams?opportunityId=xxx - Find matching teams for an opportunity
 export async function GET(request: NextRequest) {
@@ -73,7 +128,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate match scores
     const matches = teams.map(team => {
-      const score = calculateTeamMatchScore(team, opportunity);
+      const score = calculateTeamMatchScore(team, opportunity as unknown as OpportunityWithCompany);
       return {
         team: {
           id: team.id,
@@ -124,10 +179,10 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper to extract team skills from members
-function extractTeamSkills(members: any[]): string[] {
+function extractTeamSkills(members: TeamMember[]): string[] {
   const skills = new Set<string>();
   members.forEach(member => {
-    member.user.skills?.forEach((s: any) => {
+    member.user.skills?.forEach((s) => {
       skills.add(s.skill.name);
     });
   });
@@ -135,7 +190,7 @@ function extractTeamSkills(members: any[]): string[] {
 }
 
 // Calculate match score between team and opportunity
-function calculateTeamMatchScore(team: any, opportunity: any) {
+function calculateTeamMatchScore(team: TeamWithMembers, opportunity: OpportunityWithCompany) {
   const breakdown = {
     skillsMatch: calculateSkillsScore(team, opportunity),
     industryMatch: calculateIndustryScore(team, opportunity),
@@ -174,10 +229,12 @@ function calculateTeamMatchScore(team: any, opportunity: any) {
   };
 }
 
-function calculateSkillsScore(team: any, opportunity: any): number {
+function calculateSkillsScore(team: TeamWithMembers, opportunity: OpportunityWithCompany): number {
   const teamSkills = extractTeamSkills(team.members).map(s => s.toLowerCase());
-  const requiredSkills = (opportunity.requiredSkills || []).map((s: string) => s.toLowerCase());
-  const preferredSkills = (opportunity.preferredSkills || []).map((s: string) => s.toLowerCase());
+  const requiredSkillsArr = Array.isArray(opportunity.requiredSkills) ? opportunity.requiredSkills as string[] : [];
+  const preferredSkillsArr = Array.isArray(opportunity.preferredSkills) ? opportunity.preferredSkills as string[] : [];
+  const requiredSkills = requiredSkillsArr.map(s => s.toLowerCase());
+  const preferredSkills = preferredSkillsArr.map(s => s.toLowerCase());
 
   if (requiredSkills.length === 0 && preferredSkills.length === 0) return 70;
 
@@ -199,7 +256,7 @@ function calculateSkillsScore(team: any, opportunity: any): number {
   return Math.min(Math.round(score), 100);
 }
 
-function calculateIndustryScore(team: any, opportunity: any): number {
+function calculateIndustryScore(team: TeamWithMembers, opportunity: OpportunityWithCompany): number {
   const teamIndustry = team.industry?.toLowerCase() || '';
   const oppIndustry = opportunity.industry?.toLowerCase() || '';
 
@@ -222,7 +279,7 @@ function calculateIndustryScore(team: any, opportunity: any): number {
   return 40;
 }
 
-function calculateLocationScore(team: any, opportunity: any): number {
+function calculateLocationScore(team: TeamWithMembers, opportunity: OpportunityWithCompany): number {
   const teamLocation = team.location?.toLowerCase() || '';
   const oppLocation = opportunity.location?.toLowerCase() || '';
   const teamRemote = team.remoteStatus;
@@ -244,7 +301,7 @@ function calculateLocationScore(team: any, opportunity: any): number {
   return 50;
 }
 
-function calculateSizeScore(team: any, opportunity: any): number {
+function calculateSizeScore(team: TeamWithMembers, opportunity: OpportunityWithCompany): number {
   const teamSize = team.size || team._count?.members || 0;
   const minSize = opportunity.teamSizeMin || 1;
   const maxSize = opportunity.teamSizeMax || 20;
@@ -261,7 +318,7 @@ function calculateSizeScore(team: any, opportunity: any): number {
   return 50;
 }
 
-function calculateCompensationScore(team: any, opportunity: any): number {
+function calculateCompensationScore(team: TeamWithMembers, opportunity: OpportunityWithCompany): number {
   const teamMin = team.salaryExpectationMin || 0;
   const teamMax = team.salaryExpectationMax || 0;
   const oppMin = opportunity.compensationMin || 0;
@@ -287,7 +344,7 @@ function calculateCompensationScore(team: any, opportunity: any): number {
   return Math.max(0, Math.round(70 - gapPercent * 100));
 }
 
-function calculateExperienceScore(team: any): number {
+function calculateExperienceScore(team: TeamWithMembers): number {
   const yearsWorking = Number(team.yearsWorkingTogether) || 0;
 
   if (yearsWorking >= 5) return 100;
@@ -297,7 +354,7 @@ function calculateExperienceScore(team: any): number {
   return 40;
 }
 
-function calculateAvailabilityScore(team: any): number {
+function calculateAvailabilityScore(team: TeamWithMembers): number {
   switch (team.availabilityStatus) {
     case 'available': return 100;
     case 'selective': return 70;
@@ -313,7 +370,7 @@ function getRecommendation(score: number): string {
   return 'poor';
 }
 
-function extractInsights(team: any, opportunity: any, breakdown: any) {
+function extractInsights(team: TeamWithMembers, opportunity: OpportunityWithCompany, breakdown: ScoreBreakdown) {
   const strengths: string[] = [];
   const concerns: string[] = [];
 

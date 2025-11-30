@@ -2,6 +2,7 @@
 
 import { AppSidebar } from '@/components/app/AppSidebar';
 import { AppHeader } from '@/components/app/AppHeader';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -50,8 +51,8 @@ export default function AppLayout({
       marketing: false,
       confidentialMode: false,
     },
-    createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     ...demoData.profile,
   } : {
     id: user.id,
@@ -68,8 +69,8 @@ export default function AppLayout({
       marketing: false,
       confidentialMode: false,
     },
-    createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   return (
@@ -79,7 +80,9 @@ export default function AppLayout({
         <AppHeader user={userData} />
         <main className="py-6">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </div>
         </main>
       </div>
