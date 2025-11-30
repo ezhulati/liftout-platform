@@ -192,7 +192,7 @@ export default async function CategoryPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <LandingHeader />
-      <main className="bg-bg min-h-screen">
+      <main id="main-content" tabIndex={-1} className="bg-bg min-h-screen outline-none">
         {/* Hero Section - Practical UI: Dark section with proper contrast */}
         <section className="bg-[#0f172a] pt-40 pb-20">
           <div className="max-w-7xl mx-auto px-4 lg:px-10">

@@ -114,8 +114,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             name={name}
             disabled={disabled}
             className={inputClasses}
-            aria-invalid={error ? 'true' : undefined}
-            aria-describedby={error ? `${name}-error` : hint ? `${name}-hint` : undefined}
             {...props}
           />
           {rightIcon && (

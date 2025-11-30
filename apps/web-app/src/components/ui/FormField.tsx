@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 interface FormFieldProps {
@@ -29,7 +29,13 @@ interface FormFieldProps {
  * - Hints displayed below label, above input
  * - Sentence case for labels
  * - Required field marking with asterisk (*)
- * - Proper accessibility with htmlFor
+ * - Proper accessibility with htmlFor, aria-describedby, aria-invalid
+ *
+ * Accessibility Features:
+ * - aria-describedby links input to hint and error messages
+ * - aria-invalid indicates validation state
+ * - role="alert" on error messages for screen reader announcement
+ * - aria-required for required fields
  *
  * @example
  * <FormField
@@ -51,6 +57,43 @@ export function FormField({
   children,
   className = '',
 }: FormFieldProps) {
+  const hintId = `${name}-hint`;
+  const errorId = `${name}-error`;
+
+  // Build aria-describedby from hint and error IDs
+  const describedBy = useMemo(() => {
+    const ids: string[] = [];
+    if (hint) ids.push(hintId);
+    if (error) ids.push(errorId);
+    return ids.length > 0 ? ids.join(' ') : undefined;
+  }, [hint, error, hintId, errorId]);
+
+  // Clone children to add accessibility attributes
+  const enhancedChildren = useMemo(() => {
+    return React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        // Add accessibility attributes to the input element
+        const additionalProps: Record<string, unknown> = {};
+
+        if (describedBy) {
+          additionalProps['aria-describedby'] = describedBy;
+        }
+        if (error) {
+          additionalProps['aria-invalid'] = true;
+        }
+        if (required) {
+          additionalProps['aria-required'] = true;
+        }
+
+        // Only clone if we have props to add
+        if (Object.keys(additionalProps).length > 0) {
+          return React.cloneElement(child, additionalProps);
+        }
+      }
+      return child;
+    });
+  }, [children, describedBy, error, required]);
+
   return (
     <div className={`form-field ${className}`}>
       {/* Label - always above input */}
@@ -63,19 +106,21 @@ export function FormField({
 
       {/* Hint - below label, above input */}
       {hint && (
-        <p className="form-field-hint">{hint}</p>
+        <p id={hintId} className="form-field-hint">
+          {hint}
+        </p>
       )}
 
       {/* Error - ABOVE input (Practical UI pattern) */}
       {error && (
-        <div className="form-field-error" role="alert">
+        <div id={errorId} className="form-field-error" role="alert" aria-live="assertive">
           <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* Input field(s) */}
-      {children}
+      {/* Input field(s) with enhanced accessibility */}
+      {enhancedChildren}
     </div>
   );
 }

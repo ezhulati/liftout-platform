@@ -18,7 +18,7 @@ export default function ContactPage() {
   return (
     <>
       <LandingHeader />
-      <main className="bg-bg">
+      <main id="main-content" tabIndex={-1} className="bg-bg outline-none">
         {/* Hero Section - Clear hierarchy with response time promise (#12, #43) */}
         <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">

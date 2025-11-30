@@ -6,6 +6,63 @@ const nextConfig = {
     // Skip ESLint during production builds - linting is done in CI/development
     ignoreDuringBuilds: true,
   },
+  // Security headers
+  async headers() {
+    return [
+      {
+        // Apply to all routes
+        source: '/:path*',
+        headers: [
+          // Strict Transport Security - enforce HTTPS
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          // Prevent clickjacking
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          // Prevent MIME type sniffing
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // Control referrer information
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // XSS protection (legacy browsers)
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          // Permissions Policy - restrict browser features
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          // Content Security Policy
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https: http:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://*.clarity.ms wss: https:",
+              "frame-ancestors 'self'",
+              "form-action 'self'",
+              "base-uri 'self'",
+              "object-src 'none'",
+            ].join('; '),
+          },
+        ],
+      },
+    ];
+  },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', '@grpc/grpc-js'],
   },

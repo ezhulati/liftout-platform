@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import Script from 'next/script';
 import { Providers } from './providers';
+import { SkipToContent } from '@/components/ui';
 import './globals.css';
 
 // Force dynamic rendering to avoid SSG issues with SessionProvider
@@ -34,9 +35,20 @@ export const metadata: Metadata = {
   creator: 'Liftout',
   publisher: 'Liftout',
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/logo.png',
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    shortcut: '/favicon-32.png',
+    apple: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Liftout',
   },
   formatDetection: {
     email: false,
@@ -51,7 +63,7 @@ export const metadata: Metadata = {
     siteName: 'Liftout',
     images: [
       {
-        url: '/hero-team.jpeg',
+        url: '/hero-team.webp',
         width: 1200,
         height: 630,
         alt: 'Liftout – Hire verified teams that deliver from day one',
@@ -64,7 +76,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Liftout – Hire Entire Teams, Not Just Individuals',
     description: 'Skip the 6-month team-building phase. Connect with verified, intact teams who already work well together and deliver from day one.',
-    images: ['/hero-team.jpeg'],
+    images: ['/hero-team.webp'],
     creator: '@liftout',
   },
   robots: {
@@ -128,6 +140,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <SkipToContent />
         <Providers>
           {children}
         </Providers>

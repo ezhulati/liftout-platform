@@ -105,8 +105,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           name={name}
           disabled={disabled}
           className={selectClasses}
-          aria-invalid={error ? 'true' : undefined}
-          aria-describedby={error ? `${name}-error` : hint ? `${name}-hint` : undefined}
           {...props}
         >
           {placeholder && (

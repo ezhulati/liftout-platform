@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <AdminSidebar />
       <div className="lg:pl-64">
         <AdminHeader pendingActionsCount={pendingActionsCount} />
-        <main className="py-6">
+        <main id="main-content" tabIndex={-1} className="py-6 outline-none">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>

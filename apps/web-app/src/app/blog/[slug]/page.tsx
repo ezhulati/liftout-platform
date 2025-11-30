@@ -151,7 +151,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <LandingHeader />
-      <main className="bg-bg min-h-screen">
+      <main id="main-content" tabIndex={-1} className="bg-bg min-h-screen outline-none">
         {/* Hero Section - Dark with proper contrast */}
         <section className="bg-[#0f172a] pt-40 pb-20">
           <div className="max-w-4xl mx-auto px-4 lg:px-10">

@@ -8,6 +8,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { SocketProvider } from '@/contexts/SocketContext';
+import { LiveRegionProvider } from '@/components/ui';
 import { useState } from 'react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -34,6 +35,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <SettingsProvider>
             <OnboardingProvider>
               <SocketProvider>
+              <LiveRegionProvider>
               {children}
               <Toaster
                 position="top-right"
@@ -49,6 +51,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
                       primary: '#10b981',
                       secondary: '#fff',
                     },
+                    ariaProps: {
+                      role: 'status',
+                      'aria-live': 'polite',
+                    },
                   },
                   error: {
                     duration: 5000,
@@ -56,10 +62,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
                       primary: '#ef4444',
                       secondary: '#fff',
                     },
+                    ariaProps: {
+                      role: 'alert',
+                      'aria-live': 'assertive',
+                    },
                   },
                 }}
               />
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+              </LiveRegionProvider>
               </SocketProvider>
             </OnboardingProvider>
           </SettingsProvider>
