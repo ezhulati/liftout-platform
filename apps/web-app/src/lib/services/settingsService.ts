@@ -1,13 +1,4 @@
 import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { db } from '../firebase';
-import {
   UserSettings,
   NotificationSettings,
   PrivacySettings,
@@ -16,8 +7,6 @@ import {
   AccountSettings,
   DEFAULT_USER_SETTINGS,
 } from '@/types/settings';
-
-const SETTINGS_COLLECTION = 'userSettings';
 
 // Helper to check if this is a demo user
 const isDemoEntity = (id: string): boolean => {
@@ -48,7 +37,7 @@ export class SettingsService {
             passwordLastChanged: parsed.security?.passwordLastChanged
               ? new Date(parsed.security.passwordLastChanged)
               : null,
-            activeSessions: (parsed.security?.activeSessions || []).map((s: any) => ({
+            activeSessions: (parsed.security?.activeSessions || []).map((s: { lastActive: string | Date; [key: string]: unknown }) => ({
               ...s,
               lastActive: new Date(s.lastActive),
             })),
@@ -80,7 +69,7 @@ export class SettingsService {
   }
 
   /**
-   * Get user settings from Firestore
+   * Get user settings
    */
   async getUserSettings(userId: string): Promise<UserSettings | null> {
     // Demo user handling
@@ -96,16 +85,20 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings');
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // Convert Firestore timestamps back to Date objects
-        return this.convertTimestampsToDate(data as UserSettings);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to get user settings');
       }
 
-      return null;
+      const result = await response.json();
+      const data = result.settings || result.data;
+
+      if (!data) return null;
+
+      // Convert date strings back to Date objects
+      return this.convertDatesToObjects(data);
     } catch (error) {
       console.error('Error fetching user settings:', error);
       throw error;
@@ -124,11 +117,15 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      await setDoc(docRef, {
-        ...settings,
-        updatedAt: serverTimestamp(),
+      const response = await fetch('/api/user/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to save user settings');
+      }
     } catch (error) {
       console.error('Error saving user settings:', error);
       throw error;
@@ -170,39 +167,14 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notifications }),
+      });
 
-      if (docSnap.exists()) {
-        const currentSettings = docSnap.data() as UserSettings;
-        await updateDoc(docRef, {
-          notifications: {
-            ...currentSettings.notifications,
-            ...notifications,
-            email: {
-              ...currentSettings.notifications.email,
-              ...notifications.email,
-            },
-            push: {
-              ...currentSettings.notifications.push,
-              ...notifications.push,
-            },
-            inApp: {
-              ...currentSettings.notifications.inApp,
-              ...notifications.inApp,
-            },
-          },
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        // Create settings if they don't exist
-        await this.saveUserSettings(userId, {
-          ...DEFAULT_USER_SETTINGS,
-          notifications: {
-            ...DEFAULT_USER_SETTINGS.notifications,
-            ...notifications,
-          },
-        });
+      if (!response.ok) {
+        throw new Error('Failed to update notification settings');
       }
     } catch (error) {
       console.error('Error updating notification settings:', error);
@@ -233,26 +205,14 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ privacy }),
+      });
 
-      if (docSnap.exists()) {
-        const currentSettings = docSnap.data() as UserSettings;
-        await updateDoc(docRef, {
-          privacy: {
-            ...currentSettings.privacy,
-            ...privacy,
-          },
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        await this.saveUserSettings(userId, {
-          ...DEFAULT_USER_SETTINGS,
-          privacy: {
-            ...DEFAULT_USER_SETTINGS.privacy,
-            ...privacy,
-          },
-        });
+      if (!response.ok) {
+        throw new Error('Failed to update privacy settings');
       }
     } catch (error) {
       console.error('Error updating privacy settings:', error);
@@ -283,26 +243,14 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ security }),
+      });
 
-      if (docSnap.exists()) {
-        const currentSettings = docSnap.data() as UserSettings;
-        await updateDoc(docRef, {
-          security: {
-            ...currentSettings.security,
-            ...security,
-          },
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        await this.saveUserSettings(userId, {
-          ...DEFAULT_USER_SETTINGS,
-          security: {
-            ...DEFAULT_USER_SETTINGS.security,
-            ...security,
-          },
-        });
+      if (!response.ok) {
+        throw new Error('Failed to update security settings');
       }
     } catch (error) {
       console.error('Error updating security settings:', error);
@@ -333,26 +281,14 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme }),
+      });
 
-      if (docSnap.exists()) {
-        const currentSettings = docSnap.data() as UserSettings;
-        await updateDoc(docRef, {
-          theme: {
-            ...currentSettings.theme,
-            ...theme,
-          },
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        await this.saveUserSettings(userId, {
-          ...DEFAULT_USER_SETTINGS,
-          theme: {
-            ...DEFAULT_USER_SETTINGS.theme,
-            ...theme,
-          },
-        });
+      if (!response.ok) {
+        throw new Error('Failed to update theme settings');
       }
     } catch (error) {
       console.error('Error updating theme settings:', error);
@@ -383,26 +319,14 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      const docSnap = await getDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account }),
+      });
 
-      if (docSnap.exists()) {
-        const currentSettings = docSnap.data() as UserSettings;
-        await updateDoc(docRef, {
-          account: {
-            ...currentSettings.account,
-            ...account,
-          },
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        await this.saveUserSettings(userId, {
-          ...DEFAULT_USER_SETTINGS,
-          account: {
-            ...DEFAULT_USER_SETTINGS.account,
-            ...account,
-          },
-        });
+      if (!response.ok) {
+        throw new Error('Failed to update account settings');
       }
     } catch (error) {
       console.error('Error updating account settings:', error);
@@ -424,8 +348,13 @@ export class SettingsService {
     }
 
     try {
-      const docRef = doc(db, SETTINGS_COLLECTION, userId);
-      await deleteDoc(docRef);
+      const response = await fetch('/api/user/settings', {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete user settings');
+      }
     } catch (error) {
       console.error('Error deleting user settings:', error);
       throw error;
@@ -456,9 +385,9 @@ export class SettingsService {
   }
 
   /**
-   * Convert Firestore timestamps to Date objects
+   * Convert date strings to Date objects
    */
-  private convertTimestampsToDate(settings: UserSettings): UserSettings {
+  private convertDatesToObjects(settings: UserSettings): UserSettings {
     return {
       ...settings,
       security: {
@@ -482,16 +411,16 @@ export class SettingsService {
   }
 
   /**
-   * Convert Firestore timestamp or date to Date object
+   * Convert various date formats to Date object
    */
-  private toDate(value: any): Date {
-    if (value?.toDate) {
-      return value.toDate();
+  private toDate(value: unknown): Date {
+    if (value && typeof value === 'object' && 'toDate' in value && typeof (value as { toDate: () => Date }).toDate === 'function') {
+      return (value as { toDate: () => Date }).toDate();
     }
     if (value instanceof Date) {
       return value;
     }
-    return new Date(value);
+    return new Date(value as string | number);
   }
 }
 

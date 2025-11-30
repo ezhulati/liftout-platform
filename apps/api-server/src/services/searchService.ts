@@ -194,10 +194,10 @@ class SearchService {
         if (opp.industry?.toLowerCase().includes(termLower)) {
           relevanceScore += 3;
         }
-        if (opp.requiredSkills.some(s => s.toLowerCase().includes(termLower))) {
+        if (Array.isArray(opp.requiredSkills) && (opp.requiredSkills as string[]).some(s => typeof s === 'string' && s.toLowerCase().includes(termLower))) {
           relevanceScore += 4;
         }
-        if (opp.techStack.some(s => s.toLowerCase().includes(termLower))) {
+        if (Array.isArray(opp.techStack) && (opp.techStack as string[]).some(s => typeof s === 'string' && s.toLowerCase().includes(termLower))) {
           relevanceScore += 3;
         }
       }
@@ -609,9 +609,9 @@ class SearchService {
     // Get popular skills
     const skills = await prisma.skill.findMany({
       include: {
-        _count: { select: { users: true } }
+        _count: { select: { userSkills: true } }
       },
-      orderBy: { users: { _count: 'desc' } },
+      orderBy: { userSkills: { _count: 'desc' } },
       take: 5
     });
 

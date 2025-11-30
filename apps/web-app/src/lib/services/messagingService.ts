@@ -1,39 +1,112 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
-  limit as firestoreLimit,
-  startAfter,
-  Timestamp,
-  writeBatch,
-  increment,
-  arrayUnion,
-  onSnapshot,
-  QuerySnapshot,
-  DocumentSnapshot
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { documentService } from './documentService';
-import type { 
-  Conversation, 
-  SecureMessage, 
+import type {
+  Conversation,
+  SecureMessage,
   ConversationParticipant,
   MessageAttachment,
-  MessageDraft,
-  AuditLogEntry,
-  ComplianceReport 
 } from '@/lib/messaging';
 
-const CONVERSATIONS_COLLECTION = 'conversations';
-const MESSAGES_COLLECTION = 'messages';
-const MESSAGE_DRAFTS_COLLECTION = 'message_drafts';
-const AUDIT_LOGS_COLLECTION = 'audit_logs';
+// Demo data for testing
+const DEMO_CONVERSATIONS: Conversation[] = [
+  {
+    id: 'demo-conv-001',
+    title: 'Acquisition Discussion - Tech Innovations Team',
+    participants: [
+      {
+        userId: 'demo-user-001',
+        name: 'Demo User',
+        email: 'demo@example.com',
+        role: 'team_lead',
+        permissions: {
+          canSendMessages: true,
+          canUploadFiles: true,
+          canInviteParticipants: true,
+          canModerateMessages: false,
+          canAccessLegalDocuments: false,
+          canViewAuditTrail: false,
+          canExportConversation: false,
+          canDeleteMessages: false,
+        },
+        status: 'active',
+        joinedAt: new Date().toISOString(),
+        lastSeen: new Date().toISOString(),
+        notificationPreferences: {
+          emailNotifications: true,
+          instantNotifications: true,
+          dailyDigest: false,
+          urgentOnly: false,
+        },
+        isAnonymous: false,
+      },
+    ],
+    securityLevel: 'high',
+    encryptionEnabled: true,
+    auditTrailEnabled: true,
+    conversationType: 'negotiation',
+    isArchived: false,
+    isConfidential: false,
+    createdAt: new Date().toISOString(),
+    createdBy: 'demo-user-001',
+    lastActivity: new Date().toISOString(),
+    messageCount: 5,
+    requiresModeration: false,
+    allowedFileTypes: ['.pdf', '.doc', '.docx'],
+    maxFileSize: 25 * 1024 * 1024,
+    retentionPolicy: 'standard',
+    complianceNotes: [],
+    legalReviewRequired: false,
+    accessControls: [],
+  },
+];
+
+const DEMO_MESSAGES: SecureMessage[] = [
+  {
+    id: 'demo-msg-001',
+    conversationId: 'demo-conv-001',
+    senderId: 'demo-user-001',
+    senderName: 'Demo User',
+    senderRole: 'team_lead',
+    recipientIds: ['company-user-001'],
+    content: 'Thank you for your interest in our team. We are excited to discuss this opportunity.',
+    messageType: 'text',
+    encryptionLevel: 'high',
+    accessLevel: 'parties_only',
+    isAnonymous: false,
+    timestamp: new Date(Date.now() - 3600000).toISOString(),
+    readBy: [],
+    reactions: [],
+    requiresAcknowledgment: false,
+    acknowledgedBy: [],
+    tags: [],
+    priority: 'medium',
+    attachments: [],
+    status: 'read',
+    moderationFlags: [],
+  },
+  {
+    id: 'demo-msg-002',
+    conversationId: 'demo-conv-001',
+    senderId: 'company-user-001',
+    senderName: 'Company Representative',
+    senderRole: 'company_rep',
+    recipientIds: ['demo-user-001'],
+    content: 'We would like to schedule a call to discuss the next steps. Are you available next week?',
+    messageType: 'text',
+    encryptionLevel: 'high',
+    accessLevel: 'parties_only',
+    isAnonymous: false,
+    timestamp: new Date(Date.now() - 1800000).toISOString(),
+    readBy: [],
+    reactions: [],
+    requiresAcknowledgment: false,
+    acknowledgedBy: [],
+    tags: [],
+    priority: 'medium',
+    attachments: [],
+    status: 'delivered',
+    moderationFlags: [],
+  },
+];
 
 // Helper to check if this is a demo user/entity
 const isDemoEntity = (id: string): boolean => {
@@ -83,48 +156,22 @@ export class MessagingService {
     }
 
     try {
-      const conversationData: Partial<Conversation> = {
-        title,
-        participants,
-        securityLevel: options.securityLevel || 'high',
-        encryptionEnabled: (options.securityLevel || 'high') !== 'standard',
-        auditTrailEnabled: true,
-        conversationType: options.conversationType || 'general',
-        isArchived: false,
-        isConfidential: options.isConfidential || false,
-        createdAt: new Date().toISOString(),
-        createdBy: participants[0]?.userId || '',
-        lastActivity: new Date().toISOString(),
-        messageCount: 0,
-        requiresModeration: options.requiresModeration || (options.securityLevel === 'maximum'),
-        allowedFileTypes: ['.pdf', '.doc', '.docx', '.txt', '.jpg', '.png'],
-        maxFileSize: 25 * 1024 * 1024, // 25MB
-        retentionPolicy: options.securityLevel === 'maximum' ? 'legal_hold' : 'standard',
-        complianceNotes: [],
-        legalReviewRequired: options.securityLevel === 'maximum',
-        accessControls: [],
-        dealId: options.dealId,
-        teamId: options.teamId,
-        opportunityId: options.opportunityId,
-      };
-
-      const docRef = await addDoc(collection(db, CONVERSATIONS_COLLECTION), {
-        ...conversationData,
-        createdAt: Timestamp.now(),
-        lastActivity: Timestamp.now(),
+      const response = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          participants,
+          ...options,
+        }),
       });
 
-      // Log conversation creation
-      await this.logAuditEvent({
-        userId: participants[0]?.userId || '',
-        userName: participants[0]?.name || '',
-        action: 'conversation_created',
-        entityType: 'conversation',
-        entityId: docRef.id,
-        details: { title, participantCount: participants.length, securityLevel: options.securityLevel },
-      });
+      if (!response.ok) {
+        throw new Error('Failed to create conversation');
+      }
 
-      return docRef.id;
+      const result = await response.json();
+      return result.conversation?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error creating conversation:', error);
       throw new Error('Failed to create conversation');
@@ -158,104 +205,23 @@ export class MessagingService {
     }
 
     try {
-      // Get conversation to validate security requirements
-      const conversation = await this.getConversationById(conversationId);
-      if (!conversation) {
-        throw new Error('Conversation not found');
-      }
-
-      // Validate sender is participant
-      const isParticipant = conversation.participants.some(p => p.userId === senderId);
-      if (!isParticipant) {
-        throw new Error('Sender is not a participant in this conversation');
-      }
-
-      // Get sender info
-      const sender = conversation.participants.find(p => p.userId === senderId);
-      if (!sender) {
-        throw new Error('Sender not found');
-      }
-
-      // Validate permissions
-      if (!sender.permissions.canSendMessages) {
-        throw new Error('Sender does not have permission to send messages');
-      }
-
-      // Get attachments if provided
-      let attachments: MessageAttachment[] = [];
-      if (options.attachmentIds?.length) {
-        attachments = await this.getMessageAttachments(options.attachmentIds);
-      }
-
-      // Validate file uploads if present
-      if (attachments.length && !sender.permissions.canUploadFiles) {
-        throw new Error('Sender does not have permission to upload files');
-      }
-
-      // Determine encryption level based on conversation security
-      const encryptionLevel = options.encryptionLevel || 
-        (conversation.securityLevel === 'maximum' ? 'legal' : 
-         conversation.securityLevel === 'high' ? 'high' : 'standard');
-
-      const messageData: Partial<SecureMessage> = {
-        conversationId,
-        senderId,
-        senderName: sender.name,
-        senderRole: sender.role,
-        recipientIds: conversation.participants.filter(p => p.userId !== senderId).map(p => p.userId),
-        content,
-        subject: options.subject,
-        messageType: options.messageType || 'text',
-        encryptionLevel,
-        accessLevel: options.accessLevel || 'parties_only',
-        isAnonymous: sender.isAnonymous,
-        pseudonym: sender.displayName,
-        timestamp: new Date().toISOString(),
-        readBy: [],
-        reactions: [],
-        expiresAt: options.expiresAt?.toISOString(),
-        requiresAcknowledgment: options.requiresAcknowledgment || false,
-        acknowledgedBy: [],
-        parentMessageId: options.parentMessageId,
-        tags: options.tags || [],
-        priority: options.priority || 'medium',
-        attachments,
-        status: 'sent',
-        moderationFlags: [],
-      };
-
-      // Add message to Firestore
-      const messageRef = await addDoc(collection(db, MESSAGES_COLLECTION), {
-        ...messageData,
-        timestamp: Timestamp.now(),
-        expiresAt: options.expiresAt ? Timestamp.fromDate(options.expiresAt) : null,
+      const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content,
+          ...options,
+          expiresAt: options.expiresAt?.toISOString(),
+        }),
       });
 
-      // Update conversation last activity and message count
-      const conversationRef = doc(db, CONVERSATIONS_COLLECTION, conversationId);
-      await updateDoc(conversationRef, {
-        lastActivity: Timestamp.now(),
-        messageCount: increment(1),
-      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send message');
+      }
 
-      // Log message sent
-      await this.logAuditEvent({
-        userId: senderId,
-        userName: sender.name,
-        action: 'message_sent',
-        entityType: 'message',
-        entityId: messageRef.id,
-        details: { 
-          conversationId, 
-          messageType: options.messageType,
-          hasAttachments: attachments.length > 0,
-          encryptionLevel 
-        },
-      });
-
-      // TODO: Send real-time notifications to participants
-
-      return messageRef.id;
+      const result = await response.json();
+      return result.message?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error sending message:', error);
       throw new Error('Failed to send message');
@@ -264,21 +230,21 @@ export class MessagingService {
 
   // Get conversation by ID
   async getConversationById(conversationId: string): Promise<Conversation | null> {
+    // Handle demo conversations
+    if (isDemoEntity(conversationId)) {
+      return DEMO_CONVERSATIONS.find(c => c.id === conversationId) || DEMO_CONVERSATIONS[0];
+    }
+
     try {
-      const docRef = doc(db, CONVERSATIONS_COLLECTION, conversationId);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          id: docSnap.id,
-          ...data,
-          createdAt: data.createdAt?.toDate().toISOString(),
-          lastActivity: data.lastActivity?.toDate().toISOString(),
-        } as Conversation;
+      const response = await fetch(`/api/conversations/${conversationId}`);
+
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to get conversation');
       }
-      
-      return null;
+
+      const result = await response.json();
+      return result.conversation || result.data || null;
     } catch (error) {
       console.error('Error getting conversation:', error);
       throw new Error('Failed to get conversation');
@@ -287,24 +253,20 @@ export class MessagingService {
 
   // Get conversations for a user
   async getUserConversations(userId: string, limit = 50): Promise<Conversation[]> {
+    // Handle demo users
+    if (isDemoEntity(userId)) {
+      return DEMO_CONVERSATIONS;
+    }
+
     try {
-      const q = query(
-        collection(db, CONVERSATIONS_COLLECTION),
-        where('participants', 'array-contains', { userId }),
-        orderBy('lastActivity', 'desc'),
-        firestoreLimit(limit)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate().toISOString(),
-          lastActivity: data.lastActivity?.toDate().toISOString(),
-        } as Conversation;
-      });
+      const response = await fetch(`/api/conversations?limit=${limit}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to get user conversations');
+      }
+
+      const result = await response.json();
+      return result.conversations || result.data?.conversations || [];
     } catch (error) {
       console.error('Error getting user conversations:', error);
       throw new Error('Failed to get user conversations');
@@ -313,7 +275,7 @@ export class MessagingService {
 
   // Get messages for a conversation
   async getConversationMessages(
-    conversationId: string, 
+    conversationId: string,
     userId: string,
     options: {
       limit?: number;
@@ -321,59 +283,25 @@ export class MessagingService {
       includeDeleted?: boolean;
     } = {}
   ): Promise<SecureMessage[]> {
+    // Handle demo conversations
+    if (isDemoEntity(conversationId) || isDemoEntity(userId)) {
+      return DEMO_MESSAGES.filter(m => m.conversationId === conversationId || conversationId.startsWith('demo-'));
+    }
+
     try {
-      // Verify user has access to conversation
-      const conversation = await this.getConversationById(conversationId);
-      if (!conversation) {
-        throw new Error('Conversation not found');
+      const params = new URLSearchParams();
+      if (options.limit) params.append('limit', options.limit.toString());
+      if (options.startAfter) params.append('startAfter', options.startAfter);
+      if (options.includeDeleted) params.append('includeDeleted', 'true');
+
+      const response = await fetch(`/api/conversations/${conversationId}/messages?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to get conversation messages');
       }
 
-      const isParticipant = conversation.participants.some(p => p.userId === userId);
-      if (!isParticipant) {
-        throw new Error('User is not a participant in this conversation');
-      }
-
-      let q = query(
-        collection(db, MESSAGES_COLLECTION),
-        where('conversationId', '==', conversationId),
-        orderBy('timestamp', 'desc'),
-        firestoreLimit(options.limit || 50)
-      );
-
-      if (options.startAfter) {
-        const startAfterDoc = await getDoc(doc(db, MESSAGES_COLLECTION, options.startAfter));
-        if (startAfterDoc.exists()) {
-          q = query(q, startAfter(startAfterDoc));
-        }
-      }
-
-      const querySnapshot = await getDocs(q);
-      const messages = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          timestamp: data.timestamp?.toDate().toISOString(),
-          expiresAt: data.expiresAt?.toDate().toISOString(),
-        } as SecureMessage;
-      }).filter(message => {
-        // Filter out deleted messages unless specifically requested
-        if (!options.includeDeleted && message.status === 'deleted') {
-          return false;
-        }
-        
-        // Filter out expired messages
-        if (message.expiresAt && new Date(message.expiresAt) < new Date()) {
-          return false;
-        }
-        
-        return true;
-      });
-
-      // Mark messages as delivered if they haven't been read yet
-      await this.markMessagesAsDelivered(messages.filter(m => m.senderId !== userId), userId);
-
-      return messages.reverse(); // Return in chronological order
+      const result = await response.json();
+      return result.messages || result.data?.messages || [];
     } catch (error) {
       console.error('Error getting conversation messages:', error);
       throw new Error('Failed to get conversation messages');
@@ -382,34 +310,23 @@ export class MessagingService {
 
   // Mark messages as read
   async markMessagesAsRead(messageIds: string[], userId: string): Promise<void> {
+    // Handle demo messages
+    if (isDemoEntity(userId) || messageIds.some(id => isDemoEntity(id))) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      console.log(`[Demo] Marked ${messageIds.length} messages as read`);
+      return;
+    }
+
     try {
-      const batch = writeBatch(db);
-      const timestamp = Timestamp.now();
-
-      for (const messageId of messageIds) {
-        const messageRef = doc(db, MESSAGES_COLLECTION, messageId);
-        batch.update(messageRef, {
-          readBy: arrayUnion({
-            userId,
-            readAt: timestamp,
-            ipAddress: '127.0.0.1', // Would get real IP
-            userAgent: 'Mozilla/5.0...', // Would get real user agent
-          }),
-          status: 'read',
-        });
-      }
-
-      await batch.commit();
-
-      // Log read activity
-      await this.logAuditEvent({
-        userId,
-        userName: '', // Would get from user service
-        action: 'message_read',
-        entityType: 'message',
-        entityId: messageIds.join(','),
-        details: { messageCount: messageIds.length },
+      const response = await fetch('/api/conversations/read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageIds }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to mark messages as read');
+      }
     } catch (error) {
       console.error('Error marking messages as read:', error);
       throw new Error('Failed to mark messages as read');
@@ -422,65 +339,33 @@ export class MessagingService {
     searchQuery: string,
     options: MessageSearchOptions = {}
   ): Promise<SecureMessage[]> {
+    // Handle demo users
+    if (isDemoEntity(userId)) {
+      const filtered = DEMO_MESSAGES.filter(m =>
+        m.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        m.subject?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      return filtered.slice(0, options.limit || 50);
+    }
+
     try {
-      // Get user's accessible conversations first
-      const userConversations = await this.getUserConversations(userId);
-      const conversationIds = options.conversationId 
-        ? [options.conversationId]
-        : userConversations.map(c => c.id);
+      const params = new URLSearchParams();
+      params.append('q', searchQuery);
+      if (options.conversationId) params.append('conversationId', options.conversationId);
+      if (options.senderId) params.append('senderId', options.senderId);
+      if (options.messageType) params.append('messageType', options.messageType);
+      if (options.priority) params.append('priority', options.priority);
+      if (options.limit) params.append('limit', options.limit.toString());
+      if (options.tags?.length) params.append('tags', options.tags.join(','));
 
-      // Build Firestore query (limited text search capabilities)
-      let q = collection(db, MESSAGES_COLLECTION);
-      const constraints = [];
+      const response = await fetch(`/api/conversations/search?${params.toString()}`);
 
-      if (conversationIds.length > 0) {
-        constraints.push(where('conversationId', 'in', conversationIds.slice(0, 10))); // Firestore limit
+      if (!response.ok) {
+        throw new Error('Failed to search messages');
       }
 
-      if (options.senderId) {
-        constraints.push(where('senderId', '==', options.senderId));
-      }
-
-      if (options.messageType) {
-        constraints.push(where('messageType', '==', options.messageType));
-      }
-
-      if (options.priority) {
-        constraints.push(where('priority', '==', options.priority));
-      }
-
-      if (options.hasAttachments !== undefined) {
-        // Would need to structure data differently for this query
-      }
-
-      if (options.tags?.length) {
-        constraints.push(where('tags', 'array-contains-any', options.tags));
-      }
-
-      constraints.push(orderBy('timestamp', 'desc'));
-      constraints.push(firestoreLimit(options.limit || 50));
-
-      const finalQuery = query(q as any, ...constraints);
-      const querySnapshot = await getDocs(finalQuery);
-      
-      const messages = querySnapshot.docs.map(doc => {
-        const data = doc.data() as any;
-        return {
-          id: doc.id,
-          ...(data as object),
-          timestamp: data.timestamp?.toDate().toISOString(),
-        } as SecureMessage;
-      });
-
-      // Client-side text search (in production, would use proper search service)
-      const filteredMessages = searchQuery.trim() 
-        ? messages.filter(message => 
-            message.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            message.subject?.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : messages;
-
-      return filteredMessages;
+      const result = await response.json();
+      return result.messages || result.data?.messages || [];
     } catch (error) {
       console.error('Error searching messages:', error);
       throw new Error('Failed to search messages');
@@ -498,37 +383,29 @@ export class MessagingService {
       attachmentIds?: string[];
     } = {}
   ): Promise<string> {
+    // Handle demo users
+    if (isDemoEntity(authorId) || isDemoEntity(conversationId)) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      console.log(`[Demo] Saved draft for conversation ${conversationId}`);
+      return `demo-draft-${Date.now()}`;
+    }
+
     try {
-      const draftData = {
-        conversationId,
-        authorId,
-        content,
-        subject: options.subject,
-        recipientIds: options.recipientIds || [],
-        attachments: [], // Would populate from attachment IDs
-        lastSaved: Timestamp.now(),
-        autoSaveEnabled: true,
-      };
+      const response = await fetch(`/api/conversations/${conversationId}/drafts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content,
+          ...options,
+        }),
+      });
 
-      // Check if draft already exists
-      const existingDraftQuery = query(
-        collection(db, MESSAGE_DRAFTS_COLLECTION),
-        where('conversationId', '==', conversationId),
-        where('authorId', '==', authorId)
-      );
-
-      const existingDrafts = await getDocs(existingDraftQuery);
-      
-      if (!existingDrafts.empty) {
-        // Update existing draft
-        const draftRef = existingDrafts.docs[0].ref;
-        await updateDoc(draftRef, draftData);
-        return draftRef.id;
-      } else {
-        // Create new draft
-        const draftRef = await addDoc(collection(db, MESSAGE_DRAFTS_COLLECTION), draftData);
-        return draftRef.id;
+      if (!response.ok) {
+        throw new Error('Failed to save message draft');
       }
+
+      const result = await response.json();
+      return result.draft?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error saving message draft:', error);
       throw new Error('Failed to save message draft');
@@ -536,38 +413,159 @@ export class MessagingService {
   }
 
   // Subscribe to conversation updates (real-time)
+  // Note: This would need WebSocket or SSE implementation on the server
   subscribeToConversation(
     conversationId: string,
     callback: (messages: SecureMessage[]) => void
   ): () => void {
-    const q = query(
-      collection(db, MESSAGES_COLLECTION),
-      where('conversationId', '==', conversationId),
-      orderBy('timestamp', 'desc'),
-      firestoreLimit(50)
-    );
+    // For demo, just return the messages once
+    if (isDemoEntity(conversationId)) {
+      setTimeout(() => {
+        callback(DEMO_MESSAGES.filter(m => m.conversationId === conversationId));
+      }, 100);
+      return () => {};
+    }
 
-    return onSnapshot(q, (snapshot) => {
-      const messages = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          timestamp: data.timestamp?.toDate().toISOString(),
-        } as SecureMessage;
-      }).reverse();
+    // In production, this would use WebSocket or polling
+    let intervalId: NodeJS.Timeout | null = null;
+    let lastMessageId: string | undefined;
 
-      callback(messages);
-    });
+    const poll = async () => {
+      try {
+        const messages = await this.getConversationMessages(conversationId, 'system', {
+          limit: 50,
+          startAfter: lastMessageId,
+        });
+
+        if (messages.length > 0) {
+          lastMessageId = messages[messages.length - 1].id;
+          callback(messages);
+        }
+      } catch (error) {
+        console.error('Error polling for messages:', error);
+      }
+    };
+
+    // Poll every 5 seconds
+    intervalId = setInterval(poll, 5000);
+    poll(); // Initial fetch
+
+    // Return unsubscribe function
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }
+
+  // Add participant to conversation
+  async addParticipant(
+    conversationId: string,
+    participant: ConversationParticipant
+  ): Promise<void> {
+    // Handle demo conversations
+    if (isDemoEntity(conversationId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Added participant to conversation ${conversationId}`);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/conversations/${conversationId}/participants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(participant),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add participant');
+      }
+    } catch (error) {
+      console.error('Error adding participant:', error);
+      throw new Error('Failed to add participant');
+    }
+  }
+
+  // Remove participant from conversation
+  async removeParticipant(
+    conversationId: string,
+    userId: string
+  ): Promise<void> {
+    // Handle demo conversations
+    if (isDemoEntity(conversationId) || isDemoEntity(userId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Removed participant ${userId} from conversation ${conversationId}`);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/conversations/${conversationId}/participants/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to remove participant');
+      }
+    } catch (error) {
+      console.error('Error removing participant:', error);
+      throw new Error('Failed to remove participant');
+    }
+  }
+
+  // Archive conversation
+  async archiveConversation(conversationId: string): Promise<void> {
+    // Handle demo conversations
+    if (isDemoEntity(conversationId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Archived conversation ${conversationId}`);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/conversations/${conversationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isArchived: true }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to archive conversation');
+      }
+    } catch (error) {
+      console.error('Error archiving conversation:', error);
+      throw new Error('Failed to archive conversation');
+    }
+  }
+
+  // Get unread message count
+  async getUnreadCount(userId: string): Promise<number> {
+    // Handle demo users
+    if (isDemoEntity(userId)) {
+      return 2;
+    }
+
+    try {
+      const response = await fetch('/api/conversations/unread');
+
+      if (!response.ok) {
+        throw new Error('Failed to get unread count');
+      }
+
+      const result = await response.json();
+      return result.count || result.data?.count || 0;
+    } catch (error) {
+      console.error('Error getting unread count:', error);
+      return 0;
+    }
   }
 
   // Private helper methods
   private async getMessageAttachments(attachmentIds: string[]): Promise<MessageAttachment[]> {
     const attachments: MessageAttachment[] = [];
-    
+
     for (const attachmentId of attachmentIds) {
       try {
-        const document = await documentService.getSecureDocument(attachmentId, 'system'); // System access for message attachment
+        const document = await documentService.getSecureDocument(attachmentId, 'system');
         if (document) {
           attachments.push({
             id: document.id!,
@@ -586,7 +584,7 @@ export class MessagingService {
             documentType: document.documentType,
             version: document.version,
             checksum: document.checksum,
-            expiresAt: document.expiresAt && typeof document.expiresAt === 'object' && 'toDate' in document.expiresAt ? (document.expiresAt as any).toDate().toISOString() : document.expiresAt,
+            expiresAt: document.expiresAt && typeof document.expiresAt === 'object' && 'toDate' in document.expiresAt ? (document.expiresAt as { toDate: () => Date }).toDate().toISOString() : document.expiresAt as string | undefined,
             isExpired: document.isExpired,
           });
         }
@@ -594,46 +592,8 @@ export class MessagingService {
         console.error(`Error getting attachment ${attachmentId}:`, error);
       }
     }
-    
+
     return attachments;
-  }
-
-  private async markMessagesAsDelivered(messages: SecureMessage[], userId: string): Promise<void> {
-    if (messages.length === 0) return;
-
-    try {
-      const batch = writeBatch(db);
-      const timestamp = Timestamp.now();
-
-      for (const message of messages) {
-        if (message.status === 'sent') {
-          const messageRef = doc(db, MESSAGES_COLLECTION, message.id);
-          batch.update(messageRef, {
-            status: 'delivered',
-          });
-        }
-      }
-
-      await batch.commit();
-    } catch (error) {
-      console.error('Error marking messages as delivered:', error);
-    }
-  }
-
-  private async logAuditEvent(event: Omit<AuditLogEntry, 'id' | 'timestamp' | 'ipAddress' | 'userAgent' | 'location'>): Promise<void> {
-    try {
-      const auditEntry = {
-        ...event,
-        timestamp: Timestamp.now(),
-        ipAddress: '127.0.0.1', // Would get real IP
-        userAgent: 'Mozilla/5.0...', // Would get real user agent
-        location: 'Unknown', // Would get from IP geolocation
-      };
-
-      await addDoc(collection(db, AUDIT_LOGS_COLLECTION), auditEntry);
-    } catch (error) {
-      console.error('Error logging audit event:', error);
-    }
   }
 }
 

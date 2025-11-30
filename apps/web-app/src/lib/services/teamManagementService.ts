@@ -1,29 +1,9 @@
-import {
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  Timestamp,
-  writeBatch,
-  deleteDoc
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { isDemoAccount } from '@/lib/demo-accounts';
-import type { 
-  TeamInvitation, 
-  TeamMemberDetails, 
+import type {
+  TeamInvitation,
+  TeamMemberDetails,
   TeamManagementData,
-  UserWithTeam 
 } from '@/types/team-management';
-
-const INVITATIONS_COLLECTION = 'team_invitations';
-const TEAMS_COLLECTION = 'teams';
-const USERS_COLLECTION = 'users';
 
 // Demo data for Alex Chen's team
 const DEMO_TEAM_MANAGEMENT: TeamManagementData = {
@@ -31,42 +11,74 @@ const DEMO_TEAM_MANAGEMENT: TeamManagementData = {
   teamName: 'TechFlow Data Science Team',
   description: 'Elite data science team with proven track record in fintech analytics and machine learning solutions.',
   leader: {
+    odUserId: 'demo@example.com',
+    odEmail: 'demo@example.com',
+    odName: 'Alex Chen',
+    odRole: 'leader',
+    odJoinedAt: new Date(Date.now() - 3.5 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+    odStatus: 'active',
+    odTitle: 'Senior Data Scientist & Team Lead',
+    odSkills: ['Machine Learning', 'Python', 'Team Leadership', 'Financial Modeling'],
     userId: 'demo@example.com',
     email: 'demo@example.com',
     name: 'Alex Chen',
     role: 'leader',
-    joinedAt: Timestamp.fromDate(new Date(Date.now() - 3.5 * 365 * 24 * 60 * 60 * 1000)),
+    joinedAt: new Date(Date.now() - 3.5 * 365 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'active',
     title: 'Senior Data Scientist & Team Lead',
     skills: ['Machine Learning', 'Python', 'Team Leadership', 'Financial Modeling']
   },
   members: [
     {
+      odUserId: 'sarah.kim@techflow.com',
+      odEmail: 'sarah.kim@techflow.com',
+      odName: 'Sarah Kim',
+      odRole: 'member',
+      odJoinedAt: new Date(Date.now() - 2.8 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+      odStatus: 'active',
+      odTitle: 'Data Scientist',
+      odSkills: ['Python', 'SQL', 'Machine Learning', 'Statistics'],
       userId: 'sarah.kim@techflow.com',
       email: 'sarah.kim@techflow.com',
       name: 'Sarah Kim',
       role: 'member',
-      joinedAt: Timestamp.fromDate(new Date(Date.now() - 2.8 * 365 * 24 * 60 * 60 * 1000)),
+      joinedAt: new Date(Date.now() - 2.8 * 365 * 24 * 60 * 60 * 1000).toISOString(),
       status: 'active',
       title: 'Data Scientist',
       skills: ['Python', 'SQL', 'Machine Learning', 'Statistics']
     },
     {
+      odUserId: 'mike.rodriguez@techflow.com',
+      odEmail: 'mike.rodriguez@techflow.com',
+      odName: 'Mike Rodriguez',
+      odRole: 'member',
+      odJoinedAt: new Date(Date.now() - 2.2 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+      odStatus: 'active',
+      odTitle: 'Senior Data Engineer',
+      odSkills: ['Python', 'AWS', 'Data Engineering', 'ETL'],
       userId: 'mike.rodriguez@techflow.com',
       email: 'mike.rodriguez@techflow.com',
       name: 'Mike Rodriguez',
       role: 'member',
-      joinedAt: Timestamp.fromDate(new Date(Date.now() - 2.2 * 365 * 24 * 60 * 60 * 1000)),
+      joinedAt: new Date(Date.now() - 2.2 * 365 * 24 * 60 * 60 * 1000).toISOString(),
       status: 'active',
       title: 'Senior Data Engineer',
       skills: ['Python', 'AWS', 'Data Engineering', 'ETL']
     },
     {
+      odUserId: 'jennifer.liu@techflow.com',
+      odEmail: 'jennifer.liu@techflow.com',
+      odName: 'Jennifer Liu',
+      odRole: 'member',
+      odJoinedAt: new Date(Date.now() - 1.5 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+      odStatus: 'active',
+      odTitle: 'ML Engineer',
+      odSkills: ['Machine Learning', 'TensorFlow', 'Model Deployment', 'MLOps'],
       userId: 'jennifer.liu@techflow.com',
       email: 'jennifer.liu@techflow.com',
       name: 'Jennifer Liu',
       role: 'member',
-      joinedAt: Timestamp.fromDate(new Date(Date.now() - 1.5 * 365 * 24 * 60 * 60 * 1000)),
+      joinedAt: new Date(Date.now() - 1.5 * 365 * 24 * 60 * 60 * 1000).toISOString(),
       status: 'active',
       title: 'ML Engineer',
       skills: ['Machine Learning', 'TensorFlow', 'Model Deployment', 'MLOps']
@@ -75,14 +87,15 @@ const DEMO_TEAM_MANAGEMENT: TeamManagementData = {
   pendingInvitations: [
     {
       id: 'inv_001',
+      odId: 'inv_001',
       teamId: 'team_demo_001',
       teamName: 'TechFlow Data Science Team',
       invitedEmail: 'david.park@gmail.com',
       invitedBy: 'demo@example.com',
       inviterName: 'Alex Chen',
       status: 'pending',
-      invitedAt: Timestamp.fromDate(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)),
-      expiresAt: Timestamp.fromDate(new Date(Date.now() + 4 * 24 * 60 * 60 * 1000)),
+      invitedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      expiresAt: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
       message: "Hi David! We'd love to have you join our data science team at TechFlow. Your expertise in NLP would be a perfect fit for our upcoming projects.",
       role: 'member'
     }
@@ -102,68 +115,15 @@ export class TeamManagementService {
     }
 
     try {
-      // Get user's team
-      const userDoc = await getDoc(doc(db, USERS_COLLECTION, userId));
-      if (!userDoc.exists()) return null;
+      const response = await fetch('/api/teams/my-team');
 
-      const userData = userDoc.data() as UserWithTeam;
-      if (!userData.teamId) return null;
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to get team management data');
+      }
 
-      // Get team details
-      const teamDoc = await getDoc(doc(db, TEAMS_COLLECTION, userData.teamId));
-      if (!teamDoc.exists()) return null;
-
-      const teamData = teamDoc.data();
-
-      // Get all team members
-      const membersQuery = query(
-        collection(db, USERS_COLLECTION),
-        where('teamId', '==', userData.teamId)
-      );
-      const membersSnapshot = await getDocs(membersQuery);
-      
-      const members: TeamMemberDetails[] = membersSnapshot.docs.map(doc => {
-        const data = doc.data() as UserWithTeam;
-        return {
-          userId: doc.id,
-          email: data.email,
-          name: data.name,
-          role: data.teamRole || 'member',
-          joinedAt: data.joinedTeamAt || Timestamp.now(),
-          status: 'active',
-          title: data.position || '',
-          skills: []
-        };
-      });
-
-      // Get pending invitations
-      const invitationsQuery = query(
-        collection(db, INVITATIONS_COLLECTION),
-        where('teamId', '==', userData.teamId),
-        where('status', '==', 'pending'),
-        orderBy('invitedAt', 'desc')
-      );
-      const invitationsSnapshot = await getDocs(invitationsQuery);
-      
-      const pendingInvitations: TeamInvitation[] = invitationsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as TeamInvitation));
-
-      const leader = members.find(m => m.role === 'leader') || members[0];
-
-      return {
-        teamId: userData.teamId,
-        teamName: teamData.name,
-        description: teamData.description,
-        leader,
-        members: members.filter(m => m.role !== 'leader'),
-        pendingInvitations,
-        teamSize: members.length,
-        maxTeamSize: 8,
-        isLookingForMembers: members.length < 8,
-        requiredSkills: teamData.skills || []
-      };
+      const result = await response.json();
+      return result.team || result.data || null;
     } catch (error) {
       console.error('Error getting team management data:', error);
       return null;
@@ -180,65 +140,30 @@ export class TeamManagementService {
   ): Promise<string> {
     // For demo accounts, simulate success
     if (isDemoAccount(invitedBy) || invitedBy === 'demo@example.com') {
-      // Simulate adding to demo data
       console.log(`Demo: Inviting ${invitedEmail} to team ${teamId}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
       return 'demo_invitation_001';
     }
 
     try {
-      // Check if user is already on a team
-      const existingUserQuery = query(
-        collection(db, USERS_COLLECTION),
-        where('email', '==', invitedEmail),
-        where('teamId', '!=', null)
-      );
-      const existingUserSnapshot = await getDocs(existingUserQuery);
-      
-      if (!existingUserSnapshot.empty) {
-        throw new Error('User is already part of another team');
+      const response = await fetch('/api/teams/invitations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teamId,
+          invitedEmail,
+          inviterName,
+          message,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send invitation');
       }
 
-      // Check if there's already a pending invitation
-      const existingInviteQuery = query(
-        collection(db, INVITATIONS_COLLECTION),
-        where('teamId', '==', teamId),
-        where('invitedEmail', '==', invitedEmail),
-        where('status', '==', 'pending')
-      );
-      const existingInviteSnapshot = await getDocs(existingInviteQuery);
-      
-      if (!existingInviteSnapshot.empty) {
-        throw new Error('Invitation already sent to this email');
-      }
-
-      // Get team details
-      const teamDoc = await getDoc(doc(db, TEAMS_COLLECTION, teamId));
-      if (!teamDoc.exists()) {
-        throw new Error('Team not found');
-      }
-
-      const teamData = teamDoc.data();
-
-      // Create invitation
-      const invitation: Omit<TeamInvitation, 'id'> = {
-        teamId,
-        teamName: teamData.name,
-        invitedEmail,
-        invitedBy,
-        inviterName,
-        status: 'pending',
-        invitedAt: Timestamp.now(),
-        expiresAt: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), // 7 days
-        message,
-        role: 'member'
-      };
-
-      const docRef = await addDoc(collection(db, INVITATIONS_COLLECTION), invitation);
-      
-      // TODO: Send invitation email
-      await this.sendInvitationEmail(invitation, docRef.id);
-
-      return docRef.id;
+      const result = await response.json();
+      return result.invitation?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error sending team invitation:', error);
       throw error;
@@ -250,53 +175,21 @@ export class TeamManagementService {
     // For demo accounts, simulate success
     if (isDemoAccount(userId) || userId === 'demo@example.com') {
       console.log(`Demo: Accepting invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 200));
       return;
     }
 
     try {
-      const batch = writeBatch(db);
-
-      // Get invitation
-      const inviteDoc = await getDoc(doc(db, INVITATIONS_COLLECTION, invitationId));
-      if (!inviteDoc.exists()) {
-        throw new Error('Invitation not found');
-      }
-
-      const invitation = inviteDoc.data() as TeamInvitation;
-      
-      if (invitation.status !== 'pending') {
-        throw new Error('Invitation is no longer valid');
-      }
-
-      if (invitation.expiresAt.toDate() < new Date()) {
-        throw new Error('Invitation has expired');
-      }
-
-      // Check if user is already on a team
-      const userDoc = await getDoc(doc(db, USERS_COLLECTION, userId));
-      if (!userDoc.exists()) {
-        throw new Error('User not found');
-      }
-
-      const userData = userDoc.data() as UserWithTeam;
-      if (userData.teamId) {
-        throw new Error('User is already part of a team. Please leave your current team first.');
-      }
-
-      // Update user with team information
-      batch.update(doc(db, USERS_COLLECTION, userId), {
-        teamId: invitation.teamId,
-        teamRole: invitation.role,
-        joinedTeamAt: Timestamp.now()
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'accept' }),
       });
 
-      // Update invitation status
-      batch.update(doc(db, INVITATIONS_COLLECTION, invitationId), {
-        status: 'accepted',
-        respondedAt: Timestamp.now()
-      });
-
-      await batch.commit();
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to accept invitation');
+      }
     } catch (error) {
       console.error('Error accepting invitation:', error);
       throw error;
@@ -306,10 +199,15 @@ export class TeamManagementService {
   // Decline team invitation
   async declineInvitation(invitationId: string): Promise<void> {
     try {
-      await updateDoc(doc(db, INVITATIONS_COLLECTION, invitationId), {
-        status: 'declined',
-        respondedAt: Timestamp.now()
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'decline' }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to decline invitation');
+      }
     } catch (error) {
       console.error('Error declining invitation:', error);
       throw error;
@@ -321,30 +219,19 @@ export class TeamManagementService {
     // For demo accounts, simulate success
     if (isDemoAccount(userId) || userId === 'demo@example.com') {
       console.log(`Demo: User ${userId} leaving team`);
+      await new Promise(resolve => setTimeout(resolve, 200));
       return;
     }
 
     try {
-      const userDoc = await getDoc(doc(db, USERS_COLLECTION, userId));
-      if (!userDoc.exists()) {
-        throw new Error('User not found');
-      }
-
-      const userData = userDoc.data() as UserWithTeam;
-      if (!userData.teamId) {
-        throw new Error('User is not part of any team');
-      }
-
-      if (userData.teamRole === 'leader') {
-        throw new Error('Team leader cannot leave team. Please transfer leadership first.');
-      }
-
-      // Remove user from team
-      await updateDoc(doc(db, USERS_COLLECTION, userId), {
-        teamId: null,
-        teamRole: null,
-        joinedTeamAt: null
+      const response = await fetch('/api/teams/my-team/leave', {
+        method: 'POST',
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to leave team');
+      }
     } catch (error) {
       console.error('Error leaving team:', error);
       throw error;
@@ -356,38 +243,19 @@ export class TeamManagementService {
     // For demo accounts, simulate success
     if (isDemoAccount(teamLeaderId) || teamLeaderId === 'demo@example.com') {
       console.log(`Demo: Removing member ${memberUserId} from team`);
+      await new Promise(resolve => setTimeout(resolve, 200));
       return;
     }
 
     try {
-      // Verify the requester is the team leader
-      const leaderDoc = await getDoc(doc(db, USERS_COLLECTION, teamLeaderId));
-      if (!leaderDoc.exists()) {
-        throw new Error('Leader not found');
-      }
-
-      const leaderData = leaderDoc.data() as UserWithTeam;
-      if (leaderData.teamRole !== 'leader') {
-        throw new Error('Only team leaders can remove members');
-      }
-
-      // Get member
-      const memberDoc = await getDoc(doc(db, USERS_COLLECTION, memberUserId));
-      if (!memberDoc.exists()) {
-        throw new Error('Member not found');
-      }
-
-      const memberData = memberDoc.data() as UserWithTeam;
-      if (memberData.teamId !== leaderData.teamId) {
-        throw new Error('Member is not part of your team');
-      }
-
-      // Remove member from team
-      await updateDoc(doc(db, USERS_COLLECTION, memberUserId), {
-        teamId: null,
-        teamRole: null,
-        joinedTeamAt: null
+      const response = await fetch(`/api/teams/my-team/members/${memberUserId}`, {
+        method: 'DELETE',
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to remove member');
+      }
     } catch (error) {
       console.error('Error removing team member:', error);
       throw error;
@@ -396,48 +264,99 @@ export class TeamManagementService {
 
   // Cancel invitation
   async cancelInvitation(invitationId: string, userId: string): Promise<void> {
+    // For demo accounts, simulate success
+    if (isDemoAccount(userId) || userId === 'demo@example.com') {
+      console.log(`Demo: Canceling invitation ${invitationId}`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      return;
+    }
+
     try {
-      const inviteDoc = await getDoc(doc(db, INVITATIONS_COLLECTION, invitationId));
-      if (!inviteDoc.exists()) {
-        throw new Error('Invitation not found');
-      }
+      const response = await fetch(`/api/teams/invitations/${invitationId}`, {
+        method: 'DELETE',
+      });
 
-      const invitation = inviteDoc.data() as TeamInvitation;
-      
-      if (invitation.invitedBy !== userId) {
-        throw new Error('Only the inviter can cancel this invitation');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to cancel invitation');
       }
-
-      await deleteDoc(doc(db, INVITATIONS_COLLECTION, invitationId));
     } catch (error) {
       console.error('Error canceling invitation:', error);
       throw error;
     }
   }
 
-  // Private method to send invitation email
-  private async sendInvitationEmail(invitation: Omit<TeamInvitation, 'id'>, invitationId: string): Promise<void> {
-    // Import dynamically to avoid issues with server/client code
-    try {
-      const { sendTeamInvitationEmail } = await import('@/lib/email');
+  // Get pending invitations for a user
+  async getUserInvitations(userEmail: string): Promise<TeamInvitation[]> {
+    // For demo accounts, return demo invitations
+    if (isDemoAccount(userEmail) || userEmail === 'demo@example.com') {
+      return DEMO_TEAM_MANAGEMENT.pendingInvitations;
+    }
 
-      const result = await sendTeamInvitationEmail({
-        to: invitation.invitedEmail,
-        inviterName: invitation.inviterName,
-        teamName: invitation.teamName,
-        invitationId,
-        message: invitation.message,
+    try {
+      const response = await fetch('/api/teams/invitations');
+
+      if (!response.ok) {
+        throw new Error('Failed to get invitations');
+      }
+
+      const result = await response.json();
+      return result.invitations || result.data?.invitations || [];
+    } catch (error) {
+      console.error('Error getting user invitations:', error);
+      return [];
+    }
+  }
+
+  // Transfer leadership
+  async transferLeadership(currentLeaderId: string, newLeaderId: string): Promise<void> {
+    // For demo accounts, simulate success
+    if (isDemoAccount(currentLeaderId) || currentLeaderId === 'demo@example.com') {
+      console.log(`Demo: Transferring leadership to ${newLeaderId}`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/teams/my-team/transfer-leadership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newLeaderId }),
       });
 
-      if (result.success) {
-        console.log('Invitation email sent successfully:', result.messageId);
-      } else {
-        console.error('Failed to send invitation email:', result.error);
-        // Don't throw - invitation is still created, email just failed
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to transfer leadership');
       }
     } catch (error) {
-      // Log error but don't fail the invitation creation
-      console.error('Error sending invitation email:', error);
+      console.error('Error transferring leadership:', error);
+      throw error;
+    }
+  }
+
+  // Update member role
+  async updateMemberRole(teamLeaderId: string, memberUserId: string, newRole: string): Promise<void> {
+    // For demo accounts, simulate success
+    if (isDemoAccount(teamLeaderId) || teamLeaderId === 'demo@example.com') {
+      console.log(`Demo: Updating member ${memberUserId} role to ${newRole}`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/teams/my-team/members/${memberUserId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update member role');
+      }
+    } catch (error) {
+      console.error('Error updating member role:', error);
+      throw error;
     }
   }
 }
