@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { User } from '@/types/firebase';
-import { Timestamp } from 'firebase/firestore';
 
 // Type for API handler functions
 export type ApiHandler = (
@@ -55,8 +54,8 @@ export function withAuth(handler: AuthenticatedApiHandler): ApiHandler {
           marketing: true,
           confidentialMode: false,
         },
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       return handler(req, user, params);

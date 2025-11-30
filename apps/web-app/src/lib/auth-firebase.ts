@@ -14,7 +14,6 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebase';
 import { userService } from './firestore';
-import { Timestamp } from 'firebase/firestore';
 import type { User } from '@/types/firebase';
 
 export interface SignUpData {
@@ -111,9 +110,9 @@ export class AuthService {
           marketing: false,
           confidentialMode: false,
         },
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        lastLoginAt: Timestamp.now()
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastLoginAt: new Date()
       };
 
       return { user: mockFirebaseUser, userData: mockUserData };
@@ -144,9 +143,9 @@ export class AuthService {
           marketing: true,
           confidentialMode: false,
         },
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        lastLoginAt: Timestamp.now()
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastLoginAt: new Date()
       };
 
       return { user: mockFirebaseUser, userData: mockUserData };

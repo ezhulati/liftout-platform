@@ -1,7 +1,5 @@
-import { Timestamp } from 'firebase/firestore';
-
-// Flexible timestamp type for Firebase/PostgreSQL compatibility
-export type FlexibleTimestamp = Timestamp | Date | string;
+// Flexible timestamp type for PostgreSQL compatibility
+export type FlexibleTimestamp = Date | string;
 
 // Base types
 export interface BaseDocument {
@@ -23,7 +21,7 @@ export interface User extends BaseDocument {
   position?: string;
   verified: boolean;
   status: 'active' | 'inactive' | 'suspended';
-  lastLoginAt?: Timestamp;
+  lastLoginAt?: FlexibleTimestamp;
   preferences: {
     notifications: boolean;
     marketing: boolean;
@@ -82,7 +80,7 @@ export interface TeamMember extends BaseDocument {
   skills: string[];
   education?: string;
   previousCompanies?: string[];
-  joinedTeamAt: Timestamp;
+  joinedTeamAt: FlexibleTimestamp;
   isLead: boolean;
   status: 'active' | 'inactive';
 }
@@ -113,7 +111,7 @@ export interface Opportunity extends BaseDocument {
     benefits?: string[];
   };
   timeline: {
-    startDate?: Timestamp;
+    startDate?: FlexibleTimestamp;
     urgency: 'immediate' | 'within_month' | 'within_quarter' | 'flexible';
   };
   requirements: {
@@ -137,14 +135,14 @@ export interface Application extends BaseDocument {
   coverLetter?: string;
   proposedTerms?: {
     compensation: number;
-    startDate: Timestamp;
+    startDate: FlexibleTimestamp;
     conditions: string[];
   };
   timeline: {
-    appliedAt: Timestamp;
-    lastUpdatedAt: Timestamp;
-    interviewScheduledAt?: Timestamp;
-    decisionDeadline?: Timestamp;
+    appliedAt: FlexibleTimestamp;
+    lastUpdatedAt: FlexibleTimestamp;
+    interviewScheduledAt?: FlexibleTimestamp;
+    decisionDeadline?: FlexibleTimestamp;
   };
   documents: {
     resumeUrl?: string;
@@ -165,7 +163,7 @@ export interface Conversation extends BaseDocument {
   lastMessage?: {
     content: string;
     senderId: string;
-    timestamp: Timestamp;
+    timestamp: FlexibleTimestamp;
   };
   status: 'active' | 'archived' | 'blocked';
   metadata: {
@@ -183,10 +181,10 @@ export interface Message extends BaseDocument {
   fileName?: string;
   readBy: {
     userId: string;
-    readAt: Timestamp;
+    readAt: FlexibleTimestamp;
   }[];
   edited: boolean;
-  editedAt?: Timestamp;
+  editedAt?: FlexibleTimestamp;
 }
 
 // Due Diligence types
@@ -198,7 +196,7 @@ export interface DueDiligenceCase extends BaseDocument {
   checklist: {
     item: string;
     status: 'pending' | 'completed' | 'failed';
-    completedAt?: Timestamp;
+    completedAt?: FlexibleTimestamp;
     notes?: string;
     assignedTo?: string;
   }[];
@@ -214,13 +212,13 @@ export interface DueDiligenceCase extends BaseDocument {
     name: string;
     url: string;
     type: string;
-    uploadedAt: Timestamp;
+    uploadedAt: FlexibleTimestamp;
     uploadedBy: string;
   }[];
   timeline: {
-    startDate: Timestamp;
-    expectedEndDate: Timestamp;
-    actualEndDate?: Timestamp;
+    startDate: FlexibleTimestamp;
+    expectedEndDate: FlexibleTimestamp;
+    actualEndDate?: FlexibleTimestamp;
   };
   findings: {
     summary: string;
@@ -235,8 +233,8 @@ export interface Analytics extends BaseDocument {
   entityType: 'team' | 'company' | 'platform';
   entityId: string;
   period: {
-    startDate: Timestamp;
-    endDate: Timestamp;
+    startDate: FlexibleTimestamp;
+    endDate: FlexibleTimestamp;
     type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
   };
   metrics: {
@@ -259,7 +257,7 @@ export interface Notification extends BaseDocument {
   status: 'unread' | 'read';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   actionUrl?: string;
-  expiresAt?: Timestamp;
+  expiresAt?: FlexibleTimestamp;
 }
 
 // Company Profile types
@@ -280,7 +278,7 @@ export interface CompanyProfile extends BaseDocument {
   verification: {
     status: 'pending' | 'verified' | 'rejected';
     documents: string[];
-    verifiedAt?: Timestamp;
+    verifiedAt?: FlexibleTimestamp;
   };
   stats: {
     successfulLiftouts: number;
@@ -305,8 +303,8 @@ export interface MarketData extends BaseDocument {
   industry: string;
   location: string;
   period: {
-    startDate: Timestamp;
-    endDate: Timestamp;
+    startDate: FlexibleTimestamp;
+    endDate: FlexibleTimestamp;
   };
   metrics: {
     demandScore: number;
@@ -356,7 +354,7 @@ export interface CreateOpportunityData {
     benefits?: string[];
   };
   timeline: {
-    startDate?: Timestamp;
+    startDate?: FlexibleTimestamp;
     urgency: 'immediate' | 'within_month' | 'within_quarter' | 'flexible';
   };
   requirements: {
