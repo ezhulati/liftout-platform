@@ -1,29 +1,55 @@
-import { 
-  ref, 
-  uploadBytes, 
-  getDownloadURL, 
-  deleteObject,
-  getMetadata,
-  updateMetadata 
-} from 'firebase/storage';
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
-  Timestamp,
-  writeBatch 
-} from 'firebase/firestore';
-import { db, storage } from '@/lib/firebase';
 import type { MessageAttachment } from '@/lib/messaging';
 
-const DOCUMENTS_COLLECTION = 'documents';
-const DOCUMENT_ACCESS_LOG_COLLECTION = 'document_access_logs';
+const DEMO_DOCUMENTS = [
+  {
+    id: 'demo-doc-001',
+    filename: 'team-performance-report.pdf',
+    originalFilename: 'Team Performance Report Q4 2024.pdf',
+    fileType: 'application/pdf',
+    fileSize: 2456789,
+    encryptedUrl: '#',
+    accessLevel: 'parties_only' as const,
+    virusScanned: true,
+    uploadedBy: 'demo-user-001',
+    uploadedAt: new Date().toISOString(),
+    downloadCount: 5,
+    documentType: 'due_diligence' as const,
+    version: 1,
+    checksum: 'sha256:abc123...',
+    isExpired: false,
+    complianceLabels: ['confidential'],
+    isLegalPrivileged: false,
+    jurisdictions: ['US'],
+    reviewStatus: 'approved' as const,
+    accessLog: [],
+    sharedWith: [],
+    regulatoryClassification: 'confidential' as const,
+  },
+  {
+    id: 'demo-doc-002',
+    filename: 'nda-agreement.pdf',
+    originalFilename: 'Non-Disclosure Agreement.pdf',
+    fileType: 'application/pdf',
+    fileSize: 156789,
+    encryptedUrl: '#',
+    accessLevel: 'legal_only' as const,
+    virusScanned: true,
+    uploadedBy: 'demo-user-001',
+    uploadedAt: new Date().toISOString(),
+    downloadCount: 2,
+    documentType: 'nda' as const,
+    version: 1,
+    checksum: 'sha256:def456...',
+    isExpired: false,
+    complianceLabels: ['legal', 'confidential'],
+    isLegalPrivileged: true,
+    jurisdictions: ['US', 'UK'],
+    reviewStatus: 'approved' as const,
+    accessLog: [],
+    sharedWith: [],
+    regulatoryClassification: 'restricted' as const,
+  },
+];
 
 // Helper to check if this is a demo user/team/company
 const isDemoEntity = (id: string): boolean => {
@@ -40,22 +66,22 @@ export interface SecureDocument extends MessageAttachment {
   dealId?: string;
   teamId?: string;
   companyId?: string;
-  
+
   // Security and compliance
   encryptionKey?: string; // Stored separately for security
   digitalSignature?: string;
   complianceLabels: string[];
   retentionDate?: Date;
-  
+
   // Access tracking
   accessLog: DocumentAccessEntry[];
   sharedWith: DocumentShare[];
-  
+
   // Legal and regulatory
   isLegalPrivileged: boolean;
   jurisdictions: string[];
   regulatoryClassification?: 'public' | 'internal' | 'confidential' | 'restricted';
-  
+
   // Workflow
   reviewStatus: 'pending' | 'approved' | 'rejected' | 'requires_changes';
   reviewedBy?: string;
@@ -95,7 +121,7 @@ export interface VirusScanResult {
   status: 'clean' | 'infected' | 'suspicious' | 'error';
   threats: string[];
   riskScore: number;
-  scanDetails: Record<string, any>;
+  scanDetails: Record<string, unknown>;
 }
 
 export interface DocumentTemplate {
@@ -117,7 +143,7 @@ export interface TemplateVariable {
   type: 'text' | 'number' | 'date' | 'select' | 'boolean';
   label: string;
   required: boolean;
-  defaultValue?: any;
+  defaultValue?: unknown;
   options?: string[];
   validation?: {
     pattern?: string;
@@ -128,7 +154,7 @@ export interface TemplateVariable {
 
 export interface DocumentGenerationRequest {
   templateId: string;
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
   outputFormat: 'pdf' | 'docx';
   watermark?: string;
   securityLevel: 'standard' | 'high' | 'legal';
@@ -144,7 +170,6 @@ export class DocumentService {
   ];
 
   private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-  private readonly VIRUS_SCAN_TIMEOUT = 30000; // 30 seconds
 
   // File upload with security validation
   async uploadSecureDocument(
@@ -172,68 +197,46 @@ export class DocumentService {
     try {
       // Validate file
       this.validateFile(file);
-      
+
       // Generate secure filename
       const secureFileName = this.generateSecureFilename(file.name, metadata.uploadedBy);
-      const storagePath = this.getStoragePath(metadata.documentType || 'other', secureFileName);
-      
+
       // Scan for viruses (simulate - would integrate with real service)
       const scanResult = await this.scanForViruses(file);
       if (scanResult.status === 'infected') {
         throw new Error(`File rejected: ${scanResult.threats.join(', ')}`);
       }
-      
-      // Encrypt file if required
-      const processedFile = metadata.encryptionLevel === 'legal' 
-        ? await this.encryptFile(file) 
-        : file;
-      
-      // Upload to Firebase Storage
-      const storageRef = ref(storage, storagePath);
-      const uploadResult = await uploadBytes(storageRef, processedFile);
-      const downloadURL = await getDownloadURL(uploadResult.ref);
-      
-      // Create document record
-      const documentData: Partial<SecureDocument> = {
-        filename: secureFileName,
-        originalFilename: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        encryptedUrl: downloadURL,
-        accessLevel: metadata.accessLevel,
-        virusScanned: true,
-        scanResults: JSON.stringify(scanResult),
-        uploadedBy: metadata.uploadedBy,
-        uploadedAt: new Date().toISOString(),
-        downloadCount: 0,
-        documentType: metadata.documentType,
-        version: 1,
-        checksum: await this.calculateChecksum(file),
-        isExpired: false,
-        conversationId: metadata.conversationId,
-        dealId: metadata.dealId,
-        teamId: metadata.teamId,
-        companyId: metadata.companyId,
-        complianceLabels: metadata.complianceLabels || [],
-        isLegalPrivileged: metadata.encryptionLevel === 'legal',
-        jurisdictions: ['US'], // Default, could be configured
-        reviewStatus: 'pending',
-        accessLog: [],
-        sharedWith: [],
-        regulatoryClassification: this.determineRegulatoryClassification(metadata.accessLevel),
-      };
-      
-      const docRef = await addDoc(collection(db, DOCUMENTS_COLLECTION), {
-        ...documentData,
-        uploadedAt: Timestamp.now(),
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
+
+      // Calculate checksum
+      const checksum = await this.calculateChecksum(file);
+
+      // Create form data for upload
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('filename', secureFileName);
+      formData.append('originalFilename', file.name);
+      formData.append('documentType', metadata.documentType || 'other');
+      formData.append('accessLevel', metadata.accessLevel);
+      formData.append('encryptionLevel', metadata.encryptionLevel);
+      formData.append('checksum', checksum);
+      if (metadata.conversationId) formData.append('conversationId', metadata.conversationId);
+      if (metadata.dealId) formData.append('dealId', metadata.dealId);
+      if (metadata.teamId) formData.append('teamId', metadata.teamId);
+      if (metadata.companyId) formData.append('companyId', metadata.companyId);
+      if (metadata.complianceLabels) formData.append('complianceLabels', JSON.stringify(metadata.complianceLabels));
+
+      const response = await fetch('/api/documents', {
+        method: 'POST',
+        body: formData,
       });
-      
-      // Log upload activity
-      await this.logDocumentAccess(docRef.id, metadata.uploadedBy, 'upload', 'success');
-      
-      return docRef.id;
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to upload document');
+      }
+
+      const result = await response.json();
+      return result.document?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error uploading document:', error);
       throw new Error('Failed to upload secure document');
@@ -242,44 +245,41 @@ export class DocumentService {
 
   // Get document with access control
   async getSecureDocument(documentId: string, userId: string, action: 'view' | 'download' = 'view'): Promise<SecureDocument | null> {
+    // Handle demo documents
+    if (isDemoEntity(documentId) || isDemoEntity(userId)) {
+      const demoDoc = DEMO_DOCUMENTS.find(d => d.id === documentId);
+      if (demoDoc) {
+        return demoDoc as unknown as SecureDocument;
+      }
+      // Return first demo doc for any demo user
+      return DEMO_DOCUMENTS[0] as unknown as SecureDocument;
+    }
+
     try {
-      const docRef = doc(db, DOCUMENTS_COLLECTION, documentId);
-      const docSnap = await getDoc(docRef);
-      
-      if (!docSnap.exists()) {
-        await this.logDocumentAccess(documentId, userId, action, 'denied', 'Document not found');
-        return null;
+      const response = await fetch(`/api/documents/${documentId}?action=${action}`);
+
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        if (response.status === 403) throw new Error('Access denied to document');
+        throw new Error('Failed to retrieve document');
       }
-      
-      const documentData = docSnap.data() as SecureDocument;
-      
-      // Check access permissions
-      const hasAccess = await this.checkDocumentAccess(documentData, userId, action);
-      if (!hasAccess) {
-        await this.logDocumentAccess(documentId, userId, action, 'denied', 'Insufficient permissions');
-        throw new Error('Access denied to document');
-      }
-      
-      // Increment download count if downloading
-      if (action === 'download') {
-        await updateDoc(docRef, {
-          downloadCount: (documentData.downloadCount || 0) + 1,
-          lastDownloaded: Timestamp.now(),
-          updatedAt: Timestamp.now(),
-        });
-      }
-      
-      // Log access
-      await this.logDocumentAccess(documentId, userId, action, 'success');
-      
-      // Convert Firestore timestamps
+
+      const result = await response.json();
+      const doc = result.document || result.data;
+
+      if (!doc) return null;
+
       return {
-        ...documentData,
-        id: docSnap.id,
-        uploadedAt: documentData.uploadedAt && typeof documentData.uploadedAt === 'object' && 'toDate' in documentData.uploadedAt ? (documentData.uploadedAt as any).toDate().toISOString() : documentData.uploadedAt,
-        reviewedAt: documentData.reviewedAt && typeof documentData.reviewedAt === 'object' && 'toDate' in documentData.reviewedAt ? (documentData.reviewedAt as any).toDate() : documentData.reviewedAt,
-        retentionDate: documentData.retentionDate && typeof documentData.retentionDate === 'object' && 'toDate' in documentData.retentionDate ? (documentData.retentionDate as any).toDate() : documentData.retentionDate,
-      };
+        ...doc,
+        id: doc.id,
+        uploadedAt: doc.uploadedAt,
+        reviewedAt: doc.reviewedAt ? new Date(doc.reviewedAt) : undefined,
+        retentionDate: doc.retentionDate ? new Date(doc.retentionDate) : undefined,
+        accessLog: doc.accessLog || [],
+        sharedWith: doc.sharedWith || [],
+        complianceLabels: doc.complianceLabels || [],
+        jurisdictions: doc.jurisdictions || ['US'],
+      } as SecureDocument;
     } catch (error) {
       console.error('Error getting document:', error);
       throw new Error('Failed to retrieve document');
@@ -288,7 +288,7 @@ export class DocumentService {
 
   // Share document with specific users
   async shareDocument(
-    documentId: string, 
+    documentId: string,
     sharedByUserId: string,
     shareOptions: {
       recipientUserIds: string[];
@@ -299,47 +299,35 @@ export class DocumentService {
       customMessage?: string;
     }
   ): Promise<DocumentShare[]> {
+    // Handle demo documents
+    if (isDemoEntity(documentId) || isDemoEntity(sharedByUserId)) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      console.log(`[Demo] Shared document ${documentId} with ${shareOptions.recipientUserIds.length} recipients`);
+      return shareOptions.recipientUserIds.map(recipientUserId => ({
+        sharedWithUserId: recipientUserId,
+        sharedByUserId,
+        shareType: shareOptions.shareType,
+        expiresAt: shareOptions.expiresAt,
+        notifyOnAccess: shareOptions.notifyOnAccess || false,
+        passwordProtected: shareOptions.passwordProtected || false,
+        createdAt: new Date(),
+        accessCount: 0,
+      }));
+    }
+
     try {
-      const document = await this.getSecureDocument(documentId, sharedByUserId, 'view');
-      if (!document) {
-        throw new Error('Document not found');
+      const response = await fetch(`/api/documents/${documentId}/share`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(shareOptions),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to share document');
       }
-      
-      const shares: DocumentShare[] = [];
-      const batch = writeBatch(db);
-      
-      for (const recipientUserId of shareOptions.recipientUserIds) {
-        const shareId = `share-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const share: DocumentShare = {
-          sharedWithUserId: recipientUserId,
-          sharedByUserId,
-          shareType: shareOptions.shareType,
-          expiresAt: shareOptions.expiresAt,
-          notifyOnAccess: shareOptions.notifyOnAccess || false,
-          passwordProtected: shareOptions.passwordProtected || false,
-          shareUrl: shareOptions.passwordProtected ? this.generateSecureShareUrl(documentId, shareId) : undefined,
-          createdAt: new Date(),
-          accessCount: 0,
-        };
-        
-        shares.push(share);
-        
-        // Update document with new share
-        const docRef = doc(db, DOCUMENTS_COLLECTION, documentId);
-        batch.update(docRef, {
-          sharedWith: [...(document.sharedWith || []), share],
-          updatedAt: Timestamp.now(),
-        });
-      }
-      
-      await batch.commit();
-      
-      // TODO: Send notifications to recipients
-      if (shareOptions.notifyOnAccess) {
-        await this.notifyDocumentShared(documentId, shares, shareOptions.customMessage);
-      }
-      
-      return shares;
+
+      const result = await response.json();
+      return result.shares || result.data?.shares || [];
     } catch (error) {
       console.error('Error sharing document:', error);
       throw new Error('Failed to share document');
@@ -349,40 +337,18 @@ export class DocumentService {
   // Generate legal document from template
   async generateLegalDocument(request: DocumentGenerationRequest): Promise<string> {
     try {
-      // Get template
-      const template = await this.getDocumentTemplate(request.templateId);
-      if (!template) {
-        throw new Error('Template not found');
+      const response = await fetch('/api/documents/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate document');
       }
-      
-      // Validate variables
-      this.validateTemplateVariables(template, request.variables);
-      
-      // Generate document (would integrate with document generation service)
-      const generatedContent = await this.processTemplate(template, request.variables);
-      
-      // Create file blob
-      const blob = new Blob([generatedContent], { 
-        type: request.outputFormat === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
-      });
-      
-      const file = new File([blob], `${template.name}-${Date.now()}.${request.outputFormat}`, {
-        type: blob.type
-      });
-      
-      // Upload generated document
-      const documentId = await this.uploadSecureDocument(file, {
-        documentType: template.category as any,
-        accessLevel: request.securityLevel === 'legal' ? 'legal_only' : 'parties_only',
-        encryptionLevel: request.securityLevel,
-        uploadedBy: 'system', // System-generated
-        complianceLabels: ['generated_document', `template_${request.templateId}`],
-      });
-      
-      // Update template usage count
-      await this.incrementTemplateUsage(request.templateId);
-      
-      return documentId;
+
+      const result = await response.json();
+      return result.documentId || result.data?.documentId || '';
     } catch (error) {
       console.error('Error generating document:', error);
       throw new Error('Failed to generate legal document');
@@ -395,34 +361,80 @@ export class DocumentService {
     entityId: string,
     userId: string
   ): Promise<SecureDocument[]> {
+    // Handle demo entities
+    if (isDemoEntity(entityId) || isDemoEntity(userId)) {
+      return DEMO_DOCUMENTS as unknown as SecureDocument[];
+    }
+
     try {
-      const q = query(
-        collection(db, DOCUMENTS_COLLECTION),
-        where(`${entityType}Id`, '==', entityId),
-        orderBy('uploadedAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      const documents: SecureDocument[] = [];
-      
-      for (const docSnap of querySnapshot.docs) {
-        const documentData = docSnap.data() as SecureDocument;
-        
-        // Check if user has access to this document
-        const hasAccess = await this.checkDocumentAccess(documentData, userId, 'view');
-        if (hasAccess) {
-          documents.push({
-            ...documentData,
-            id: docSnap.id,
-            uploadedAt: documentData.uploadedAt && typeof documentData.uploadedAt === 'object' && 'toDate' in documentData.uploadedAt ? (documentData.uploadedAt as any).toDate().toISOString() : documentData.uploadedAt,
-          });
-        }
+      const response = await fetch(`/api/documents?${entityType}Id=${entityId}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to retrieve documents');
       }
-      
-      return documents;
+
+      const result = await response.json();
+      const docs = result.documents || result.data?.documents || [];
+
+      return docs.map((doc: Record<string, unknown>) => ({
+        ...doc,
+        id: doc.id,
+        uploadedAt: doc.uploadedAt,
+        accessLog: doc.accessLog || [],
+        sharedWith: doc.sharedWith || [],
+        complianceLabels: doc.complianceLabels || [],
+        jurisdictions: doc.jurisdictions || ['US'],
+      })) as SecureDocument[];
     } catch (error) {
       console.error('Error getting documents for entity:', error);
       throw new Error('Failed to retrieve documents');
+    }
+  }
+
+  // Delete document
+  async deleteDocument(documentId: string, userId: string): Promise<void> {
+    // Handle demo documents
+    if (isDemoEntity(documentId) || isDemoEntity(userId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Deleted document: ${documentId}`);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/documents/${documentId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete document');
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      throw new Error('Failed to delete document');
+    }
+  }
+
+  // Get document versions
+  async getDocumentVersions(documentId: string): Promise<{ version: number; uploadedAt: string; uploadedBy: string }[]> {
+    // Handle demo documents
+    if (isDemoEntity(documentId)) {
+      return [
+        { version: 1, uploadedAt: new Date().toISOString(), uploadedBy: 'demo-user-001' },
+      ];
+    }
+
+    try {
+      const response = await fetch(`/api/documents/${documentId}/versions`);
+
+      if (!response.ok) {
+        throw new Error('Failed to retrieve document versions');
+      }
+
+      const result = await response.json();
+      return result.versions || result.data?.versions || [];
+    } catch (error) {
+      console.error('Error getting document versions:', error);
+      throw new Error('Failed to retrieve document versions');
     }
   }
 
@@ -431,7 +443,7 @@ export class DocumentService {
     if (file.size > this.MAX_FILE_SIZE) {
       throw new Error(`File size exceeds maximum limit of ${this.MAX_FILE_SIZE / (1024 * 1024)}MB`);
     }
-    
+
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!this.ALLOWED_FILE_TYPES.includes(fileExtension)) {
       throw new Error(`File type ${fileExtension} is not allowed`);
@@ -443,10 +455,6 @@ export class DocumentService {
     const random = Math.random().toString(36).substr(2, 9);
     const extension = originalName.split('.').pop();
     return `${timestamp}-${random}-${userId.substr(0, 8)}.${extension}`;
-  }
-
-  private getStoragePath(documentType: string, filename: string): string {
-    return `secure-documents/${documentType}/${filename}`;
   }
 
   private async scanForViruses(file: File): Promise<VirusScanResult> {
@@ -470,103 +478,12 @@ export class DocumentService {
     });
   }
 
-  private async encryptFile(file: File): Promise<File> {
-    // Simulate file encryption - would use proper encryption
-    const arrayBuffer = await file.arrayBuffer();
-    const encrypted = new Uint8Array(arrayBuffer); // In reality, would encrypt
-    return new File([encrypted], file.name, { type: file.type });
-  }
-
   private async calculateChecksum(file: File): Promise<string> {
     // Calculate SHA-256 checksum
     const arrayBuffer = await file.arrayBuffer();
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return 'sha256:' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  private determineRegulatoryClassification(accessLevel: string): 'public' | 'internal' | 'confidential' | 'restricted' {
-    switch (accessLevel) {
-      case 'public': return 'public';
-      case 'parties_only': return 'internal';
-      case 'legal_only': return 'restricted';
-      case 'confidential': return 'confidential';
-      default: return 'internal';
-    }
-  }
-
-  private async checkDocumentAccess(document: SecureDocument, userId: string, action: string): Promise<boolean> {
-    // Check if user uploaded the document
-    if (document.uploadedBy === userId) {
-      return true;
-    }
-    
-    // Check access level restrictions
-    if (document.accessLevel === 'legal_only') {
-      // Would check if user has legal role
-      return userId.includes('legal'); // Simplified check
-    }
-    
-    // Check if document is shared with user
-    const isSharedWithUser = document.sharedWith?.some(share => 
-      share.sharedWithUserId === userId && 
-      (!share.expiresAt || share.expiresAt > new Date()) &&
-      (action === 'view' || share.shareType === action || share.shareType === 'edit')
-    );
-    
-    return isSharedWithUser || document.accessLevel === 'public';
-  }
-
-  private async logDocumentAccess(
-    documentId: string, 
-    userId: string, 
-    action: string, 
-    outcome: string, 
-    denyReason?: string
-  ): Promise<void> {
-    try {
-      const logEntry = {
-        documentId,
-        userId,
-        action,
-        outcome,
-        denyReason,
-        timestamp: Timestamp.now(),
-        ipAddress: '127.0.0.1', // Would get real IP
-        userAgent: 'Mozilla/5.0...', // Would get real user agent
-      };
-      
-      await addDoc(collection(db, DOCUMENT_ACCESS_LOG_COLLECTION), logEntry);
-    } catch (error) {
-      console.error('Error logging document access:', error);
-    }
-  }
-
-  private generateSecureShareUrl(documentId: string, shareId: string): string {
-    return `https://secure.liftout.com/documents/shared/${documentId}/${shareId}`;
-  }
-
-  private async notifyDocumentShared(documentId: string, shares: DocumentShare[], customMessage?: string): Promise<void> {
-    // TODO: Implement notification system
-    console.log('Document shared notifications sent for:', documentId, shares.length, 'recipients');
-  }
-
-  private async getDocumentTemplate(templateId: string): Promise<DocumentTemplate | null> {
-    // TODO: Implement template retrieval
-    return null;
-  }
-
-  private validateTemplateVariables(template: DocumentTemplate, variables: Record<string, any>): void {
-    // TODO: Implement template variable validation
-  }
-
-  private async processTemplate(template: DocumentTemplate, variables: Record<string, any>): Promise<string> {
-    // TODO: Implement template processing
-    return `Generated document content for ${template.name}`;
-  }
-
-  private async incrementTemplateUsage(templateId: string): Promise<void> {
-    // TODO: Implement template usage tracking
   }
 }
 
