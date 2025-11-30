@@ -453,9 +453,25 @@ export default function OpportunityDetailPage() {
                     </Link>
                     {opportunity.status === 'open' && (
                       <button
-                        onClick={() => {
-                          toast.success('Opportunity closed');
-                          // TODO: Implement close opportunity API
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/opportunities/${opportunity.id}`, {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ status: 'closed' }),
+                            });
+
+                            if (!response.ok) {
+                              const data = await response.json();
+                              throw new Error(data.error || 'Failed to close opportunity');
+                            }
+
+                            setOpportunity({ ...opportunity, status: 'closed' });
+                            toast.success('Opportunity closed successfully');
+                          } catch (error) {
+                            console.error('Close opportunity error:', error);
+                            toast.error(error instanceof Error ? error.message : 'Failed to close opportunity');
+                          }
                         }}
                         className="btn-outline min-h-12 w-full flex items-center justify-center gap-2 text-error border-error hover:bg-error-light"
                       >

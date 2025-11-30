@@ -86,12 +86,28 @@ export default function TeamProfilePage() {
     }
 
     try {
-      // TODO: Implement express interest API endpoint
+      const response = await fetch('/api/applications/eoi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toType: 'team',
+          toId: teamId,
+          message: `Interest in team ${team?.name}`,
+          interestLevel: 'high',
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to express interest');
+      }
+
       setHasExpressedInterest(true);
-      toast.success('Interest expressed successfully!');
+      toast.success('Interest expressed successfully! The team will be notified.');
       refetch();
     } catch (error) {
-      toast.error('Failed to express interest');
+      console.error('Express interest error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to express interest');
     }
   };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   AdjustmentsHorizontalIcon,
@@ -83,9 +84,29 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
     }));
   };
 
-  const handleExpressInterest = (teamId: string) => {
-    // TODO: Implement express interest flow
-    console.log('Express interest in team:', teamId);
+  const handleExpressInterest = async (teamId: string) => {
+    try {
+      const response = await fetch('/api/applications/eoi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toType: 'team',
+          toId: teamId,
+          message: `Interest from matching`,
+          interestLevel: 'high',
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to express interest');
+      }
+
+      toast.success('Interest expressed! The team will be notified.');
+    } catch (error) {
+      console.error('Express interest error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to express interest');
+    }
   };
 
   const handleApply = (opportunityId: string) => {
