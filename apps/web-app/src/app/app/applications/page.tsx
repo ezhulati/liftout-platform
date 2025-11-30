@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -9,9 +10,13 @@ import {
   XCircleIcon,
   EyeIcon,
   PlusIcon,
+  CalendarIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { useApplications } from '@/hooks/useApplications';
 import { useSession } from 'next-auth/react';
+import { InterviewScheduler } from '@/components/interviews';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -58,6 +63,26 @@ export default function ApplicationsPage() {
   const { data: session } = useSession();
   const { data: applicationsData, isLoading, error } = useApplications();
   const applications = applicationsData?.data || [];
+  const [showInterviews, setShowInterviews] = useState(true);
+
+  // Transform applications with scheduled interviews into Interview format
+  const interviews = useMemo(() => {
+    return applications
+      .filter((app: any) => app.interviewScheduledAt)
+      .map((app: any) => ({
+        id: `interview-${app.id}`,
+        applicationId: app.id,
+        teamId: app.team?.id || '',
+        teamName: app.team?.name || 'Team',
+        opportunityTitle: app.opportunity?.title || 'Opportunity',
+        scheduledAt: app.interviewScheduledAt,
+        duration: 60,
+        format: 'video' as const,
+        status: app.status === 'interview_scheduled' ? 'scheduled' as const : 'confirmed' as const,
+        interviewers: [],
+        notes: app.interviewNotes,
+      }));
+  }, [applications]);
 
   if (!session) {
     return null;
@@ -141,6 +166,43 @@ export default function ApplicationsPage() {
           }
         </p>
       </div>
+
+      {/* Interviews Section */}
+      {interviews.length > 0 && (
+        <div className="card">
+          <button
+            onClick={() => setShowInterviews(!showInterviews)}
+            className="w-full px-6 py-4 flex items-center justify-between hover:bg-bg-alt transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-navy-50 flex items-center justify-center">
+                <CalendarIcon className="h-5 w-5 text-navy" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-lg font-bold text-text-primary">
+                  Upcoming Interviews
+                </h2>
+                <p className="text-sm text-text-secondary">
+                  {interviews.length} interview{interviews.length !== 1 ? 's' : ''} scheduled
+                </p>
+              </div>
+            </div>
+            {showInterviews ? (
+              <ChevronUpIcon className="h-5 w-5 text-text-tertiary" />
+            ) : (
+              <ChevronDownIcon className="h-5 w-5 text-text-tertiary" />
+            )}
+          </button>
+          {showInterviews && (
+            <div className="px-6 pb-6">
+              <InterviewScheduler
+                interviews={interviews}
+                isLoading={isLoading}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Applications list - Practical UI cards */}
       <div className="space-y-4">
