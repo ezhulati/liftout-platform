@@ -3,6 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { teams, addTeam, type Team } from './_data';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   
@@ -110,9 +115,36 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Demo user handling - simulate success
+  if (isDemoUser(session.user.email)) {
+    const body = await request.json();
+    const mockTeam = {
+      id: `demo-team-${Date.now()}`,
+      name: body.name || 'Demo Team',
+      description: body.description || 'Demo team description',
+      size: body.members?.length || 2,
+      yearsWorking: 0,
+      cohesionScore: 75,
+      successfulProjects: 0,
+      clientSatisfaction: 0,
+      openToLiftout: true,
+      createdBy: session.user.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      members: body.members || [],
+      achievements: [],
+      industry: body.industry || '',
+      location: body.location || '',
+      availability: 'Open to strategic opportunities',
+      compensation: body.compensation || { range: '', equity: false, benefits: '' },
+    };
+    console.log('[Demo] Team created:', mockTeam.id);
+    return NextResponse.json({ team: mockTeam, message: 'Team profile created successfully' }, { status: 201 });
   }
 
   try {

@@ -4,6 +4,15 @@ import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable } from '@/lib/api-helpers';
 import { updateMockApplicationStatus, getMockApplicationById } from '@/lib/mock-data/applications';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id?.startsWith('demo-');
+};
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function PATCH(
@@ -26,6 +35,16 @@ export async function PATCH(
         { error: 'Status is required' },
         { status: 400 }
       );
+    }
+
+    // Demo user handling - simulate success
+    if (isDemoUser(session.user.email) || isDemoEntity(id)) {
+      console.log(`[Demo] Application ${id} status updated to ${status}`);
+      return NextResponse.json({
+        application: { id, status, notes, updatedAt: new Date().toISOString() },
+        message: `Application status updated to ${status}`,
+        _demo: true,
+      });
     }
 
     // Check if API server is available

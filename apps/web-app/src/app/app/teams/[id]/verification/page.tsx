@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/auth';
 import { TeamVerification } from '@/components/teams/TeamVerification';
 import Link from 'next/link';
 import { ArrowLeftIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { teamService } from '@/lib/firestore';
+import { prisma } from '@/lib/prisma';
 
 interface TeamVerificationPageProps {
   params: {
@@ -131,51 +131,61 @@ const getFallbackTeam = (teamId: string) => ({
   updatedAt: new Date('2024-01-20'),
 });
 
-// Transform Firestore team data to verification page format
-function transformFirestoreTeam(firestoreTeam: any, teamId: string) {
+// Transform Prisma team data to verification page format
+function transformPrismaTeam(prismaTeam: any, teamId: string) {
+  const metrics = (prismaTeam.performanceMetrics as any) || {};
   return {
-    id: firestoreTeam.id || teamId,
-    name: firestoreTeam.name || 'Unnamed Team',
-    description: firestoreTeam.description || '',
-    industry: [firestoreTeam.industry].filter(Boolean),
-    specializations: firestoreTeam.skills || [],
-    size: firestoreTeam.size || firestoreTeam.memberIds?.length || 1,
+    id: prismaTeam.id || teamId,
+    name: prismaTeam.name || 'Unnamed Team',
+    description: prismaTeam.description || '',
+    industry: [prismaTeam.industry].filter(Boolean),
+    specializations: prismaTeam.specialization ? [prismaTeam.specialization] : [],
+    size: prismaTeam.size || prismaTeam.members?.length || 1,
     location: {
-      primary: firestoreTeam.location || 'Not specified',
+      primary: prismaTeam.location || 'Not specified',
       secondary: [],
-      remote: true,
+      remote: prismaTeam.remoteStatus === 'remote',
     },
-    members: [],
-    leaderId: firestoreTeam.leaderId || '',
-    establishedDate: firestoreTeam.createdAt?.toDate?.() || new Date(),
+    members: (prismaTeam.members || []).map((m: any) => ({
+      id: m.id,
+      name: m.user ? `${m.user.firstName} ${m.user.lastName}`.trim() : 'Unknown',
+      role: m.role || '',
+      experience: m.user?.profile?.yearsExperience || 0,
+      skills: m.keySkills || [],
+      bio: m.user?.profile?.bio || '',
+      education: '',
+      certifications: [],
+    })),
+    leaderId: prismaTeam.createdBy || '',
+    establishedDate: prismaTeam.createdAt || new Date(),
     performanceMetrics: {
-      projectsCompleted: firestoreTeam.experience?.successfulProjects || 0,
-      clientSatisfactionScore: 0,
-      successRate: 0,
-      avgProjectValue: 0,
-      repeatClientRate: 0,
-      teamCohesionScore: 0,
-      avgExperienceYears: firestoreTeam.experience?.yearsWorkedTogether || 0,
+      projectsCompleted: metrics.projectsCompleted || 0,
+      clientSatisfactionScore: metrics.clientSatisfactionScore || 0,
+      successRate: metrics.successRate || 0,
+      avgProjectValue: metrics.avgProjectValue || 0,
+      repeatClientRate: metrics.repeatClientRate || 0,
+      teamCohesionScore: metrics.teamCohesionScore || 0,
+      avgExperienceYears: prismaTeam.yearsWorkingTogether ? Number(prismaTeam.yearsWorkingTogether) : 0,
     },
     portfolioItems: [],
     dynamics: {
-      communicationStyle: '',
+      communicationStyle: prismaTeam.communicationStyle || '',
       decisionMakingProcess: '',
       conflictResolutionApproach: '',
       leadershipStyle: '',
       meetingCadence: '',
       collaborationTools: [],
-      workLifeBalance: '',
+      workLifeBalance: prismaTeam.workingStyle || '',
     },
-    values: [],
+    values: prismaTeam.teamCulture ? [prismaTeam.teamCulture] : [],
     workingMethodology: [],
     verification: {
-      status: firestoreTeam.verificationStatus || 'pending',
+      status: prismaTeam.verificationStatus || 'pending',
       documents: [],
       references: [],
       backgroundChecks: [],
     },
-    testimonials: [],
+    testimonials: prismaTeam.clientTestimonials || [],
     liftoutHistory: {
       previousLiftouts: [],
       currentEmployer: {
@@ -185,24 +195,22 @@ function transformFirestoreTeam(firestoreTeam: any, teamId: string) {
         department: '',
       },
       availability: {
-        timeline: firestoreTeam.availability?.timeframe || '',
-        noticePeriod: firestoreTeam.availability?.preferredNoticeTime
-          ? `${firestoreTeam.availability.preferredNoticeTime} weeks`
-          : '',
+        timeline: prismaTeam.availabilityDate ? new Date(prismaTeam.availabilityDate).toLocaleDateString() : '',
+        noticePeriod: '',
         constraints: [],
-        flexibility: '',
+        flexibility: prismaTeam.remoteStatus || '',
       },
       liftoutReadiness: {
-        teamAlignment: firestoreTeam.availability?.status === 'available',
+        teamAlignment: prismaTeam.availabilityStatus === 'available',
         individualAlignment: [],
-        compensationExpectations: firestoreTeam.compensation
-          ? `${firestoreTeam.compensation.expectations?.min || 0}-${firestoreTeam.compensation.expectations?.max || 0} ${firestoreTeam.compensation.expectations?.currency || 'USD'}`
+        compensationExpectations: prismaTeam.salaryExpectationMin && prismaTeam.salaryExpectationMax
+          ? `${prismaTeam.salaryExpectationMin}-${prismaTeam.salaryExpectationMax} ${prismaTeam.salaryCurrency || 'USD'}`
           : '',
         culturalFit: [],
       },
     },
-    createdAt: firestoreTeam.createdAt?.toDate?.() || new Date(),
-    updatedAt: firestoreTeam.updatedAt?.toDate?.() || new Date(),
+    createdAt: prismaTeam.createdAt || new Date(),
+    updatedAt: prismaTeam.updatedAt || new Date(),
   };
 }
 
@@ -217,19 +225,51 @@ export default async function TeamVerificationPage({ params }: TeamVerificationP
   let usingFallback = false;
 
   try {
-    // Try to fetch team from Firestore
-    const firestoreTeam = await teamService.getTeamById(params.id);
+    // Fetch team from PostgreSQL via Prisma
+    const prismaTeam = await prisma.team.findUnique({
+      where: { id: params.id },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                profile: {
+                  select: {
+                    profilePhotoUrl: true,
+                    title: true,
+                    bio: true,
+                    yearsExperience: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
 
-    if (firestoreTeam) {
-      team = transformFirestoreTeam(firestoreTeam, params.id);
+    if (prismaTeam) {
+      team = transformPrismaTeam(prismaTeam, params.id);
     } else {
-      // Team not found in Firestore, use fallback
+      // Team not found, use fallback
       team = getFallbackTeam(params.id);
       usingFallback = true;
     }
   } catch (error) {
-    console.error('Error fetching team from Firestore:', error);
-    // Use fallback data if Firestore fails
+    console.error('Error fetching team from database:', error);
+    // Use fallback data if database fails
     team = getFallbackTeam(params.id);
     usingFallback = true;
   }
@@ -264,7 +304,7 @@ export default async function TeamVerificationPage({ params }: TeamVerificationP
             <div>
               <h3 className="text-sm font-medium text-gold-800">Demo Data</h3>
               <p className="text-sm text-gold-700 mt-1">
-                This team data is for demonstration purposes. Connect to Firestore to see real team verification information.
+                This team was not found in the database. Showing demo data for demonstration purposes.
               </p>
             </div>
           </div>

@@ -273,15 +273,12 @@ test.describe('Authentication Flow', () => {
   });
 
   test('demo credentials dropdown works', async ({ page }) => {
-    await page.goto('/auth/signin');
-    await page.getByText('Try demo credentials').waitFor({ state: 'visible', timeout: 20000 });
-    await page.click('text=Try demo credentials');
-
-    // Click team lead option
-    await page.click('button:has-text("Team lead")');
-
-    // Email field should be filled
-    const emailValue = await page.locator('input[type="email"]').inputValue();
-    expect(emailValue).toBe('demo@example.com');
+    await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
+    const summary = page.locator('summary:has-text("Try demo credentials")');
+    await summary.click();
+    const teamBtn = page.locator('button:has-text("Team lead")');
+    await teamBtn.waitFor({ state: 'visible', timeout: 10000 });
+    await teamBtn.click();
+    await expect(page.locator('input[type="email"]')).toHaveValue('demo@example.com', { timeout: 10000 });
   });
 });

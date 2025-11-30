@@ -6,6 +6,7 @@ import { QuickActions } from '@/components/dashboard/QuickActions';
 import { RecommendedTeams } from '@/components/dashboard/RecommendedTeams';
 import { UpcomingDeadlines } from '@/components/dashboard/UpcomingDeadlines';
 import { DashboardOnboarding } from '@/components/dashboard/DashboardOnboarding';
+import { MatchingPreview } from '@/components/dashboard/MatchingPreview';
 import { useSession } from 'next-auth/react';
 
 export default function DashboardPage() {
@@ -55,10 +56,13 @@ export default function DashboardPage() {
       {/* Quick actions */}
       <QuickActions userType={user.userType || 'individual'} />
 
+      {/* AI Matching Preview */}
+      <MatchingPreview />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent activity */}
         <RecentActivity />
-        
+
         {/* Upcoming deadlines or recommended content */}
         {isCompanyUser ? (
           <UpcomingDeadlines />

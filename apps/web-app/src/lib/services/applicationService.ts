@@ -1,22 +1,5 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
-  limit as firestoreLimit,
-  Timestamp,
-  writeBatch
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { isDemoAccount, DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 import type { Application, CreateApplicationData, ApplicationFilters } from '@/types/applications';
-
-const APPLICATIONS_COLLECTION = 'applications';
 
 // Demo applications data for Alex Chen (team user)
 const DEMO_TEAM_APPLICATIONS: Application[] = [
@@ -178,22 +161,43 @@ const DEMO_COMPANY_APPLICATIONS: Application[] = [
   }
 ];
 
+// Helper to check if this is a demo entity
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-') ||
+         id.startsWith('app_');
+};
+
 export class ApplicationService {
   // Create a new application
   async createApplication(data: CreateApplicationData, applicantUserId: string): Promise<string> {
-    try {
-      const applicationData = {
-        ...data,
-        applicantUserId,
-        status: 'pending' as const,
-        submittedAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        documents: [], // TODO: Handle file uploads
-        viewedByCompany: false,
-      };
+    // Handle demo users
+    if (isDemoEntity(applicantUserId)) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const demoAppId = `demo-app-${Date.now()}`;
+      console.log(`[Demo] Created application: ${demoAppId}`);
+      return demoAppId;
+    }
 
-      const docRef = await addDoc(collection(db, APPLICATIONS_COLLECTION), applicationData);
-      return docRef.id;
+    try {
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          applicantUserId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create application');
+      }
+
+      const result = await response.json();
+      return result.application?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error creating application:', error);
       throw new Error('Failed to create application');
@@ -202,22 +206,29 @@ export class ApplicationService {
 
   // Get application by ID
   async getApplicationById(applicationId: string): Promise<Application | null> {
+    // Handle demo applications
+    if (isDemoEntity(applicationId)) {
+      const demoApp = [...DEMO_TEAM_APPLICATIONS, ...DEMO_COMPANY_APPLICATIONS].find(a => a.id === applicationId);
+      return demoApp || null;
+    }
+
     try {
-      const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          id: docSnap.id,
-          ...data,
-          submittedAt: data.submittedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          viewedAt: data.viewedAt?.toDate(),
-        } as Application;
+      const response = await fetch(`/api/applications/${applicationId}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to fetch application');
       }
-      
-      return null;
+
+      const result = await response.json();
+      const app = result.application || result.data;
+      if (!app) return null;
+
+      return {
+        ...app,
+        submittedAt: app.submittedAt ? new Date(app.submittedAt) : new Date(),
+        updatedAt: app.updatedAt ? new Date(app.updatedAt) : new Date(),
+        viewedAt: app.viewedAt ? new Date(app.viewedAt) : undefined,
+      } as Application;
     } catch (error) {
       console.error('Error getting application:', error);
       throw new Error('Failed to get application');
@@ -227,97 +238,64 @@ export class ApplicationService {
   // Get applications for a team
   async getTeamApplications(teamId: string): Promise<Application[]> {
     console.log('getTeamApplications called with teamId:', teamId);
-    console.log('isDemoAccount(teamId):', isDemoAccount(teamId));
-    
+
     // Return demo data for demo accounts - check team ID and email patterns
-    if (teamId === 'team_demo_001' || 
-        teamId === 'demo@example.com' || 
-        teamId === 'demo@liftout.com' || 
-        teamId?.includes('demo') || 
+    if (teamId === 'team_demo_001' ||
+        teamId === 'demo@example.com' ||
+        teamId === 'demo@liftout.com' ||
+        teamId?.includes('demo') ||
         isDemoAccount(teamId)) {
       console.log('Returning demo team applications, count:', DEMO_TEAM_APPLICATIONS.length);
       return [...DEMO_TEAM_APPLICATIONS];
     }
 
     try {
-      // Try the optimized query with composite index first
-      const q = query(
-        collection(db, APPLICATIONS_COLLECTION),
-        where('teamId', '==', teamId),
-        orderBy('submittedAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          submittedAt: data.submittedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          viewedAt: data.viewedAt?.toDate(),
-        } as Application;
-      });
-    } catch (error: any) {
-      console.error('Error getting team applications:', error);
-      
-      // If the error is about missing index, try fallback query without ordering
-      if (error.message?.includes('index') || error.code === 'failed-precondition') {
-        console.log('Composite index not available, using fallback query without ordering');
-        try {
-          const fallbackQuery = query(
-            collection(db, APPLICATIONS_COLLECTION),
-            where('teamId', '==', teamId)
-          );
-          
-          const fallbackSnapshot = await getDocs(fallbackQuery);
-          const applications = fallbackSnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              ...data,
-              submittedAt: data.submittedAt?.toDate(),
-              updatedAt: data.updatedAt?.toDate(),
-              viewedAt: data.viewedAt?.toDate(),
-            } as Application;
-          });
-          
-          // Sort in memory as fallback
-          return applications.sort((a, b) => {
-            const dateA = a.submittedAt || new Date(0);
-            const dateB = b.submittedAt || new Date(0);
-            return dateB.getTime() - dateA.getTime();
-          });
-        } catch (fallbackError) {
-          console.error('Fallback query also failed:', fallbackError);
-          throw new Error('Failed to get team applications');
-        }
+      // Use API route which handles Prisma operations server-side
+      const response = await fetch('/api/applications/user');
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications');
       }
-      
+      const result = await response.json();
+      if (result.success && result.data) {
+        // Filter for this team and transform dates
+        return result.data
+          .filter((app: any) => app.teamId === teamId)
+          .map((app: any) => ({
+            ...app,
+            submittedAt: new Date(app.submittedAt),
+            updatedAt: new Date(app.updatedAt),
+            viewedAt: app.viewedAt ? new Date(app.viewedAt) : undefined,
+          })) as Application[];
+      }
+      return [];
+    } catch (error) {
+      console.error('Error getting team applications:', error);
       throw new Error('Failed to get team applications');
     }
   }
 
   // Get applications for an opportunity (for companies)
   async getOpportunityApplications(opportunityId: string): Promise<Application[]> {
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId)) {
+      return DEMO_COMPANY_APPLICATIONS.filter(a => a.opportunityId === opportunityId);
+    }
+
     try {
-      const q = query(
-        collection(db, APPLICATIONS_COLLECTION),
-        where('opportunityId', '==', opportunityId),
-        orderBy('submittedAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          submittedAt: data.submittedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          viewedAt: data.viewedAt?.toDate(),
-        } as Application;
-      });
+      const response = await fetch(`/api/applications/opportunity/${opportunityId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications');
+      }
+
+      const result = await response.json();
+      const apps = result.applications || result.data || [];
+
+      return apps.map((app: any) => ({
+        ...app,
+        submittedAt: app.submittedAt ? new Date(app.submittedAt) : new Date(),
+        updatedAt: app.updatedAt ? new Date(app.updatedAt) : new Date(),
+        viewedAt: app.viewedAt ? new Date(app.viewedAt) : undefined,
+      })) as Application[];
     } catch (error) {
       console.error('Error getting opportunity applications:', error);
       throw new Error('Failed to get opportunity applications');
@@ -327,46 +305,31 @@ export class ApplicationService {
   // Get all applications for a company (across all their opportunities)
   async getCompanyApplications(companyUserId: string): Promise<Application[]> {
     // Return demo data for demo company account
-    if (companyUserId === 'company_demo_001' || 
-        companyUserId === 'company@example.com' || 
-        companyUserId === 'company@liftout.com' || 
+    if (companyUserId === 'company_demo_001' ||
+        companyUserId === 'company@example.com' ||
+        companyUserId === 'company@liftout.com' ||
         companyUserId?.includes('company') ||
         isDemoAccount(companyUserId)) {
       return [...DEMO_COMPANY_APPLICATIONS];
     }
 
     try {
-      // First get all opportunities posted by this company
-      const opportunitiesQuery = query(
-        collection(db, 'opportunities'),
-        where('companyId', '==', companyUserId)
-      );
-      
-      const opportunitiesSnapshot = await getDocs(opportunitiesQuery);
-      const opportunityIds = opportunitiesSnapshot.docs.map(doc => doc.id);
-      
-      if (opportunityIds.length === 0) {
-        return [];
+      // Use API route which handles Prisma operations server-side
+      const response = await fetch('/api/applications/user');
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications');
       }
-
-      // Get applications for these opportunities
-      const applicationsQuery = query(
-        collection(db, APPLICATIONS_COLLECTION),
-        where('opportunityId', 'in', opportunityIds),
-        orderBy('submittedAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(applicationsQuery);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          submittedAt: data.submittedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          viewedAt: data.viewedAt?.toDate(),
-        } as Application;
-      });
+      const result = await response.json();
+      if (result.success && result.data) {
+        // Transform dates
+        return result.data.map((app: any) => ({
+          ...app,
+          submittedAt: new Date(app.submittedAt),
+          updatedAt: new Date(app.updatedAt),
+          viewedAt: app.viewedAt ? new Date(app.viewedAt) : undefined,
+        })) as Application[];
+      }
+      return [];
     } catch (error) {
       console.error('Error getting company applications:', error);
       throw new Error('Failed to get company applications');
@@ -375,26 +338,23 @@ export class ApplicationService {
 
   // Update application status
   async updateApplicationStatus(applicationId: string, status: Application['status'], companyNotes?: string): Promise<void> {
-    // Handle demo applications (stored in memory, simulate success)
-    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
-      // Simulate API delay for demo
+    // Handle demo applications
+    if (isDemoEntity(applicationId)) {
       await new Promise(resolve => setTimeout(resolve, 300));
       console.log(`[Demo] Updated application ${applicationId} status to ${status}`);
       return;
     }
 
     try {
-      const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
-      const updateData: any = {
-        status,
-        updatedAt: Timestamp.now(),
-      };
+      const response = await fetch(`/api/applications/${applicationId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, companyNotes }),
+      });
 
-      if (companyNotes) {
-        updateData.companyNotes = companyNotes;
+      if (!response.ok) {
+        throw new Error('Failed to update application status');
       }
-
-      await updateDoc(docRef, updateData);
     } catch (error) {
       console.error('Error updating application status:', error);
       throw new Error('Failed to update application status');
@@ -404,19 +364,22 @@ export class ApplicationService {
   // Mark application as viewed by company
   async markAsViewed(applicationId: string): Promise<void> {
     // Handle demo applications
-    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+    if (isDemoEntity(applicationId)) {
       await new Promise(resolve => setTimeout(resolve, 200));
       console.log(`[Demo] Marked application ${applicationId} as viewed`);
       return;
     }
 
     try {
-      const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
-      await updateDoc(docRef, {
-        viewedByCompany: true,
-        viewedAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/applications/${applicationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ viewedByCompany: true }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to mark application as viewed');
+      }
     } catch (error) {
       console.error('Error marking application as viewed:', error);
       throw new Error('Failed to mark application as viewed');
@@ -426,18 +389,20 @@ export class ApplicationService {
   // Withdraw application (for teams)
   async withdrawApplication(applicationId: string): Promise<void> {
     // Handle demo applications
-    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+    if (isDemoEntity(applicationId)) {
       await new Promise(resolve => setTimeout(resolve, 300));
       console.log(`[Demo] Withdrew application ${applicationId}`);
       return;
     }
 
     try {
-      const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
-      await updateDoc(docRef, {
-        status: 'withdrawn',
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/applications/${applicationId}/withdraw`, {
+        method: 'POST',
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to withdraw application');
+      }
     } catch (error) {
       console.error('Error withdrawing application:', error);
       throw new Error('Failed to withdraw application');
@@ -447,22 +412,22 @@ export class ApplicationService {
   // Schedule interview
   async scheduleInterview(applicationId: string, interviewDetails: Application['interviewDetails']): Promise<void> {
     // Handle demo applications
-    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+    if (isDemoEntity(applicationId)) {
       await new Promise(resolve => setTimeout(resolve, 300));
       console.log(`[Demo] Scheduled interview for application ${applicationId}`);
       return;
     }
 
     try {
-      const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
-      await updateDoc(docRef, {
-        status: 'interview_scheduled',
-        interviewDetails: {
-          ...interviewDetails,
-          scheduledDate: Timestamp.fromDate(interviewDetails!.scheduledDate),
-        },
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/applications/${applicationId}/interview`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(interviewDetails),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to schedule interview');
+      }
     } catch (error) {
       console.error('Error scheduling interview:', error);
       throw new Error('Failed to schedule interview');
@@ -471,16 +436,17 @@ export class ApplicationService {
 
   // Check if team has already applied to opportunity
   async hasTeamApplied(teamId: string, opportunityId: string): Promise<boolean> {
-    try {
-      const q = query(
-        collection(db, APPLICATIONS_COLLECTION),
-        where('teamId', '==', teamId),
-        where('opportunityId', '==', opportunityId),
-        firestoreLimit(1)
+    // Handle demo entities
+    if (isDemoEntity(teamId) || isDemoEntity(opportunityId)) {
+      const hasApplied = DEMO_TEAM_APPLICATIONS.some(
+        app => app.teamId === teamId && app.opportunityId === opportunityId
       );
-      
-      const querySnapshot = await getDocs(q);
-      return !querySnapshot.empty;
+      return hasApplied;
+    }
+
+    try {
+      const applications = await this.getTeamApplications(teamId);
+      return applications.some(app => app.opportunityId === opportunityId);
     } catch (error) {
       console.error('Error checking if team has applied:', error);
       return false;
@@ -490,33 +456,13 @@ export class ApplicationService {
   // Get application statistics
   async getApplicationStats(filters?: { companyUserId?: string; teamId?: string }): Promise<any> {
     try {
-      let baseQuery = collection(db, APPLICATIONS_COLLECTION);
-      
-      // Apply filters if provided
-      let finalQuery;
+      let applications: Application[] = [];
+
       if (filters?.companyUserId) {
-        // Get company's opportunities first
-        const opportunitiesQuery = query(
-          collection(db, 'opportunities'),
-          where('companyId', '==', filters.companyUserId)
-        );
-        
-        const opportunitiesSnapshot = await getDocs(opportunitiesQuery);
-        const opportunityIds = opportunitiesSnapshot.docs.map(doc => doc.id);
-        
-        if (opportunityIds.length === 0) {
-          return { total: 0, pending: 0, underReview: 0, interviewScheduled: 0, accepted: 0, rejected: 0 };
-        }
-
-        finalQuery = query(baseQuery, where('opportunityId', 'in', opportunityIds));
+        applications = await this.getCompanyApplications(filters.companyUserId);
       } else if (filters?.teamId) {
-        finalQuery = query(baseQuery, where('teamId', '==', filters.teamId));
-      } else {
-        finalQuery = baseQuery;
+        applications = await this.getTeamApplications(filters.teamId);
       }
-
-      const querySnapshot = await getDocs(finalQuery);
-      const applications = querySnapshot.docs.map(doc => doc.data());
 
       const stats = {
         total: applications.length,

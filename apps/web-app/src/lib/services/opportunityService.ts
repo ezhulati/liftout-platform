@@ -1,21 +1,5 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy, 
-  limit as firestoreLimit,
-  Timestamp,
-  writeBatch
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { DEMO_DATA, DEMO_ACCOUNTS, isDemoAccount } from '@/lib/demo-accounts';
 import type { Opportunity, CreateOpportunityData, OpportunityFilters } from '@/types/firebase';
-
-const OPPORTUNITIES_COLLECTION = 'opportunities';
 
 // Helper to check if this is a demo user/entity
 const isDemoEntity = (id: string): boolean => {
@@ -25,6 +9,27 @@ const isDemoEntity = (id: string): boolean => {
          id === 'company@example.com' ||
          id.startsWith('demo-');
 };
+
+// Transform demo opportunity data to match Opportunity type
+const transformDemoOpportunity = (opp: typeof DEMO_DATA.opportunities[0]): Opportunity => ({
+  id: opp.id,
+  title: opp.title,
+  description: opp.description,
+  companyId: 'company_demo_001',
+  status: 'active',
+  industry: 'Financial Services',
+  location: opp.location,
+  skills: opp.requirements,
+  compensation: {
+    min: 200000,
+    max: 350000,
+    currency: 'USD',
+  },
+  viewCount: 150,
+  applicantCount: 8,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+} as unknown as Opportunity);
 
 export interface OpportunitySearchResult {
   opportunities: Opportunity[];
@@ -49,18 +54,18 @@ export class OpportunityService {
     }
 
     try {
-      const opportunityData = {
-        ...data,
-        companyId: companyUserId,
-        status: 'active' as const,
-        postedAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        viewCount: 0,
-        applicantCount: 0,
-      };
+      const response = await fetch('/api/opportunities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
 
-      const docRef = await addDoc(collection(db, OPPORTUNITIES_COLLECTION), opportunityData);
-      return docRef.id;
+      if (!response.ok) {
+        throw new Error('Failed to create opportunity');
+      }
+
+      const result = await response.json();
+      return result.opportunity?.id || result.data?.id || '';
     } catch (error) {
       console.error('Error creating opportunity:', error);
       throw new Error('Failed to create opportunity');
@@ -69,22 +74,45 @@ export class OpportunityService {
 
   // Get opportunity by ID
   async getOpportunityById(opportunityId: string): Promise<Opportunity | null> {
-    try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data() as any;
-        return {
-          id: docSnap.id,
-          ...(data as object),
-          postedAt: data.postedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          deadline: data.deadline?.toDate(),
-        } as unknown as Opportunity;
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId)) {
+      const demoOpp = DEMO_DATA.opportunities.find(o => o.id === opportunityId);
+      if (demoOpp) {
+        return transformDemoOpportunity(demoOpp);
       }
-      
       return null;
+    }
+
+    try {
+      const response = await fetch(`/api/opportunities/${opportunityId}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to fetch opportunity');
+      }
+
+      const result = await response.json();
+      const opp = result.opportunity || result.data;
+      if (!opp) return null;
+
+      return {
+        id: opp.id,
+        title: opp.title,
+        description: opp.description,
+        companyId: opp.companyId,
+        status: opp.status,
+        industry: opp.industry,
+        location: opp.location,
+        skills: opp.requiredSkills || [],
+        compensation: opp.compensationMin ? {
+          min: opp.compensationMin,
+          max: opp.compensationMax || opp.compensationMin,
+          currency: opp.compensationCurrency || 'USD',
+        } : undefined,
+        viewCount: opp.viewCount || 0,
+        applicantCount: opp.applicationsCount || 0,
+        createdAt: opp.createdAt ? new Date(opp.createdAt) : new Date(),
+        updatedAt: opp.updatedAt ? new Date(opp.updatedAt) : new Date(),
+      } as unknown as Opportunity;
     } catch (error) {
       console.error('Error getting opportunity:', error);
       throw new Error('Failed to get opportunity');
@@ -93,60 +121,76 @@ export class OpportunityService {
 
   // Search opportunities with filters
   async searchOpportunities(filters: OpportunityFilters, page = 0, pageSize = 10): Promise<OpportunitySearchResult> {
-    try {
-      let q = collection(db, OPPORTUNITIES_COLLECTION);
-      const constraints = [];
-
-      // Apply filters
-      if (filters.status) {
-        constraints.push(where('status', '==', filters.status));
-      }
-
-      if (filters.companyId) {
-        constraints.push(where('companyId', '==', filters.companyId));
-      }
-      
-      if (filters.industry?.length) {
-        constraints.push(where('industry', 'array-contains-any', filters.industry));
-      }
-      
-      if (filters.location) {
-        constraints.push(where('location', '==', filters.location));
-      }
-      
-      // remotePolicy filter removed - property doesn't exist
-      // commitment filter removed - property doesn't exist
-
-      // Add ordering and pagination
-      constraints.push(orderBy('postedAt', 'desc'));
-      constraints.push(firestoreLimit(filters.limit || pageSize));
-
-      const finalQuery = query(q, ...constraints);
-      const querySnapshot = await getDocs(finalQuery);
-      
-      const opportunities = querySnapshot.docs.map(doc => {
-        const data = doc.data() as any;
-        return {
-          id: doc.id,
-          ...(data as object),
-          postedAt: data.postedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          deadline: data.deadline?.toDate(),
-        } as unknown as Opportunity;
-      });
-
-      // TODO: Implement aggregation for filter counts
-      const filterCounts = {
-        industries: [],
-        locations: [],
-        commitment: [],
-        compensation: [],
+    // Handle demo users - return demo opportunities
+    if (isDemoEntity(filters.companyId || '')) {
+      const demoOpportunities = DEMO_DATA.opportunities.map(transformDemoOpportunity);
+      return {
+        opportunities: demoOpportunities,
+        total: demoOpportunities.length,
+        filters: {
+          industries: [],
+          locations: [],
+          commitment: [],
+          compensation: [],
+        },
       };
+    }
+
+    try {
+      // Build query params
+      const params = new URLSearchParams();
+      if (filters.status) {
+        const statusArr = Array.isArray(filters.status) ? filters.status : [filters.status];
+        statusArr.forEach(s => params.append('status', s));
+      }
+      if (filters.companyId) params.append('companyId', filters.companyId);
+      if (filters.industry?.length) {
+        filters.industry.forEach(i => params.append('industry', i));
+      }
+      if (filters.location?.length) {
+        filters.location.forEach(l => params.append('location', l));
+      }
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      params.append('page', page.toString());
+      params.append('pageSize', pageSize.toString());
+
+      const response = await fetch(`/api/opportunities?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch opportunities');
+      }
+
+      const result = await response.json();
+      const opps = result.opportunities || result.data?.opportunities || [];
+
+      const opportunities = opps.map((opp: any) => ({
+        id: opp.id,
+        title: opp.title,
+        description: opp.description,
+        companyId: opp.companyId,
+        status: opp.status,
+        industry: opp.industry,
+        location: opp.location,
+        skills: opp.requiredSkills || [],
+        compensation: opp.compensationMin ? {
+          min: opp.compensationMin,
+          max: opp.compensationMax || opp.compensationMin,
+          currency: opp.compensationCurrency || 'USD',
+        } : undefined,
+        viewCount: opp.viewCount || 0,
+        applicantCount: opp.applicationsCount || 0,
+        createdAt: opp.createdAt ? new Date(opp.createdAt) : new Date(),
+        updatedAt: opp.updatedAt ? new Date(opp.updatedAt) : new Date(),
+      } as unknown as Opportunity));
 
       return {
         opportunities,
-        total: opportunities.length, // TODO: Get actual count
-        filters: filterCounts,
+        total: result.total || opportunities.length,
+        filters: result.filters || {
+          industries: [],
+          locations: [],
+          commitment: [],
+          compensation: [],
+        },
       };
     } catch (error) {
       console.error('Error searching opportunities:', error);
@@ -156,24 +200,14 @@ export class OpportunityService {
 
   // Get opportunities for a company
   async getCompanyOpportunities(companyUserId: string): Promise<Opportunity[]> {
+    // Handle demo users
+    if (isDemoEntity(companyUserId)) {
+      return DEMO_DATA.opportunities.map(transformDemoOpportunity);
+    }
+
     try {
-      const q = query(
-        collection(db, OPPORTUNITIES_COLLECTION),
-        where('companyId', '==', companyUserId),
-        orderBy('postedAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data() as any;
-        return {
-          id: doc.id,
-          ...(data as object),
-          postedAt: data.postedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          deadline: data.deadline?.toDate(),
-        } as unknown as Opportunity;
-      });
+      const result = await this.searchOpportunities({ companyId: companyUserId, limit: 50 });
+      return result.opportunities;
     } catch (error) {
       console.error('Error getting company opportunities:', error);
       throw new Error('Failed to get company opportunities');
@@ -190,11 +224,15 @@ export class OpportunityService {
     }
 
     try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        ...updates,
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/opportunities/${opportunityId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to update opportunity');
+      }
     } catch (error) {
       console.error('Error updating opportunity:', error);
       throw new Error('Failed to update opportunity');
@@ -203,12 +241,23 @@ export class OpportunityService {
 
   // Update opportunity status
   async updateOpportunityStatus(opportunityId: string, status: Opportunity['status']): Promise<void> {
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Updated opportunity status: ${opportunityId} -> ${status}`);
+      return;
+    }
+
     try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        status,
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/opportunities/${opportunityId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to update opportunity status');
+      }
     } catch (error) {
       console.error('Error updating opportunity status:', error);
       throw new Error('Failed to update opportunity status');
@@ -217,14 +266,15 @@ export class OpportunityService {
 
   // Increment view count
   async incrementViewCount(opportunityId: string): Promise<void> {
-    try {
-      const opportunity = await this.getOpportunityById(opportunityId);
-      if (!opportunity) return;
+    // Handle demo opportunities - no-op
+    if (isDemoEntity(opportunityId)) {
+      return;
+    }
 
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        viewCount: (opportunity.viewCount || 0) + 1,
-      });
+    try {
+      // View count is typically handled server-side when opportunity is fetched
+      // This is a no-op for now as the API should handle view tracking
+      console.log(`View count increment requested for: ${opportunityId}`);
     } catch (error) {
       console.error('Error incrementing view count:', error);
     }
@@ -232,17 +282,28 @@ export class OpportunityService {
 
   // Express interest in opportunity
   async expressInterest(opportunityId: string, teamId: string): Promise<void> {
-    try {
-      const opportunity = await this.getOpportunityById(opportunityId);
-      if (!opportunity) throw new Error('Opportunity not found');
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId) || isDemoEntity(teamId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Expressed interest in opportunity: ${opportunityId}`);
+      return;
+    }
 
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        applicantCount: (opportunity.applicantCount || 0) + 1,
-        updatedAt: Timestamp.now(),
+    try {
+      // This would typically create an application or expression of interest
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          opportunityId,
+          teamId,
+          type: 'expression_of_interest',
+        }),
       });
-      
-      // TODO: Add notification system to notify company of interest
+
+      if (!response.ok) {
+        throw new Error('Failed to express interest');
+      }
     } catch (error) {
       console.error('Error expressing interest:', error);
       throw new Error('Failed to express interest in opportunity');
@@ -252,28 +313,13 @@ export class OpportunityService {
   // Get featured opportunities
   async getFeaturedOpportunities(limit = 6): Promise<Opportunity[]> {
     try {
-      const q = query(
-        collection(db, OPPORTUNITIES_COLLECTION),
-        where('status', '==', 'active'),
-        where('featured', '==', true),
-        orderBy('postedAt', 'desc'),
-        firestoreLimit(limit)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data() as any;
-        return {
-          id: doc.id,
-          ...(data as object),
-          postedAt: data.postedAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          deadline: data.deadline?.toDate(),
-        } as unknown as Opportunity;
-      });
+      const result = await this.searchOpportunities({ status: ['active'], limit });
+      // Return top opportunities as "featured"
+      return result.opportunities.slice(0, limit);
     } catch (error) {
       console.error('Error getting featured opportunities:', error);
-      throw new Error('Failed to get featured opportunities');
+      // Return demo opportunities as fallback
+      return DEMO_DATA.opportunities.slice(0, limit).map(transformDemoOpportunity);
     }
   }
 
@@ -284,12 +330,12 @@ export class OpportunityService {
         // Get stats for specific opportunity
         const opportunity = await this.getOpportunityById(opportunityId);
         if (!opportunity) throw new Error('Opportunity not found');
-        
+
         const createdDate = typeof opportunity.createdAt === 'string'
           ? new Date(opportunity.createdAt)
           : opportunity.createdAt instanceof Date
             ? opportunity.createdAt
-            : (opportunity.createdAt as any)?.toDate?.() || new Date();
+            : new Date();
         return {
           viewCount: opportunity.viewCount || 0,
           applicantCount: opportunity.applicantCount || 0,
@@ -298,7 +344,6 @@ export class OpportunityService {
         };
       } else {
         // Get platform-wide opportunity stats
-        // TODO: Implement aggregation queries
         return {
           totalOpportunities: 0,
           activeOpportunities: 0,
@@ -314,12 +359,21 @@ export class OpportunityService {
 
   // Delete opportunity
   async deleteOpportunity(opportunityId: string): Promise<void> {
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Deleted opportunity: ${opportunityId}`);
+      return;
+    }
+
     try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        status: 'closed',
-        updatedAt: Timestamp.now(),
+      const response = await fetch(`/api/opportunities/${opportunityId}`, {
+        method: 'DELETE',
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete opportunity');
+      }
     } catch (error) {
       console.error('Error deleting opportunity:', error);
       throw new Error('Failed to delete opportunity');
@@ -328,30 +382,12 @@ export class OpportunityService {
 
   // Archive opportunity
   async archiveOpportunity(opportunityId: string): Promise<void> {
-    try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        status: 'archived',
-        updatedAt: Timestamp.now(),
-      });
-    } catch (error) {
-      console.error('Error archiving opportunity:', error);
-      throw new Error('Failed to archive opportunity');
-    }
+    await this.updateOpportunityStatus(opportunityId, 'archived' as Opportunity['status']);
   }
 
   // Feature opportunity
   async featureOpportunity(opportunityId: string, featured: boolean): Promise<void> {
-    try {
-      const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
-      await updateDoc(docRef, {
-        featured,
-        updatedAt: Timestamp.now(),
-      });
-    } catch (error) {
-      console.error('Error featuring opportunity:', error);
-      throw new Error('Failed to feature opportunity');
-    }
+    await this.updateOpportunity(opportunityId, { featured } as Partial<Opportunity>);
   }
 }
 

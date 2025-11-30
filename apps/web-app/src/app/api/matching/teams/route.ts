@@ -1,0 +1,337 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+// GET /api/matching/teams?opportunityId=xxx - Find matching teams for an opportunity
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const opportunityId = request.nextUrl.searchParams.get('opportunityId');
+    const minScore = parseInt(request.nextUrl.searchParams.get('minScore') || '50');
+    const limit = parseInt(request.nextUrl.searchParams.get('limit') || '20');
+
+    if (!opportunityId) {
+      return NextResponse.json({ error: 'opportunityId is required' }, { status: 400 });
+    }
+
+    // Fetch the opportunity
+    const opportunity = await prisma.opportunity.findUnique({
+      where: { id: opportunityId },
+      include: {
+        company: {
+          select: { id: true, name: true, industry: true }
+        }
+      }
+    });
+
+    if (!opportunity) {
+      return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
+    }
+
+    // Fetch available teams
+    const teams = await prisma.team.findMany({
+      where: {
+        visibility: 'public',
+        availabilityStatus: { not: 'not_available' },
+        deletedAt: null,
+      },
+      include: {
+        members: {
+          where: { status: 'active' },
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                skills: {
+                  include: { skill: true }
+                },
+                profile: {
+                  select: {
+                    title: true,
+                    yearsExperience: true,
+                    location: true,
+                  }
+                }
+              }
+            }
+          }
+        },
+        _count: {
+          select: { applications: true, members: true }
+        }
+      },
+      take: 100, // Get more teams for better matching
+    });
+
+    // Calculate match scores
+    const matches = teams.map(team => {
+      const score = calculateTeamMatchScore(team, opportunity);
+      return {
+        team: {
+          id: team.id,
+          name: team.name,
+          description: team.description,
+          industry: team.industry,
+          specialization: team.specialization,
+          location: team.location,
+          remoteStatus: team.remoteStatus,
+          size: team.size,
+          yearsWorkingTogether: team.yearsWorkingTogether,
+          availabilityStatus: team.availabilityStatus,
+          verificationStatus: team.verificationStatus,
+          memberCount: team._count.members,
+          applicationCount: team._count.applications,
+          skills: extractTeamSkills(team.members),
+        },
+        score,
+      };
+    });
+
+    // Filter and sort by score
+    const filteredMatches = matches
+      .filter(m => m.score.total >= minScore)
+      .sort((a, b) => b.score.total - a.score.total)
+      .slice(0, limit);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        opportunity: {
+          id: opportunity.id,
+          title: opportunity.title,
+          company: opportunity.company.name,
+          industry: opportunity.industry,
+        },
+        matches: filteredMatches,
+        total: filteredMatches.length,
+      }
+    });
+  } catch (error) {
+    console.error('Error finding team matches:', error);
+    return NextResponse.json(
+      { error: 'Failed to find matching teams' },
+      { status: 500 }
+    );
+  }
+}
+
+// Helper to extract team skills from members
+function extractTeamSkills(members: any[]): string[] {
+  const skills = new Set<string>();
+  members.forEach(member => {
+    member.user.skills?.forEach((s: any) => {
+      skills.add(s.skill.name);
+    });
+  });
+  return Array.from(skills);
+}
+
+// Calculate match score between team and opportunity
+function calculateTeamMatchScore(team: any, opportunity: any) {
+  const breakdown = {
+    skillsMatch: calculateSkillsScore(team, opportunity),
+    industryMatch: calculateIndustryScore(team, opportunity),
+    locationMatch: calculateLocationScore(team, opportunity),
+    sizeMatch: calculateSizeScore(team, opportunity),
+    compensationMatch: calculateCompensationScore(team, opportunity),
+    experienceMatch: calculateExperienceScore(team),
+    availabilityMatch: calculateAvailabilityScore(team),
+  };
+
+  const weights = {
+    skillsMatch: 0.30,
+    industryMatch: 0.20,
+    locationMatch: 0.10,
+    sizeMatch: 0.10,
+    compensationMatch: 0.15,
+    experienceMatch: 0.10,
+    availabilityMatch: 0.05,
+  };
+
+  const total = Math.round(
+    Object.entries(breakdown).reduce((sum, [key, score]) => {
+      return sum + score * weights[key as keyof typeof weights];
+    }, 0)
+  );
+
+  const recommendation = getRecommendation(total);
+  const { strengths, concerns } = extractInsights(team, opportunity, breakdown);
+
+  return {
+    total,
+    breakdown,
+    recommendation,
+    strengths,
+    concerns,
+  };
+}
+
+function calculateSkillsScore(team: any, opportunity: any): number {
+  const teamSkills = extractTeamSkills(team.members).map(s => s.toLowerCase());
+  const requiredSkills = (opportunity.requiredSkills || []).map((s: string) => s.toLowerCase());
+  const preferredSkills = (opportunity.preferredSkills || []).map((s: string) => s.toLowerCase());
+
+  if (requiredSkills.length === 0 && preferredSkills.length === 0) return 70;
+
+  let score = 0;
+  const totalSkills = requiredSkills.length + preferredSkills.length * 0.5;
+
+  // Required skills (more important)
+  const matchedRequired = requiredSkills.filter((skill: string) =>
+    teamSkills.some(ts => ts.includes(skill) || skill.includes(ts))
+  ).length;
+  score += (matchedRequired / Math.max(requiredSkills.length, 1)) * 70;
+
+  // Preferred skills
+  const matchedPreferred = preferredSkills.filter((skill: string) =>
+    teamSkills.some(ts => ts.includes(skill) || skill.includes(ts))
+  ).length;
+  score += (matchedPreferred / Math.max(preferredSkills.length, 1)) * 30;
+
+  return Math.min(Math.round(score), 100);
+}
+
+function calculateIndustryScore(team: any, opportunity: any): number {
+  const teamIndustry = team.industry?.toLowerCase() || '';
+  const oppIndustry = opportunity.industry?.toLowerCase() || '';
+
+  if (!teamIndustry || !oppIndustry) return 50;
+  if (teamIndustry === oppIndustry) return 100;
+
+  // Industry transfer compatibility
+  const transfers: Record<string, string[]> = {
+    'financial services': ['fintech', 'investment banking', 'private equity', 'consulting'],
+    'technology': ['fintech', 'healthcare technology', 'enterprise software'],
+    'healthcare': ['healthcare technology', 'biotechnology', 'pharmaceuticals'],
+    'consulting': ['financial services', 'technology', 'strategy'],
+  };
+
+  const related = transfers[teamIndustry] || [];
+  if (related.some(r => oppIndustry.includes(r) || r.includes(oppIndustry))) {
+    return 75;
+  }
+
+  return 40;
+}
+
+function calculateLocationScore(team: any, opportunity: any): number {
+  const teamLocation = team.location?.toLowerCase() || '';
+  const oppLocation = opportunity.location?.toLowerCase() || '';
+  const teamRemote = team.remoteStatus;
+  const oppRemote = opportunity.remotePolicy;
+
+  // Remote matches
+  if (teamRemote === 'remote' && oppRemote === 'remote') return 100;
+  if (oppRemote === 'remote') return 90;
+
+  // Location matches
+  if (teamLocation && oppLocation && teamLocation === oppLocation) return 100;
+
+  // Hybrid compatibility
+  if (teamRemote === 'hybrid' || oppRemote === 'hybrid') return 70;
+
+  // Remote team for onsite opportunity
+  if (teamRemote === 'remote' && oppRemote === 'onsite') return 30;
+
+  return 50;
+}
+
+function calculateSizeScore(team: any, opportunity: any): number {
+  const teamSize = team.size || team._count?.members || 0;
+  const minSize = opportunity.teamSizeMin || 1;
+  const maxSize = opportunity.teamSizeMax || 20;
+
+  if (teamSize >= minSize && teamSize <= maxSize) return 100;
+  if (teamSize < minSize) {
+    const deficit = minSize - teamSize;
+    return Math.max(0, 100 - deficit * 15);
+  }
+  if (teamSize > maxSize) {
+    const excess = teamSize - maxSize;
+    return Math.max(0, 100 - excess * 10);
+  }
+  return 50;
+}
+
+function calculateCompensationScore(team: any, opportunity: any): number {
+  const teamMin = team.salaryExpectationMin || 0;
+  const teamMax = team.salaryExpectationMax || 0;
+  const oppMin = opportunity.compensationMin || 0;
+  const oppMax = opportunity.compensationMax || 0;
+
+  if (!teamMin && !teamMax) return 70; // No expectations set
+  if (!oppMin && !oppMax) return 70; // No budget set
+
+  // Check for overlap
+  const overlapMin = Math.max(teamMin, oppMin);
+  const overlapMax = Math.min(teamMax, oppMax);
+
+  if (overlapMax >= overlapMin) {
+    // There's overlap
+    const overlapSize = overlapMax - overlapMin;
+    const teamRange = teamMax - teamMin || 1;
+    return Math.min(Math.round(70 + (overlapSize / teamRange) * 30), 100);
+  }
+
+  // No overlap - calculate gap
+  const gap = teamMin > oppMax ? teamMin - oppMax : oppMin - teamMax;
+  const gapPercent = gap / Math.max(teamMin, oppMin);
+  return Math.max(0, Math.round(70 - gapPercent * 100));
+}
+
+function calculateExperienceScore(team: any): number {
+  const yearsWorking = Number(team.yearsWorkingTogether) || 0;
+
+  if (yearsWorking >= 5) return 100;
+  if (yearsWorking >= 3) return 85;
+  if (yearsWorking >= 2) return 70;
+  if (yearsWorking >= 1) return 55;
+  return 40;
+}
+
+function calculateAvailabilityScore(team: any): number {
+  switch (team.availabilityStatus) {
+    case 'available': return 100;
+    case 'selective': return 70;
+    case 'engaged': return 40;
+    default: return 0;
+  }
+}
+
+function getRecommendation(score: number): string {
+  if (score >= 85) return 'excellent';
+  if (score >= 70) return 'good';
+  if (score >= 55) return 'fair';
+  return 'poor';
+}
+
+function extractInsights(team: any, opportunity: any, breakdown: any) {
+  const strengths: string[] = [];
+  const concerns: string[] = [];
+
+  if (breakdown.skillsMatch >= 80) strengths.push('Exceptional skills alignment');
+  else if (breakdown.skillsMatch < 50) concerns.push('Skills gap may require training');
+
+  if (breakdown.industryMatch >= 90) strengths.push('Direct industry experience');
+  else if (breakdown.industryMatch < 50) concerns.push('Industry transition needed');
+
+  if (breakdown.experienceMatch >= 85) strengths.push('Highly cohesive team');
+  else if (breakdown.experienceMatch < 50) concerns.push('Limited shared working history');
+
+  if (breakdown.compensationMatch < 60) concerns.push('Compensation expectations may not align');
+
+  if (breakdown.locationMatch < 50) concerns.push('Location/remote work mismatch');
+
+  if (team.verificationStatus === 'verified') strengths.push('Verified credentials');
+  else if (team.verificationStatus === 'pending') concerns.push('Verification pending');
+
+  return { strengths, concerns };
+}

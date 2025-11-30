@@ -96,6 +96,27 @@ export function ContactForm() {
     setSubmitStatus('idle');
 
     try {
+      // Check if this is a demo submission (demo email in form)
+      const isDemoSubmission = formData.email === 'demo@example.com' ||
+                               formData.email === 'company@example.com';
+
+      if (isDemoSubmission) {
+        // Simulate API call for demo users
+        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log('[Demo] Contact form submission:', formData);
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          inquiryType: 'general',
+          subject: '',
+          message: '',
+        });
+        setErrors({});
+        return;
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

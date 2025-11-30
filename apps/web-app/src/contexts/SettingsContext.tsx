@@ -13,6 +13,11 @@ import {
 } from '@/types/settings';
 import { toast } from 'react-hot-toast';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 interface SettingsContextType {
   settings: UserSettings;
   isLoading: boolean;
@@ -33,6 +38,40 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Load settings from localStorage (for demo users or as fallback)
+  const loadFromLocalStorage = useCallback((userId: string): UserSettings | null => {
+    try {
+      const storedSettings = localStorage.getItem(`settings_${userId}`);
+      if (storedSettings) {
+        const parsed = JSON.parse(storedSettings);
+        return {
+          ...DEFAULT_USER_SETTINGS,
+          ...parsed,
+          security: {
+            ...DEFAULT_USER_SETTINGS.security,
+            ...parsed.security,
+            passwordLastChanged: parsed.security?.passwordLastChanged
+              ? new Date(parsed.security.passwordLastChanged)
+              : null,
+          },
+          account: {
+            ...DEFAULT_USER_SETTINGS.account,
+            ...parsed.account,
+            memberSince: parsed.account?.memberSince
+              ? new Date(parsed.account.memberSince)
+              : new Date(),
+            lastLogin: parsed.account?.lastLogin
+              ? new Date(parsed.account.lastLogin)
+              : null,
+          },
+        };
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+    return null;
+  }, []);
+
   // Load user settings from API
   const loadUserSettings = useCallback(async () => {
     if (!user) {
@@ -42,6 +81,21 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsLoading(true);
+
+    // Demo user handling - only use localStorage
+    if (isDemoUser(user.email)) {
+      const localSettings = loadFromLocalStorage(user.id);
+      if (localSettings) {
+        setSettings(localSettings);
+        console.log('[Demo] Loaded settings from localStorage');
+      } else {
+        setSettings(DEFAULT_USER_SETTINGS);
+        console.log('[Demo] Using default settings');
+      }
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/user/settings');
 
@@ -74,30 +128,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(`settings_${user.id}`, JSON.stringify(loadedSettings));
       } else {
         // Fall back to localStorage
-        const storedSettings = localStorage.getItem(`settings_${user.id}`);
-        if (storedSettings) {
-          const parsed = JSON.parse(storedSettings);
-          setSettings({
-            ...DEFAULT_USER_SETTINGS,
-            ...parsed,
-            security: {
-              ...DEFAULT_USER_SETTINGS.security,
-              ...parsed.security,
-              passwordLastChanged: parsed.security?.passwordLastChanged
-                ? new Date(parsed.security.passwordLastChanged)
-                : null,
-            },
-            account: {
-              ...DEFAULT_USER_SETTINGS.account,
-              ...parsed.account,
-              memberSince: parsed.account?.memberSince
-                ? new Date(parsed.account.memberSince)
-                : new Date(),
-              lastLogin: parsed.account?.lastLogin
-                ? new Date(parsed.account.lastLogin)
-                : null,
-            },
-          });
+        const localSettings = loadFromLocalStorage(user.id);
+        if (localSettings) {
+          setSettings(localSettings);
         } else {
           setSettings(DEFAULT_USER_SETTINGS);
         }
@@ -105,24 +138,16 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Failed to load user settings:', error);
       // Fall back to localStorage if API fails
-      try {
-        const storedSettings = localStorage.getItem(`settings_${user.id}`);
-        if (storedSettings) {
-          const parsed = JSON.parse(storedSettings);
-          setSettings({
-            ...DEFAULT_USER_SETTINGS,
-            ...parsed,
-          });
-        } else {
-          setSettings(DEFAULT_USER_SETTINGS);
-        }
-      } catch {
+      const localSettings = loadFromLocalStorage(user.id);
+      if (localSettings) {
+        setSettings(localSettings);
+      } else {
         setSettings(DEFAULT_USER_SETTINGS);
       }
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, loadFromLocalStorage]);
 
   // Load settings when user changes
   useEffect(() => {
@@ -135,8 +160,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
     // Optimistic update
     setSettings(newSettings);
-    // Save to localStorage as backup
+    // Save to localStorage
     localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
+
+    // Demo user handling - only use localStorage
+    if (isDemoUser(user.email)) {
+      console.log('[Demo] Saved settings to localStorage');
+      return;
+    }
 
     try {
       const response = await fetch('/api/user/settings', {

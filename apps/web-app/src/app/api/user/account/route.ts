@@ -5,6 +5,11 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 const deleteAccountSchema = z.object({
   password: z.string().min(1, 'Password is required'),
   confirmEmail: z.string().email('Valid email is required'),
@@ -20,6 +25,15 @@ export async function DELETE(request: Request) {
         { error: 'You must be logged in to delete your account' },
         { status: 401 }
       );
+    }
+
+    // Demo user handling - simulate success without database changes
+    if (isDemoUser(session.user.email)) {
+      console.log('[Demo] Account deletion simulated for demo user');
+      return NextResponse.json({
+        success: true,
+        message: 'Account deleted successfully',
+      });
     }
 
     const body = await request.json();
@@ -121,6 +135,17 @@ export async function PATCH(request: Request) {
 
     const body = await request.json();
     const { status } = body;
+
+    // Demo user handling - simulate success without database changes
+    if (isDemoUser(session.user.email)) {
+      console.log(`[Demo] Account status change to "${status}" simulated for demo user`);
+      return NextResponse.json({
+        success: true,
+        message: status === 'deactivated'
+          ? 'Account deactivated successfully'
+          : 'Account reactivated successfully',
+      });
+    }
 
     if (!['active', 'deactivated'].includes(status)) {
       return NextResponse.json(

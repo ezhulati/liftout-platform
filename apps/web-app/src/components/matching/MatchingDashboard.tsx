@@ -1,131 +1,164 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useQuery } from '@tanstack/react-query';
-import { matchingService } from '@/lib/services/matchingService';
 import {
-  ChartBarIcon,
-  StarIcon,
-  UserGroupIcon,
-  BriefcaseIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
   AdjustmentsHorizontalIcon,
   SparklesIcon,
-  TrophyIcon,
   LightBulbIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
-import { Button, Badge, EmptyState, Skeleton } from '@/components/ui';
-import type { TeamOpportunityMatch, MatchingFilters } from '@/lib/services/matchingService';
+import { Button, EmptyState, Skeleton } from '@/components/ui';
+import { TeamMatchCard, OpportunityMatchCard } from './MatchScoreCard';
+import {
+  useTeamMatches,
+  useOpportunityMatches,
+  type TeamMatch,
+  type OpportunityMatch,
+} from '@/hooks/useMatching';
 
 interface MatchingDashboardProps {
-  entityId: string; // Team ID or Company ID
+  entityId: string; // Opportunity ID (for company) or Team ID (for team)
   entityType: 'team' | 'company';
+  entityName?: string;
 }
 
-const recommendationColors = {
-  excellent: 'success',
-  good: 'info',
-  fair: 'warning',
-  poor: 'error',
-} as const;
+interface MatchingFilters {
+  minScore: number;
+  limit: number;
+}
 
-const recommendationIcons = {
-  excellent: TrophyIcon,
-  good: CheckCircleIcon,
-  fair: ExclamationTriangleIcon,
-  poor: ExclamationTriangleIcon,
-};
-
-export function MatchingDashboard({ entityId, entityType }: MatchingDashboardProps) {
+export function MatchingDashboard({ entityId, entityType, entityName }: MatchingDashboardProps) {
   const { userData } = useAuth();
   const [filters, setFilters] = useState<MatchingFilters>({
     minScore: 60,
-    maxResults: 10,
+    limit: 10,
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: matches, isLoading, refetch } = useQuery({
-    queryKey: ['ai-matches', entityId, entityType, filters],
-    queryFn: async () => {
-      if (entityType === 'team') {
-        return await matchingService.findOpportunitiesForTeam(entityId, filters);
-      } else {
-        return await matchingService.findTeamsForOpportunity(entityId, filters);
-      }
-    },
-    enabled: !!entityId,
+  // Use the appropriate hook based on entity type
+  const teamMatchesQuery = useTeamMatches({
+    opportunityId: entityId,
+    minScore: filters.minScore,
+    limit: filters.limit,
+    enabled: entityType === 'company',
   });
 
-  const handleFilterChange = (key: keyof MatchingFilters, value: any) => {
+  const opportunityMatchesQuery = useOpportunityMatches({
+    teamId: entityId,
+    minScore: filters.minScore,
+    limit: filters.limit,
+    enabled: entityType === 'team',
+  });
+
+  const isLoading = entityType === 'company'
+    ? teamMatchesQuery.isLoading
+    : opportunityMatchesQuery.isLoading;
+
+  const isError = entityType === 'company'
+    ? teamMatchesQuery.isError
+    : opportunityMatchesQuery.isError;
+
+  const refetch = entityType === 'company'
+    ? teamMatchesQuery.refetch
+    : opportunityMatchesQuery.refetch;
+
+  const matches = entityType === 'company'
+    ? teamMatchesQuery.data?.matches || []
+    : opportunityMatchesQuery.data?.matches || [];
+
+  const total = entityType === 'company'
+    ? teamMatchesQuery.data?.total || 0
+    : opportunityMatchesQuery.data?.total || 0;
+
+  const handleFilterChange = (key: keyof MatchingFilters, value: number) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,
     }));
   };
 
-  const isCompanyUser = userData?.type === 'company';
+  const handleExpressInterest = (teamId: string) => {
+    // TODO: Implement express interest flow
+    console.log('Express interest in team:', teamId);
+  };
+
+  const handleApply = (opportunityId: string) => {
+    // Navigate to apply page
+    window.location.href = `/app/opportunities/${opportunityId}/apply`;
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header - Practical UI: bold headings, proper spacing */}
+      {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-gold flex items-center justify-center">
             <SparklesIcon className="h-6 w-6 text-white" aria-hidden="true" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-text-primary">AI-powered matching</h2>
+            <h2 className="text-lg font-bold text-text-primary">AI-Powered Matching</h2>
             <p className="text-sm font-normal text-text-secondary mt-1">
               {entityType === 'team'
-                ? 'Discover opportunities perfectly matched to your team\'s capabilities'
-                : 'Find teams that excel in the specific skills you need'
+                ? 'Discover opportunities matched to your team\'s capabilities'
+                : 'Find teams that excel in the skills you need'
               }
+              {entityName && <span className="text-text-tertiary"> for {entityName}</span>}
             </p>
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          leftIcon={<AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />}
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          Filters
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowPathIcon className="h-4 w-4" />}
+            onClick={() => refetch()}
+            disabled={isLoading}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<AdjustmentsHorizontalIcon className="h-4 w-4" />}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            Filters
+          </Button>
+        </div>
       </div>
 
       {/* Filter Panel */}
       {showFilters && (
         <div className="card">
           <div className="px-6 py-4">
-            <h3 className="text-lg font-bold text-text-primary mb-4">Matching criteria</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h3 className="text-sm font-bold text-text-primary mb-4">Matching Criteria</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="label-text mb-2">
-                  Minimum match score
+                <label className="block text-xs font-medium text-text-secondary mb-2">
+                  Minimum Match Score
                 </label>
                 <select
                   value={filters.minScore}
                   onChange={(e) => handleFilterChange('minScore', parseInt(e.target.value))}
-                  className="input-field"
+                  className="input-field text-sm"
                 >
                   <option value={50}>50% - Show all matches</option>
                   <option value={60}>60% - Good matches</option>
                   <option value={70}>70% - Strong matches</option>
-                  <option value={80}>80% - Excellent matches</option>
+                  <option value={80}>80% - Excellent matches only</option>
                 </select>
               </div>
 
               <div>
-                <label className="label-text mb-2">
-                  Maximum results
+                <label className="block text-xs font-medium text-text-secondary mb-2">
+                  Maximum Results
                 </label>
                 <select
-                  value={filters.maxResults}
-                  onChange={(e) => handleFilterChange('maxResults', parseInt(e.target.value))}
-                  className="input-field"
+                  value={filters.limit}
+                  onChange={(e) => handleFilterChange('limit', parseInt(e.target.value))}
+                  className="input-field text-sm"
                 >
                   <option value={5}>5 results</option>
                   <option value={10}>10 results</option>
@@ -133,32 +166,6 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
                   <option value={50}>50 results</option>
                 </select>
               </div>
-
-              {entityType === 'company' && (
-                <div>
-                  <label className="label-text mb-2">
-                    Team size range
-                  </label>
-                  <select
-                    value={filters.teamSizeRange ? `${filters.teamSizeRange.min}-${filters.teamSizeRange.max}` : ''}
-                    onChange={(e) => {
-                      if (!e.target.value) {
-                        handleFilterChange('teamSizeRange', undefined);
-                        return;
-                      }
-                      const [min, max] = e.target.value.split('-').map(n => parseInt(n));
-                      handleFilterChange('teamSizeRange', { min, max });
-                    }}
-                    className="input-field"
-                  >
-                    <option value="">Any size</option>
-                    <option value="2-5">2-5 members</option>
-                    <option value="6-10">6-10 members</option>
-                    <option value="11-15">11-15 members</option>
-                    <option value="16-20">16+ members</option>
-                  </select>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -166,225 +173,108 @@ export function MatchingDashboard({ entityId, entityType }: MatchingDashboardPro
 
       {/* Loading State */}
       {isLoading && (
-        <div className="card">
-          <div className="px-6 py-12 text-center">
-            <div className="loading-spinner mx-auto"></div>
-            <p className="mt-4 text-sm text-text-tertiary">Analyzing compatibility...</p>
-          </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="card p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-4">
+                  <Skeleton variant="rectangular" width="40px" height="40px" className="rounded-lg" />
+                  <div>
+                    <Skeleton variant="text" width="200px" className="mb-2" />
+                    <Skeleton variant="text" width="150px" />
+                  </div>
+                </div>
+                <Skeleton variant="rectangular" width="80px" height="40px" className="rounded-lg" />
+              </div>
+              <Skeleton variant="text" lines={2} className="mb-4" />
+              <div className="grid grid-cols-5 gap-3">
+                {[1, 2, 3, 4, 5].map((j) => (
+                  <Skeleton key={j} variant="rectangular" height="20px" className="rounded" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Error State */}
+      {isError && !isLoading && (
+        <div className="card p-6">
+          <EmptyState
+            icon={<LightBulbIcon className="w-12 h-12 text-error" />}
+            title="Failed to load matches"
+            description="There was an error loading the matches. Please try again."
+            action={
+              <Button variant="primary" onClick={() => refetch()}>
+                Try Again
+              </Button>
+            }
+          />
         </div>
       )}
 
       {/* Results */}
-      {!isLoading && matches && (
-        <div className="space-y-4">
-          {matches.length === 0 ? (
-            <div className="card">
-              <EmptyState
-                icon={<LightBulbIcon className="w-12 h-12" />}
-                title="No matches found"
-                description="Try adjusting your filters to find more potential matches."
-              />
+      {!isLoading && !isError && (
+        <>
+          {/* Results Summary */}
+          {matches.length > 0 && (
+            <div className="text-sm text-text-secondary">
+              Showing {matches.length} of {total} matches
             </div>
-          ) : (
-            matches.map((match, index) => (
-              <MatchCard
-                key={`${match.team.id}-${match.opportunity.id}`}
-                match={match}
-                rank={index + 1}
-                entityType={entityType}
-                isCompanyUser={isCompanyUser}
-              />
-            ))
           )}
-        </div>
+
+          {/* Match Cards */}
+          <div className="space-y-4">
+            {matches.length === 0 ? (
+              <div className="card">
+                <EmptyState
+                  icon={<LightBulbIcon className="w-12 h-12" />}
+                  title="No matches found"
+                  description={
+                    filters.minScore > 50
+                      ? "Try lowering the minimum match score to see more results."
+                      : entityType === 'team'
+                        ? "No opportunities currently match your team's profile."
+                        : "No teams currently match this opportunity's requirements."
+                  }
+                  action={
+                    filters.minScore > 50 ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => handleFilterChange('minScore', 50)}
+                      >
+                        Show All Matches
+                      </Button>
+                    ) : undefined
+                  }
+                />
+              </div>
+            ) : entityType === 'company' ? (
+              // Show team matches for companies
+              (matches as TeamMatch[]).map((match, index) => (
+                <TeamMatchCard
+                  key={match.team.id}
+                  match={match}
+                  rank={index + 1}
+                  onExpressInterest={handleExpressInterest}
+                />
+              ))
+            ) : (
+              // Show opportunity matches for teams
+              (matches as OpportunityMatch[]).map((match, index) => (
+                <OpportunityMatchCard
+                  key={match.opportunity.id}
+                  match={match}
+                  rank={index + 1}
+                  onApply={handleApply}
+                />
+              ))
+            )}
+          </div>
+        </>
       )}
     </div>
   );
 }
 
-interface MatchCardProps {
-  match: TeamOpportunityMatch;
-  rank: number;
-  entityType: 'team' | 'company';
-  isCompanyUser: boolean;
-}
-
-function MatchCard({ match, rank, entityType, isCompanyUser }: MatchCardProps) {
-  const { team, opportunity, score, recommendation, keyStrengths, potentialConcerns } = match;
-  const RecommendationIcon = recommendationIcons[recommendation];
-
-  return (
-    <div className="card hover:shadow-lg transition-shadow duration-fast">
-      <div className="px-6 py-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <div className="flex-shrink-0">
-              <div className="h-12 w-12 rounded-xl bg-navy-100 flex items-center justify-center">
-                <span className="text-lg font-bold text-navy">#{rank}</span>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                {entityType === 'team' ? (
-                  <BriefcaseIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
-                ) : (
-                  <UserGroupIcon className="h-5 w-5 text-text-tertiary" aria-hidden="true" />
-                )}
-                <h3 className="text-lg font-bold text-text-primary">
-                  {entityType === 'team' ? opportunity.title : team.name}
-                </h3>
-                <Badge
-                  variant={recommendationColors[recommendation]}
-                  icon={<RecommendationIcon className="h-3 w-3" />}
-                >
-                  {recommendation}
-                </Badge>
-              </div>
-              <p className="text-sm text-text-secondary">
-                {entityType === 'team' ? opportunity.companyName : `${team.size} members • ${team.industry.join(', ')}`}
-              </p>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <div className="text-2xl font-bold text-navy">{score.total}%</div>
-            <div className="text-xs text-text-tertiary">match score</div>
-          </div>
-        </div>
-
-        {/* Score Breakdown */}
-        <div className="mb-6">
-          <h4 className="text-sm font-bold text-text-primary mb-3">Compatibility breakdown</h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <ScoreBar label="Skills" score={score.breakdown.skillsMatch} max={25} />
-            <ScoreBar label="Industry" score={score.breakdown.industryMatch} max={20} />
-            <ScoreBar label="Experience" score={score.breakdown.experienceMatch} max={15} />
-            <ScoreBar label="Compensation" score={score.breakdown.compensationMatch} max={15} />
-          </div>
-        </div>
-
-        {/* Key Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Strengths */}
-          <div>
-            <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
-              <CheckCircleIcon className="h-4 w-4 text-success" aria-hidden="true" />
-              Key strengths
-            </h4>
-            <ul className="text-sm text-text-secondary space-y-1">
-              {keyStrengths.map((strength, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-success rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                  {strength}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Concerns */}
-          {potentialConcerns.length > 0 && (
-            <div>
-              <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
-                <ExclamationTriangleIcon className="h-4 w-4 text-warning" aria-hidden="true" />
-                Considerations
-              </h4>
-              <ul className="text-sm text-text-secondary space-y-1">
-                {potentialConcerns.map((concern, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="w-1.5 h-1.5 bg-warning rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                    {concern}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* AI Reasoning */}
-        <div className="mb-6 p-4 bg-bg-alt rounded-xl">
-          <h4 className="text-sm font-bold text-text-primary mb-2 flex items-center gap-1">
-            <SparklesIcon className="h-4 w-4 text-navy" aria-hidden="true" />
-            AI analysis
-          </h4>
-          <div className="text-sm text-text-secondary space-y-1">
-            {score.reasoning.map((reason, index) => (
-              <p key={index}>• {reason}</p>
-            ))}
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pt-4 border-t border-border">
-          <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
-            {entityType === 'team' ? (
-              <>
-                <span>{opportunity.location}</span>
-                <span>•</span>
-                <span>{opportunity.timeline?.urgency || 'Flexible timeline'}</span>
-              </>
-            ) : (
-              <>
-                <span>{team.location.primary}</span>
-                <span>•</span>
-                <span>{team.dynamics.yearsWorkingTogether} years together</span>
-              </>
-            )}
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={entityType === 'team' ? `/app/opportunities/${opportunity.id}` : `/app/teams/${team.id}`}
-              className="btn-outline min-h-12 transition-colors duration-fast"
-            >
-              View details
-            </Link>
-            {isCompanyUser && entityType === 'company' && (
-              <Button variant="primary" size="md">
-                Express interest
-              </Button>
-            )}
-            {!isCompanyUser && entityType === 'team' && (
-              <Link
-                href={`/app/opportunities/${opportunity.id}/apply`}
-                className="btn-primary min-h-12 transition-colors duration-fast"
-              >
-                Apply now
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface ScoreBarProps {
-  label: string;
-  score: number;
-  max: number;
-}
-
-function ScoreBar({ label, score, max }: ScoreBarProps) {
-  const percentage = (score / max) * 100;
-
-  return (
-    <div>
-      <div className="flex justify-between text-xs text-text-secondary mb-1">
-        <span>{label}</span>
-        <span>{score}/{max}</span>
-      </div>
-      <div className="w-full bg-bg-elevated rounded-full h-2">
-        <div
-          className={`h-2 rounded-full transition-all duration-base ${
-            percentage >= 80 ? 'bg-success' :
-            percentage >= 60 ? 'bg-navy' :
-            percentage >= 40 ? 'bg-warning' :
-            'bg-error'
-          }`}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
-  );
-}
+export default MatchingDashboard;

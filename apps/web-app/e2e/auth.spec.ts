@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { signIn } from './utils';
 
 test.describe('Authentication Flows', () => {
   test.describe('Sign In Page', () => {
@@ -18,80 +19,52 @@ test.describe('Authentication Flows', () => {
     test('can fill demo credentials for team user', async ({ page }) => {
       await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
-      // Open demo credentials section
-      await page.click('text=Try demo credentials');
-      await page.click('button:has-text("Team lead")');
+      const summary = page.locator('summary:has-text("Try demo credentials")');
+      await summary.click();
+      const teamBtn = page.locator('button:has-text("Team lead")');
+      await teamBtn.waitFor({ state: 'visible', timeout: 10000 });
+      await teamBtn.click();
 
-      // Verify fields are filled
       const emailInput = page.locator('input[type="email"]');
       const passwordInput = page.locator('input[type="password"]');
 
-      await expect(emailInput).toHaveValue('demo@example.com');
-      await expect(passwordInput).toHaveValue('password');
+      await expect(emailInput).toHaveValue('demo@example.com', { timeout: 10000 });
+      await expect(passwordInput).toHaveValue('password', { timeout: 10000 });
     });
 
     test('can fill demo credentials for company user', async ({ page }) => {
       await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
 
-      // Open demo credentials section
-      await page.click('text=Try demo credentials');
-      await page.click('button:has-text("Company")');
+      const summary = page.locator('summary:has-text("Try demo credentials")');
+      await summary.click();
+      const companyBtn = page.locator('button:has-text("Company")');
+      await companyBtn.waitFor({ state: 'visible', timeout: 10000 });
+      await companyBtn.click();
 
-      // Verify fields are filled
       const emailInput = page.locator('input[type="email"]');
       const passwordInput = page.locator('input[type="password"]');
 
-      await expect(emailInput).toHaveValue('company@example.com');
-      await expect(passwordInput).toHaveValue('password');
+      await expect(emailInput).toHaveValue('company@example.com', { timeout: 10000 });
+      await expect(passwordInput).toHaveValue('password', { timeout: 10000 });
     });
 
     test('team user can sign in and reach dashboard', async ({ page }) => {
-      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
-
-      // Fill credentials
-      await page.fill('input[type="email"]', 'demo@example.com');
-      await page.fill('input[type="password"]', 'password');
-
-      // Submit form
-      await page.click('button:has-text("Sign in")');
-
-      // Wait for navigation to dashboard
+      await signIn(page, { email: 'demo@example.com', password: 'password' });
       await expect(page).toHaveURL(/\/app\/dashboard/, { timeout: 30000 });
-
-      // Verify dashboard loaded - use first() to avoid strict mode violation
       await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible({ timeout: 10000 });
     });
 
     test('company user can sign in and reach dashboard', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-
-      // Fill credentials
-      await page.fill('input[type="email"]', 'company@example.com');
-      await page.fill('input[type="password"]', 'password');
-
-      // Submit form
-      await page.click('button:has-text("Sign in")');
-
-      // Wait for navigation to dashboard
+      await signIn(page, { email: 'company@example.com', password: 'password' });
       await expect(page).toHaveURL(/\/app\/dashboard/, { timeout: 30000 });
-
-      // Verify dashboard loaded - use first() to avoid strict mode violation
       await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible({ timeout: 10000 });
     });
 
     test('shows error for invalid credentials', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-
-      // Fill invalid credentials
+      await page.goto('/auth/signin', { waitUntil: 'domcontentloaded' });
       await page.fill('input[type="email"]', 'invalid@example.com');
       await page.fill('input[type="password"]', 'wrongpassword');
-
-      // Submit form
       await page.click('button:has-text("Sign in")');
-
-      // Should show error toast
       await expect(page.locator('text=Invalid credentials')).toBeVisible({ timeout: 10000 });
     });
   });
@@ -118,11 +91,11 @@ test.describe('Authentication Flows', () => {
   });
 
   test.describe('Protected Routes', () => {
+    test.use({ storageState: { cookies: [], origins: [] } });
     test('redirects unauthenticated users to signin', async ({ page }) => {
+      await page.context().clearCookies();
       await page.goto('/app/dashboard', { waitUntil: 'domcontentloaded' });
-
-      // Should redirect to signin
-      await page.waitForURL('**/auth/signin**', { timeout: 10000 });
+      await expect(page).toHaveURL(/\/auth\/signin/, { timeout: 10000 });
     });
   });
 });

@@ -20,7 +20,9 @@ import {
   UserGroupIcon,
   PencilSquareIcon,
   XCircleIcon,
+  LightBulbIcon,
 } from '@heroicons/react/24/outline';
+import { MatchingDashboard } from '@/components/matching';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -360,6 +362,24 @@ export default function OpportunityDetailPage() {
               </div>
               <p className="text-text-secondary">{opportunity.integrationPlan}</p>
             </div>
+
+            {/* AI Matching Section - Only for company owners */}
+            {isCompanyUser && isOwner && (
+              <div className="bg-bg-elevated rounded-lg border border-border p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <LightBulbIcon className="w-5 h-5 text-gold" />
+                  <h2 className="text-lg font-semibold text-text-primary">AI-Matched Teams</h2>
+                </div>
+                <p className="text-sm text-text-secondary mb-6">
+                  Discover teams that match the requirements for this opportunity based on their skills, experience, and availability.
+                </p>
+                <MatchingDashboard
+                  entityId={opportunity.id}
+                  entityType="company"
+                  entityName={opportunity.title}
+                />
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}

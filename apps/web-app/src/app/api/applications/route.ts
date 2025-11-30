@@ -3,6 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable } from '@/lib/api-helpers';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
 
 // GET /api/applications - List applications (teamId or opportunityId required)
@@ -51,6 +56,21 @@ export async function POST(request: NextRequest) {
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Demo user handling - simulate success
+    if (isDemoUser(session.user.email)) {
+      const body = await request.json();
+      const mockApplication = {
+        id: `demo-app-${Date.now()}`,
+        ...body,
+        status: 'submitted',
+        appliedBy: session.user.id,
+        appliedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+      };
+      console.log('[Demo] Application created:', mockApplication.id);
+      return NextResponse.json({ success: true, data: mockApplication }, { status: 201 });
     }
 
     const apiAvailable = await isApiServerAvailable();

@@ -15,6 +15,15 @@ import {
 import { MemberManagement } from './MemberManagement';
 import { MemberInvitation } from './MemberInvitation';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id?.startsWith('demo-');
+};
+
 interface TeamMember {
   id: string;
   name: string;
@@ -67,10 +76,61 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
 
+  // Demo mock team data
+  const getDemoTeamData = (): Team => ({
+    id: teamId,
+    name: 'Demo Engineering Team',
+    description: 'A high-performing engineering team ready for liftout opportunities.',
+    members: [
+      {
+        id: 'demo-member-1',
+        name: 'Alex Johnson',
+        role: 'Tech Lead',
+        experience: 8,
+        skills: ['TypeScript', 'React', 'Node.js', 'AWS'],
+        email: 'alex@example.com',
+        isLead: true,
+        joinedDate: '2022-01-15',
+        performance: { rating: 4.8, projects: 12, achievements: ['Led team migration to TypeScript'] },
+      },
+      {
+        id: 'demo-member-2',
+        name: 'Sarah Chen',
+        role: 'Senior Developer',
+        experience: 6,
+        skills: ['React', 'Python', 'PostgreSQL'],
+        email: 'sarah@example.com',
+        isLead: false,
+        joinedDate: '2022-03-20',
+        performance: { rating: 4.6, projects: 8, achievements: ['Optimized database queries'] },
+      },
+      {
+        id: 'demo-member-3',
+        name: 'Mike Davis',
+        role: 'Full Stack Developer',
+        experience: 4,
+        skills: ['JavaScript', 'React', 'Node.js'],
+        email: 'mike@example.com',
+        isLead: false,
+        joinedDate: '2022-06-10',
+        performance: { rating: 4.4, projects: 6, achievements: ['Built real-time notification system'] },
+      },
+    ],
+    createdBy: user?.id || 'demo-user',
+    openToLiftout: true,
+  });
+
   // Fetch team data
   const { data: team, isLoading, error } = useQuery({
     queryKey: ['team', teamId],
     queryFn: async () => {
+      // Demo user handling
+      if (isDemoUser(user?.email) || isDemoEntity(teamId)) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log('[Demo] Fetched team data');
+        return getDemoTeamData();
+      }
+
       const response = await fetch(`/api/teams/${teamId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch team');
@@ -83,6 +143,14 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
   // Update team members mutation
   const updateTeamMutation = useMutation({
     mutationFn: async (updatedMembers: TeamMember[]) => {
+      // Demo user handling
+      if (isDemoUser(user?.email) || isDemoEntity(teamId)) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log('[Demo] Updated team members:', updatedMembers);
+        toast.success('Team members updated');
+        return { team: { ...getDemoTeamData(), members: updatedMembers } };
+      }
+
       const response = await fetch(`/api/teams/${teamId}`, {
         method: 'PUT',
         headers: {

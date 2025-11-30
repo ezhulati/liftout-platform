@@ -3,6 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 // GET /api/opportunities - List opportunities (API only)
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -72,6 +77,22 @@ export async function POST(request: NextRequest) {
       { error: 'Only company users can create opportunities' },
       { status: 403 }
     );
+  }
+
+  // Demo user handling - simulate success
+  if (isDemoUser(session.user.email)) {
+    const body = await request.json();
+    const mockOpportunity = {
+      id: `demo-opp-${Date.now()}`,
+      ...body,
+      createdBy: session.user.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: 'active',
+      applications: [],
+    };
+    console.log('[Demo] Opportunity created:', mockOpportunity.id);
+    return NextResponse.json({ opportunity: mockOpportunity }, { status: 201 });
   }
 
   const apiAvailable = await isApiServerAvailable();

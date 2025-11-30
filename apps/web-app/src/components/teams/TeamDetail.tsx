@@ -26,6 +26,15 @@ import {
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id?.startsWith('demo-');
+};
+
 interface Team {
   id: string;
   name: string;
@@ -66,10 +75,44 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
   const queryClient = useQueryClient();
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
 
+  // Demo mock team data
+  const getDemoTeamData = (): Team => ({
+    id: teamId,
+    name: 'Demo Engineering Team',
+    description: 'A high-performing engineering team with 5 years of experience working together on enterprise software projects.',
+    size: 4,
+    yearsWorking: 5,
+    cohesionScore: 92,
+    successfulProjects: 12,
+    clientSatisfaction: 4.8,
+    openToLiftout: true,
+    createdBy: user?.id || 'demo-user',
+    createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date().toISOString(),
+    members: [
+      { id: 'demo-m1', name: 'Alex Johnson', role: 'Tech Lead', experience: 8, skills: ['TypeScript', 'React', 'Node.js'] },
+      { id: 'demo-m2', name: 'Sarah Chen', role: 'Senior Developer', experience: 6, skills: ['React', 'Python', 'PostgreSQL'] },
+      { id: 'demo-m3', name: 'Mike Davis', role: 'Full Stack Developer', experience: 4, skills: ['JavaScript', 'Node.js', 'AWS'] },
+      { id: 'demo-m4', name: 'Emily Brown', role: 'DevOps Engineer', experience: 5, skills: ['AWS', 'Docker', 'Kubernetes'] },
+    ],
+    achievements: ['Delivered 12 successful projects', 'Reduced deployment time by 70%', '98% client retention rate'],
+    industry: 'Enterprise Software',
+    location: 'San Francisco, CA',
+    availability: 'Available in 2-3 months',
+    compensation: { range: '$150k-$220k per person', equity: true, benefits: 'Full package' },
+  });
+
   // Fetch team data
   const { data: team, isLoading, error } = useQuery({
     queryKey: ['team', teamId],
     queryFn: async () => {
+      // Demo user handling
+      if (isDemoUser(user?.email) || isDemoEntity(teamId)) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log('[Demo] Fetched team data');
+        return getDemoTeamData();
+      }
+
       const response = await fetch(`/api/teams/${teamId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch team');
@@ -82,6 +125,13 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
   // Delete team mutation
   const deleteTeamMutation = useMutation({
     mutationFn: async () => {
+      // Demo user handling
+      if (isDemoUser(user?.email) || isDemoEntity(teamId)) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log('[Demo] Team deletion simulated');
+        return { success: true };
+      }
+
       const response = await fetch(`/api/teams/${teamId}`, {
         method: 'DELETE',
       });

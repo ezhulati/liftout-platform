@@ -4,6 +4,11 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 const settingsSchema = z.object({
   notifications: z.object({
     email: z.object({
@@ -187,6 +192,15 @@ export async function PUT(request: Request) {
         { error: 'Not authenticated' },
         { status: 401 }
       );
+    }
+
+    // Demo user handling - simulate success without database changes
+    if (isDemoUser(session.user.email)) {
+      console.log('[Demo] Settings update simulated for demo user');
+      return NextResponse.json({
+        success: true,
+        message: 'Settings updated successfully',
+      });
     }
 
     const body = await request.json();

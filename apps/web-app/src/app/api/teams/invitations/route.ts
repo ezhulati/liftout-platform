@@ -3,6 +3,11 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { emailInvitationService } from '@/lib/email-invitations';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 // GET /api/teams/invitations - Get user's invitations
 export async function GET(request: NextRequest) {
   try {
@@ -66,6 +71,16 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid role' },
         { status: 400 }
       );
+    }
+
+    // Demo user handling - simulate success
+    if (isDemoUser(session.user.email)) {
+      console.log('[Demo] Invitation sent to', inviteeEmail);
+      return NextResponse.json({
+        success: true,
+        invitationId: `demo-inv-${Date.now()}`,
+        message: 'Invitation sent successfully (demo mode)',
+      });
     }
 
     // TODO: Verify user has permission to invite to this team

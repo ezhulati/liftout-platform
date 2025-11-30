@@ -3,6 +3,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id?.startsWith('demo-');
+};
+
 // GET /api/opportunities/[id] - Get opportunity details (API only)
 export async function GET(
   request: NextRequest,
@@ -69,6 +78,13 @@ export async function PUT(
     );
   }
 
+  // Demo user handling - simulate success
+  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
+    const body = await request.json();
+    console.log(`[Demo] Opportunity ${id} updated`);
+    return NextResponse.json({ opportunity: { id, ...body, updatedAt: new Date().toISOString() } });
+  }
+
   const apiAvailable = await isApiServerAvailable();
   if (!apiAvailable) {
     return NextResponse.json(
@@ -128,6 +144,12 @@ export async function DELETE(
     );
   }
 
+  // Demo user handling - simulate success
+  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
+    console.log(`[Demo] Opportunity ${id} deleted`);
+    return NextResponse.json({ success: true, message: 'Opportunity deleted' });
+  }
+
   const apiAvailable = await isApiServerAvailable();
   if (!apiAvailable) {
     return NextResponse.json(
@@ -176,6 +198,13 @@ export async function PATCH(
       { error: 'Only company users can update opportunities' },
       { status: 403 }
     );
+  }
+
+  // Demo user handling - simulate success
+  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
+    const body = await request.json();
+    console.log(`[Demo] Opportunity ${id} status updated`);
+    return NextResponse.json({ opportunity: { id, ...body, updatedAt: new Date().toISOString() } });
   }
 
   const apiAvailable = await isApiServerAvailable();

@@ -351,3 +351,313 @@ export function useShareDocument() {
     },
   });
 }
+
+// ============================================
+// VERSION MANAGEMENT HOOKS
+// ============================================
+
+export interface DocumentVersion {
+  id: string;
+  versionNumber: number;
+  filename: string;
+  fileSize: number;
+  storageUrl: string;
+  checksum?: string;
+  changeDescription?: string;
+  uploadedBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+  };
+  createdAt: string;
+  isCurrent?: boolean;
+}
+
+interface VersionsResponse {
+  document: {
+    id: string;
+    name: string;
+    currentVersion: number;
+    uploadedBy: {
+      id: string;
+      firstName: string;
+      lastName: string;
+    };
+  };
+  versions: DocumentVersion[];
+  total: number;
+}
+
+interface UploadVersionData {
+  filename: string;
+  fileSize: number;
+  storageUrl: string;
+  checksum?: string;
+  changeDescription?: string;
+}
+
+// Fetch document versions
+export function useDocumentVersions(documentId: string, enabled = true) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['document-versions', documentId],
+    queryFn: async () => {
+      // Demo document handling
+      if (documentId.startsWith('demo-') || documentId.startsWith('doc_')) {
+        return getDemoVersions(documentId);
+      }
+
+      const response = await fetch(`/api/documents/${documentId}/versions`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch versions');
+      }
+      const data = await response.json();
+      return data.data as VersionsResponse;
+    },
+    enabled: enabled && !!documentId && !!session,
+    staleTime: 30000,
+  });
+}
+
+// Fetch single version
+export function useDocumentVersion(documentId: string, versionId: string, enabled = true) {
+  const { data: session } = useSession();
+
+  return useQuery({
+    queryKey: ['document-version', documentId, versionId],
+    queryFn: async () => {
+      const response = await fetch(`/api/documents/${documentId}/versions/${versionId}`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch version');
+      }
+      const data = await response.json();
+      return data.data as DocumentVersion & {
+        document: { id: string; name: string; currentVersion: number };
+      };
+    },
+    enabled: enabled && !!documentId && !!versionId && !!session,
+    staleTime: 60000,
+  });
+}
+
+// Upload new version
+export function useUploadVersion() {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
+  return useMutation({
+    mutationFn: async ({
+      documentId,
+      ...data
+    }: UploadVersionData & { documentId: string }) => {
+      // Demo document handling
+      if (isDemoUser(session?.user?.email) || documentId.startsWith('demo-') || documentId.startsWith('doc_')) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const newVersion: DocumentVersion = {
+          id: `ver-${Date.now()}`,
+          versionNumber: Math.floor(Math.random() * 5) + 2,
+          filename: data.filename,
+          fileSize: data.fileSize,
+          storageUrl: data.storageUrl,
+          changeDescription: data.changeDescription || 'New version uploaded',
+          uploadedBy: {
+            id: session?.user?.id || 'demo-user',
+            firstName: session?.user?.firstName || 'Demo',
+            lastName: session?.user?.lastName || 'User',
+          },
+          createdAt: new Date().toISOString(),
+          isCurrent: true,
+        };
+        console.log(`[Demo] Uploaded new version for document ${documentId}`);
+        return { version: newVersion };
+      }
+
+      const response = await fetch(`/api/documents/${documentId}/versions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to upload version');
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['document-versions', variables.documentId] });
+      queryClient.invalidateQueries({ queryKey: ['document', variables.documentId] });
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+    },
+  });
+}
+
+// Restore a previous version
+export function useRestoreVersion() {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
+  return useMutation({
+    mutationFn: async ({
+      documentId,
+      versionId,
+    }: {
+      documentId: string;
+      versionId: string;
+    }) => {
+      // Demo document handling
+      if (isDemoUser(session?.user?.email) || documentId.startsWith('demo-') || documentId.startsWith('doc_')) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        console.log(`[Demo] Restored version ${versionId} for document ${documentId}`);
+        return { success: true, restoredFromVersion: parseInt(versionId.split('-')[1] || '1') };
+      }
+
+      const response = await fetch(`/api/documents/${documentId}/versions/${versionId}`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to restore version');
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['document-versions', variables.documentId] });
+      queryClient.invalidateQueries({ queryKey: ['document', variables.documentId] });
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+    },
+  });
+}
+
+// Demo versions generator
+function getDemoVersions(documentId: string): VersionsResponse {
+  const versions: DocumentVersion[] = [
+    {
+      id: 'ver-3',
+      versionNumber: 3,
+      filename: 'document-v3.pdf',
+      fileSize: 2500000,
+      storageUrl: '#',
+      changeDescription: 'Added performance metrics section',
+      uploadedBy: {
+        id: '1',
+        firstName: 'Demo',
+        lastName: 'User',
+      },
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      isCurrent: true,
+    },
+    {
+      id: 'ver-2',
+      versionNumber: 2,
+      filename: 'document-v2.pdf',
+      fileSize: 2200000,
+      storageUrl: '#',
+      changeDescription: 'Updated team composition details',
+      uploadedBy: {
+        id: '1',
+        firstName: 'Demo',
+        lastName: 'User',
+      },
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      isCurrent: false,
+    },
+    {
+      id: 'ver-1',
+      versionNumber: 1,
+      filename: 'document-v1.pdf',
+      fileSize: 1800000,
+      storageUrl: '#',
+      changeDescription: 'Initial version',
+      uploadedBy: {
+        id: '1',
+        firstName: 'Demo',
+        lastName: 'User',
+      },
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+      isCurrent: false,
+    },
+  ];
+
+  return {
+    document: {
+      id: documentId,
+      name: 'TechFlow Team Profile.pdf',
+      currentVersion: 3,
+      uploadedBy: {
+        id: '1',
+        firstName: 'Demo',
+        lastName: 'User',
+      },
+    },
+    versions,
+    total: versions.length,
+  };
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Format file size
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Format relative time
+export function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
+}
+
+// Get document type label
+export function getDocumentTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    nda: 'NDA',
+    contract: 'Contract',
+    term_sheet: 'Term Sheet',
+    due_diligence: 'Due Diligence',
+    team_profile: 'Team Profile',
+    performance_report: 'Performance Report',
+    compliance: 'Compliance',
+    reference: 'Reference',
+    proposal: 'Proposal',
+    presentation: 'Presentation',
+    other: 'Other',
+    legal_document: 'Legal Document',
+  };
+  return labels[type] || type;
+}
+
+// Get access level badge variant
+export function getAccessLevelVariant(level: string): 'info' | 'warning' | 'error' | 'success' {
+  switch (level) {
+    case 'public': return 'success';
+    case 'internal': return 'info';
+    case 'confidential': return 'warning';
+    case 'restricted':
+    case 'legal_only': return 'error';
+    default: return 'info';
+  }
+}

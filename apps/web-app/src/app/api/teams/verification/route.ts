@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 const API_URL = process.env.API_SERVER_URL || 'http://localhost:8000/api';
 
 export async function POST(request: NextRequest) {
@@ -9,6 +14,17 @@ export async function POST(request: NextRequest) {
 
     if (!session || !session.accessToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Demo user handling - simulate success
+    if (isDemoUser(session.user?.email)) {
+        console.log('[Demo] Verification documents submitted');
+        return NextResponse.json({
+            success: true,
+            verificationId: `demo-verify-${Date.now()}`,
+            status: 'pending',
+            message: 'Verification documents submitted successfully (demo mode)',
+        }, { status: 201 });
     }
 
     try {

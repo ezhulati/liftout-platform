@@ -19,11 +19,82 @@ import {
 
 const SETTINGS_COLLECTION = 'userSettings';
 
+// Helper to check if this is a demo user
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-');
+};
+
 export class SettingsService {
+  private readonly DEMO_STORAGE_KEY = 'demo_user_settings';
+
+  /**
+   * Get demo user settings from localStorage
+   */
+  private getDemoSettings(userId: string): UserSettings | null {
+    if (typeof window === 'undefined') return null;
+    try {
+      const stored = localStorage.getItem(`${this.DEMO_STORAGE_KEY}_${userId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Convert date strings back to Date objects
+        return {
+          ...parsed,
+          security: {
+            ...parsed.security,
+            passwordLastChanged: parsed.security?.passwordLastChanged
+              ? new Date(parsed.security.passwordLastChanged)
+              : null,
+            activeSessions: (parsed.security?.activeSessions || []).map((s: any) => ({
+              ...s,
+              lastActive: new Date(s.lastActive),
+            })),
+          },
+          account: {
+            ...parsed.account,
+            memberSince: new Date(parsed.account?.memberSince || Date.now()),
+            lastLogin: parsed.account?.lastLogin ? new Date(parsed.account.lastLogin) : null,
+          },
+        };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Save demo user settings to localStorage
+   */
+  private saveDemoSettings(userId: string, settings: UserSettings): void {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(`${this.DEMO_STORAGE_KEY}_${userId}`, JSON.stringify(settings));
+      console.log('[Demo] Saved settings to localStorage');
+    } catch (error) {
+      console.error('[Demo] Error saving settings to localStorage:', error);
+    }
+  }
+
   /**
    * Get user settings from Firestore
    */
   async getUserSettings(userId: string): Promise<UserSettings | null> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const demoSettings = this.getDemoSettings(userId);
+      if (demoSettings) {
+        console.log('[Demo] Retrieved settings from localStorage');
+        return demoSettings;
+      }
+      // Return default settings for demo users
+      console.log('[Demo] Returning default settings');
+      return { ...DEFAULT_USER_SETTINGS };
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -45,6 +116,13 @@ export class SettingsService {
    * Create or update user settings
    */
   async saveUserSettings(userId: string, settings: UserSettings): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      this.saveDemoSettings(userId, settings);
+      console.log('[Demo] Saved user settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       await setDoc(docRef, {
@@ -64,6 +142,33 @@ export class SettingsService {
     userId: string,
     notifications: Partial<NotificationSettings>
   ): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const currentSettings = this.getDemoSettings(userId) || { ...DEFAULT_USER_SETTINGS };
+      const updatedSettings: UserSettings = {
+        ...currentSettings,
+        notifications: {
+          ...currentSettings.notifications,
+          ...notifications,
+          email: {
+            ...currentSettings.notifications.email,
+            ...notifications.email,
+          },
+          push: {
+            ...currentSettings.notifications.push,
+            ...notifications.push,
+          },
+          inApp: {
+            ...currentSettings.notifications.inApp,
+            ...notifications.inApp,
+          },
+        },
+      };
+      this.saveDemoSettings(userId, updatedSettings);
+      console.log('[Demo] Updated notification settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -112,6 +217,21 @@ export class SettingsService {
     userId: string,
     privacy: Partial<PrivacySettings>
   ): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const currentSettings = this.getDemoSettings(userId) || { ...DEFAULT_USER_SETTINGS };
+      const updatedSettings: UserSettings = {
+        ...currentSettings,
+        privacy: {
+          ...currentSettings.privacy,
+          ...privacy,
+        },
+      };
+      this.saveDemoSettings(userId, updatedSettings);
+      console.log('[Demo] Updated privacy settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -147,6 +267,21 @@ export class SettingsService {
     userId: string,
     security: Partial<SecuritySettings>
   ): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const currentSettings = this.getDemoSettings(userId) || { ...DEFAULT_USER_SETTINGS };
+      const updatedSettings: UserSettings = {
+        ...currentSettings,
+        security: {
+          ...currentSettings.security,
+          ...security,
+        },
+      };
+      this.saveDemoSettings(userId, updatedSettings);
+      console.log('[Demo] Updated security settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -182,6 +317,21 @@ export class SettingsService {
     userId: string,
     theme: Partial<ThemeSettings>
   ): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const currentSettings = this.getDemoSettings(userId) || { ...DEFAULT_USER_SETTINGS };
+      const updatedSettings: UserSettings = {
+        ...currentSettings,
+        theme: {
+          ...currentSettings.theme,
+          ...theme,
+        },
+      };
+      this.saveDemoSettings(userId, updatedSettings);
+      console.log('[Demo] Updated theme settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -217,6 +367,21 @@ export class SettingsService {
     userId: string,
     account: Partial<AccountSettings>
   ): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      const currentSettings = this.getDemoSettings(userId) || { ...DEFAULT_USER_SETTINGS };
+      const updatedSettings: UserSettings = {
+        ...currentSettings,
+        account: {
+          ...currentSettings.account,
+          ...account,
+        },
+      };
+      this.saveDemoSettings(userId, updatedSettings);
+      console.log('[Demo] Updated account settings');
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       const docSnap = await getDoc(docRef);
@@ -249,6 +414,15 @@ export class SettingsService {
    * Delete user settings (for account deletion)
    */
   async deleteUserSettings(userId: string): Promise<void> {
+    // Demo user handling
+    if (isDemoEntity(userId)) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(`${this.DEMO_STORAGE_KEY}_${userId}`);
+        console.log('[Demo] Deleted user settings from localStorage');
+      }
+      return;
+    }
+
     try {
       const docRef = doc(db, SETTINGS_COLLECTION, userId);
       await deleteDoc(docRef);
@@ -275,7 +449,9 @@ export class SettingsService {
       },
     };
 
+    // Demo user handling - saveUserSettings already handles demo users
     await this.saveUserSettings(userId, settings);
+    console.log(isDemoEntity(userId) ? '[Demo] Initialized user settings' : 'Initialized user settings');
     return settings;
   }
 

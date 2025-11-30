@@ -3,6 +3,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { isApiServerAvailable } from '@/lib/api-helpers';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id?.startsWith('demo-');
+};
+
 const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
 
 export async function GET(
@@ -53,6 +62,16 @@ export async function PUT(
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Demo user handling - simulate success
+    if (isDemoUser(session.user.email) || isDemoEntity(id)) {
+      const body = await request.json();
+      console.log(`[Demo] Application ${id} updated`);
+      return NextResponse.json({
+        success: true,
+        data: { id, ...body, updatedAt: new Date().toISOString() },
+      });
     }
 
     const apiAvailable = await isApiServerAvailable();

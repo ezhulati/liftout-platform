@@ -5,6 +5,11 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 const passwordChangeSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),
   newPassword: z.string().min(8, 'New password must be at least 8 characters'),
@@ -19,6 +24,15 @@ export async function POST(request: Request) {
         { error: 'You must be logged in to change your password' },
         { status: 401 }
       );
+    }
+
+    // Demo user handling - simulate success without database changes
+    if (isDemoUser(session.user.email)) {
+      console.log('[Demo] Password change simulated for demo user');
+      return NextResponse.json({
+        success: true,
+        message: 'Password updated successfully',
+      });
     }
 
     const body = await request.json();
