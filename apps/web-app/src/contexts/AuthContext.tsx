@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Timestamp } from 'firebase/firestore';
 import { User } from '@/types/firebase';
 
 interface AuthContextType {

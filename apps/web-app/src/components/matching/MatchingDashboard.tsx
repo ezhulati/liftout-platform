@@ -1,15 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   AdjustmentsHorizontalIcon,
   SparklesIcon,
   LightBulbIcon,
   ArrowPathIcon,
+  ArrowsRightLeftIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Button, EmptyState, Skeleton } from '@/components/ui';
 import { TeamMatchCard, OpportunityMatchCard } from './MatchScoreCard';
+import { TeamComparison } from '@/components/teams/TeamComparison';
 import {
   useTeamMatches,
   useOpportunityMatches,
@@ -35,6 +38,8 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
     limit: 10,
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedTeamIds, setSelectedTeamIds] = useState<string[]>([]);
+  const [showComparison, setShowComparison] = useState(false);
 
   // Use the appropriate hook based on entity type
   const teamMatchesQuery = useTeamMatches({
@@ -88,6 +93,49 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
     window.location.href = `/app/opportunities/${opportunityId}/apply`;
   };
 
+  // Team comparison functionality (for company users)
+  const handleToggleTeamSelection = (teamId: string) => {
+    setSelectedTeamIds(prev =>
+      prev.includes(teamId)
+        ? prev.filter(id => id !== teamId)
+        : prev.length < 4 ? [...prev, teamId] : prev
+    );
+  };
+
+  const handleRemoveFromComparison = (teamId: string) => {
+    setSelectedTeamIds(prev => prev.filter(id => id !== teamId));
+  };
+
+  // Transform selected teams for comparison component
+  const comparisonTeams = useMemo(() => {
+    if (entityType !== 'company') return [];
+    const teamMatches = matches as TeamMatch[];
+    return selectedTeamIds
+      .map(id => teamMatches.find(m => m.team.id === id))
+      .filter((m): m is TeamMatch => m !== undefined)
+      .map(match => ({
+        id: match.team.id,
+        name: match.team.name,
+        matchScore: match.score.total,
+        size: match.team.memberCount || match.team.size || 0,
+        yearsWorking: match.team.yearsWorkingTogether || 0,
+        industry: match.team.industry || 'Not specified',
+        location: match.team.location || 'Not specified',
+        skills: match.team.skills || [],
+        achievements: [],
+        compensation: {
+          min: 0,
+          max: 0,
+        },
+        availability: match.team.availabilityStatus || 'Not specified',
+        members: [],
+        strengths: match.score.strengths || [],
+        considerations: match.score.concerns || [],
+        verificationStatus: (match.team.verificationStatus as 'verified' | 'pending' | 'unverified') || 'unverified',
+        previousLiftouts: 0,
+      }));
+  }, [entityType, matches, selectedTeamIds]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -109,6 +157,21 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
         </div>
 
         <div className="flex items-center gap-2">
+          {entityType === 'company' && selectedTeamIds.length >= 2 && (
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<ArrowsRightLeftIcon className="h-4 w-4" />}
+              onClick={() => setShowComparison(!showComparison)}
+            >
+              Compare ({selectedTeamIds.length})
+            </Button>
+          )}
+          {entityType === 'company' && selectedTeamIds.length > 0 && selectedTeamIds.length < 2 && (
+            <span className="text-sm text-text-tertiary">
+              Select {2 - selectedTeamIds.length} more to compare
+            </span>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -128,6 +191,29 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
           </Button>
         </div>
       </div>
+
+      {/* Team Comparison Panel */}
+      {showComparison && entityType === 'company' && comparisonTeams.length >= 2 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-text-primary">Team Comparison</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              leftIcon={<XMarkIcon className="h-4 w-4" />}
+              onClick={() => setShowComparison(false)}
+            >
+              Close
+            </Button>
+          </div>
+          <TeamComparison
+            teams={comparisonTeams}
+            onRemoveTeam={handleRemoveFromComparison}
+            onViewTeam={(teamId) => window.location.href = `/app/teams/${teamId}`}
+            onContactTeam={handleExpressInterest}
+          />
+        </div>
+      )}
 
       {/* Filter Panel */}
       {showFilters && (
@@ -252,12 +338,26 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
             ) : entityType === 'company' ? (
               // Show team matches for companies
               (matches as TeamMatch[]).map((match, index) => (
-                <TeamMatchCard
-                  key={match.team.id}
-                  match={match}
-                  rank={index + 1}
-                  onExpressInterest={handleExpressInterest}
-                />
+                <div key={match.team.id} className="relative">
+                  {/* Selection checkbox for comparison */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedTeamIds.includes(match.team.id)}
+                        onChange={() => handleToggleTeamSelection(match.team.id)}
+                        disabled={!selectedTeamIds.includes(match.team.id) && selectedTeamIds.length >= 4}
+                        className="rounded border-border text-navy focus:ring-navy h-4 w-4"
+                      />
+                      <span className="text-xs text-text-tertiary">Compare</span>
+                    </label>
+                  </div>
+                  <TeamMatchCard
+                    match={match}
+                    rank={index + 1}
+                    onExpressInterest={handleExpressInterest}
+                  />
+                </div>
               ))
             ) : (
               // Show opportunity matches for teams
