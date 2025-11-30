@@ -69,9 +69,12 @@ export function MatchingDashboard({ entityId, entityType, entityName }: Matching
     ? teamMatchesQuery.refetch
     : opportunityMatchesQuery.refetch;
 
-  const matches = entityType === 'company'
-    ? teamMatchesQuery.data?.matches || []
-    : opportunityMatchesQuery.data?.matches || [];
+  // Memoize matches to prevent unnecessary re-renders
+  const matches = useMemo(() => {
+    return entityType === 'company'
+      ? teamMatchesQuery.data?.matches || []
+      : opportunityMatchesQuery.data?.matches || [];
+  }, [entityType, teamMatchesQuery.data?.matches, opportunityMatchesQuery.data?.matches]);
 
   const total = entityType === 'company'
     ? teamMatchesQuery.data?.total || 0

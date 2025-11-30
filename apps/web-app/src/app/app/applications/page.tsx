@@ -62,8 +62,12 @@ function getStatusIcon(status: string) {
 export default function ApplicationsPage() {
   const { data: session } = useSession();
   const { data: applicationsData, isLoading, error } = useApplications();
-  const applications = applicationsData?.data || [];
   const [showInterviews, setShowInterviews] = useState(true);
+
+  // Memoize applications array to prevent unnecessary re-renders
+  const applications = useMemo(() => {
+    return applicationsData?.data || [];
+  }, [applicationsData?.data]);
 
   // Transform applications with scheduled interviews into Interview format
   const interviews = useMemo(() => {
