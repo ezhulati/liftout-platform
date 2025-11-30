@@ -73,7 +73,7 @@ export function RoleChangeNotification({
     try {
       setLoading(true);
       const roleHistory = await teamPermissionService.getRoleChangeHistory(teamId);
-      
+
       // Sort by most recent first
       const sortedHistory = roleHistory.sort(
         (a, b) => {
@@ -86,11 +86,40 @@ export function RoleChangeNotification({
       // If not showing all, limit the results
       const displayHistory = showAllHistory ? sortedHistory : sortedHistory.slice(0, limit);
 
-      // TODO: Enhance with user name lookups
+      // Collect unique user IDs for lookup
+      const userIds = new Set<string>();
+      displayHistory.forEach(item => {
+        userIds.add(item.userId);
+        if (item.changedBy) userIds.add(item.changedBy);
+      });
+
+      // Fetch user names from API
+      let userNameMap: Record<string, string> = {};
+      if (userIds.size > 0) {
+        try {
+          const response = await fetch(`/api/teams/${teamId}/members`);
+          if (response.ok) {
+            const data = await response.json();
+            const members = data.members || [];
+            members.forEach((member: { userId: string; user?: { firstName?: string; lastName?: string; email?: string } }) => {
+              if (member.user) {
+                const name = `${member.user.firstName || ''} ${member.user.lastName || ''}`.trim();
+                userNameMap[member.userId] = name || member.user.email || 'Unknown User';
+              }
+            });
+          }
+        } catch (e) {
+          console.error('Error fetching user names:', e);
+        }
+      }
+
+      // Enhance history with user names
       const historyWithNames = displayHistory.map(item => ({
         ...item,
-        userName: `User ${item.userId.slice(-4)}`, // Placeholder
-        changedByName: item.changedBy === user?.id ? 'You' : `User ${item.changedBy.slice(-4)}`
+        userName: userNameMap[item.userId] || 'Team Member',
+        changedByName: item.changedBy === user?.id
+          ? 'You'
+          : userNameMap[item.changedBy] || 'System'
       }));
 
       setHistory(historyWithNames);

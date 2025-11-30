@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { emailInvitationService } from '@/lib/email-invitations';
+import { prisma } from '@/lib/prisma';
 
 // Demo user detection helper
 const isDemoUser = (email: string | null | undefined): boolean => {
@@ -83,7 +84,31 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Verify user has permission to invite to this team
+    // Verify user has permission to invite to this team
+    const userId = (session.user as any).id;
+    if (userId) {
+      const teamMember = await prisma.teamMember.findFirst({
+        where: {
+          teamId,
+          userId,
+          status: 'active',
+        },
+      });
+
+      if (!teamMember) {
+        return NextResponse.json(
+          { error: 'You are not a member of this team' },
+          { status: 403 }
+        );
+      }
+
+      if (!teamMember.isAdmin && !teamMember.isLead) {
+        return NextResponse.json(
+          { error: 'Only team admins and leads can send invitations' },
+          { status: 403 }
+        );
+      }
+    }
 
     const invitationData = {
       teamId,

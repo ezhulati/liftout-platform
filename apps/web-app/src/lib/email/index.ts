@@ -1,7 +1,18 @@
 import { Resend } from 'resend';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-initialize Resend client to avoid build-time errors
+let resendClient: Resend | null = null;
+const getResend = () => {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn('RESEND_API_KEY not configured - emails will be skipped');
+      return null;
+    }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
+};
 
 // From email address - use a verified domain in production
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Liftout <noreply@liftout.com>';
@@ -28,6 +39,12 @@ export async function sendTeamInvitationEmail(params: {
   const invitationUrl = `${APP_URL}/app/invitations/${invitationId}`;
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Team invitation to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -137,6 +154,12 @@ export async function sendApplicationStatusEmail(params: {
   const config = statusConfig[status];
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Application status to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -203,6 +226,12 @@ export async function sendNewMessageEmail(params: {
   const conversationUrl = `${APP_URL}/app/messages?conversation=${conversationId}`;
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] New message to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -275,6 +304,12 @@ export async function sendExpressionOfInterestEmail(params: {
     : `${interestedPartyName} is interested in your opportunity`;
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Expression of interest to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -343,6 +378,12 @@ export async function sendPasswordResetEmail(params: {
   const resetUrl = `${APP_URL}/auth/reset-password?token=${resetToken}`;
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Password reset to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -409,6 +450,12 @@ export async function sendVerificationEmail(params: {
   const verifyUrl = `${APP_URL}/auth/verify-email?token=${verificationToken}`;
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Verification to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -473,6 +520,12 @@ export async function sendWelcomeEmail(params: {
   const isTeamUser = userType === 'individual';
 
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Welcome to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
@@ -543,6 +596,81 @@ export async function sendWelcomeEmail(params: {
   }
 }
 
+// ============================================
+// ACCOUNT DELETION CONFIRMATION EMAIL
+// ============================================
+
+export async function sendAccountDeletionEmail(params: {
+  to: string;
+  recipientName: string;
+}): Promise<EmailResult> {
+  const { to, recipientName } = params;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Account deletion to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: 'Your Liftout account has been deleted',
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #6b7280; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px;">Account Deleted</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
+              <p style="font-size: 16px;">Hi ${recipientName},</p>
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                This email confirms that your Liftout account has been successfully deleted as requested.
+              </p>
+              <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #333;">What's been removed:</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #666;">
+                  <li>Your profile information</li>
+                  <li>Team memberships</li>
+                  <li>Application history</li>
+                  <li>Messages and conversations</li>
+                  <li>All associated data</li>
+                </ul>
+              </div>
+              <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                If you didn't request this deletion or believe this was done in error, please contact our support team immediately.
+              </p>
+              <p style="font-size: 14px; color: #666;">
+                We're sorry to see you go. If you ever want to return, you're welcome to create a new account at any time.
+              </p>
+            </div>
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p>This is an automated message. Please do not reply to this email.</p>
+              <p>&copy; ${new Date().getFullYear()} Liftout. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send account deletion email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending account deletion email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
 // Export all functions
 export const emailService = {
   sendTeamInvitationEmail,
@@ -552,4 +680,5 @@ export const emailService = {
   sendPasswordResetEmail,
   sendVerificationEmail,
   sendWelcomeEmail,
+  sendAccountDeletionEmail,
 };

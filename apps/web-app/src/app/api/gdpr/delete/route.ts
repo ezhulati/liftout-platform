@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
+import { sendAccountDeletionEmail } from '@/lib/email';
 
 // POST /api/gdpr/delete - Request account deletion
 export async function POST(request: NextRequest) {
@@ -25,6 +26,19 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
+
+    // Store original email and name before deletion for confirmation email
+    const originalUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, firstName: true, lastName: true },
+    });
+
+    if (!originalUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const originalEmail = originalUser.email;
+    const originalName = `${originalUser.firstName || ''} ${originalUser.lastName || ''}`.trim() || 'User';
 
     // Start deletion process in a transaction
     await prisma.$transaction(async (tx) => {
@@ -161,8 +175,17 @@ export async function POST(request: NextRequest) {
     // Log the deletion for compliance
     console.log(`User account deleted: ${userId} at ${new Date().toISOString()}`);
 
-    // TODO: Send confirmation email to user's original email
-    // This would require storing the email temporarily before deletion
+    // Send confirmation email to user's original email
+    try {
+      await sendAccountDeletionEmail({
+        to: originalEmail,
+        recipientName: originalName,
+      });
+      console.log(`Deletion confirmation email sent to: ${originalEmail}`);
+    } catch (emailError) {
+      // Don't fail the request if email fails - deletion is already complete
+      console.error('Failed to send deletion confirmation email:', emailError);
+    }
 
     return NextResponse.json({
       success: true,
