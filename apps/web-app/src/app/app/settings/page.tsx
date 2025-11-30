@@ -10,7 +10,8 @@ import {
   ShieldCheckIcon,
   EyeIcon,
   SwatchIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  CircleStackIcon,
 } from '@heroicons/react/24/outline';
 import { ProfileSettings } from '@/components/settings/ProfileSettings';
 import { NotificationSettings } from '@/components/settings/NotificationSettings';
@@ -18,6 +19,7 @@ import { PrivacySettings } from '@/components/settings/PrivacySettings';
 import { SecuritySettings } from '@/components/settings/SecuritySettings';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
 import { AccountSettings } from '@/components/settings/AccountSettings';
+import { DataManagementSettings } from '@/components/settings/DataManagementSettings';
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
@@ -31,6 +33,7 @@ export default function SettingsPage() {
     { id: 'privacy', name: 'Privacy', icon: EyeIcon, description: 'Visibility and data settings' },
     { id: 'security', name: 'Security', icon: ShieldCheckIcon, description: 'Password and login' },
     { id: 'theme', name: 'Appearance', icon: SwatchIcon, description: 'Theme and display' },
+    { id: 'data', name: 'Data', icon: CircleStackIcon, description: 'Export and delete your data' },
     { id: 'account', name: 'Account', icon: Cog6ToothIcon, description: 'Plan and account actions' },
   ];
 
@@ -120,6 +123,7 @@ export default function SettingsPage() {
           {activeTab === 'privacy' && <PrivacySettings />}
           {activeTab === 'security' && <SecuritySettings />}
           {activeTab === 'theme' && <ThemeSettings />}
+          {activeTab === 'data' && <DataManagementSettings />}
           {activeTab === 'account' && <AccountSettings />}
         </main>
       </div>

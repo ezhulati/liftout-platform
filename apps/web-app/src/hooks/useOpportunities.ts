@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 interface Opportunity {
   id: string;
   title: string;
@@ -103,9 +108,27 @@ export function useOpportunities(filters?: OpportunitiesFilters) {
 
 export function useCreateOpportunity() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (opportunityData: CreateOpportunityData) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockOpportunity = {
+          id: `demo-opp-${Date.now()}`,
+          ...opportunityData,
+          type: opportunityData.type || 'liftout',
+          createdBy: session?.user?.id || 'demo-user',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          status: 'active',
+          applications: [],
+        } as Opportunity;
+        console.log('[Demo] Created opportunity:', mockOpportunity.id);
+        return mockOpportunity;
+      }
+
       const response = await fetch('/api/opportunities', {
         method: 'POST',
         headers: {
@@ -131,9 +154,17 @@ export function useCreateOpportunity() {
 
 export function useUpdateOpportunity() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Opportunity> & { id: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || id.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Updated opportunity ${id}`);
+        return { id, ...updates, updatedAt: new Date().toISOString() } as Opportunity;
+      }
+
       const response = await fetch(`/api/opportunities/${id}`, {
         method: 'PUT',
         headers: {
@@ -158,9 +189,17 @@ export function useUpdateOpportunity() {
 
 export function useDeleteOpportunity() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (opportunityId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || opportunityId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Deleted opportunity ${opportunityId}`);
+        return { id: opportunityId };
+      }
+
       const response = await fetch(`/api/opportunities/${opportunityId}`, {
         method: 'DELETE',
       });

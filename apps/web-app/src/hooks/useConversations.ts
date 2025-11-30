@@ -3,6 +3,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 // Types
 export interface Participant {
   id: string;
@@ -206,9 +211,31 @@ export function useUnreadCount() {
  */
 export function useCreateConversation() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (input: CreateConversationInput) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockConversation: Conversation = {
+          id: `demo-conv-${Date.now()}`,
+          teamId: input.teamId,
+          companyId: input.companyId,
+          opportunityId: input.opportunityId,
+          subject: input.subject,
+          status: 'active',
+          isAnonymous: false,
+          messageCount: input.initialMessage ? 1 : 0,
+          unreadCounts: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          participants: [],
+        };
+        console.log('[Demo] Created conversation:', mockConversation.id);
+        return mockConversation;
+      }
+
       const data = await fetchWithAuth('/api/conversations', {
         method: 'POST',
         body: JSON.stringify(input),
@@ -226,12 +253,31 @@ export function useCreateConversation() {
  */
 export function useSendMessage() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
       conversationId,
       ...input
     }: SendMessageInput & { conversationId: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || conversationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        const mockMessage: Message = {
+          id: `demo-msg-${Date.now()}`,
+          conversationId,
+          senderId: session?.user?.id || 'demo-user',
+          content: input.content,
+          messageType: input.messageType || 'text',
+          attachments: input.attachments || [],
+          sentAt: new Date().toISOString(),
+          editedAt: null,
+          deletedAt: null,
+        };
+        console.log('[Demo] Sent message:', mockMessage.id);
+        return mockMessage;
+      }
+
       const data = await fetchWithAuth(`/api/conversations/${conversationId}/messages`, {
         method: 'POST',
         body: JSON.stringify(input),
@@ -250,6 +296,7 @@ export function useSendMessage() {
  */
 export function useEditMessage() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -261,6 +308,13 @@ export function useEditMessage() {
       messageId: string;
       content: string;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || messageId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Edited message ${messageId}`);
+        return { id: messageId, content, editedAt: new Date().toISOString() } as Message;
+      }
+
       const data = await fetchWithAuth(
         `/api/conversations/${conversationId}/messages/${messageId}`,
         {
@@ -281,6 +335,7 @@ export function useEditMessage() {
  */
 export function useDeleteMessage() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -290,6 +345,13 @@ export function useDeleteMessage() {
       conversationId: string;
       messageId: string;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || messageId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Deleted message ${messageId}`);
+        return;
+      }
+
       await fetchWithAuth(`/api/conversations/${conversationId}/messages/${messageId}`, {
         method: 'DELETE',
       });
@@ -305,9 +367,17 @@ export function useDeleteMessage() {
  */
 export function useMarkAsRead() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (conversationId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || conversationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        console.log(`[Demo] Marked conversation ${conversationId} as read`);
+        return;
+      }
+
       await fetchWithAuth(`/api/conversations/${conversationId}/read`, {
         method: 'POST',
       });
@@ -324,9 +394,17 @@ export function useMarkAsRead() {
  */
 export function useArchiveConversation() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (conversationId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || conversationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Archived conversation ${conversationId}`);
+        return;
+      }
+
       await fetchWithAuth(`/api/conversations/${conversationId}`, {
         method: 'DELETE',
       });
@@ -342,6 +420,7 @@ export function useArchiveConversation() {
  */
 export function useAddParticipant() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -351,6 +430,13 @@ export function useAddParticipant() {
       conversationId: string;
       userId: string;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || conversationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Added participant ${userId} to conversation ${conversationId}`);
+        return { success: true };
+      }
+
       const data = await fetchWithAuth(`/api/conversations/${conversationId}/participants`, {
         method: 'POST',
         body: JSON.stringify({ userId }),
@@ -368,6 +454,7 @@ export function useAddParticipant() {
  */
 export function useRemoveParticipant() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -377,6 +464,13 @@ export function useRemoveParticipant() {
       conversationId: string;
       userId: string;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || conversationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Removed participant ${userId} from conversation ${conversationId}`);
+        return;
+      }
+
       await fetchWithAuth(`/api/conversations/${conversationId}/participants/${userId}`, {
         method: 'DELETE',
       });

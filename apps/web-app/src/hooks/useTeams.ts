@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 interface Team {
   id: string;
   name: string;
@@ -108,9 +113,37 @@ export function useTeams(filters?: TeamsFilters) {
 
 export function useCreateTeam() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (teamData: CreateTeamData) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockTeam: Team = {
+          id: `demo-team-${Date.now()}`,
+          name: teamData.name,
+          description: teamData.description,
+          size: teamData.members.length,
+          yearsWorking: 0,
+          cohesionScore: 0,
+          successfulProjects: 0,
+          clientSatisfaction: 0,
+          openToLiftout: true,
+          createdBy: session?.user?.id || 'demo-user',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          members: teamData.members.map((m, i) => ({ ...m, id: `demo-member-${i}` })),
+          achievements: [],
+          industry: teamData.industry || '',
+          location: teamData.location || '',
+          availability: 'available',
+          compensation: teamData.compensation || { range: '', equity: false, benefits: '' },
+        };
+        console.log('[Demo] Created team:', mockTeam.id);
+        return mockTeam;
+      }
+
       const response = await fetch('/api/teams', {
         method: 'POST',
         headers: {
@@ -136,9 +169,17 @@ export function useCreateTeam() {
 
 export function useUpdateTeam() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Team> & { id: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || id.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Updated team ${id}`);
+        return { id, ...updates, updatedAt: new Date().toISOString() } as Team;
+      }
+
       const response = await fetch(`/api/teams/${id}`, {
         method: 'PUT',
         headers: {
@@ -163,9 +204,17 @@ export function useUpdateTeam() {
 
 export function useDeleteTeam() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (teamId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || teamId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Deleted team ${teamId}`);
+        return { id: teamId };
+      }
+
       const response = await fetch(`/api/teams/${teamId}`, {
         method: 'DELETE',
       });

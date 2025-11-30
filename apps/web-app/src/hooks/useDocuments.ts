@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 interface Document {
   id: string;
   name: string;
@@ -142,9 +147,44 @@ export function useDocument(documentId: string) {
 
 export function useCreateDocument() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (documentData: CreateDocumentData) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockDocument: Document = {
+          id: `demo-doc-${Date.now()}`,
+          name: documentData.name,
+          description: documentData.description || '',
+          type: documentData.type,
+          fileType: documentData.fileType,
+          size: documentData.size || 0,
+          uploadedBy: session?.user?.id || 'demo-user',
+          uploadedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          status: 'active',
+          confidential: documentData.confidential || false,
+          accessControl: {
+            type: documentData.accessControl?.type || 'private',
+            allowedUsers: documentData.accessControl?.allowedUsers || [],
+            allowedRoles: documentData.accessControl?.allowedRoles || [],
+            expiresAt: documentData.accessControl?.expiresAt || null,
+          },
+          metadata: {
+            opportunityId: documentData.metadata?.opportunityId ?? null,
+            applicationId: documentData.metadata?.applicationId ?? null,
+            tags: documentData.metadata?.tags || [],
+            version: documentData.metadata?.version || '1.0',
+          },
+          downloadCount: 0,
+          lastAccessed: new Date().toISOString(),
+        };
+        console.log('[Demo] Created document:', mockDocument.id);
+        return mockDocument;
+      }
+
       const response = await fetch('/api/documents', {
         method: 'POST',
         headers: {
@@ -169,9 +209,17 @@ export function useCreateDocument() {
 
 export function useUpdateDocument() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: UpdateDocumentData & { id: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || id.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Updated document ${id}`);
+        return { id, ...updates, updatedAt: new Date().toISOString() } as Document;
+      }
+
       const response = await fetch(`/api/documents/${id}`, {
         method: 'PUT',
         headers: {
@@ -197,9 +245,17 @@ export function useUpdateDocument() {
 
 export function useDeleteDocument() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (documentId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || documentId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Deleted document ${documentId}`);
+        return { id: documentId };
+      }
+
       const response = await fetch(`/api/documents/${documentId}`, {
         method: 'DELETE',
       });
@@ -218,8 +274,17 @@ export function useDeleteDocument() {
 }
 
 export function useDownloadDocument() {
+  const { data: session } = useSession();
+
   return useMutation({
     mutationFn: async (documentId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || documentId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Downloaded document ${documentId}`);
+        return { success: true, documentId, downloadUrl: '#demo-download' };
+      }
+
       const response = await fetch(`/api/documents/${documentId}?download=true`, {
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +297,7 @@ export function useDownloadDocument() {
       }
 
       const data = await response.json();
-      
+
       // In a real implementation, this would trigger a file download
       // For demo purposes, we'll return the download info
       return data;
@@ -242,13 +307,14 @@ export function useDownloadDocument() {
 
 export function useShareDocument() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
-    mutationFn: async ({ 
-      documentId, 
-      accessControl 
-    }: { 
-      documentId: string; 
+    mutationFn: async ({
+      documentId,
+      accessControl
+    }: {
+      documentId: string;
       accessControl: {
         type: 'public' | 'restricted' | 'private';
         allowedUsers?: string[];
@@ -256,6 +322,13 @@ export function useShareDocument() {
         expiresAt?: string | null;
       }
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || documentId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Updated sharing for document ${documentId}`);
+        return { id: documentId, accessControl } as Document;
+      }
+
       const response = await fetch(`/api/documents/${documentId}`, {
         method: 'PUT',
         headers: {

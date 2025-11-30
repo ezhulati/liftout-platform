@@ -3,6 +3,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+// Demo user detection helper
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
 // Types matching the API server response
 export interface TeamApplication {
   id: string;
@@ -206,9 +211,34 @@ export function useOpportunityApplications(opportunityId: string | null) {
  */
 export function useCreateApplication() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (input: CreateApplicationInput) => {
+      // Demo user handling - simulate success
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockApplication: TeamApplication = {
+          id: `demo-app-${Date.now()}`,
+          teamId: input.teamId,
+          opportunityId: input.opportunityId,
+          submittedById: session?.user?.id || 'demo-user',
+          coverLetter: input.coverLetter || null,
+          status: 'submitted',
+          submittedAt: new Date().toISOString(),
+          reviewedAt: null,
+          reviewedById: null,
+          interviewScheduledAt: null,
+          interviewNotes: null,
+          internalNotes: null,
+          rejectionReason: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        console.log('[Demo] Created application:', mockApplication.id);
+        return mockApplication;
+      }
+
       const data = await fetchWithAuth('/api/applications', {
         method: 'POST',
         body: JSON.stringify(input),
@@ -229,12 +259,25 @@ export function useCreateApplication() {
  */
 export function useUpdateApplicationStatus() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
       applicationId,
       ...input
     }: UpdateApplicationStatusInput & { applicationId: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Updated application ${applicationId} status to ${input.status}`);
+        return {
+          id: applicationId,
+          teamId: 'demo-team',
+          opportunityId: 'demo-opportunity',
+          status: input.status,
+        } as TeamApplication;
+      }
+
       const data = await fetchWithAuth(`/api/applications/${applicationId}/status`, {
         method: 'PATCH',
         body: JSON.stringify(input),
@@ -255,12 +298,20 @@ export function useUpdateApplicationStatus() {
  */
 export function useScheduleInterview() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
       applicationId,
       ...input
     }: ScheduleInterviewInput & { applicationId: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Scheduled interview for application ${applicationId}`);
+        return { id: applicationId, interviewScheduledAt: input.scheduledAt } as TeamApplication;
+      }
+
       const data = await fetchWithAuth(`/api/applications/${applicationId}/interview`, {
         method: 'POST',
         body: JSON.stringify(input),
@@ -279,12 +330,20 @@ export function useScheduleInterview() {
  */
 export function useAddApplicationFeedback() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
       applicationId,
       ...input
     }: ApplicationFeedbackInput & { applicationId: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Added feedback to application ${applicationId}`);
+        return { success: true };
+      }
+
       const data = await fetchWithAuth(`/api/applications/${applicationId}/feedback`, {
         method: 'POST',
         body: JSON.stringify(input),
@@ -302,9 +361,17 @@ export function useAddApplicationFeedback() {
  */
 export function useWithdrawApplication() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (applicationId: string) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Withdrew application ${applicationId}`);
+        return { id: applicationId, teamId: 'demo-team', status: 'withdrawn' } as TeamApplication;
+      }
+
       const data = await fetchWithAuth(`/api/applications/${applicationId}/withdraw`, {
         method: 'POST',
       });
@@ -323,6 +390,7 @@ export function useWithdrawApplication() {
  */
 export function useMakeOffer() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -335,6 +403,13 @@ export function useMakeOffer() {
       startDate?: string;
       expiresAt?: string;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Made offer for application ${applicationId}`);
+        return { success: true, applicationId, ...offerDetails };
+      }
+
       const data = await fetchWithAuth(`/api/applications/${applicationId}/offer`, {
         method: 'POST',
         body: JSON.stringify(offerDetails),
@@ -391,9 +466,29 @@ export function useCompanyEOIs(companyId: string | null) {
  */
 export function useCreateEOI() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async (input: { teamId: string; message?: string }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email)) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const mockEOI: ExpressionOfInterest = {
+          id: `demo-eoi-${Date.now()}`,
+          companyId: session?.user?.id || 'demo-company',
+          teamId: input.teamId,
+          submittedById: session?.user?.id || 'demo-user',
+          message: input.message || null,
+          status: 'pending',
+          expiresAt: null,
+          respondedAt: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        console.log('[Demo] Created EOI:', mockEOI.id);
+        return mockEOI;
+      }
+
       const data = await fetchWithAuth('/api/applications/eoi', {
         method: 'POST',
         body: JSON.stringify(input),
@@ -412,6 +507,7 @@ export function useCreateEOI() {
  */
 export function useRespondToEOI() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   return useMutation({
     mutationFn: async ({
@@ -421,6 +517,18 @@ export function useRespondToEOI() {
       eoiId: string;
       accept: boolean;
     }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || eoiId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Responded to EOI ${eoiId}: ${accept ? 'accepted' : 'rejected'}`);
+        return {
+          id: eoiId,
+          teamId: 'demo-team',
+          companyId: 'demo-company',
+          status: accept ? 'accepted' : 'rejected',
+        } as ExpressionOfInterest;
+      }
+
       const data = await fetchWithAuth(`/api/applications/eoi/${eoiId}/respond`, {
         method: 'POST',
         body: JSON.stringify({ accept }),
