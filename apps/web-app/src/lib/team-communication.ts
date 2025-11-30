@@ -1,22 +1,3 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc,
-  getDocs, 
-  getDoc,
-  query, 
-  where, 
-  orderBy,
-  limit,
-  startAfter,
-  serverTimestamp,
-  onSnapshot,
-  Timestamp
-} from 'firebase/firestore';
-import { db } from './firebase';
-
 export type MessageType = 'text' | 'file' | 'system' | 'announcement';
 export type MessageStatus = 'sent' | 'delivered' | 'read';
 export type ChannelType = 'general' | 'announcements' | 'private' | 'project';
@@ -35,8 +16,8 @@ export interface TeamMessage {
     fileSize?: number;
     fileType?: string;
     downloadUrl?: string;
-    mentions?: string[]; // User IDs mentioned in message
-    parentMessageId?: string; // For replies
+    mentions?: string[];
+    parentMessageId?: string;
     isEdited?: boolean;
     editedAt?: Date;
   };
@@ -65,12 +46,8 @@ export interface TeamChannel {
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
-  members: string[]; // User IDs with access
-  lastMessage?: {
-    content: string;
-    senderName: string;
-    timestamp: Date;
-  };
+  members: string[];
+  lastMessage?: { content: string; senderName: string; timestamp: Date };
   messageCount: number;
   isArchived: boolean;
   settings: {
@@ -90,7 +67,7 @@ export interface TeamAnnouncement {
   type: 'info' | 'warning' | 'success' | 'urgent';
   createdBy: string;
   createdByName: string;
-  targetAudience: 'all' | 'admins' | 'leaders' | string[]; // 'all', role names, or specific user IDs
+  targetAudience: 'all' | 'admins' | 'leaders' | string[];
   isPinned: boolean;
   expiresAt?: Date;
   createdAt: Date;
@@ -108,31 +85,61 @@ export interface ChatParticipant {
   unreadCount: number;
 }
 
+const isDemoEntity = (id: string): boolean => {
+  return id?.includes('demo') || id === 'demo@example.com' || id === 'company@example.com';
+};
+
+const DEMO_CHANNELS: TeamChannel[] = [
+  {
+    id: 'demo-channel-001',
+    teamId: 'demo-team-001',
+    name: 'General',
+    description: 'General team discussion',
+    type: 'general',
+    isPrivate: false,
+    createdBy: 'demo@example.com',
+    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(),
+    members: ['demo@example.com'],
+    lastMessage: { content: 'Welcome to the team!', senderName: 'Alex Chen', timestamp: new Date() },
+    messageCount: 45,
+    isArchived: false,
+    settings: { allowReactions: true, allowFileSharing: true, allowMentions: true, restrictToAdmins: false },
+  },
+];
+
+const DEMO_MESSAGES: TeamMessage[] = [
+  {
+    id: 'demo-msg-001',
+    channelId: 'demo-channel-001',
+    teamId: 'demo-team-001',
+    senderId: 'demo@example.com',
+    senderName: 'Alex Chen',
+    type: 'text',
+    content: 'Welcome to the team communication channel!',
+    status: 'read',
+    createdAt: new Date(Date.now() - 3600000),
+    updatedAt: new Date(Date.now() - 3600000),
+    reactions: [],
+  },
+];
+
 class TeamCommunicationService {
-  private readonly MESSAGES_COLLECTION = 'team_messages';
-  private readonly CHANNELS_COLLECTION = 'team_channels';
-  private readonly ANNOUNCEMENTS_COLLECTION = 'team_announcements';
-
-  /**
-   * Channel Management
-   */
-  
   async createChannel(channelData: Omit<TeamChannel, 'id' | 'createdAt' | 'updatedAt' | 'messageCount'>): Promise<string> {
+    if (isDemoEntity(channelData.teamId)) {
+      console.log(`[Demo] Creating channel: ${channelData.name}`);
+      return `demo-channel-${Date.now()}`;
+    }
+
     try {
-      const channel: Omit<TeamChannel, 'id'> = {
-        ...channelData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        messageCount: 0
-      };
-
-      const docRef = await addDoc(collection(db, this.CHANNELS_COLLECTION), {
-        ...channel,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch('/api/teams/channels', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(channelData),
       });
-
-      return docRef.id;
+      if (!response.ok) throw new Error('Failed to create channel');
+      const result = await response.json();
+      return result.channelId || result.data?.channelId || '';
     } catch (error) {
       console.error('Error creating channel:', error);
       throw error;
@@ -140,49 +147,39 @@ class TeamCommunicationService {
   }
 
   async getTeamChannels(teamId: string): Promise<TeamChannel[]> {
-    try {
-      const q = query(
-        collection(db, this.CHANNELS_COLLECTION),
-        where('teamId', '==', teamId),
-        where('isArchived', '==', false),
-        orderBy('type'),
-        orderBy('name')
-      );
+    if (isDemoEntity(teamId)) {
+      return DEMO_CHANNELS.filter(c => c.teamId === teamId || teamId.includes('demo'));
+    }
 
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamChannel[];
+    try {
+      const response = await fetch(`/api/teams/${teamId}/channels`);
+      if (!response.ok) return [];
+      const result = await response.json();
+      return result.channels || result.data || [];
     } catch (error) {
       console.error('Error getting channels:', error);
-      throw error;
+      return [];
     }
   }
 
   async getUserChannels(teamId: string, userId: string): Promise<TeamChannel[]> {
-    try {
-      const channels = await this.getTeamChannels(teamId);
-      
-      // Filter channels user has access to
-      return channels.filter(channel => 
-        !channel.isPrivate || 
-        channel.members.includes(userId) ||
-        channel.createdBy === userId
-      );
-    } catch (error) {
-      console.error('Error getting user channels:', error);
-      throw error;
-    }
+    const channels = await this.getTeamChannels(teamId);
+    return channels.filter(channel => !channel.isPrivate || channel.members.includes(userId) || channel.createdBy === userId);
   }
 
   async updateChannel(channelId: string, updates: Partial<TeamChannel>): Promise<void> {
+    if (channelId.startsWith('demo-')) {
+      console.log(`[Demo] Updating channel: ${channelId}`);
+      return;
+    }
+
     try {
-      const channelRef = doc(db, this.CHANNELS_COLLECTION, channelId);
-      await updateDoc(channelRef, {
-        ...updates,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/teams/channels/${channelId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
       });
+      if (!response.ok) throw new Error('Failed to update channel');
     } catch (error) {
       console.error('Error updating channel:', error);
       throw error;
@@ -190,21 +187,18 @@ class TeamCommunicationService {
   }
 
   async addChannelMember(channelId: string, userId: string): Promise<void> {
+    if (channelId.startsWith('demo-')) {
+      console.log(`[Demo] Adding member ${userId} to channel`);
+      return;
+    }
+
     try {
-      const channelRef = doc(db, this.CHANNELS_COLLECTION, channelId);
-      const channelDoc = await getDoc(channelRef);
-      
-      if (!channelDoc.exists()) {
-        throw new Error('Channel not found');
-      }
-
-      const channel = channelDoc.data() as TeamChannel;
-      const updatedMembers = [...new Set([...channel.members, userId])];
-
-      await updateDoc(channelRef, {
-        members: updatedMembers,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/teams/channels/${channelId}/members`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
       });
+      if (!response.ok) throw new Error('Failed to add channel member');
     } catch (error) {
       console.error('Error adding channel member:', error);
       throw error;
@@ -212,113 +206,70 @@ class TeamCommunicationService {
   }
 
   async removeChannelMember(channelId: string, userId: string): Promise<void> {
+    if (channelId.startsWith('demo-')) {
+      console.log(`[Demo] Removing member ${userId} from channel`);
+      return;
+    }
+
     try {
-      const channelRef = doc(db, this.CHANNELS_COLLECTION, channelId);
-      const channelDoc = await getDoc(channelRef);
-      
-      if (!channelDoc.exists()) {
-        throw new Error('Channel not found');
-      }
-
-      const channel = channelDoc.data() as TeamChannel;
-      const updatedMembers = channel.members.filter(id => id !== userId);
-
-      await updateDoc(channelRef, {
-        members: updatedMembers,
-        updatedAt: serverTimestamp()
-      });
+      const response = await fetch(`/api/teams/channels/${channelId}/members/${userId}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to remove channel member');
     } catch (error) {
       console.error('Error removing channel member:', error);
       throw error;
     }
   }
 
-  /**
-   * Message Management
-   */
-
   async sendMessage(messageData: Omit<TeamMessage, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    if (isDemoEntity(messageData.teamId)) {
+      console.log(`[Demo] Sending message in channel ${messageData.channelId}`);
+      return `demo-msg-${Date.now()}`;
+    }
+
     try {
-      const message: Omit<TeamMessage, 'id'> = {
-        ...messageData,
-        status: 'sent',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        reactions: []
-      };
-
-      const docRef = await addDoc(collection(db, this.MESSAGES_COLLECTION), {
-        ...message,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch('/api/teams/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(messageData),
       });
-
-      // Update channel's last message and message count
-      await this.updateChannelLastMessage(messageData.channelId, {
-        content: messageData.content,
-        senderName: messageData.senderName,
-        timestamp: new Date()
-      });
-
-      return docRef.id;
+      if (!response.ok) throw new Error('Failed to send message');
+      const result = await response.json();
+      return result.messageId || result.data?.messageId || '';
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
     }
   }
 
-  async getChannelMessages(
-    channelId: string, 
-    limitCount: number = 50,
-    startAfterDoc?: unknown
-  ): Promise<TeamMessage[]> {
+  async getChannelMessages(channelId: string, limitCount: number = 50): Promise<TeamMessage[]> {
+    if (channelId.startsWith('demo-')) {
+      return DEMO_MESSAGES.filter(m => m.channelId === channelId).slice(-limitCount);
+    }
+
     try {
-      let q = query(
-        collection(db, this.MESSAGES_COLLECTION),
-        where('channelId', '==', channelId),
-        where('isDeleted', '!=', true),
-        orderBy('createdAt', 'desc'),
-        limit(limitCount)
-      );
-
-      if (startAfterDoc) {
-        q = query(q, startAfter(startAfterDoc));
-      }
-
-      const snapshot = await getDocs(q);
-      const messages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamMessage[];
-
-      return messages.reverse(); // Return in chronological order
+      const response = await fetch(`/api/teams/channels/${channelId}/messages?limit=${limitCount}`);
+      if (!response.ok) return [];
+      const result = await response.json();
+      return result.messages || result.data || [];
     } catch (error) {
       console.error('Error getting messages:', error);
-      throw error;
+      return [];
     }
   }
 
   async editMessage(messageId: string, newContent: string, userId: string): Promise<void> {
+    if (messageId.startsWith('demo-')) {
+      console.log(`[Demo] Editing message ${messageId}`);
+      return;
+    }
+
     try {
-      const messageRef = doc(db, this.MESSAGES_COLLECTION, messageId);
-      const messageDoc = await getDoc(messageRef);
-
-      if (!messageDoc.exists()) {
-        throw new Error('Message not found');
-      }
-
-      const message = messageDoc.data() as TeamMessage;
-      
-      if (message.senderId !== userId) {
-        throw new Error('You can only edit your own messages');
-      }
-
-      await updateDoc(messageRef, {
-        content: newContent,
-        'metadata.isEdited': true,
-        'metadata.editedAt': serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/teams/messages/${messageId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newContent, userId }),
       });
+      if (!response.ok) throw new Error('Failed to edit message');
     } catch (error) {
       console.error('Error editing message:', error);
       throw error;
@@ -326,25 +277,18 @@ class TeamCommunicationService {
   }
 
   async deleteMessage(messageId: string, userId: string): Promise<void> {
+    if (messageId.startsWith('demo-')) {
+      console.log(`[Demo] Deleting message ${messageId}`);
+      return;
+    }
+
     try {
-      const messageRef = doc(db, this.MESSAGES_COLLECTION, messageId);
-      const messageDoc = await getDoc(messageRef);
-
-      if (!messageDoc.exists()) {
-        throw new Error('Message not found');
-      }
-
-      const message = messageDoc.data() as TeamMessage;
-      
-      if (message.senderId !== userId) {
-        throw new Error('You can only delete your own messages');
-      }
-
-      await updateDoc(messageRef, {
-        isDeleted: true,
-        deletedAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/teams/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
       });
+      if (!response.ok) throw new Error('Failed to delete message');
     } catch (error) {
       console.error('Error deleting message:', error);
       throw error;
@@ -352,88 +296,39 @@ class TeamCommunicationService {
   }
 
   async addReaction(messageId: string, emoji: string, userId: string, userName: string): Promise<void> {
+    if (messageId.startsWith('demo-')) {
+      console.log(`[Demo] Adding reaction ${emoji} to message ${messageId}`);
+      return;
+    }
+
     try {
-      const messageRef = doc(db, this.MESSAGES_COLLECTION, messageId);
-      const messageDoc = await getDoc(messageRef);
-
-      if (!messageDoc.exists()) {
-        throw new Error('Message not found');
-      }
-
-      const message = messageDoc.data() as TeamMessage;
-      const reactions = message.reactions || [];
-      
-      // Check if user already reacted with this emoji
-      const existingReaction = reactions.find(r => r.userId === userId && r.emoji === emoji);
-      
-      if (existingReaction) {
-        // Remove reaction
-        const updatedReactions = reactions.filter(r => !(r.userId === userId && r.emoji === emoji));
-        await updateDoc(messageRef, {
-          reactions: updatedReactions,
-          updatedAt: serverTimestamp()
-        });
-      } else {
-        // Add reaction
-        const newReaction: MessageReaction = {
-          emoji,
-          userId,
-          userName,
-          createdAt: new Date()
-        };
-        
-        await updateDoc(messageRef, {
-          reactions: [...reactions, newReaction],
-          updatedAt: serverTimestamp()
-        });
-      }
+      const response = await fetch(`/api/teams/messages/${messageId}/reactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emoji, userId, userName }),
+      });
+      if (!response.ok) throw new Error('Failed to add reaction');
     } catch (error) {
       console.error('Error adding reaction:', error);
       throw error;
     }
   }
 
-  private async updateChannelLastMessage(
-    channelId: string, 
-    lastMessage: TeamChannel['lastMessage']
-  ): Promise<void> {
-    try {
-      const channelRef = doc(db, this.CHANNELS_COLLECTION, channelId);
-      const channelDoc = await getDoc(channelRef);
-      
-      if (channelDoc.exists()) {
-        const channel = channelDoc.data() as TeamChannel;
-        await updateDoc(channelRef, {
-          lastMessage: lastMessage,
-          messageCount: (channel.messageCount || 0) + 1,
-          updatedAt: serverTimestamp()
-        });
-      }
-    } catch (error) {
-      console.error('Error updating channel last message:', error);
-    }
-  }
-
-  /**
-   * Announcements
-   */
-
   async createAnnouncement(announcementData: Omit<TeamAnnouncement, 'id' | 'createdAt' | 'updatedAt' | 'readBy'>): Promise<string> {
+    if (isDemoEntity(announcementData.teamId)) {
+      console.log(`[Demo] Creating announcement: ${announcementData.title}`);
+      return `demo-announcement-${Date.now()}`;
+    }
+
     try {
-      const announcement: Omit<TeamAnnouncement, 'id'> = {
-        ...announcementData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        readBy: []
-      };
-
-      const docRef = await addDoc(collection(db, this.ANNOUNCEMENTS_COLLECTION), {
-        ...announcement,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch('/api/teams/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(announcementData),
       });
-
-      return docRef.id;
+      if (!response.ok) throw new Error('Failed to create announcement');
+      const result = await response.json();
+      return result.announcementId || result.data?.announcementId || '';
     } catch (error) {
       console.error('Error creating announcement:', error);
       throw error;
@@ -441,138 +336,75 @@ class TeamCommunicationService {
   }
 
   async getTeamAnnouncements(teamId: string): Promise<TeamAnnouncement[]> {
-    try {
-      const q = query(
-        collection(db, this.ANNOUNCEMENTS_COLLECTION),
-        where('teamId', '==', teamId),
-        orderBy('isPinned', 'desc'),
-        orderBy('createdAt', 'desc')
-      );
+    if (isDemoEntity(teamId)) {
+      return [];
+    }
 
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamAnnouncement[];
+    try {
+      const response = await fetch(`/api/teams/${teamId}/announcements`);
+      if (!response.ok) return [];
+      const result = await response.json();
+      return result.announcements || result.data || [];
     } catch (error) {
       console.error('Error getting announcements:', error);
-      throw error;
+      return [];
     }
   }
 
   async markAnnouncementAsRead(announcementId: string, userId: string): Promise<void> {
+    if (announcementId.startsWith('demo-')) {
+      console.log(`[Demo] Marking announcement ${announcementId} as read`);
+      return;
+    }
+
     try {
-      const announcementRef = doc(db, this.ANNOUNCEMENTS_COLLECTION, announcementId);
-      const announcementDoc = await getDoc(announcementRef);
-
-      if (!announcementDoc.exists()) {
-        throw new Error('Announcement not found');
-      }
-
-      const announcement = announcementDoc.data() as TeamAnnouncement;
-      const readBy = announcement.readBy || [];
-      
-      // Check if already read
-      if (readBy.some(r => r.userId === userId)) {
-        return;
-      }
-
-      const newReadEntry = {
-        userId,
-        readAt: new Date()
-      };
-
-      await updateDoc(announcementRef, {
-        readBy: [...readBy, newReadEntry],
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/teams/announcements/${announcementId}/read`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
       });
+      if (!response.ok) throw new Error('Failed to mark announcement as read');
     } catch (error) {
       console.error('Error marking announcement as read:', error);
       throw error;
     }
   }
 
-  /**
-   * Real-time subscriptions
-   */
-
-  subscribeToChannelMessages(
-    channelId: string, 
-    callback: (messages: TeamMessage[]) => void,
-    limitCount: number = 50
-  ): () => void {
-    const q = query(
-      collection(db, this.MESSAGES_COLLECTION),
-      where('channelId', '==', channelId),
-      where('isDeleted', '!=', true),
-      orderBy('createdAt', 'desc'),
-      limit(limitCount)
-    );
-
-    return onSnapshot(q, (snapshot) => {
-      const messages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamMessage[];
-      
-      callback(messages.reverse());
-    });
+  subscribeToChannelMessages(channelId: string, callback: (messages: TeamMessage[]) => void, limitCount: number = 50): () => void {
+    // For demo, return a no-op unsubscribe
+    if (channelId.startsWith('demo-')) {
+      callback(DEMO_MESSAGES.filter(m => m.channelId === channelId).slice(-limitCount));
+      return () => {};
+    }
+    // Real-time subscriptions would use WebSocket or SSE in production
+    console.log('Real-time subscriptions not implemented - use polling instead');
+    return () => {};
   }
 
-  subscribeToTeamChannels(
-    teamId: string,
-    callback: (channels: TeamChannel[]) => void
-  ): () => void {
-    const q = query(
-      collection(db, this.CHANNELS_COLLECTION),
-      where('teamId', '==', teamId),
-      where('isArchived', '==', false)
-    );
-
-    return onSnapshot(q, (snapshot) => {
-      const channels = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamChannel[];
-      
-      callback(channels);
-    });
+  subscribeToTeamChannels(teamId: string, callback: (channels: TeamChannel[]) => void): () => void {
+    if (isDemoEntity(teamId)) {
+      callback(DEMO_CHANNELS.filter(c => c.teamId === teamId || teamId.includes('demo')));
+      return () => {};
+    }
+    console.log('Real-time subscriptions not implemented - use polling instead');
+    return () => {};
   }
 
-  /**
-   * Search functionality
-   */
+  async searchMessages(teamId: string, searchTerm: string, channelId?: string): Promise<TeamMessage[]> {
+    if (isDemoEntity(teamId)) {
+      return DEMO_MESSAGES.filter(m => m.content.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
 
-  async searchMessages(
-    teamId: string, 
-    searchTerm: string, 
-    channelId?: string
-  ): Promise<TeamMessage[]> {
     try {
-      let q = query(
-        collection(db, this.MESSAGES_COLLECTION),
-        where('teamId', '==', teamId),
-        where('isDeleted', '!=', true)
-      );
-
-      if (channelId) {
-        q = query(q, where('channelId', '==', channelId));
-      }
-
-      const snapshot = await getDocs(q);
-      const messages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as TeamMessage[];
-
-      // Client-side filtering for content search
-      return messages.filter(message => 
-        message.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        message.senderName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const params = new URLSearchParams({ q: searchTerm });
+      if (channelId) params.set('channelId', channelId);
+      const response = await fetch(`/api/teams/${teamId}/messages/search?${params}`);
+      if (!response.ok) return [];
+      const result = await response.json();
+      return result.messages || result.data || [];
     } catch (error) {
       console.error('Error searching messages:', error);
-      throw error;
+      return [];
     }
   }
 }
