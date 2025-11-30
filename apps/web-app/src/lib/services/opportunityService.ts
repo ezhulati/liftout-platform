@@ -17,6 +17,15 @@ import type { Opportunity, CreateOpportunityData, OpportunityFilters } from '@/t
 
 const OPPORTUNITIES_COLLECTION = 'opportunities';
 
+// Helper to check if this is a demo user/entity
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-');
+};
+
 export interface OpportunitySearchResult {
   opportunities: Opportunity[];
   total: number;
@@ -31,6 +40,14 @@ export interface OpportunitySearchResult {
 export class OpportunityService {
   // Create a new opportunity
   async createOpportunity(data: CreateOpportunityData, companyUserId: string): Promise<string> {
+    // Handle demo users - simulate successful opportunity creation
+    if (isDemoEntity(companyUserId)) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const demoOppId = `demo-opp-${Date.now()}`;
+      console.log(`[Demo] Created opportunity: ${data.title} (${demoOppId})`);
+      return demoOppId;
+    }
+
     try {
       const opportunityData = {
         ...data,
@@ -165,6 +182,13 @@ export class OpportunityService {
 
   // Update opportunity
   async updateOpportunity(opportunityId: string, updates: Partial<Opportunity>): Promise<void> {
+    // Handle demo opportunities
+    if (isDemoEntity(opportunityId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Updated opportunity: ${opportunityId}`);
+      return;
+    }
+
     try {
       const docRef = doc(db, OPPORTUNITIES_COLLECTION, opportunityId);
       await updateDoc(docRef, {
@@ -261,11 +285,16 @@ export class OpportunityService {
         const opportunity = await this.getOpportunityById(opportunityId);
         if (!opportunity) throw new Error('Opportunity not found');
         
+        const createdDate = typeof opportunity.createdAt === 'string'
+          ? new Date(opportunity.createdAt)
+          : opportunity.createdAt instanceof Date
+            ? opportunity.createdAt
+            : (opportunity.createdAt as any)?.toDate?.() || new Date();
         return {
           viewCount: opportunity.viewCount || 0,
           applicantCount: opportunity.applicantCount || 0,
           status: opportunity.status,
-          daysActive: Math.floor((new Date().getTime() - opportunity.createdAt.toDate().getTime()) / (1000 * 60 * 60 * 24)),
+          daysActive: Math.floor((new Date().getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)),
         };
       } else {
         // Get platform-wide opportunity stats

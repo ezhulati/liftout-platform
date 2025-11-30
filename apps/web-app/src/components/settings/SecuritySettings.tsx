@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { auth } from '@/lib/firebase';
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
-} from 'firebase/auth';
+
+// Helper to check if user is a demo user
+const isDemoUserEmail = (email: string) =>
+  email === 'demo@example.com' || email === 'company@example.com';
 import {
   ShieldCheckIcon,
   KeyIcon,
@@ -28,9 +27,10 @@ import { FormField, ButtonGroup, TextLink } from '@/components/ui';
 interface PasswordChangeFormProps {
   onCancel: () => void;
   onSuccess: () => void;
+  isDemoUser?: boolean;
 }
 
-function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
+function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: PasswordChangeFormProps) {
   const [passwords, setPasswords] = useState({
     current: '',
     new: '',
@@ -56,37 +56,36 @@ function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
       return;
     }
 
-    const currentUser = auth.currentUser;
-    if (!currentUser || !currentUser.email) {
-      toast.error('You must be logged in to change your password');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      // Re-authenticate user with current password
-      const credential = EmailAuthProvider.credential(
-        currentUser.email,
-        passwords.current
-      );
-      await reauthenticateWithCredential(currentUser, credential);
+      // For demo users, just simulate success
+      if (isDemoUser) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+        toast.success('Password updated successfully (demo mode)');
+        onSuccess();
+        return;
+      }
 
-      // Update to new password
-      await updatePassword(currentUser, passwords.new);
+      const response = await fetch('/api/user/password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passwords.current,
+          newPassword: passwords.new,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update password');
+      }
 
       toast.success('Password updated successfully');
       onSuccess();
     } catch (error: any) {
       console.error('Password change error:', error);
-      if (error.code === 'auth/wrong-password') {
-        toast.error('Current password is incorrect');
-      } else if (error.code === 'auth/weak-password') {
-        toast.error('New password is too weak. Please choose a stronger password.');
-      } else if (error.code === 'auth/requires-recent-login') {
-        toast.error('Please sign out and sign in again before changing your password');
-      } else {
-        toast.error('Failed to update password. Please try again.');
-      }
+      toast.error(error.message || 'Failed to update password. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -200,10 +199,16 @@ function PasswordChangeForm({ onCancel, onSuccess }: PasswordChangeFormProps) {
 }
 
 export function SecuritySettings() {
+  const { data: session } = useSession();
   const { user } = useAuth();
   const { settings, updateSecuritySettings, isLoading } = useSettings();
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showSessions, setShowSessions] = useState(false);
+
+  // Check if this is a demo user
+  const sessionUser = session?.user as any;
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = isDemoUserEmail(userEmail);
 
   // Mock session data - in a real app, this would come from your API
   const mockSessions = [
@@ -363,6 +368,7 @@ export function SecuritySettings() {
                 setShowPasswordForm(false);
                 updateSecuritySettings({ passwordLastChanged: new Date() });
               }}
+              isDemoUser={isDemoUser}
             />
           )}
         </div>

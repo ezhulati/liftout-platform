@@ -117,8 +117,10 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     stopTyping,
   } = useSocket();
 
-  // Check if this is a demo user (no Firestore user)
-  const isDemoUser = !user && !!session;
+  // Check if this is a demo user - use email check since AuthContext creates
+  // user records for all authenticated users (so `user` will exist even for demo)
+  const userEmail = user?.email || (session?.user as any)?.email || '';
+  const isDemoUser = userEmail === 'demo@example.com' || userEmail === 'company@example.com';
 
   // API hooks
   const { data: conversationsData, isLoading: conversationsLoading, error: conversationsError } = useConversations();

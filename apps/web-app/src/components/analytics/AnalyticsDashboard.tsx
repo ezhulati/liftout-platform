@@ -2,14 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { 
-  LiftoutAnalytics, 
-  calculateOverallROI, 
+import {
+  LiftoutAnalytics,
+  calculateOverallROI,
   getPerformanceGrade,
   identifyKeyInsights,
   generateRecommendations,
-  mockLiftoutAnalytics 
+  mockLiftoutAnalytics
 } from '@/lib/analytics';
+import {
+  downloadAnalyticsCSV,
+  downloadAnalyticsPDF,
+} from '@/lib/analytics-export';
 import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
@@ -22,6 +26,9 @@ import {
   LightBulbIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  ArrowDownTrayIcon,
+  DocumentTextIcon,
+  TableCellsIcon,
 } from '@heroicons/react/24/outline';
 
 interface AnalyticsDashboardProps {
@@ -33,6 +40,38 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
   const [analytics, setAnalytics] = useState<LiftoutAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<string>('overview');
+  const [isExporting, setIsExporting] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
+  const handleExportCSV = () => {
+    if (!analytics) return;
+    setIsExporting(true);
+    try {
+      downloadAnalyticsCSV(analytics);
+      toast.success('CSV report downloaded successfully');
+    } catch (error) {
+      toast.error('Failed to export CSV report');
+      console.error('CSV export error:', error);
+    } finally {
+      setIsExporting(false);
+      setShowExportMenu(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    if (!analytics) return;
+    setIsExporting(true);
+    try {
+      await downloadAnalyticsPDF(analytics);
+      toast.success('PDF report downloaded successfully');
+    } catch (error) {
+      toast.error('Failed to export PDF report');
+      console.error('PDF export error:', error);
+    } finally {
+      setIsExporting(false);
+      setShowExportMenu(false);
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -102,11 +141,43 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
               {analytics.reportingPeriod.type.charAt(0).toUpperCase() + analytics.reportingPeriod.type.slice(1)} Report: {new Date(analytics.reportingPeriod.startDate).toLocaleDateString()} - {new Date(analytics.reportingPeriod.endDate).toLocaleDateString()}
             </p>
           </div>
-          <div className="text-center">
-            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl text-2xl font-bold ${getGradeColor(performanceGrade)}`}>
-              {performanceGrade}
+          <div className="flex items-center gap-4">
+            {/* Export Button */}
+            <div className="relative">
+              <button
+                onClick={() => setShowExportMenu(!showExportMenu)}
+                disabled={isExporting}
+                className="btn-secondary min-h-12 px-4 inline-flex items-center gap-2"
+              >
+                <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
+                <span>{isExporting ? 'Exporting...' : 'Export'}</span>
+              </button>
+              {showExportMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-bg-surface border border-border rounded-lg shadow-lg z-10">
+                  <button
+                    onClick={handleExportCSV}
+                    className="w-full px-4 py-3 text-left text-sm font-medium text-text-primary hover:bg-bg-alt flex items-center gap-3 rounded-t-lg"
+                  >
+                    <TableCellsIcon className="h-5 w-5 text-success" aria-hidden="true" />
+                    Export as CSV
+                  </button>
+                  <button
+                    onClick={handleExportPDF}
+                    className="w-full px-4 py-3 text-left text-sm font-medium text-text-primary hover:bg-bg-alt flex items-center gap-3 rounded-b-lg border-t border-border"
+                  >
+                    <DocumentTextIcon className="h-5 w-5 text-error" aria-hidden="true" />
+                    Export as PDF
+                  </button>
+                </div>
+              )}
             </div>
-            <p className="text-sm font-bold text-text-tertiary mt-2">Performance grade</p>
+            {/* Performance Grade */}
+            <div className="text-center">
+              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl text-2xl font-bold ${getGradeColor(performanceGrade)}`}>
+                {performanceGrade}
+              </div>
+              <p className="text-sm font-bold text-text-tertiary mt-2">Performance grade</p>
+            </div>
           </div>
         </div>
       </div>

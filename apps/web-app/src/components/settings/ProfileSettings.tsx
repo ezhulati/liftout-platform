@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -15,6 +15,9 @@ import {
 import { useRouter } from 'next/navigation';
 import { FormField, ButtonGroup, TextLink } from '@/components/ui';
 
+// Local storage key for demo user settings data
+const DEMO_SETTINGS_STORAGE_KEY = 'liftout_demo_settings';
+
 export function ProfileSettings() {
   const { data: session } = useSession();
   const { user, updateProfile, isUserLoading } = useAuth();
@@ -25,6 +28,37 @@ export function ProfileSettings() {
   const sessionUser = session?.user as any;
   const displayName = user?.name || sessionUser?.name || '';
   const displayEmail = user?.email || sessionUser?.email || '';
+
+  // Check if this is a demo user - use email check since AuthContext creates
+  // user records for all authenticated users (so `user` will exist even for demo)
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = userEmail === 'demo@example.com' || userEmail === 'company@example.com';
+
+  // Save settings to localStorage for demo users
+  const saveDemoSettings = useCallback((data: typeof formData) => {
+    if (typeof window !== 'undefined' && userEmail) {
+      try {
+        localStorage.setItem(`${DEMO_SETTINGS_STORAGE_KEY}_${userEmail}`, JSON.stringify(data));
+      } catch (e) {
+        console.error('Error saving demo settings:', e);
+      }
+    }
+  }, [userEmail]);
+
+  // Load settings from localStorage for demo users
+  const loadDemoSettings = useCallback(() => {
+    if (typeof window !== 'undefined' && userEmail && isDemoUser) {
+      try {
+        const saved = localStorage.getItem(`${DEMO_SETTINGS_STORAGE_KEY}_${userEmail}`);
+        if (saved) {
+          return JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error('Error loading demo settings:', e);
+      }
+    }
+    return null;
+  }, [userEmail, isDemoUser]);
 
   const [formData, setFormData] = useState({
     name: displayName,
@@ -39,8 +73,16 @@ export function ProfileSettings() {
     linkedin: (user as any)?.profileData?.linkedin || '',
   });
 
-  // Update form when user data loads
+  // Update form when user data loads - check localStorage first for demo users
   useEffect(() => {
+    // Try to load from localStorage for demo users
+    const savedSettings = loadDemoSettings();
+    if (savedSettings) {
+      setFormData(savedSettings);
+      return;
+    }
+
+    // Otherwise use user/session data
     if (user) {
       setFormData({
         name: user.name || sessionUser?.name || '',
@@ -55,14 +97,26 @@ export function ProfileSettings() {
         linkedin: (user as any)?.profileData?.linkedin || '',
       });
     }
-  }, [user, sessionUser]);
+  }, [user, sessionUser, loadDemoSettings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
 
     setIsLoading(true);
     try {
+      // For demo users, save to localStorage instead of Firestore
+      if (isDemoUser) {
+        saveDemoSettings(formData);
+        toast.success('Profile updated successfully');
+        return;
+      }
+
+      // For real users, save via API
+      if (!user) {
+        toast.error('User not found');
+        return;
+      }
+
       await updateProfile(formData);
       toast.success('Profile updated successfully');
     } catch (error) {

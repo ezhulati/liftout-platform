@@ -1,10 +1,13 @@
 import { Timestamp } from 'firebase/firestore';
 
+// Flexible timestamp type for Firebase/PostgreSQL compatibility
+export type FlexibleTimestamp = Timestamp | Date | string;
+
 // Base types
 export interface BaseDocument {
   id: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FlexibleTimestamp;
+  updatedAt: FlexibleTimestamp;
 }
 
 // User types

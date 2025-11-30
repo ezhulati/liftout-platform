@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,7 +13,15 @@ import {
   XMarkIcon,
   CheckIcon,
 } from '@heroicons/react/24/outline';
+import { useAuth } from '@/contexts/AuthContext';
 import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
+
+// Helper to check if user is a demo user
+const isDemoUserEmail = (email: string) =>
+  email === 'demo@example.com' || email === 'company@example.com';
+
+// LocalStorage key for demo teams
+const DEMO_TEAMS_STORAGE_KEY = 'liftout_demo_teams';
 
 const memberSchema = z.object({
   id: z.string().optional(),
@@ -65,11 +74,39 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
   const [achievementInput, setAchievementInput] = useState('');
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const { user } = useAuth();
+
+  // Check if this is a demo user
+  const sessionUser = session?.user as any;
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = isDemoUserEmail(userEmail);
+
+  // Helper to get demo teams from localStorage
+  const getDemoTeams = () => {
+    if (typeof window === 'undefined') return [];
+    try {
+      return JSON.parse(localStorage.getItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`) || '[]');
+    } catch {
+      return [];
+    }
+  };
 
   // Fetch existing team data
   const { data: team, isLoading: isLoadingTeam } = useQuery({
     queryKey: ['team', teamId],
     queryFn: async () => {
+      // For demo users, load from localStorage
+      if (isDemoUser) {
+        const demoTeams = getDemoTeams();
+        const foundTeam = demoTeams.find((t: any) => t.id === teamId);
+        if (foundTeam) {
+          return foundTeam;
+        }
+        // Return mock team if not found in localStorage
+        return null;
+      }
+
       const response = await fetch(`/api/teams/${teamId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch team');
@@ -99,6 +136,24 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
   // Update team mutation
   const updateTeamMutation = useMutation({
     mutationFn: async (data: EditTeamFormData) => {
+      // For demo users, save to localStorage
+      if (isDemoUser) {
+        const demoTeams = getDemoTeams();
+        const teamIndex = demoTeams.findIndex((t: any) => t.id === teamId);
+        const updatedTeam = {
+          ...demoTeams[teamIndex],
+          ...data,
+          updatedAt: new Date().toISOString(),
+        };
+        if (teamIndex >= 0) {
+          demoTeams[teamIndex] = updatedTeam;
+        } else {
+          demoTeams.push(updatedTeam);
+        }
+        localStorage.setItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`, JSON.stringify(demoTeams));
+        return updatedTeam;
+      }
+
       const response = await fetch(`/api/teams/${teamId}`, {
         method: 'PUT',
         headers: {
@@ -115,7 +170,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
       return response.json();
     },
     onSuccess: () => {
-      toast.success('Team updated successfully!');
+      toast.success(isDemoUser ? 'Team updated successfully! (demo mode)' : 'Team updated successfully!');
       queryClient.invalidateQueries({ queryKey: ['team', teamId] });
       queryClient.invalidateQueries({ queryKey: ['teams'] });
       router.push(`/app/teams/${teamId}`);

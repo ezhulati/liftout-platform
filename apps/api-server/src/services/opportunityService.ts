@@ -632,6 +632,158 @@ class OpportunityService {
       take: limit
     });
   }
+
+  /**
+   * Get filter facets for opportunities (aggregated counts)
+   */
+  async getFilterFacets(): Promise<{
+    industries: { value: string; count: number }[];
+    locations: { value: string; count: number }[];
+    remotePolicies: { value: string; count: number }[];
+    urgencyLevels: { value: string; count: number }[];
+    seniorityLevels: { value: string; count: number }[];
+    total: number;
+  }> {
+    // Base filter for active, non-expired opportunities
+    const baseWhere = {
+      status: 'active' as const,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } }
+      ]
+    };
+
+    // Run all aggregations in parallel
+    const [
+      industryGroups,
+      locationGroups,
+      remotePolicyGroups,
+      urgencyGroups,
+      seniorityGroups,
+      total
+    ] = await Promise.all([
+      // Industry counts
+      prisma.opportunity.groupBy({
+        by: ['industry'],
+        where: { ...baseWhere, industry: { not: null } },
+        _count: { industry: true },
+        orderBy: { _count: { industry: 'desc' } },
+        take: 20
+      }),
+      // Location counts
+      prisma.opportunity.groupBy({
+        by: ['location'],
+        where: { ...baseWhere, location: { not: null } },
+        _count: { location: true },
+        orderBy: { _count: { location: 'desc' } },
+        take: 20
+      }),
+      // Remote policy counts
+      prisma.opportunity.groupBy({
+        by: ['remotePolicy'],
+        where: baseWhere,
+        _count: { remotePolicy: true },
+        orderBy: { _count: { remotePolicy: 'desc' } }
+      }),
+      // Urgency counts
+      prisma.opportunity.groupBy({
+        by: ['urgency'],
+        where: baseWhere,
+        _count: { urgency: true },
+        orderBy: { _count: { urgency: 'desc' } }
+      }),
+      // Seniority level counts
+      prisma.opportunity.groupBy({
+        by: ['seniorityLevel'],
+        where: { ...baseWhere, seniorityLevel: { not: null } },
+        _count: { seniorityLevel: true },
+        orderBy: { _count: { seniorityLevel: 'desc' } }
+      }),
+      // Total count
+      prisma.opportunity.count({ where: baseWhere })
+    ]);
+
+    return {
+      industries: industryGroups
+        .filter(g => g.industry)
+        .map(g => ({ value: g.industry!, count: g._count.industry })),
+      locations: locationGroups
+        .filter(g => g.location)
+        .map(g => ({ value: g.location!, count: g._count.location })),
+      remotePolicies: remotePolicyGroups
+        .map(g => ({ value: g.remotePolicy, count: g._count.remotePolicy })),
+      urgencyLevels: urgencyGroups
+        .map(g => ({ value: g.urgency, count: g._count.urgency })),
+      seniorityLevels: seniorityGroups
+        .filter(g => g.seniorityLevel)
+        .map(g => ({ value: g.seniorityLevel!, count: g._count.seniorityLevel })),
+      total
+    };
+  }
+
+  /**
+   * Get opportunity statistics for dashboard
+   */
+  async getOpportunityStats(): Promise<{
+    totalActive: number;
+    totalApplications: number;
+    avgApplicationsPerOpportunity: number;
+    byStatus: { status: string; count: number }[];
+    byIndustry: { industry: string; count: number }[];
+    recentActivity: { date: string; count: number }[];
+  }> {
+    const [
+      statusCounts,
+      industryCounts,
+      totalApplications,
+      recentOpportunities
+    ] = await Promise.all([
+      // Status breakdown
+      prisma.opportunity.groupBy({
+        by: ['status'],
+        _count: { status: true }
+      }),
+      // Industry breakdown (top 10)
+      prisma.opportunity.groupBy({
+        by: ['industry'],
+        where: { industry: { not: null } },
+        _count: { industry: true },
+        orderBy: { _count: { industry: 'desc' } },
+        take: 10
+      }),
+      // Total applications
+      prisma.teamApplication.count(),
+      // Recent activity (last 30 days)
+      prisma.opportunity.findMany({
+        where: {
+          createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
+        },
+        select: { createdAt: true },
+        orderBy: { createdAt: 'asc' }
+      })
+    ]);
+
+    const totalActive = statusCounts.find(s => s.status === 'active')?._count.status || 0;
+    const avgApplications = totalActive > 0 ? totalApplications / totalActive : 0;
+
+    // Group recent activity by date
+    const activityByDate = recentOpportunities.reduce((acc, opp) => {
+      const date = opp.createdAt.toISOString().split('T')[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return {
+      totalActive,
+      totalApplications,
+      avgApplicationsPerOpportunity: Math.round(avgApplications * 10) / 10,
+      byStatus: statusCounts.map(s => ({ status: s.status, count: s._count.status })),
+      byIndustry: industryCounts
+        .filter(i => i.industry)
+        .map(i => ({ industry: i.industry!, count: i._count.industry })),
+      recentActivity: Object.entries(activityByDate).map(([date, count]) => ({ date, count }))
+    };
+  }
 }
 
 export const opportunityService = new OpportunityService();

@@ -44,13 +44,31 @@ class EmailInvitationService {
   private readonly EXPIRY_DAYS = 7; // Invitations expire after 7 days
 
   /**
+   * Check if this is a demo-related invitation
+   */
+  private isDemoInvitation(teamId: string, inviterEmail: string): boolean {
+    return teamId.startsWith('demo-team-') ||
+           teamId.includes('demo') ||
+           inviterEmail === 'demo@example.com' ||
+           inviterEmail === 'company@example.com';
+  }
+
+  /**
    * Send a team invitation via email
    */
   async sendInvitation(invitation: Omit<TeamInvitation, 'id' | 'status' | 'createdAt' | 'updatedAt' | 'expiresAt'>): Promise<string> {
+    // Handle demo invitations (simulate success)
+    if (this.isDemoInvitation(invitation.teamId, invitation.inviterEmail)) {
+      const demoId = `demo-invite-${Date.now()}`;
+      console.log(`[Demo] Sending invitation to ${invitation.inviteeEmail} for team ${invitation.teamName}`);
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      return demoId;
+    }
+
     try {
       // Check if invitation already exists for this email and team
       const existingInvitation = await this.getExistingInvitation(invitation.teamId, invitation.inviteeEmail);
-      
+
       if (existingInvitation && existingInvitation.status === 'pending') {
         throw new Error('An invitation for this email address is already pending for this team');
       }

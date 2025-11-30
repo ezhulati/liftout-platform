@@ -30,9 +30,26 @@ import type {
 const TEAMS_COLLECTION = 'teams';
 const TEAM_DOCUMENTS_PATH = 'team-documents';
 
+// Helper to check if this is a demo user/entity
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-');
+};
+
 export class TeamService {
   // Create a new team profile
   async createTeam(data: CreateTeamData, creatorUserId: string): Promise<string> {
+    // Handle demo users - simulate successful team creation
+    if (isDemoEntity(creatorUserId)) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const demoTeamId = `demo-team-${Date.now()}`;
+      console.log(`[Demo] Created team: ${data.name} (${demoTeamId})`);
+      return demoTeamId;
+    }
+
     try {
       const teamData = {
         ...data,
@@ -212,6 +229,13 @@ export class TeamService {
 
   // Update team profile
   async updateTeam(teamId: string, updates: Partial<TeamProfile>): Promise<void> {
+    // Handle demo teams
+    if (isDemoEntity(teamId)) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Updated team: ${teamId}`);
+      return;
+    }
+
     try {
       const docRef = doc(db, TEAMS_COLLECTION, teamId);
       await updateDoc(docRef, {

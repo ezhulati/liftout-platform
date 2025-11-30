@@ -2,13 +2,22 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useCreateOpportunity } from '@/hooks/useOpportunities';
+import { useAuth } from '@/contexts/AuthContext';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
+
+// Helper to check if user is a demo user
+const isDemoUserEmail = (email: string) =>
+  email === 'demo@example.com' || email === 'company@example.com';
+
+// LocalStorage key for demo opportunities
+const DEMO_OPPORTUNITIES_STORAGE_KEY = 'liftout_demo_opportunities';
 
 const createOpportunitySchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -62,7 +71,14 @@ export function CreateOpportunityForm() {
   const [requirementInput, setRequirementInput] = useState('');
   const [offeringInput, setOfferingInput] = useState('');
   const router = useRouter();
+  const { data: session } = useSession();
+  const { user } = useAuth();
   const createOpportunityMutation = useCreateOpportunity();
+
+  // Check if this is a demo user
+  const sessionUser = session?.user as any;
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = isDemoUserEmail(userEmail);
 
   const {
     register,
@@ -105,6 +121,24 @@ export function CreateOpportunityForm() {
 
   const onSubmit = async (data: CreateOpportunityFormData) => {
     try {
+      // For demo users, save to localStorage instead of API
+      if (isDemoUser) {
+        const existingOpportunities = JSON.parse(localStorage.getItem(`${DEMO_OPPORTUNITIES_STORAGE_KEY}_${userEmail}`) || '[]');
+        const newOpportunity = {
+          id: `demo-opp-${Date.now()}`,
+          ...data,
+          createdAt: new Date().toISOString(),
+          status: 'active',
+          createdBy: userEmail,
+          applicants: 0,
+        };
+        existingOpportunities.push(newOpportunity);
+        localStorage.setItem(`${DEMO_OPPORTUNITIES_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingOpportunities));
+        toast.success('Liftout opportunity created successfully! (demo mode)');
+        router.push('/app/opportunities');
+        return;
+      }
+
       await createOpportunityMutation.mutateAsync(data);
       toast.success('Liftout opportunity created successfully!');
       router.push('/app/opportunities');

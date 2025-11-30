@@ -11,7 +11,6 @@ import {
   AccountSettings,
   DEFAULT_USER_SETTINGS,
 } from '@/types/settings';
-import { settingsService } from '@/lib/services/settingsService';
 import { toast } from 'react-hot-toast';
 
 interface SettingsContextType {
@@ -34,41 +33,78 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user settings from Firestore
+  // Load user settings from API
   const loadUserSettings = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setSettings(DEFAULT_USER_SETTINGS);
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     try {
-      // Fetch from Firestore
-      const firestoreSettings = await settingsService.getUserSettings(user.id);
+      const response = await fetch('/api/user/settings');
 
-      if (firestoreSettings) {
-        // Merge with defaults to ensure new settings are included
-        setSettings({
+      if (response.ok) {
+        const data = await response.json();
+        // Convert date strings back to Date objects
+        const loadedSettings: UserSettings = {
           ...DEFAULT_USER_SETTINGS,
-          ...firestoreSettings,
-          notifications: { ...DEFAULT_USER_SETTINGS.notifications, ...firestoreSettings.notifications },
-          privacy: { ...DEFAULT_USER_SETTINGS.privacy, ...firestoreSettings.privacy },
-          security: { ...DEFAULT_USER_SETTINGS.security, ...firestoreSettings.security },
-          theme: { ...DEFAULT_USER_SETTINGS.theme, ...firestoreSettings.theme },
-          account: { ...DEFAULT_USER_SETTINGS.account, ...firestoreSettings.account },
-        });
-      } else {
-        // Initialize with defaults for new users
-        const initialSettings = await settingsService.initializeUserSettings(user.id, {
+          ...data,
+          security: {
+            ...DEFAULT_USER_SETTINGS.security,
+            ...data.security,
+            passwordLastChanged: data.security?.passwordLastChanged
+              ? new Date(data.security.passwordLastChanged)
+              : null,
+          },
           account: {
             ...DEFAULT_USER_SETTINGS.account,
-            memberSince: new Date(),
-            emailVerified: user.verified || false,
-            profileCompletion: 20, // Basic signup info
+            ...data.account,
+            memberSince: data.account?.memberSince
+              ? new Date(data.account.memberSince)
+              : new Date(),
+            lastLogin: data.account?.lastLogin
+              ? new Date(data.account.lastLogin)
+              : null,
           },
-        });
-        setSettings(initialSettings);
+        };
+        setSettings(loadedSettings);
+        // Save to localStorage as backup
+        localStorage.setItem(`settings_${user.id}`, JSON.stringify(loadedSettings));
+      } else {
+        // Fall back to localStorage
+        const storedSettings = localStorage.getItem(`settings_${user.id}`);
+        if (storedSettings) {
+          const parsed = JSON.parse(storedSettings);
+          setSettings({
+            ...DEFAULT_USER_SETTINGS,
+            ...parsed,
+            security: {
+              ...DEFAULT_USER_SETTINGS.security,
+              ...parsed.security,
+              passwordLastChanged: parsed.security?.passwordLastChanged
+                ? new Date(parsed.security.passwordLastChanged)
+                : null,
+            },
+            account: {
+              ...DEFAULT_USER_SETTINGS.account,
+              ...parsed.account,
+              memberSince: parsed.account?.memberSince
+                ? new Date(parsed.account.memberSince)
+                : new Date(),
+              lastLogin: parsed.account?.lastLogin
+                ? new Date(parsed.account.lastLogin)
+                : null,
+            },
+          });
+        } else {
+          setSettings(DEFAULT_USER_SETTINGS);
+        }
       }
     } catch (error) {
-      console.error('Failed to load user settings from Firestore:', error);
-      // Fall back to localStorage if Firestore fails
+      console.error('Failed to load user settings:', error);
+      // Fall back to localStorage if API fails
       try {
         const storedSettings = localStorage.getItem(`settings_${user.id}`);
         if (storedSettings) {
@@ -90,29 +126,31 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   // Load settings when user changes
   useEffect(() => {
-    if (user) {
-      loadUserSettings();
-    }
-  }, [user, loadUserSettings]);
+    loadUserSettings();
+  }, [loadUserSettings]);
 
-  // Save settings to Firestore
+  // Save settings to API
   const saveSettings = async (newSettings: UserSettings) => {
     if (!user) return;
 
+    // Optimistic update
+    setSettings(newSettings);
+    // Save to localStorage as backup
+    localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
+
     try {
-      // Optimistic update
-      setSettings(newSettings);
+      const response = await fetch('/api/user/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSettings),
+      });
 
-      // Save to Firestore
-      await settingsService.saveUserSettings(user.id, newSettings);
-
-      // Also save to localStorage as backup
-      localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
+      if (!response.ok) {
+        throw new Error('Failed to save settings');
+      }
     } catch (error) {
-      console.error('Failed to save settings to Firestore:', error);
-      // Still save to localStorage as fallback
-      localStorage.setItem(`settings_${user.id}`, JSON.stringify(newSettings));
-      throw error;
+      console.error('Failed to save settings to API:', error);
+      // Settings are already saved to localStorage as backup
     }
   };
 
@@ -129,7 +167,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           inApp: { ...settings.notifications.inApp, ...notificationUpdates.inApp },
         },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Notification settings updated');
     } catch (error) {
@@ -145,7 +183,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         ...settings,
         privacy: { ...settings.privacy, ...privacyUpdates },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Privacy settings updated');
     } catch (error) {
@@ -161,7 +199,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         ...settings,
         security: { ...settings.security, ...securityUpdates },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Security settings updated');
     } catch (error) {
@@ -177,10 +215,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         ...settings,
         theme: { ...settings.theme, ...themeUpdates },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Theme settings updated');
-      
+
       // Apply theme changes immediately
       if (themeUpdates.theme) {
         applyTheme(themeUpdates.theme);
@@ -198,7 +236,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         ...settings,
         account: { ...settings.account, ...accountUpdates },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Account settings updated');
     } catch (error) {
@@ -227,12 +265,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const importSettings = async (settingsJson: string) => {
     try {
       const importedSettings = JSON.parse(settingsJson);
-      
+
       // Validate the structure
       if (!importedSettings.notifications || !importedSettings.privacy) {
         throw new Error('Invalid settings format');
       }
-      
+
       const newSettings = {
         ...DEFAULT_USER_SETTINGS,
         ...importedSettings,
@@ -242,7 +280,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           memberSince: settings.account.memberSince, // Don't overwrite join date
         },
       };
-      
+
       await saveSettings(newSettings);
       toast.success('Settings imported successfully');
     } catch (error) {
@@ -255,7 +293,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Apply theme to document
   const applyTheme = (theme: 'light' | 'dark' | 'system') => {
     const root = document.documentElement;
-    
+
     if (theme === 'system') {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       root.classList.toggle('dark', systemPrefersDark);

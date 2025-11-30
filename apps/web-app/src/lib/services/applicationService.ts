@@ -375,6 +375,14 @@ export class ApplicationService {
 
   // Update application status
   async updateApplicationStatus(applicationId: string, status: Application['status'], companyNotes?: string): Promise<void> {
+    // Handle demo applications (stored in memory, simulate success)
+    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+      // Simulate API delay for demo
+      await new Promise(resolve => setTimeout(resolve, 300));
+      console.log(`[Demo] Updated application ${applicationId} status to ${status}`);
+      return;
+    }
+
     try {
       const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
       const updateData: any = {
@@ -395,6 +403,13 @@ export class ApplicationService {
 
   // Mark application as viewed by company
   async markAsViewed(applicationId: string): Promise<void> {
+    // Handle demo applications
+    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log(`[Demo] Marked application ${applicationId} as viewed`);
+      return;
+    }
+
     try {
       const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
       await updateDoc(docRef, {
@@ -410,6 +425,13 @@ export class ApplicationService {
 
   // Withdraw application (for teams)
   async withdrawApplication(applicationId: string): Promise<void> {
+    // Handle demo applications
+    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      console.log(`[Demo] Withdrew application ${applicationId}`);
+      return;
+    }
+
     try {
       const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
       await updateDoc(docRef, {
@@ -424,6 +446,13 @@ export class ApplicationService {
 
   // Schedule interview
   async scheduleInterview(applicationId: string, interviewDetails: Application['interviewDetails']): Promise<void> {
+    // Handle demo applications
+    if (applicationId.startsWith('app_') || applicationId.startsWith('app_company_')) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      console.log(`[Demo] Scheduled interview for application ${applicationId}`);
+      return;
+    }
+
     try {
       const docRef = doc(db, APPLICATIONS_COLLECTION, applicationId);
       await updateDoc(docRef, {

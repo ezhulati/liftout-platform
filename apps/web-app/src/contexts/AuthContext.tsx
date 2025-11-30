@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { Timestamp } from 'firebase/firestore';
 import { User } from '@/types/firebase';
-import { userService } from '@/lib/firestore';
 
 interface AuthContextType {
   // Session and user data
@@ -56,24 +56,94 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const canCreateOpportunities = isCompany;
   const canViewAnalytics = isAuthenticated; // Both types can view analytics
 
-  // Load user data from Firestore when session changes
+  // Load user data from API when session changes
   useEffect(() => {
     const loadUser = async () => {
-      if (session?.user?.email && !user) {
+      if (session?.user?.id && !user) {
         setIsUserLoading(true);
         try {
-          const userData = await userService.getUserByEmail(session.user.email);
-          if (userData) {
-            setUser(userData);
-            // Update last login
-            await userService.updateLastLogin(userData.id);
+          const response = await fetch('/api/user/profile');
+          if (response.ok) {
+            const userData = await response.json();
+            // Transform API response to User type
+            const transformedUser: User = {
+              id: userData.id,
+              email: userData.email,
+              name: userData.name,
+              type: userData.userType as 'individual' | 'company',
+              photoURL: userData.profilePhotoUrl || '',
+              phone: userData.phone || '',
+              location: userData.location || '',
+              industry: userData.industry || '',
+              companyName: userData.companyName || '',
+              position: userData.position || '',
+              verified: userData.emailVerified || false,
+              status: 'active',
+              preferences: {
+                notifications: true,
+                marketing: true,
+                confidentialMode: false,
+              },
+              profileData: {
+                bio: userData.bio,
+                website: userData.website,
+                linkedin: userData.linkedin,
+              },
+              createdAt: userData.createdAt,
+              updatedAt: userData.updatedAt,
+            };
+            setUser(transformedUser);
           } else {
-            // Create user if doesn't exist
-            const newUser = await createUserFromSession(session);
-            setUser(newUser);
+            // User profile doesn't exist, create from session data
+            const sessionUser = session.user as any;
+            const fallbackUser = {
+              id: sessionUser.id,
+              email: sessionUser.email,
+              name: sessionUser.name || `${sessionUser.firstName || ''} ${sessionUser.lastName || ''}`.trim(),
+              type: (sessionUser.userType as 'individual' | 'company') || 'individual',
+              photoURL: sessionUser.image || '',
+              phone: '',
+              location: '',
+              industry: '',
+              companyName: '',
+              position: '',
+              verified: !!sessionUser.emailVerified,
+              status: 'active' as const,
+              preferences: {
+                notifications: true,
+                marketing: true,
+                confidentialMode: false,
+              },
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            } as User;
+            setUser(fallbackUser);
           }
         } catch (error) {
           console.error('Error loading user:', error);
+          // Fallback to session data
+          const sessionUser = session.user as any;
+          setUser({
+            id: sessionUser.id,
+            email: sessionUser.email,
+            name: sessionUser.name || '',
+            type: (sessionUser.userType as 'individual' | 'company') || 'individual',
+            photoURL: sessionUser.image || '',
+            phone: '',
+            location: '',
+            industry: '',
+            companyName: '',
+            position: '',
+            verified: false,
+            status: 'active' as const,
+            preferences: {
+              notifications: true,
+              marketing: true,
+              confidentialMode: false,
+            },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          } as User);
         } finally {
           setIsUserLoading(false);
         }
@@ -85,39 +155,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadUser();
   }, [session, user]);
 
-  // Create new user from session data
-  const createUserFromSession = async (sessionData: any): Promise<User> => {
-    const userData = {
-      email: sessionData.user.email,
-      name: sessionData.user.name || sessionData.user.firstName + ' ' + sessionData.user.lastName,
-      type: (sessionData.user.userType as 'individual' | 'company') || 'individual',
-      photoURL: sessionData.user.image || '',
-      phone: '',
-      location: '',
-      industry: '',
-      companyName: '',
-      position: '',
-      verified: true, // Treat authenticated NextAuth users as verified for onboarding completion
-      status: 'active' as const,
-      preferences: {
-        notifications: true,
-        marketing: true,
-        confidentialMode: false,
-      },
-    };
-
-    const userId = await userService.createUser(userData);
-    const createdUser = await userService.getUserById(userId);
-    return createdUser!;
-  };
-
-  // Refresh user data from Firestore
+  // Refresh user data from API
   const refreshUser = async () => {
-    if (session?.user?.email) {
+    if (session?.user?.id) {
       setIsUserLoading(true);
       try {
-        const userData = await userService.getUserByEmail(session.user.email);
-        setUser(userData);
+        const response = await fetch('/api/user/profile');
+        if (response.ok) {
+          const userData = await response.json();
+          const transformedUser = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            type: userData.userType as 'individual' | 'company',
+            photoURL: userData.profilePhotoUrl || '',
+            phone: userData.phone || '',
+            location: userData.location || '',
+            industry: userData.industry || '',
+            companyName: userData.companyName || '',
+            position: userData.position || '',
+            verified: userData.emailVerified || false,
+            status: 'active' as const,
+            preferences: {
+              notifications: true,
+              marketing: true,
+              confidentialMode: false,
+            },
+            profileData: {
+              bio: userData.bio,
+              website: userData.website,
+              linkedin: userData.linkedin,
+            },
+            createdAt: userData.createdAt ? new Date(userData.createdAt) : new Date(),
+            updatedAt: userData.updatedAt ? new Date(userData.updatedAt) : new Date(),
+          } as User;
+          setUser(transformedUser);
+        }
       } catch (error) {
         console.error('Error refreshing user:', error);
       } finally {
@@ -130,7 +203,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateUserType = async (type: 'individual' | 'company') => {
     if (user) {
       try {
-        await userService.updateUser(user.id, { type });
+        // Note: userType changes would need a separate API endpoint
+        // For now, update locally - type is usually set during registration
         setUser({ ...user, type });
       } catch (error) {
         console.error('Error updating user type:', error);
@@ -139,11 +213,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Update user profile
+  // Update user profile via API
   const updateProfile = async (data: Partial<User>) => {
     if (user) {
       try {
-        await userService.updateUser(user.id, data);
+        const response = await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to update profile');
+        }
+
         setUser({ ...user, ...data });
       } catch (error) {
         console.error('Error updating profile:', error);

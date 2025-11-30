@@ -2,7 +2,7 @@ import { prisma } from '../lib/prisma';
 import { TeamApplication, ExpressionOfInterest, ApplicationStatus, Prisma } from '@prisma/client';
 import { getPaginationParams } from '../lib/utils';
 import { NotFoundError, AuthorizationError, ValidationError } from '../middleware/errorHandler';
-import { sendApplicationStatusEmail } from '../lib/email';
+import { sendApplicationStatusEmail, sendExpressionOfInterestEmail } from '../lib/email';
 import { logger } from '../utils/logger';
 
 // Types
@@ -1063,7 +1063,120 @@ class ApplicationService {
       },
     });
 
+    // Send notification emails to the target (fire and forget)
+    this.sendEOINotificationEmails(eoi, data.fromType, fromId, data.toType, data.toId, data.message);
+
     return eoi;
+  }
+
+  /**
+   * Send EOI notification emails to the target
+   */
+  private async sendEOINotificationEmails(
+    eoi: ExpressionOfInterest,
+    fromType: 'team' | 'company',
+    fromId: string,
+    toType: 'team' | 'opportunity',
+    toId: string,
+    message?: string
+  ): Promise<void> {
+    try {
+      // Get the interested party's name
+      let interestedPartyName: string;
+      if (fromType === 'team') {
+        const team = await prisma.team.findUnique({
+          where: { id: fromId },
+          select: { name: true },
+        });
+        interestedPartyName = team?.name || 'A team';
+      } else {
+        const company = await prisma.company.findUnique({
+          where: { id: fromId },
+          select: { name: true },
+        });
+        interestedPartyName = company?.name || 'A company';
+      }
+
+      // Get recipients and target name
+      let recipients: { email: string; firstName: string }[] = [];
+      let targetName: string;
+
+      if (toType === 'team') {
+        // Get team leads/admins to notify
+        const team = await prisma.team.findUnique({
+          where: { id: toId },
+          include: {
+            members: {
+              where: {
+                status: 'active',
+                OR: [{ isAdmin: true }, { isLead: true }],
+              },
+              include: {
+                user: {
+                  select: {
+                    email: true,
+                    firstName: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+        targetName = team?.name || 'your team';
+        recipients = team?.members.map(m => ({
+          email: m.user.email,
+          firstName: m.user.firstName,
+        })) || [];
+      } else {
+        // Get company users to notify for opportunity
+        const opportunity = await prisma.opportunity.findUnique({
+          where: { id: toId },
+          include: {
+            company: {
+              include: {
+                users: {
+                  include: {
+                    user: {
+                      select: {
+                        email: true,
+                        firstName: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        targetName = opportunity?.title || 'your opportunity';
+        recipients = opportunity?.company.users.map(cu => ({
+          email: cu.user.email,
+          firstName: cu.user.firstName,
+        })) || [];
+      }
+
+      // Send emails to all recipients
+      for (const recipient of recipients) {
+        sendExpressionOfInterestEmail({
+          to: recipient.email,
+          recipientName: recipient.firstName,
+          interestedPartyName,
+          interestedPartyType: fromType,
+          targetName,
+          message,
+          interestId: eoi.id,
+        }).then(result => {
+          if (result.success) {
+            logger.info(`EOI notification email sent to: ${recipient.email}`);
+          } else {
+            logger.error(`Failed to send EOI notification to ${recipient.email}: ${result.error}`);
+          }
+        });
+      }
+    } catch (error) {
+      logger.error('Error sending EOI notification emails:', error);
+      // Don't throw - EOI was created successfully, email failure shouldn't break the flow
+    }
   }
 
   /**

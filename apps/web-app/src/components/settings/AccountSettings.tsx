@@ -1,18 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { signOut } from 'next-auth/react';
-import { auth } from '@/lib/firebase';
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  deleteUser,
-} from 'firebase/auth';
-import { settingsService } from '@/lib/services/settingsService';
-import { userService } from '@/lib/firestore';
+
+// Helper to check if user is a demo user
+const isDemoUserEmail = (email: string) =>
+  email === 'demo@example.com' || email === 'company@example.com';
 import {
   Cog6ToothIcon,
   ExclamationTriangleIcon,
@@ -208,6 +203,10 @@ export function AccountSettings() {
   // Use session data as fallback
   const sessionUser = session?.user as any;
   const displayEmail = user?.email || sessionUser?.email || '';
+
+  // Check if this is a demo user
+  const isDemoUser = isDemoUserEmail(displayEmail);
+
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -263,40 +262,70 @@ export function AccountSettings() {
 
   const handleDeactivateAccount = async () => {
     try {
-      await updateAccountSettings({ accountStatus: 'deactivated' });
+      // For demo users, just simulate success and sign out
+      if (isDemoUser) {
+        toast.success('Account deactivated successfully (demo mode)');
+        setShowDeactivateModal(false);
+        await signOut({ callbackUrl: '/' });
+        return;
+      }
+
+      const response = await fetch('/api/user/account', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'deactivated' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to deactivate account');
+      }
+
       toast.success('Account deactivated successfully');
       setShowDeactivateModal(false);
-      // In a real app, this might redirect to a deactivation confirmation page
+      // Sign out the user
+      await signOut({ callbackUrl: '/' });
     } catch (error) {
       toast.error('Failed to deactivate account');
     }
   };
 
   const handleDeleteAccount = async (password: string) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser || !currentUser.email || !user) {
+    // For demo users, just simulate success and sign out
+    if (isDemoUser) {
+      toast.success('Account deleted successfully (demo mode)');
+      setShowDeleteModal(false);
+      // Clear localStorage demo data
+      if (typeof window !== 'undefined') {
+        Object.keys(localStorage).forEach(key => {
+          if (key.includes('demo@example.com') || key.includes('company@example.com')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
+      await signOut({ callbackUrl: '/' });
+      return;
+    }
+
+    if (!user) {
       toast.error('You must be logged in to delete your account');
       return;
     }
 
     try {
-      // Re-authenticate user with password
-      const credential = EmailAuthProvider.credential(currentUser.email, password);
-      await reauthenticateWithCredential(currentUser, credential);
+      const response = await fetch('/api/user/account', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password,
+          confirmEmail: displayEmail,
+        }),
+      });
 
-      // Delete user settings from Firestore
-      await settingsService.deleteUserSettings(user.id);
+      const data = await response.json();
 
-      // Delete user data from Firestore
-      // Note: In production, you might want to use a Cloud Function to handle cascading deletes
-      try {
-        await userService.updateUser(user.id, { status: 'inactive' });
-      } catch {
-        // User document might not exist in Firestore
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete account');
       }
-
-      // Delete Firebase Auth account
-      await deleteUser(currentUser);
 
       toast.success('Account deleted successfully');
       setShowDeleteModal(false);
@@ -305,13 +334,7 @@ export function AccountSettings() {
       await signOut({ callbackUrl: '/' });
     } catch (error: any) {
       console.error('Account deletion error:', error);
-      if (error.code === 'auth/wrong-password') {
-        toast.error('Incorrect password');
-      } else if (error.code === 'auth/requires-recent-login') {
-        toast.error('Please sign out and sign in again before deleting your account');
-      } else {
-        toast.error('Failed to delete account. Please try again.');
-      }
+      toast.error(error.message || 'Failed to delete account. Please try again.');
       throw error;
     }
   };

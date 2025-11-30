@@ -28,6 +28,10 @@ import {
 import {
   StarIcon as StarSolidIcon,
 } from '@heroicons/react/24/solid';
+import { useCallback } from 'react';
+
+// Local storage key for demo user company profile data
+const DEMO_COMPANY_PROFILE_STORAGE_KEY = 'liftout_demo_company_profile';
 
 interface CompanyValue {
   id: string;
@@ -170,9 +174,29 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
   const { data: session } = useSession();
   const { user, updateProfile, isUserLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Use session data as fallback
   const sessionUser = session?.user as any;
+
+  // Check if this is a demo user - use email check since AuthContext creates
+  // user records for all authenticated users (so `user` will exist even for demo)
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = userEmail === 'demo@example.com' || userEmail === 'company@example.com';
+
+  // Save profile data to localStorage for demo users
+  const saveDemoCompanyProfile = useCallback((data: CompanyProfileData, logoUrl: string | null) => {
+    if (typeof window !== 'undefined' && userEmail) {
+      try {
+        localStorage.setItem(`${DEMO_COMPANY_PROFILE_STORAGE_KEY}_${userEmail}`, JSON.stringify(data));
+        if (logoUrl !== undefined) {
+          localStorage.setItem(`${DEMO_COMPANY_PROFILE_STORAGE_KEY}_${userEmail}_logo`, logoUrl || '');
+        }
+      } catch (e) {
+        console.error('Error saving demo company profile:', e);
+      }
+    }
+  }, [userEmail]);
   const [activeTab, setActiveTab] = useState<'overview' | 'culture' | 'team' | 'benefits' | 'hiring' | 'achievements'>('overview');
   const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(null);
   const [profileData, setProfileData] = useState<CompanyProfileData>({
@@ -217,8 +241,36 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
     clientTestimonials: [],
   });
 
-  // Initialize profile data from session first, then user
+  // Initialize profile data - load from localStorage for demo users
   useEffect(() => {
+    // Don't re-initialize if already done
+    if (isInitialized || !userEmail) return;
+
+    // Try to load from localStorage first (for demo users)
+    let savedProfile: CompanyProfileData | null = null;
+    let savedLogo: string | null = null;
+
+    if (typeof window !== 'undefined' && isDemoUser) {
+      try {
+        const saved = localStorage.getItem(`${DEMO_COMPANY_PROFILE_STORAGE_KEY}_${userEmail}`);
+        if (saved) {
+          savedProfile = JSON.parse(saved) as CompanyProfileData;
+        }
+        savedLogo = localStorage.getItem(`${DEMO_COMPANY_PROFILE_STORAGE_KEY}_${userEmail}_logo`);
+      } catch (e) {
+        console.error('Error loading demo company profile:', e);
+      }
+    }
+
+    // If we have saved profile data, use it
+    if (savedProfile && savedProfile.companyName) {
+      setProfileData(savedProfile);
+      setCurrentLogoUrl(savedLogo || user?.photoURL || sessionUser?.image || null);
+      setIsInitialized(true);
+      return;
+    }
+
+    // Otherwise use session/user data as initial values
     const companyName = user?.companyName || sessionUser?.name || '';
     const email = user?.email || sessionUser?.email || '';
 
@@ -237,11 +289,20 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
 
     // Set current logo URL
     setCurrentLogoUrl(user?.photoURL || sessionUser?.image || null);
-  }, [user, sessionUser]);
+    setIsInitialized(true);
+  }, [user, sessionUser, userEmail, isDemoUser, isInitialized]);
 
   const handleSave = async () => {
     try {
-      // Update basic user fields
+      // For demo users, save to localStorage instead of Firestore
+      if (isDemoUser) {
+        saveDemoCompanyProfile(profileData, currentLogoUrl);
+        setIsEditing(false);
+        toast.success('Company profile updated successfully');
+        return;
+      }
+
+      // For real users, update via API
       await updateProfile({
         companyName: profileData.companyName,
         phone: profileData.contactPhone,
@@ -251,7 +312,7 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
         // Store extended profile data
         profileData,
       });
-      
+
       setIsEditing(false);
       toast.success('Company profile updated successfully');
     } catch (error) {
@@ -263,8 +324,15 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
   // Handle logo upload/delete
   const handleLogoUpdate = async (logoUrl: string | null) => {
     setCurrentLogoUrl(logoUrl);
-    
-    // Auto-save logo URL to user profile
+
+    // For demo users, save to localStorage
+    if (isDemoUser) {
+      saveDemoCompanyProfile(profileData, logoUrl);
+      toast.success('Logo updated');
+      return;
+    }
+
+    // Auto-save logo URL to user profile for real users
     try {
       await updateProfile({ photoURL: logoUrl || undefined });
     } catch (error) {
@@ -362,12 +430,13 @@ export default function CompanyProfile({ readonly = false, companyId }: CompanyP
               {/* Company Logo Upload */}
               <PhotoUpload
                 currentPhotoUrl={currentLogoUrl || undefined}
-                userId={user?.id || sessionUser?.id || 'temp'}
+                userId={user?.id || sessionUser?.id || 'demo-company-user'}
                 type="company-logo"
                 onPhotoUpdate={handleLogoUpdate}
                 size="xl"
-                disabled={readonly || !user}
+                disabled={readonly}
                 className="rounded-lg"
+                useLocalStorage={isDemoUser}
               />
               
               <div>

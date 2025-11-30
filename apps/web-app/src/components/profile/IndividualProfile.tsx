@@ -174,9 +174,10 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Check if this is a demo user (no Firestore user available)
-  const isDemoUser = !user && !!session;
+  // Check if this is a demo user - use email check since AuthContext creates
+  // user records for all authenticated users (so `user` will exist even for demo)
   const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = userEmail === 'demo@example.com' || userEmail === 'company@example.com';
 
   // Save profile data to localStorage for demo users
   const saveDemoProfile = useCallback((data: IndividualProfileData, photoUrl: string | null) => {

@@ -113,6 +113,26 @@ router.get('/featured', authMiddleware, async (req: AuthenticatedRequest, res) =
   });
 });
 
+// GET /api/opportunities/facets - Get filter facets with counts
+router.get('/facets', authMiddleware, async (req: AuthenticatedRequest, res) => {
+  const facets = await opportunityService.getFilterFacets();
+
+  res.json({
+    success: true,
+    data: facets
+  });
+});
+
+// GET /api/opportunities/stats - Get opportunity statistics
+router.get('/stats', authMiddleware, async (req: AuthenticatedRequest, res) => {
+  const stats = await opportunityService.getOpportunityStats();
+
+  res.json({
+    success: true,
+    data: stats
+  });
+});
+
 // GET /api/opportunities/company - Get opportunities for user's company
 router.get('/company', authMiddleware, requireCompanyUser, async (req: AuthenticatedRequest, res) => {
   if (!req.user?.companyId) {

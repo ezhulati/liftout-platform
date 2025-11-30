@@ -1,14 +1,15 @@
 'use client';
 
 import { useSettings } from '@/contexts/SettingsContext';
-import { 
-  EnvelopeIcon, 
-  DevicePhoneMobileIcon, 
+import {
+  EnvelopeIcon,
+  DevicePhoneMobileIcon,
   BellIcon,
   CheckCircleIcon,
   XCircleIcon
 } from '@heroicons/react/24/outline';
 import { NotificationSettings as NotificationSettingsType } from '@/types/settings';
+import { PushNotificationSettings } from './PushNotificationSettings';
 
 interface ToggleSwitchProps {
   enabled: boolean;
@@ -176,6 +177,9 @@ export function NotificationSettings() {
 
   return (
     <div className="space-y-8">
+      {/* Browser Push Notifications */}
+      <PushNotificationSettings />
+
       {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
         <h3 className="text-lg font-bold text-text-primary">Notification preferences</h3>

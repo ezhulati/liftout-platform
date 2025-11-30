@@ -2,12 +2,21 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useCreateTeam } from '@/hooks/useTeams';
+import { useAuth } from '@/contexts/AuthContext';
 import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
+
+// Helper to check if user is a demo user
+const isDemoUserEmail = (email: string) =>
+  email === 'demo@example.com' || email === 'company@example.com';
+
+// LocalStorage key for demo teams
+const DEMO_TEAMS_STORAGE_KEY = 'liftout_demo_teams';
 
 const memberSchema = z.object({
   name: z.string().min(2, 'Member name is required'),
@@ -50,7 +59,14 @@ const industries = [
 export function CreateTeamForm() {
   const [skillInput, setSkillInput] = useState<{ [key: number]: string }>({});
   const router = useRouter();
+  const { data: session } = useSession();
+  const { user } = useAuth();
   const createTeamMutation = useCreateTeam();
+
+  // Check if this is a demo user
+  const sessionUser = session?.user as any;
+  const userEmail = user?.email || sessionUser?.email || '';
+  const isDemoUser = isDemoUserEmail(userEmail);
 
   const {
     register,
@@ -80,6 +96,23 @@ export function CreateTeamForm() {
 
   const onSubmit = async (data: CreateTeamFormData) => {
     try {
+      // For demo users, save to localStorage instead of API
+      if (isDemoUser) {
+        const existingTeams = JSON.parse(localStorage.getItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`) || '[]');
+        const newTeam = {
+          id: `demo-team-${Date.now()}`,
+          ...data,
+          createdAt: new Date().toISOString(),
+          status: 'active',
+          leaderId: userEmail,
+        };
+        existingTeams.push(newTeam);
+        localStorage.setItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingTeams));
+        toast.success('Team created successfully! (demo mode)');
+        router.push('/app/teams');
+        return;
+      }
+
       await createTeamMutation.mutateAsync(data);
       toast.success('Team created successfully!');
       router.push('/app/teams');

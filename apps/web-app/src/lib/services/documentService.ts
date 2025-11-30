@@ -25,6 +25,15 @@ import type { MessageAttachment } from '@/lib/messaging';
 const DOCUMENTS_COLLECTION = 'documents';
 const DOCUMENT_ACCESS_LOG_COLLECTION = 'document_access_logs';
 
+// Helper to check if this is a demo user/team/company
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-');
+};
+
 export interface SecureDocument extends MessageAttachment {
   // Enhanced metadata
   conversationId?: string;
@@ -152,6 +161,14 @@ export class DocumentService {
       complianceLabels?: string[];
     }
   ): Promise<string> {
+    // Handle demo users - simulate successful upload
+    if (isDemoEntity(metadata.uploadedBy) || isDemoEntity(metadata.teamId || '') || isDemoEntity(metadata.companyId || '')) {
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate upload delay
+      const demoDocId = `demo-doc-${Date.now()}`;
+      console.log(`[Demo] Uploaded document: ${file.name} (${demoDocId})`);
+      return demoDocId;
+    }
+
     try {
       // Validate file
       this.validateFile(file);

@@ -35,6 +35,15 @@ const MESSAGES_COLLECTION = 'messages';
 const MESSAGE_DRAFTS_COLLECTION = 'message_drafts';
 const AUDIT_LOGS_COLLECTION = 'audit_logs';
 
+// Helper to check if this is a demo user/entity
+const isDemoEntity = (id: string): boolean => {
+  if (!id) return false;
+  return id.includes('demo') ||
+         id === 'demo@example.com' ||
+         id === 'company@example.com' ||
+         id.startsWith('demo-');
+};
+
 export interface MessageSearchOptions {
   conversationId?: string;
   senderId?: string;
@@ -64,6 +73,15 @@ export class MessagingService {
       requiresModeration?: boolean;
     } = {}
   ): Promise<string> {
+    // Handle demo users - simulate successful conversation creation
+    const hasDemoParticipant = participants.some(p => isDemoEntity(p.userId));
+    if (hasDemoParticipant || isDemoEntity(options.teamId || '')) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const demoConvId = `demo-conv-${Date.now()}`;
+      console.log(`[Demo] Created conversation: ${title} (${demoConvId})`);
+      return demoConvId;
+    }
+
     try {
       const conversationData: Partial<Conversation> = {
         title,
@@ -131,6 +149,14 @@ export class MessagingService {
       parentMessageId?: string;
     } = {}
   ): Promise<string> {
+    // Handle demo users - simulate successful message send
+    if (isDemoEntity(senderId) || conversationId.startsWith('demo-conv-')) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const demoMsgId = `demo-msg-${Date.now()}`;
+      console.log(`[Demo] Sent message in conversation ${conversationId} (${demoMsgId})`);
+      return demoMsgId;
+    }
+
     try {
       // Get conversation to validate security requirements
       const conversation = await this.getConversationById(conversationId);

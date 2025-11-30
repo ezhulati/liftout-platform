@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState, useEffect, useRef } from 'react';
+import { Fragment, useState, useEffect, useRef, useCallback } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { toast } from 'react-hot-toast';
 import {
@@ -15,6 +15,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import type { User } from '@/types/firebase';
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 
 interface AppHeaderProps {
   user: User;
@@ -68,6 +69,20 @@ const userNavigation = [
 
 export function AppHeader({ user }: AppHeaderProps) {
   const isVisible = useScrollDirection();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Keyboard shortcut to open search (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -103,22 +118,21 @@ export function AppHeader({ user }: AppHeaderProps) {
         <div className="h-6 w-px bg-border lg:hidden" aria-hidden="true" />
 
         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-          <form className="relative flex flex-1" action="#" method="GET">
-            <label htmlFor="search-field" className="sr-only">
-              Search
-            </label>
+          {/* Search trigger button */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="relative flex flex-1 items-center gap-2 px-3 text-sm text-text-tertiary hover:text-text-secondary transition-colors"
+          >
             <MagnifyingGlassIcon
-              className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-text-tertiary"
+              className="h-5 w-5 text-text-tertiary"
               aria-hidden="true"
             />
-            <input
-              id="search-field"
-              className="block h-full w-full border-0 py-0 pl-8 pr-0 text-text-primary bg-transparent placeholder:text-text-tertiary focus:ring-0 sm:text-sm"
-              placeholder="Search teams, opportunities..."
-              type="search"
-              name="search"
-            />
-          </form>
+            <span className="hidden sm:inline">Search teams, opportunities...</span>
+            <span className="sm:hidden">Search...</span>
+            <kbd className="hidden lg:inline-flex items-center gap-1 ml-auto rounded border border-border bg-bg-alt px-1.5 py-0.5 text-xs text-text-tertiary">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </button>
           <div className="flex items-center gap-x-4 lg:gap-x-6">
             <button
               type="button"
@@ -222,6 +236,12 @@ export function AppHeader({ user }: AppHeaderProps) {
         </div>
         </div>
       </div>
+
+      {/* Global Search Modal */}
+      <GlobalSearch
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </header>
   );
 }

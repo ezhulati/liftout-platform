@@ -236,6 +236,10 @@ model User {
   deletedAt                DateTime? @map("deleted_at")
   deletedBy                String?   @map("deleted_by")
 
+  // Push notification fields
+  pushEnabled              Boolean   @default(false) @map("push_enabled")
+  pushSubscription         Json?     @map("push_subscription")
+
   // Relations
   profile                IndividualProfile?
   skills                 UserSkill[]
@@ -566,6 +570,12 @@ model TeamApplication {
   appliedAt              DateTime          @default(now()) @map("applied_at")
   reviewedAt             DateTime?         @map("reviewed_at")
   interviewScheduledAt   DateTime?         @map("interview_scheduled_at")
+  interviewFormat        String?           @map("interview_format") // 'video', 'in_person', 'phone'
+  interviewDuration      Int?              @map("interview_duration") // in minutes
+  interviewLocation      String?           @map("interview_location")
+  interviewMeetingLink   String?           @map("interview_meeting_link")
+  interviewParticipants  Json?             @map("interview_participants") // array of participant names/emails
+  interviewNotes         String?           @map("interview_notes")
   offerMadeAt            DateTime?         @map("offer_made_at")
   responseDeadline       DateTime?         @map("response_deadline")
   finalDecisionAt        DateTime?         @map("final_decision_at")
