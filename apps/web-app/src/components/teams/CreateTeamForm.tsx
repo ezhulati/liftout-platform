@@ -116,8 +116,9 @@ export function CreateTeamForm() {
       await createTeamMutation.mutateAsync(data);
       toast.success('Team created successfully!');
       router.push('/app/teams');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to create team');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create team';
+      toast.error(message);
     }
   };
 

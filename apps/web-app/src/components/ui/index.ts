@@ -29,3 +29,6 @@ export { Dropdown } from './Dropdown';
 // Loading Components
 export { Skeleton, SkeletonCard, SkeletonList } from './Skeleton';
 export { EmptyState } from './EmptyState';
+
+// Error Handling
+export { ErrorBoundary, PageErrorBoundary, useErrorBoundary } from './ErrorBoundary';

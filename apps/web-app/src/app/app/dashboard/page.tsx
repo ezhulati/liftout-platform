@@ -27,7 +27,6 @@ export default function DashboardPage() {
   const user = session.user;
   
   // Debug logging to check user object structure
-  console.log('Dashboard user object:', user);
   
   const isCompanyUser = user.userType === 'company';
   const firstName = user.firstName || user.name?.split(' ')[0] || user.name || 'User';

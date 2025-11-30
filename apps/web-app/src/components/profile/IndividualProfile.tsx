@@ -420,6 +420,29 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
       // For real users with Firestore, update via API
       if (user) {
+        // Transform profile data to match User.profileData type
+        const profileDataForApi = {
+          bio: profileData.bio,
+          website: profileData.socialLinks.website,
+          linkedin: profileData.socialLinks.linkedin,
+          twitter: profileData.socialLinks.twitter,
+          github: profileData.socialLinks.github,
+          headline: profileData.headline,
+          yearsExperience: profileData.yearsExperience,
+          skills: profileData.skills.map((skill: Skill) => skill.name),
+          education: profileData.education.map((edu) => ({
+            degree: edu.degree,
+            institution: edu.institution,
+            year: edu.endYear || edu.startYear,
+          })),
+          workHistory: profileData.experiences.map((exp) => ({
+            company: exp.company,
+            role: exp.position,
+            duration: exp.isCurrent
+              ? `${exp.startDate} - Present`
+              : `${exp.startDate} - ${exp.endDate || 'Present'}`,
+          })),
+        };
         await updateProfile({
           name: `${profileData.firstName} ${profileData.lastName}`,
           location: profileData.location,
@@ -429,7 +452,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
           industry: profileData.industry,
           photoURL: currentPhotoUrl || undefined,
           // Store extended profile data in a separate field
-          profileData,
+          profileData: profileDataForApi,
         });
       }
 

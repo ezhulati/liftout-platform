@@ -2,32 +2,70 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import type { Session } from 'next-auth';
 import { User } from '@/types/firebase';
+
+// Extended session user type with our custom fields
+interface SessionUser {
+  id: string;
+  email: string;
+  name?: string | null;
+  firstName?: string;
+  lastName?: string;
+  image?: string | null;
+  userType?: 'individual' | 'company';
+  emailVerified?: Date | null | boolean;
+}
+
+// Sign up data structure
+interface SignUpData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  userType: 'individual' | 'company';
+  companyName?: string;
+  industry?: string;
+  location?: string;
+}
+
+// Sign up response
+interface SignUpResponse {
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    userType: string;
+  };
+  message: string;
+}
 
 interface AuthContextType {
   // Session and user data
-  session: any;
+  session: Session | null;
   user: User | null;
   userData: User | null; // Backward compatibility alias
   userType: 'individual' | 'company' | null;
   isAuthenticated: boolean;
-  
+
   // Loading states
   loading: boolean; // Backward compatibility alias
   isLoading: boolean;
   isUserLoading: boolean;
-  
+
   // User operations
   refreshUser: () => Promise<void>;
   updateUserType: (type: 'individual' | 'company') => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
-  signUp: (userData: any) => Promise<any>;
-  signInWithGoogle: () => Promise<any>;
+  signUp: (userData: SignUpData) => Promise<SignUpResponse>;
+  signInWithGoogle: () => Promise<unknown>;
   sendPasswordReset: (email: string) => Promise<void>;
-  
-  // Firebase user for backward compatibility
-  firebaseUser: any;
-  
+
+  // Session user for backward compatibility (replaces firebaseUser)
+  sessionUser: SessionUser | null;
+  firebaseUser: SessionUser | null; // Backward compatibility alias
+
   // Role-based access
   isIndividual: boolean;
   isCompany: boolean;
@@ -94,19 +132,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(transformedUser);
           } else {
             // User profile doesn't exist, create from session data
-            const sessionUser = session.user as any;
+            const sessUser = session.user as SessionUser;
             const fallbackUser = {
-              id: sessionUser.id,
-              email: sessionUser.email,
-              name: sessionUser.name || `${sessionUser.firstName || ''} ${sessionUser.lastName || ''}`.trim(),
-              type: (sessionUser.userType as 'individual' | 'company') || 'individual',
-              photoURL: sessionUser.image || '',
+              id: sessUser.id,
+              email: sessUser.email,
+              name: sessUser.name || `${sessUser.firstName || ''} ${sessUser.lastName || ''}`.trim(),
+              type: sessUser.userType || 'individual',
+              photoURL: sessUser.image || '',
               phone: '',
               location: '',
               industry: '',
               companyName: '',
               position: '',
-              verified: !!sessionUser.emailVerified,
+              verified: !!sessUser.emailVerified,
               status: 'active' as const,
               preferences: {
                 notifications: true,
@@ -121,13 +159,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
           console.error('Error loading user:', error);
           // Fallback to session data
-          const sessionUser = session.user as any;
+          const sessUser = session.user as SessionUser;
           setUser({
-            id: sessionUser.id,
-            email: sessionUser.email,
-            name: sessionUser.name || '',
-            type: (sessionUser.userType as 'individual' | 'company') || 'individual',
-            photoURL: sessionUser.image || '',
+            id: sessUser.id,
+            email: sessUser.email,
+            name: sessUser.name || '',
+            type: sessUser.userType || 'individual',
+            photoURL: sessUser.image || '',
             phone: '',
             location: '',
             industry: '',
@@ -236,16 +274,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // User registration - creates user in database
-  const signUp = async (userData: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    userType: 'individual' | 'company';
-    companyName?: string;
-    industry?: string;
-    location?: string;
-  }) => {
+  const signUp = async (userData: SignUpData): Promise<SignUpResponse> => {
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -305,9 +334,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signInWithGoogle,
     sendPasswordReset,
     
-    // Firebase user for backward compatibility
-    firebaseUser: session?.user || null,
-    
+    // Session user for backward compatibility (replaces firebaseUser)
+    sessionUser: (session?.user as SessionUser) || null,
+    firebaseUser: (session?.user as SessionUser) || null, // Backward compatibility alias
+
     // Role-based access
     isIndividual,
     isCompany,

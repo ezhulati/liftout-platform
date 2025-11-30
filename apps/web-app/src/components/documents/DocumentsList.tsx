@@ -166,8 +166,9 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       toast.success(`Downloading ${documentName}`);
       // In a real implementation, this would trigger the actual download
       console.log('Download URL:', result.downloadUrl);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to download document');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to download document';
+      toast.error(message);
     }
   };
 
@@ -176,8 +177,9 @@ export function DocumentsList({ opportunityId, applicationId, showUpload = true 
       try {
         await deleteMutation.mutateAsync(documentId);
         toast.success('Document deleted successfully');
-      } catch (error: any) {
-        toast.error(error.message || 'Failed to delete document');
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to delete document';
+        toast.error(message);
       }
     }
   };

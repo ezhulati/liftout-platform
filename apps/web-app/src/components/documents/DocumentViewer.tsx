@@ -97,8 +97,9 @@ export function DocumentViewer({ documentId }: DocumentViewerProps) {
       toast.success(`Downloading ${document.name}`);
       // In a real implementation, this would trigger the actual download
       console.log('Download URL:', result.downloadUrl);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to download document');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to download document';
+      toast.error(message);
     }
   };
 

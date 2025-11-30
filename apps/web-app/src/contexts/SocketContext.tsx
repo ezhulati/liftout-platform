@@ -33,7 +33,7 @@ interface TypingUser {
 
 interface SocketMessage {
   type: 'message' | 'typing' | 'stop_typing' | 'user_online' | 'user_offline' | 'message_read' | 'conversation_update';
-  data: any;
+  data: SecureMessage | OnlineUser | TypingUser | Conversation | string | Record<string, unknown>;
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
@@ -75,12 +75,10 @@ export function SocketProvider({ children }: SocketProviderProps) {
 
       // Connection event handlers
       newSocket.on('connect', () => {
-        console.log('🔗 Socket connected:', newSocket.id);
         setIsConnected(true);
       });
 
       newSocket.on('disconnect', () => {
-        console.log('❌ Socket disconnected');
         setIsConnected(false);
         setOnlineUsers([]);
         setTypingUsers([]);
@@ -88,18 +86,14 @@ export function SocketProvider({ children }: SocketProviderProps) {
 
       // Real-time message events
       newSocket.on('new_message', (message: SecureMessage) => {
-        console.log('📨 New message received:', message);
-        // Emit custom event that components can listen to
         window.dispatchEvent(new CustomEvent('socket:new_message', { detail: message }));
       });
 
       newSocket.on('message_updated', (message: SecureMessage) => {
-        console.log('📝 Message updated:', message);
         window.dispatchEvent(new CustomEvent('socket:message_updated', { detail: message }));
       });
 
       newSocket.on('message_deleted', (messageId: string) => {
-        console.log('🗑️ Message deleted:', messageId);
         window.dispatchEvent(new CustomEvent('socket:message_deleted', { detail: { messageId } }));
       });
 
@@ -135,40 +129,35 @@ export function SocketProvider({ children }: SocketProviderProps) {
 
       // Conversation events
       newSocket.on('conversation_updated', (conversation: Conversation) => {
-        console.log('💬 Conversation updated:', conversation);
         window.dispatchEvent(new CustomEvent('socket:conversation_updated', { detail: conversation }));
       });
 
-      newSocket.on('participant_joined', (data: { conversationId: string; participant: any }) => {
-        console.log('👋 Participant joined:', data);
+      newSocket.on('participant_joined', (data: { conversationId: string; participant: { id: string; name: string; avatar?: string } }) => {
         window.dispatchEvent(new CustomEvent('socket:participant_joined', { detail: data }));
       });
 
       newSocket.on('participant_left', (data: { conversationId: string; userId: string }) => {
-        console.log('👋 Participant left:', data);
         window.dispatchEvent(new CustomEvent('socket:participant_left', { detail: data }));
       });
 
       // Read receipts
       newSocket.on('messages_read', (data: { conversationId: string; userId: string; readAt: string }) => {
-        console.log('👁️ Messages read:', data);
         window.dispatchEvent(new CustomEvent('socket:messages_read', { detail: data }));
       });
 
       // Error handling
-      newSocket.on('error', (error: any) => {
-        console.error('🚨 Socket error:', error);
+      newSocket.on('error', (error: Error) => {
+        console.error('Socket error:', error);
       });
 
-      newSocket.on('connect_error', (error: any) => {
-        console.error('🚨 Socket connection error:', error);
+      newSocket.on('connect_error', (error: Error) => {
+        console.error('Socket connection error:', error);
       });
 
       setSocket(newSocket);
 
       // Cleanup on unmount or session change
       return () => {
-        console.log('🧹 Cleaning up socket connection');
         newSocket.disconnect();
       };
     }
@@ -202,23 +191,18 @@ export function SocketProvider({ children }: SocketProviderProps) {
       };
 
       socket.emit('send_message', fullMessage);
-      console.log('📤 Sending message:', fullMessage);
-    } else {
-      console.warn('⚠️ Cannot send message: Socket not connected');
     }
   };
 
   const joinConversation = (conversationId: string) => {
     if (socket && isConnected) {
       socket.emit('join_conversation', { conversationId });
-      console.log('🏠 Joining conversation:', conversationId);
     }
   };
 
   const leaveConversation = (conversationId: string) => {
     if (socket && isConnected) {
       socket.emit('leave_conversation', { conversationId });
-      console.log('🚪 Leaving conversation:', conversationId);
     }
   };
 

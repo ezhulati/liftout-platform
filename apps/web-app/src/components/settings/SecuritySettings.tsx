@@ -83,9 +83,10 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
 
       toast.success('Password updated successfully');
       onSuccess();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Password change error:', error);
-      toast.error(error.message || 'Failed to update password. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to update password. Please try again.';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

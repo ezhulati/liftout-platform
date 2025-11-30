@@ -213,8 +213,9 @@ export function DocumentUpload({ opportunityId, applicationId, onSuccess, onCanc
       } else {
         router.push('/app/documents');
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to upload document');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to upload document';
+      toast.error(message);
     }
   };
 

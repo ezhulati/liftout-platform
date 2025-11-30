@@ -160,9 +160,11 @@ export function useProfileCompletion(options: UseProfileCompletionOptions = {}) 
       : ['companyName', 'description', 'industry', 'companySize', 'website'];
 
     const missing = requirements.filter(req => {
-      const profile = user.profileData || {};
-      const value = req.includes('.') 
-        ? req.split('.').reduce((obj, key) => obj?.[key], profile)
+      const profile = (user.profileData || {}) as Record<string, unknown>;
+      const value = req.includes('.')
+        ? req.split('.').reduce((obj: Record<string, unknown> | undefined, key) =>
+            obj && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] as Record<string, unknown> | undefined : undefined,
+            profile as Record<string, unknown>)
         : profile[req] || user[req as keyof typeof user];
       return !value;
     });

@@ -114,7 +114,6 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Company profile updated:', formData);
   };
 
   if (!isEditing) {

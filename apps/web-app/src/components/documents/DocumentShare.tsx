@@ -138,8 +138,9 @@ export function DocumentShare({ documentId, onSuccess, onCancel }: DocumentShare
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to update sharing settings');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update sharing settings';
+      toast.error(message);
     }
   };
 

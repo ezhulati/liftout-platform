@@ -332,9 +332,10 @@ export function AccountSettings() {
 
       // Sign out from NextAuth
       await signOut({ callbackUrl: '/' });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Account deletion error:', error);
-      toast.error(error.message || 'Failed to delete account. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to delete account. Please try again.';
+      toast.error(message);
       throw error;
     }
   };

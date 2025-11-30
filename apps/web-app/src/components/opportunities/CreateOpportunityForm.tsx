@@ -142,8 +142,9 @@ export function CreateOpportunityForm() {
       await createOpportunityMutation.mutateAsync(data);
       toast.success('Liftout opportunity created successfully!');
       router.push('/app/opportunities');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to create opportunity');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create opportunity';
+      toast.error(message);
     }
   };
 

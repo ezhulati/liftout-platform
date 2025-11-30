@@ -276,7 +276,6 @@ export default async function TeamVerificationPage({ params }: TeamVerificationP
 
   const handleUpdate = () => {
     // In a real app, this would trigger a refetch of team data
-    console.log('Team verification updated');
   };
 
   return (

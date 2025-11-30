@@ -27,7 +27,18 @@ export interface User extends BaseDocument {
     marketing: boolean;
     confidentialMode: boolean;
   };
-  profileData?: any; // Extended profile data for individual/company specific fields
+  profileData?: {
+    bio?: string;
+    website?: string;
+    linkedin?: string;
+    twitter?: string;
+    github?: string;
+    headline?: string;
+    yearsExperience?: number;
+    skills?: string[];
+    education?: { degree: string; institution: string; year: number }[];
+    workHistory?: { company: string; role: string; duration: string }[];
+  };
 }
 
 // Team types
