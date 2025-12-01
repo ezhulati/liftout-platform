@@ -492,6 +492,21 @@ export async function POST(request: NextRequest) {
 
         if (!existing) {
           await prisma.opportunity.create({ data: opp });
+        } else {
+          // Update existing opportunity to ensure it has active status
+          await prisma.opportunity.update({
+            where: { id: existing.id },
+            data: {
+              status: OpportunityStatus.active,
+              visibility: 'public',
+              description: opp.description,
+              requiredSkills: opp.requiredSkills,
+              preferredSkills: opp.preferredSkills,
+              benefits: opp.benefits,
+              compensationMin: opp.compensationMin,
+              compensationMax: opp.compensationMax,
+            }
+          });
         }
       }
       results.push(`Created/updated ${demoOpportunities.length} demo opportunities`);
