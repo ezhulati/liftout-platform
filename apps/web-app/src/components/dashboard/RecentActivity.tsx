@@ -80,10 +80,55 @@ export function RecentActivity() {
   const { data: activities, isLoading } = useQuery({
     queryKey: ['recent-activity'],
     queryFn: async () => {
-      // This would normally fetch from your API
-      return mockActivities;
+      try {
+        const response = await fetch('/api/activity?limit=5');
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        if (data.activities && data.activities.length > 0) {
+          // Transform API response to match Activity interface
+          return data.activities.map((a: any) => ({
+            id: a.id,
+            type: mapActivityType(a.type),
+            title: a.title,
+            description: a.description,
+            createdAt: a.timestamp,
+            href: getActivityHref(a.type, a.metadata),
+          }));
+        }
+        throw new Error('No activities');
+      } catch {
+        // Fallback to mock data
+        return mockActivities;
+      }
     },
+    staleTime: 30000, // 30 seconds
   });
+
+  function mapActivityType(type: string): Activity['type'] {
+    const typeMap: Record<string, Activity['type']> = {
+      'application': 'liftout_interest',
+      'interview': 'liftout_opportunity',
+      'message': 'message',
+      'eoi': 'team_profile_view',
+    };
+    return typeMap[type] || 'liftout_interest';
+  }
+
+  function getActivityHref(type: string, metadata: any): string {
+    switch (type) {
+      case 'application':
+        return '/app/applications';
+      case 'interview':
+        return '/app/applications';
+      case 'message':
+        return metadata?.conversationId ? `/app/messages/${metadata.conversationId}` : '/app/messages';
+      case 'eoi':
+        return '/app/teams';
+      default:
+        return '/app/dashboard';
+    }
+  }
 
   if (isLoading) {
     return (
@@ -122,7 +167,7 @@ export function RecentActivity() {
 
       <div className="flow-root">
         <ul className="-mb-8">
-          {activities?.map((activity, activityIdx) => {
+          {activities?.map((activity: Activity, activityIdx: number) => {
             const Icon = activityIcons[activity.type];
             const colorClass = activityColors[activity.type];
 
