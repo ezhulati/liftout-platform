@@ -232,17 +232,7 @@ export function LiftoutPreferences({ onComplete, onSkip }: LiftoutPreferencesPro
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <SparklesIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-bold text-text-primary">
-          Liftout preferences
-        </h3>
-        <p className="mt-1 text-base text-text-secondary">
-          Help us match you with the right opportunities. These preferences are kept confidential.
-        </p>
-      </div>
-
+    <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Availability */}
         <div className="space-y-5">

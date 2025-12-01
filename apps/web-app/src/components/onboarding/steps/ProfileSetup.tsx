@@ -178,17 +178,7 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <UserIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-bold text-text-primary">
-          Set up your professional profile
-        </h3>
-        <p className="mt-1 text-sm text-text-secondary">
-          This information helps companies understand your background and expertise.
-        </p>
-      </div>
-
+    <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <RequiredFieldsNote />
 

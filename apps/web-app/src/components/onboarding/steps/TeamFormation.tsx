@@ -226,17 +226,7 @@ export function TeamFormation({ onComplete, onSkip }: TeamFormationProps) {
 
   if (mode === 'choose') {
     return (
-      <div className="space-y-8">
-        <div className="text-center">
-          <UserGroupIcon className="mx-auto h-12 w-12 text-navy" />
-          <h3 className="mt-2 text-lg font-bold text-text-primary">
-            Team formation
-          </h3>
-          <p className="mt-1 text-base text-text-secondary">
-            Create a new team or join an existing one to start exploring liftout opportunities together.
-          </p>
-        </div>
-
+      <div className="space-y-6">
         <div className="space-y-4">
           {/* Create Team Option */}
           <button
@@ -308,17 +298,7 @@ export function TeamFormation({ onComplete, onSkip }: TeamFormationProps) {
 
   if (mode === 'create') {
     return (
-      <div className="space-y-8">
-        <div className="text-center">
-          <PlusIcon className="mx-auto h-12 w-12 text-navy" />
-          <h3 className="mt-2 text-lg font-bold text-text-primary">
-            Create your team
-          </h3>
-          <p className="mt-1 text-base text-text-secondary">
-            Set up your team profile and invite members you've worked with.
-          </p>
-        </div>
-
+      <div className="space-y-6">
         <form onSubmit={handleSubmit(onCreateTeam)} className="space-y-8">
           {/* Team Details */}
           <div className="space-y-5">
@@ -471,17 +451,7 @@ export function TeamFormation({ onComplete, onSkip }: TeamFormationProps) {
 
   // Join mode
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-bold text-text-primary">
-          Join a team
-        </h3>
-        <p className="mt-1 text-base text-text-secondary">
-          Enter an invite code or search for teams you've been invited to.
-        </p>
-      </div>
-
+    <div className="space-y-6">
       <div className="space-y-8">
         {/* Join with Code */}
         <div className="space-y-5">

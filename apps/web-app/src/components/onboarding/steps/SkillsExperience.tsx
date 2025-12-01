@@ -215,17 +215,7 @@ export function SkillsExperience({ onComplete, onSkip }: SkillsExperienceProps) 
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <WrenchScrewdriverIcon className="mx-auto h-12 w-12 text-navy" />
-        <h3 className="mt-2 text-lg font-bold text-text-primary">
-          Skills & experience
-        </h3>
-        <p className="mt-1 text-base text-text-secondary">
-          Highlight your expertise and achievements to attract the best opportunities.
-        </p>
-      </div>
-
+    <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Primary Role & Experience */}
         <div className="space-y-5">
