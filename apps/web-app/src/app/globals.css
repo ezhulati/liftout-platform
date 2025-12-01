@@ -967,6 +967,61 @@
   .animate-on-scroll.is-visible .stagger-child:nth-child(3) { transition-delay: 0.3s; }
   .animate-on-scroll.is-visible .stagger-child:nth-child(4) { transition-delay: 0.4s; }
   .animate-on-scroll.is-visible .stagger-child:nth-child(5) { transition-delay: 0.5s; }
+
+  /* Conversational onboarding animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .animate-slideInRight {
+    animation: slideInRight 0.4s ease-out forwards;
+  }
+
+  .animate-slideInLeft {
+    animation: slideInLeft 0.4s ease-out forwards;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out forwards;
+  }
   .animate-on-scroll.is-visible .stagger-child:nth-child(6) { transition-delay: 0.6s; }
 
   .stagger-child {
