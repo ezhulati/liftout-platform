@@ -3,10 +3,14 @@
 
 export interface TeamMember {
   id: string;
+  userId?: string;
   name: string;
   role: string;
   experience: number;
   skills: string[];
+  photoUrl?: string;
+  title?: string;
+  bio?: string;
 }
 
 export interface Team {
@@ -52,31 +56,47 @@ export const teams: Team[] = [
     members: [
       {
         id: 'member_1',
+        userId: 'demo-user-alex',
         name: 'Alex Chen',
-        role: 'Team Lead & Senior Data Scientist',
-        experience: 8,
-        skills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling']
+        role: 'Tech Lead',
+        experience: 10,
+        skills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling'],
+        photoUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+        title: 'Senior Data Scientist & Team Lead',
+        bio: 'Passionate technologist with 10+ years leading high-performing data science and engineering teams.',
       },
       {
         id: 'member_2',
-        name: 'Sarah Kim',
-        role: 'Senior ML Engineer',
-        experience: 6,
-        skills: ['Deep Learning', 'Python', 'TensorFlow', 'Model Deployment']
+        userId: 'demo-user-sarah',
+        name: 'Sarah Martinez',
+        role: 'Senior Data Scientist',
+        experience: 7,
+        skills: ['NLP', 'Deep Learning', 'PyTorch', 'Python', 'Statistical Analysis'],
+        photoUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
+        title: 'Senior Data Scientist',
+        bio: 'Data scientist with deep expertise in NLP and predictive modeling. Stanford PhD in Statistics.',
       },
       {
         id: 'member_3',
-        name: 'Michael Rodriguez',
-        role: 'Data Engineer',
-        experience: 5,
-        skills: ['SQL', 'Apache Spark', 'Data Pipelines', 'AWS']
+        userId: 'demo-user-marcus',
+        name: 'Marcus Johnson',
+        role: 'ML Engineer',
+        experience: 6,
+        skills: ['MLOps', 'Kubernetes', 'AWS', 'TensorFlow', 'Data Engineering'],
+        photoUrl: 'https://randomuser.me/api/portraits/men/75.jpg',
+        title: 'Machine Learning Engineer',
+        bio: 'Full-stack ML engineer focused on taking models from research to production.',
       },
       {
         id: 'member_4',
-        name: 'Emily Zhang',
-        role: 'Business Analyst',
+        userId: 'demo-user-priya',
+        name: 'Priya Patel',
+        role: 'Data Analyst',
         experience: 4,
-        skills: ['Business Intelligence', 'Analytics', 'Tableau', 'SQL']
+        skills: ['SQL', 'Tableau', 'Python', 'Business Intelligence', 'Data Visualization'],
+        photoUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
+        title: 'Senior Data Analyst',
+        bio: 'Data analyst passionate about translating complex data into actionable business insights.',
       }
     ],
     achievements: [

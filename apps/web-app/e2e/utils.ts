@@ -28,22 +28,21 @@ export async function signIn(page: Page, { email, password, destinations = ['das
   await emailInput.fill(email);
   await passwordInput.fill(password);
 
-  await page.request.post('/api/auth/callback/credentials', {
-    form: {
-      csrfToken: '',
-      email,
-      password
-    }
-  }).catch(() => {});
+  // Click the submit button to properly submit the form (NextAuth handles CSRF tokens)
+  const submitButton = page.locator('button[type="submit"]:has-text("Sign in")');
+  await submitButton.click();
 
-  // Race dashboard/onboarding redirects; tolerate immediate navigation.
-  await page.waitForLoadState('networkidle');
-  const urlOk = destinations.some(path => page.url().includes(`/app/${path}`));
-  if (!urlOk) {
-    await page.goto('/app/dashboard', { waitUntil: 'domcontentloaded' }).catch(() => {});
-    const ok = destinations.some(path => page.url().includes(`/app/${path}`));
-    if (!ok) {
-      await page.waitForURL(`**/app/(${destinations.join('|')})`, { timeout: 30000 }).catch(() => {});
+  // Wait for navigation to dashboard or onboarding
+  try {
+    await page.waitForURL(/\/app\/(dashboard|onboarding)/, { timeout: 30000 });
+  } catch {
+    // If redirect didn't happen, check if we're still on signin (auth failed)
+    if (page.url().includes('/auth/signin')) {
+      // Check for error message
+      const errorVisible = await page.locator('text=Invalid credentials').isVisible().catch(() => false);
+      if (errorVisible) {
+        throw new Error('Sign in failed: Invalid credentials');
+      }
     }
   }
 }

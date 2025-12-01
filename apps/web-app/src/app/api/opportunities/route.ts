@@ -23,6 +23,21 @@ function formatTeamSize(min?: number | null, max?: number | null): string {
   return 'Flexible';
 }
 
+// Map database status to frontend status
+function mapStatus(dbStatus: string): 'open' | 'in_review' | 'closed' {
+  switch (dbStatus) {
+    case 'active':
+      return 'open';
+    case 'paused':
+      return 'in_review';
+    case 'filled':
+    case 'expired':
+      return 'closed';
+    default:
+      return 'open';
+  }
+}
+
 // GET /api/opportunities - List opportunities from database
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -123,7 +138,7 @@ export async function GET(request: NextRequest) {
         compensation: formatCompensation(opp.compensationMin, opp.compensationMax),
         teamSize: formatTeamSize(opp.teamSizeMin, opp.teamSizeMax),
         timeline: opp.urgency === 'urgent' ? 'Immediate' : opp.urgency === 'high' ? '1-2 months' : '3-6 months',
-        status: opp.status,
+        status: mapStatus(opp.status),
         urgent: opp.urgency === 'urgent' || opp.urgency === 'high',
         confidential: opp.visibility === 'private',
         requirements: requiredSkills,

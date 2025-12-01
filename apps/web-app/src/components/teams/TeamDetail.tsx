@@ -35,6 +35,18 @@ const isDemoEntity = (id: string): boolean => {
   return id?.includes('demo') || id?.startsWith('demo-');
 };
 
+interface TeamMember {
+  id: string;
+  userId?: string;
+  name: string;
+  role: string;
+  experience: number;
+  skills: string[];
+  photoUrl?: string;
+  title?: string;
+  bio?: string;
+}
+
 interface Team {
   id: string;
   name: string;
@@ -48,13 +60,7 @@ interface Team {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
-  members: Array<{
-    id: string;
-    name: string;
-    role: string;
-    experience: number;
-    skills: string[];
-  }>;
+  members: TeamMember[];
   achievements: string[];
   industry: string;
   location: string;
@@ -78,28 +84,72 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
   // Demo mock team data
   const getDemoTeamData = (): Team => ({
     id: teamId,
-    name: 'Demo Engineering Team',
-    description: 'A high-performing engineering team with 5 years of experience working together on enterprise software projects.',
+    name: 'TechFlow Data Science Team',
+    description: 'Elite data science team with 3.5 years working together, specializing in fintech analytics and machine learning. We\'ve successfully completed a liftout in 2022 and are open to new strategic opportunities.',
     size: 4,
-    yearsWorking: 5,
-    cohesionScore: 92,
-    successfulProjects: 12,
-    clientSatisfaction: 4.8,
+    yearsWorking: 3.5,
+    cohesionScore: 94,
+    successfulProjects: 23,
+    clientSatisfaction: 96,
     openToLiftout: true,
     createdBy: user?.id || 'demo-user',
     createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date().toISOString(),
     members: [
-      { id: 'demo-m1', name: 'Alex Johnson', role: 'Tech Lead', experience: 8, skills: ['TypeScript', 'React', 'Node.js'] },
-      { id: 'demo-m2', name: 'Sarah Chen', role: 'Senior Developer', experience: 6, skills: ['React', 'Python', 'PostgreSQL'] },
-      { id: 'demo-m3', name: 'Mike Davis', role: 'Full Stack Developer', experience: 4, skills: ['JavaScript', 'Node.js', 'AWS'] },
-      { id: 'demo-m4', name: 'Emily Brown', role: 'DevOps Engineer', experience: 5, skills: ['AWS', 'Docker', 'Kubernetes'] },
+      {
+        id: 'demo-m1',
+        userId: 'demo-user-alex',
+        name: 'Alex Chen',
+        role: 'Tech Lead',
+        experience: 10,
+        skills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling'],
+        photoUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+        title: 'Senior Data Scientist & Team Lead',
+        bio: 'Passionate technologist with 10+ years leading high-performing data science and engineering teams.',
+      },
+      {
+        id: 'demo-m2',
+        userId: 'demo-user-sarah',
+        name: 'Sarah Martinez',
+        role: 'Senior Data Scientist',
+        experience: 7,
+        skills: ['NLP', 'Deep Learning', 'PyTorch', 'Python', 'Statistical Analysis'],
+        photoUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
+        title: 'Senior Data Scientist',
+        bio: 'Data scientist with deep expertise in NLP and predictive modeling. Stanford PhD in Statistics.',
+      },
+      {
+        id: 'demo-m3',
+        userId: 'demo-user-marcus',
+        name: 'Marcus Johnson',
+        role: 'ML Engineer',
+        experience: 6,
+        skills: ['MLOps', 'Kubernetes', 'AWS', 'TensorFlow', 'Data Engineering'],
+        photoUrl: 'https://randomuser.me/api/portraits/men/75.jpg',
+        title: 'Machine Learning Engineer',
+        bio: 'Full-stack ML engineer focused on taking models from research to production.',
+      },
+      {
+        id: 'demo-m4',
+        userId: 'demo-user-priya',
+        name: 'Priya Patel',
+        role: 'Data Analyst',
+        experience: 4,
+        skills: ['SQL', 'Tableau', 'Python', 'Business Intelligence', 'Data Visualization'],
+        photoUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
+        title: 'Senior Data Analyst',
+        bio: 'Data analyst passionate about translating complex data into actionable business insights.',
+      },
     ],
-    achievements: ['Delivered 12 successful projects', 'Reduced deployment time by 70%', '98% client retention rate'],
-    industry: 'Enterprise Software',
+    achievements: [
+      'Led team that reduced fraud detection false positives by 35%',
+      'Built predictive models generating $2.1M annual savings',
+      'Mentored 12+ junior data scientists across 3 years',
+    ],
+    industry: 'Financial Services',
     location: 'San Francisco, CA',
-    availability: 'Available in 2-3 months',
-    compensation: { range: '$150k-$220k per person', equity: true, benefits: 'Full package' },
+    availability: 'Available for strategic opportunities',
+    compensation: { range: '$180k-$280k per person', equity: true, benefits: 'Full package' },
   });
 
   // Fetch team data
@@ -335,23 +385,42 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
             <div className="px-6 py-4">
               <div className="space-y-4">
                 {team.members.map((member, index) => (
-                  <div key={member.id} className="flex items-start space-x-4 p-4 border border-border rounded-lg">
-                    <div className="h-12 w-12 rounded-full bg-bg-alt flex items-center justify-center">
-                      <span className="text-sm font-medium text-text-secondary">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </span>
+                  <Link
+                    key={member.id}
+                    href={member.userId ? `/app/members/${member.userId}` : '#'}
+                    className="flex items-start space-x-4 p-4 border border-border rounded-lg hover:bg-bg-alt hover:border-navy-200 transition-all cursor-pointer group"
+                  >
+                    <div className="relative h-14 w-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-transparent group-hover:ring-navy-200 transition-all">
+                      {member.photoUrl ? (
+                        <img
+                          src={member.photoUrl}
+                          alt={member.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-bg-alt flex items-center justify-center">
+                          <span className="text-sm font-medium text-text-secondary">
+                            {member.name.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium text-text-primary">{member.name}</h3>
-                          <p className="text-sm text-text-secondary">{member.role}</p>
+                          <h3 className="font-medium text-text-primary group-hover:text-navy transition-colors">
+                            {member.name}
+                            <span className="ml-2 text-xs font-normal text-text-tertiary group-hover:text-navy-600">
+                              View profile →
+                            </span>
+                          </h3>
+                          <p className="text-sm text-text-secondary">{member.title || member.role}</p>
                           <p className="text-xs text-text-tertiary mt-1">
                             {member.experience} years experience
                           </p>
                         </div>
                         {isTeamOwner && (
-                          <div className="flex space-x-1">
+                          <div className="flex space-x-1" onClick={(e) => e.preventDefault()}>
                             <Link
                               href={`/app/teams/${teamId}/members`}
                               className="min-w-12 min-h-12 p-3 text-navy hover:text-navy-hover hover:bg-navy-50 rounded-lg transition-colors"
@@ -360,7 +429,10 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                               <PencilSquareIcon className="h-5 w-5" />
                             </Link>
                             <button
-                              onClick={() => toast.success('Member removed from team')}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toast.success('Member removed from team');
+                              }}
                               className="min-w-12 min-h-12 p-3 text-error hover:text-error-dark hover:bg-error-light rounded-lg transition-colors"
                               aria-label="Remove member"
                             >
@@ -369,10 +441,13 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                           </div>
                         )}
                       </div>
+                      {member.bio && (
+                        <p className="text-sm text-text-secondary mt-2 line-clamp-2">{member.bio}</p>
+                      )}
                       <div className="flex flex-wrap gap-1 mt-2">
                         {member.skills.slice(0, 4).map((skill, skillIndex) => (
-                          <span 
-                            key={skillIndex} 
+                          <span
+                            key={skillIndex}
                             className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-bg-alt text-text-primary"
                           >
                             {skill}
@@ -385,7 +460,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

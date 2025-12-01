@@ -25,34 +25,179 @@ export async function POST(request: NextRequest) {
     // Hash password for demo users
     const demoPassword = await bcrypt.hash('password', 12);
 
-    // Create demo team user
-    const demoUser = await prisma.user.upsert({
-      where: { email: 'demo@example.com' },
-      update: { passwordHash: demoPassword },
-      create: {
+    // Demo team member data with full profiles and headshots
+    const demoTeamMembers = [
+      {
         email: 'demo@example.com',
-        passwordHash: demoPassword,
-        firstName: 'Demo',
-        lastName: 'User',
-        userType: 'individual',
-        emailVerified: true,
-        profileCompleted: true,
+        firstName: 'Alex',
+        lastName: 'Chen',
+        isLead: true,
+        role: 'Tech Lead',
+        seniorityLevel: 'lead' as const,
         profile: {
-          create: {
-            title: 'Team Lead',
-            location: 'San Francisco, CA',
-            bio: 'Demo team lead user for testing the platform.',
-            yearsExperience: 10,
-            availabilityStatus: 'open_to_opportunities',
-            salaryExpectationMin: 180000,
-            salaryExpectationMax: 250000,
-            remotePreference: 'hybrid',
-            skillsSummary: 'Leadership, Full-Stack Development, Team Management'
-          }
+          title: 'Senior Data Scientist & Team Lead',
+          location: 'San Francisco, CA',
+          bio: 'Passionate technologist with 10+ years leading high-performing data science and engineering teams. Specialized in fintech analytics, machine learning, and building scalable systems that deliver measurable business value. Led my current team through a successful liftout in 2022, and we\'ve been thriving ever since.',
+          yearsExperience: 10,
+          profilePhotoUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+          linkedinUrl: 'https://linkedin.com/in/alexchen',
+          githubUrl: 'https://github.com/alexchen',
+          currentEmployer: 'TechFlow Analytics',
+          currentTitle: 'VP of Data Science',
+          skillsSummary: 'Machine Learning, Python, SQL, Team Leadership, Financial Modeling, Data Architecture',
+          achievements: 'Led team that reduced fraud detection false positives by 35%. Built predictive models generating $2.1M annual savings. Mentored 12+ junior data scientists.',
+        },
+        keySkills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling'],
+        contribution: 'Leads technical strategy and team development',
+      },
+      {
+        email: 'sarah.martinez@example.com',
+        firstName: 'Sarah',
+        lastName: 'Martinez',
+        isLead: false,
+        role: 'Senior Data Scientist',
+        seniorityLevel: 'senior' as const,
+        profile: {
+          title: 'Senior Data Scientist',
+          location: 'San Francisco, CA',
+          bio: 'Data scientist with deep expertise in NLP and predictive modeling. Stanford PhD in Statistics with 7 years of industry experience. Love working on complex problems that have real-world impact, especially in healthcare and finance.',
+          yearsExperience: 7,
+          profilePhotoUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
+          linkedinUrl: 'https://linkedin.com/in/sarahmartinez',
+          githubUrl: 'https://github.com/smartinez',
+          currentEmployer: 'TechFlow Analytics',
+          currentTitle: 'Senior Data Scientist',
+          skillsSummary: 'NLP, Deep Learning, PyTorch, Research, Statistical Analysis',
+          achievements: 'Published 5 papers in top ML conferences. Developed sentiment analysis system processing 1M+ daily transactions.',
+        },
+        keySkills: ['NLP', 'Deep Learning', 'PyTorch', 'Python', 'Statistical Analysis'],
+        contribution: 'Leads NLP and unstructured data initiatives',
+      },
+      {
+        email: 'marcus.johnson@example.com',
+        firstName: 'Marcus',
+        lastName: 'Johnson',
+        isLead: false,
+        role: 'ML Engineer',
+        seniorityLevel: 'senior' as const,
+        profile: {
+          title: 'Machine Learning Engineer',
+          location: 'Oakland, CA',
+          bio: 'Full-stack ML engineer focused on taking models from research to production. 6 years experience building and deploying ML systems at scale. Expert in MLOps, cloud infrastructure, and real-time prediction systems.',
+          yearsExperience: 6,
+          profilePhotoUrl: 'https://randomuser.me/api/portraits/men/75.jpg',
+          linkedinUrl: 'https://linkedin.com/in/marcusjohnson',
+          githubUrl: 'https://github.com/mjohnson',
+          currentEmployer: 'TechFlow Analytics',
+          currentTitle: 'ML Engineer',
+          skillsSummary: 'MLOps, Kubernetes, AWS, TensorFlow, Data Engineering',
+          achievements: 'Built ML pipeline processing 10M+ predictions/day. Reduced model deployment time from 2 weeks to 2 hours.',
+        },
+        keySkills: ['MLOps', 'Kubernetes', 'AWS', 'TensorFlow', 'Data Engineering'],
+        contribution: 'Owns ML infrastructure and deployment pipelines',
+      },
+      {
+        email: 'priya.patel@example.com',
+        firstName: 'Priya',
+        lastName: 'Patel',
+        isLead: false,
+        role: 'Data Analyst',
+        seniorityLevel: 'mid' as const,
+        profile: {
+          title: 'Senior Data Analyst',
+          location: 'San Jose, CA',
+          bio: 'Data analyst passionate about translating complex data into actionable business insights. 4 years experience in fintech with expertise in visualization, reporting, and stakeholder communication. Bridge between technical team and business leadership.',
+          yearsExperience: 4,
+          profilePhotoUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
+          linkedinUrl: 'https://linkedin.com/in/priyapatel',
+          currentEmployer: 'TechFlow Analytics',
+          currentTitle: 'Senior Data Analyst',
+          skillsSummary: 'SQL, Tableau, Python, Business Intelligence, Data Visualization',
+          achievements: 'Created executive dashboard used by C-suite. Identified $500K cost savings through data analysis.',
+        },
+        keySkills: ['SQL', 'Tableau', 'Python', 'Business Intelligence', 'Data Visualization'],
+        contribution: 'Drives analytics strategy and stakeholder reporting',
+      },
+    ];
+
+    const createdMembers: { id: string; email: string; isLead: boolean; role: string; seniorityLevel: string; keySkills: string[]; contribution: string }[] = [];
+
+    // Create each team member as a user with full profile
+    for (const member of demoTeamMembers) {
+      const user = await prisma.user.upsert({
+        where: { email: member.email },
+        update: {
+          passwordHash: demoPassword,
+          firstName: member.firstName,
+          lastName: member.lastName,
+        },
+        create: {
+          email: member.email,
+          passwordHash: demoPassword,
+          firstName: member.firstName,
+          lastName: member.lastName,
+          userType: 'individual',
+          emailVerified: true,
+          profileCompleted: true,
         }
-      }
-    });
-    results.push(`Created/updated demo user: ${demoUser.email}`);
+      });
+
+      // Upsert the profile
+      await prisma.individualProfile.upsert({
+        where: { userId: user.id },
+        update: {
+          title: member.profile.title,
+          location: member.profile.location,
+          bio: member.profile.bio,
+          yearsExperience: member.profile.yearsExperience,
+          profilePhotoUrl: member.profile.profilePhotoUrl,
+          linkedinUrl: member.profile.linkedinUrl,
+          githubUrl: member.profile.githubUrl,
+          currentEmployer: member.profile.currentEmployer,
+          currentTitle: member.profile.currentTitle,
+          skillsSummary: member.profile.skillsSummary,
+          achievements: member.profile.achievements,
+          availabilityStatus: 'open_to_opportunities',
+          salaryExpectationMin: 180000,
+          salaryExpectationMax: 280000,
+          remotePreference: 'hybrid',
+        },
+        create: {
+          userId: user.id,
+          title: member.profile.title,
+          location: member.profile.location,
+          bio: member.profile.bio,
+          yearsExperience: member.profile.yearsExperience,
+          profilePhotoUrl: member.profile.profilePhotoUrl,
+          linkedinUrl: member.profile.linkedinUrl,
+          githubUrl: member.profile.githubUrl,
+          currentEmployer: member.profile.currentEmployer,
+          currentTitle: member.profile.currentTitle,
+          skillsSummary: member.profile.skillsSummary,
+          achievements: member.profile.achievements,
+          availabilityStatus: 'open_to_opportunities',
+          salaryExpectationMin: 180000,
+          salaryExpectationMax: 280000,
+          remotePreference: 'hybrid',
+        }
+      });
+
+      createdMembers.push({
+        id: user.id,
+        email: user.email,
+        isLead: member.isLead,
+        role: member.role,
+        seniorityLevel: member.seniorityLevel,
+        keySkills: member.keySkills,
+        contribution: member.contribution,
+      });
+
+      results.push(`Created/updated team member: ${user.email}`);
+    }
+
+    // Get the demo user (team lead) for team creation
+    const demoUser = createdMembers.find(m => m.email === 'demo@example.com')!;
+    results.push(`Demo user ready: ${demoUser.email}`);
 
     // Create demo company user
     const demoCompanyUser = await prisma.user.upsert({
@@ -123,6 +268,87 @@ export async function POST(request: NextRequest) {
         results.push(`Linked company user to existing demo company`);
       } else {
         results.push(`Demo company already exists and user is linked`);
+      }
+    }
+
+    // Create demo team and link all members
+    const existingDemoTeam = await prisma.team.findFirst({
+      where: { slug: 'techflow-data-science' }
+    });
+
+    let demoTeam;
+    if (!existingDemoTeam) {
+      demoTeam = await prisma.team.create({
+        data: {
+          name: 'TechFlow Data Science Team',
+          slug: 'techflow-data-science',
+          description: 'Elite data science team with 3.5 years working together, specializing in fintech analytics and machine learning. We\'ve successfully completed a liftout in 2022 and are open to new strategic opportunities with the right organization.',
+          industry: 'Financial Services',
+          specialization: 'Data Science & Machine Learning',
+          size: 4,
+          location: 'San Francisco, CA',
+          remoteStatus: 'hybrid',
+          availabilityStatus: 'available',
+          yearsWorkingTogether: 3.5,
+          teamCulture: 'Collaborative, data-driven, and focused on continuous learning. We believe in strong ownership and celebrating wins together.',
+          workingStyle: 'Agile with 2-week sprints. Daily standups, weekly retrospectives. We value async communication and deep work time.',
+          communicationStyle: 'Direct and transparent. We use Slack for daily comms, Notion for docs, and have weekly all-hands.',
+          notableAchievements: 'Reduced fraud detection false positives by 35%. Built predictive models generating $2.1M annual savings. 98% client satisfaction rate.',
+          portfolioUrl: 'https://techflow-analytics.com/portfolio',
+          performanceMetrics: JSON.stringify({
+            cohesionScore: 94,
+            successfulProjects: 23,
+            clientSatisfaction: 96,
+            avgProjectDeliveryTime: '2.1 weeks under deadline',
+          }),
+          clientTestimonials: JSON.stringify([
+            { client: 'Major US Bank', quote: 'The TechFlow team delivered beyond expectations and integrated seamlessly with our internal teams.' },
+            { client: 'Fintech Startup', quote: 'Their ML expertise transformed our risk assessment capabilities.' }
+          ]),
+          visibility: 'public',
+          salaryExpectationMin: 180000,
+          salaryExpectationMax: 280000,
+          equityExpectation: '0.5% - 1.5% per member',
+          benefitsRequirements: JSON.stringify(['Health insurance', '401k match', 'Remote flexibility', 'Learning budget']),
+          relocationWillingness: true,
+          createdBy: demoUser.id,
+          verificationStatus: 'verified',
+          verifiedAt: new Date(),
+        }
+      });
+      results.push(`Created demo team: ${demoTeam.name}`);
+    } else {
+      demoTeam = existingDemoTeam;
+      results.push(`Demo team already exists: ${demoTeam.name}`);
+    }
+
+    // Link all team members to the demo team
+    for (const member of createdMembers) {
+      const existingMembership = await prisma.teamMember.findFirst({
+        where: {
+          teamId: demoTeam.id,
+          userId: member.id
+        }
+      });
+
+      if (!existingMembership) {
+        await prisma.teamMember.create({
+          data: {
+            teamId: demoTeam.id,
+            userId: member.id,
+            role: member.role,
+            seniorityLevel: member.seniorityLevel as 'entry' | 'mid' | 'senior' | 'lead' | 'principal',
+            isLead: member.isLead,
+            isAdmin: member.isLead,
+            keySkills: JSON.stringify(member.keySkills),
+            contribution: member.contribution,
+            status: 'active',
+            joinDate: new Date(Date.now() - 3.5 * 365 * 24 * 60 * 60 * 1000), // 3.5 years ago
+          }
+        });
+        results.push(`Linked ${member.email} to demo team`);
+      } else {
+        results.push(`${member.email} already linked to demo team`);
       }
     }
 

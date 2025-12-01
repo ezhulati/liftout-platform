@@ -23,6 +23,21 @@ function formatTeamSize(min?: number | null, max?: number | null): string {
   return 'Flexible';
 }
 
+// Map database status to frontend status
+function mapStatus(dbStatus: string): 'open' | 'in_review' | 'closed' {
+  switch (dbStatus) {
+    case 'active':
+      return 'open';
+    case 'paused':
+      return 'in_review';
+    case 'filled':
+    case 'expired':
+      return 'closed';
+    default:
+      return 'open';
+  }
+}
+
 // GET /api/opportunities/[id] - Get opportunity details from database
 export async function GET(
   request: NextRequest,
@@ -124,7 +139,7 @@ export async function GET(
         : opportunity.urgency === 'high'
         ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
-      status: opportunity.status,
+      status: mapStatus(opportunity.status),
       urgent: opportunity.urgency === 'urgent' || opportunity.urgency === 'high',
       postedAt: opportunity.createdAt.toISOString(),
       createdAt: opportunity.createdAt.toISOString(),
