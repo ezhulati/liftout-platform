@@ -21,9 +21,9 @@ COPY apps/web-app ./apps/web-app
 # Install all dependencies from root
 RUN pnpm install --frozen-lockfile
 
-# Generate Prisma client in database package
+# Build database package (generates Prisma client and compiles TypeScript)
 WORKDIR /app/packages/database
-RUN pnpm run db:generate
+RUN pnpm run db:generate && pnpm run build
 
 # Build web-app with placeholder DATABASE_URL to allow Prisma generate during build
 WORKDIR /app/apps/web-app
