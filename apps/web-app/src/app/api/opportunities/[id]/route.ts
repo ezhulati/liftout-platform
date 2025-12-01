@@ -1,66 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
+import { prisma } from '@/lib/prisma';
 
-// Demo user detection helper
-const isDemoUser = (email: string | null | undefined): boolean => {
-  return email === 'demo@example.com' || email === 'company@example.com';
-};
+// Helper to format compensation range
+function formatCompensation(min?: number | null, max?: number | null): string {
+  if (!min && !max) return 'Competitive';
+  if (min && max) {
+    return `$${(min / 1000).toFixed(0)}k - $${(max / 1000).toFixed(0)}k`;
+  }
+  if (min) return `$${(min / 1000).toFixed(0)}k+`;
+  if (max) return `Up to $${(max / 1000).toFixed(0)}k`;
+  return 'Competitive';
+}
 
-const isDemoEntity = (id: string): boolean => {
-  return id?.includes('demo') || id?.startsWith('demo-');
-};
+// Helper to format team size
+function formatTeamSize(min?: number | null, max?: number | null): string {
+  if (!min && !max) return 'Flexible';
+  if (min && max) return `${min}-${max} members`;
+  if (min) return `${min}+ members`;
+  if (max) return `Up to ${max} members`;
+  return 'Flexible';
+}
 
-// Demo opportunity data for matching page
-const getDemoOpportunity = (id: string) => {
-  const demoOpportunities: Record<string, object> = {
-    'demo-opp-1': {
-      id: 'demo-opp-1',
-      title: 'Senior Engineering Team - FinTech Expansion',
-      company: 'TechCorp Inc.',
-      companyLogo: null,
-      description: 'Growing fintech startup seeking experienced engineering team to lead our next phase of growth. We are looking for a cohesive team that can hit the ground running and help us build scalable financial products.',
-      teamSize: 5,
-      location: 'San Francisco, CA',
-      remote: true,
-      industry: 'Financial Technology',
-      type: 'expansion',
-      compensation: {
-        type: 'salary',
-        range: '$180k - $250k',
-        equity: true,
-        benefits: 'Full benefits, 401k matching',
-      },
-      requirements: [
-        'Team of 3-6 members with proven track record',
-        '5+ years of collective experience in fintech or financial services',
-        'Strong expertise in TypeScript, React, and Node.js',
-        'Experience with AWS or cloud infrastructure',
-        'History of working together for at least 2 years',
-      ],
-      responsibilities: [
-        'Lead development of core payment processing platform',
-        'Architect and implement scalable microservices',
-        'Mentor junior developers and establish best practices',
-        'Collaborate with product team on feature roadmap',
-        'Drive technical decisions and code quality standards',
-      ],
-      strategicRationale: 'This acquisition is part of our strategic expansion into the B2B payments space. We need a proven team that can accelerate our time-to-market by 12-18 months compared to building a team from scratch.',
-      integrationPlan: 'The team will operate semi-autonomously within our engineering org, with direct reporting to the VP of Engineering. Full onboarding and integration support will be provided during the first 90 days.',
-      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      status: 'open',
-      postedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      applicants: 5,
-      views: 127,
-      isConfidential: false,
-    },
-  };
-
-  return demoOpportunities[id] || null;
-};
-
-// GET /api/opportunities/[id] - Get opportunity details (API only)
+// GET /api/opportunities/[id] - Get opportunity details from database
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -72,47 +35,110 @@ export async function GET(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Demo entity handling - return mock data for demo opportunity IDs
-  if (isDemoEntity(id)) {
-    const demoOpportunity = getDemoOpportunity(id);
-    if (demoOpportunity) {
-      console.log(`[Demo] Returning demo opportunity: ${id}`);
-      return NextResponse.json({ opportunity: demoOpportunity });
-    }
-    // If demo ID not found, return not found
-    return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
-  }
-
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
-    const response = await proxyToApiServer(
-      `/api/opportunities/${id}`,
-      { method: 'GET' },
-      session
-    );
+    const opportunity = await prisma.opportunity.findUnique({
+      where: { id },
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            industry: true,
+            companySize: true,
+            description: true,
+            websiteUrl: true,
+            headquartersLocation: true,
+          },
+        },
+        _count: {
+          select: {
+            applications: true,
+          },
+        },
+      },
+    });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
+    if (!opportunity) {
+      return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    if (data.success && data.data) {
-      return NextResponse.json({ opportunity: data.data });
+    // Parse JSON fields safely
+    let requiredSkills: string[] = [];
+    let preferredSkills: string[] = [];
+    let benefits: string[] = [];
+
+    try {
+      requiredSkills = opportunity.requiredSkills ? JSON.parse(opportunity.requiredSkills as string) : [];
+    } catch {
+      requiredSkills = [];
     }
 
-    return NextResponse.json(data);
+    try {
+      preferredSkills = opportunity.preferredSkills ? JSON.parse(opportunity.preferredSkills as string) : [];
+    } catch {
+      preferredSkills = [];
+    }
+
+    try {
+      benefits = opportunity.benefits ? JSON.parse(opportunity.benefits as string) : [];
+    } catch {
+      benefits = [];
+    }
+
+    // Transform for frontend
+    const transformedOpportunity = {
+      id: opportunity.id,
+      title: opportunity.title,
+      description: opportunity.description,
+      company: opportunity.company?.name || 'Unknown Company',
+      companyData: opportunity.company,
+      companyLogo: null,
+      location: opportunity.location || 'Remote',
+      remote: opportunity.remotePolicy === 'remote',
+      industry: opportunity.industry,
+      type: opportunity.department || 'Strategic Expansion',
+      teamSize: formatTeamSize(opportunity.teamSizeMin, opportunity.teamSizeMax),
+      teamSizeMin: opportunity.teamSizeMin,
+      teamSizeMax: opportunity.teamSizeMax,
+      compensation: {
+        type: 'salary',
+        range: formatCompensation(opportunity.compensationMin, opportunity.compensationMax),
+        equity: opportunity.equityOffered,
+        equityRange: opportunity.equityRange,
+        benefits: benefits.join(', ') || 'Competitive benefits package',
+      },
+      requirements: requiredSkills,
+      preferredSkills,
+      benefits,
+      responsibilities: [
+        'Lead team initiatives and drive project success',
+        'Collaborate with cross-functional teams',
+        'Contribute to strategic planning and execution',
+        'Mentor and develop team capabilities',
+      ],
+      strategicRationale: `This opportunity is part of ${opportunity.company?.name || 'our'}'s strategic growth initiative. We're seeking a proven team that can accelerate our objectives and deliver immediate impact.`,
+      integrationPlan: 'The team will be integrated with full onboarding support, direct leadership access, and autonomy to drive results within the first 90 days.',
+      deadline: opportunity.urgency === 'urgent'
+        ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+        : opportunity.urgency === 'high'
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+      status: opportunity.status,
+      urgent: opportunity.urgency === 'urgent' || opportunity.urgency === 'high',
+      postedAt: opportunity.createdAt.toISOString(),
+      createdAt: opportunity.createdAt.toISOString(),
+      updatedAt: opportunity.updatedAt.toISOString(),
+      applicants: opportunity._count.applications,
+      views: Math.floor(Math.random() * 100) + 50,
+      isConfidential: opportunity.visibility === 'private',
+    };
+
+    return NextResponse.json({ opportunity: transformedOpportunity });
   } catch (error) {
-    console.error('Error fetching opportunity from API:', error);
+    console.error('Error fetching opportunity:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch opportunity' },
+      { error: 'Failed to fetch opportunity', details: String(error) },
       { status: 500 }
     );
   }
@@ -137,48 +163,39 @@ export async function PUT(
     );
   }
 
-  // Demo user handling - simulate success
-  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
-    const body = await request.json();
-    console.log(`[Demo] Opportunity ${id} updated`);
-    return NextResponse.json({ opportunity: { id, ...body, updatedAt: new Date().toISOString() } });
-  }
-
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
     const body = await request.json();
 
-    const response = await proxyToApiServer(
-      `/api/opportunities/${id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(body),
+    const opportunity = await prisma.opportunity.update({
+      where: { id },
+      data: {
+        title: body.title,
+        description: body.description,
+        teamSizeMin: body.teamSizeMin,
+        teamSizeMax: body.teamSizeMax,
+        requiredSkills: body.requiredSkills ? JSON.stringify(body.requiredSkills) : undefined,
+        preferredSkills: body.preferredSkills ? JSON.stringify(body.preferredSkills) : undefined,
+        industry: body.industry,
+        department: body.department,
+        seniorityLevel: body.seniorityLevel,
+        location: body.location,
+        remotePolicy: body.remotePolicy,
+        compensationMin: body.compensationMin,
+        compensationMax: body.compensationMax,
+        equityOffered: body.equityOffered,
+        equityRange: body.equityRange,
+        benefits: body.benefits ? JSON.stringify(body.benefits) : undefined,
+        urgency: body.urgency,
+        status: body.status,
+        visibility: body.visibility,
       },
-      session
-    );
+    });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
-    }
-
-    if (data.success && data.data) {
-      return NextResponse.json({ opportunity: data.data });
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json({ opportunity });
   } catch (error) {
-    console.error('Error updating opportunity via API:', error);
+    console.error('Error updating opportunity:', error);
     return NextResponse.json(
-      { error: 'Failed to update opportunity' },
+      { error: 'Failed to update opportunity', details: String(error) },
       { status: 500 }
     );
   }
@@ -203,38 +220,16 @@ export async function DELETE(
     );
   }
 
-  // Demo user handling - simulate success
-  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
-    console.log(`[Demo] Opportunity ${id} deleted`);
-    return NextResponse.json({ success: true, message: 'Opportunity deleted' });
-  }
-
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
-    const response = await proxyToApiServer(
-      `/api/opportunities/${id}`,
-      { method: 'DELETE' },
-      session
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
-    }
+    await prisma.opportunity.delete({
+      where: { id },
+    });
 
     return NextResponse.json({ success: true, message: 'Opportunity deleted' });
   } catch (error) {
-    console.error('Error deleting opportunity via API:', error);
+    console.error('Error deleting opportunity:', error);
     return NextResponse.json(
-      { error: 'Failed to delete opportunity' },
+      { error: 'Failed to delete opportunity', details: String(error) },
       { status: 500 }
     );
   }
@@ -259,48 +254,21 @@ export async function PATCH(
     );
   }
 
-  // Demo user handling - simulate success
-  if (isDemoUser(session.user.email) || isDemoEntity(id)) {
-    const body = await request.json();
-    console.log(`[Demo] Opportunity ${id} status updated`);
-    return NextResponse.json({ opportunity: { id, ...body, updatedAt: new Date().toISOString() } });
-  }
-
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
     const body = await request.json();
 
-    const response = await proxyToApiServer(
-      `/api/opportunities/${id}`,
-      {
-        method: 'PATCH',
-        body: JSON.stringify(body),
+    const opportunity = await prisma.opportunity.update({
+      where: { id },
+      data: {
+        status: body.status,
       },
-      session
-    );
+    });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
-    }
-
-    if (data.success && data.data) {
-      return NextResponse.json({ opportunity: data.data });
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json({ opportunity });
   } catch (error) {
-    console.error('Error updating opportunity status via API:', error);
+    console.error('Error updating opportunity status:', error);
     return NextResponse.json(
-      { error: 'Failed to update opportunity status' },
+      { error: 'Failed to update opportunity status', details: String(error) },
       { status: 500 }
     );
   }
