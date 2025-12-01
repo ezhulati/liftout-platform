@@ -43,7 +43,7 @@ export default function DashboardPage() {
         <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed max-w-2xl">
           {isCompanyUser
             ? 'Manage your opportunities and find the perfect teams'
-            : 'Discover opportunities and connect with amazing teams'
+            : 'Discover opportunities and connect with top companies'
           }
         </p>
       </div>

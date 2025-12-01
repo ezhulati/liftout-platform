@@ -134,27 +134,25 @@ export async function captureError(report: ErrorReport): Promise<void> {
   }
 
   // If Sentry is configured, send to Sentry
-  // Note: Install @sentry/nextjs and configure to enable
-  // Sentry integration is disabled by default - uncomment when @sentry/nextjs is installed
-  // if (config.sentryDsn) {
-  //   try {
-  //     const Sentry = await import('@sentry/nextjs');
-  //     if (user) {
-  //       Sentry.setUser({ id: user.id, email: user.email });
-  //     }
-  //     if (tags) {
-  //       Object.entries(tags).forEach(([key, value]) => {
-  //         Sentry.setTag(key, value);
-  //       });
-  //     }
-  //     if (context) {
-  //       Sentry.setContext('additional', context);
-  //     }
-  //     Sentry.captureException(error);
-  //   } catch {
-  //     // Sentry not available, skip
-  //   }
-  // }
+  if (config.sentryDsn) {
+    try {
+      const Sentry = await import('@sentry/nextjs');
+      if (user) {
+        Sentry.setUser({ id: user.id, email: user.email });
+      }
+      if (tags) {
+        Object.entries(tags).forEach(([key, value]) => {
+          Sentry.setTag(key, value);
+        });
+      }
+      if (context) {
+        Sentry.setContext('additional', context);
+      }
+      Sentry.captureException(error);
+    } catch {
+      // Sentry not available, skip
+    }
+  }
 }
 
 /**
