@@ -48,7 +48,8 @@ export default function AppLayout({
     lastName: user.lastName || user.name?.split(' ')[1] || '',
     type: user.userType as 'individual' | 'company',
     userType: user.userType,
-    verified: true,
+    verified: user.profileCompleted ?? false,
+    profileCompleted: user.profileCompleted ?? false,
     status: 'active' as const,
     preferences: {
       notifications: true,
@@ -66,7 +67,8 @@ export default function AppLayout({
     lastName: user.lastName || user.name?.split(' ')[1] || '',
     type: (user.userType || 'individual') as 'individual' | 'company',
     userType: user.userType || 'individual',
-    verified: true,
+    verified: user.profileCompleted ?? false,
+    profileCompleted: user.profileCompleted ?? false,
     status: 'active' as const,
     preferences: {
       notifications: true,

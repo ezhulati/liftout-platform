@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOnboarding } from '@/contexts/OnboardingContext';
 import { toast } from 'react-hot-toast';
 import {
   ArrowRightIcon,
@@ -16,6 +16,7 @@ import {
   WrenchScrewdriverIcon,
   HeartIcon,
 } from '@heroicons/react/24/outline';
+import { ProgressRing } from './ProgressRing';
 
 interface Question {
   id: string;
@@ -187,6 +188,7 @@ interface ConversationalOnboardingProps {
 
 export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalOnboardingProps) {
   const { userData } = useAuth();
+  const { markOnboardingComplete, skipOnboarding: contextSkipOnboarding } = useOnboarding();
   const [currentIndex, setCurrentIndex] = useState(-1); // -1 = welcome screen
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [currentValue, setCurrentValue] = useState<string | string[]>('');
@@ -294,6 +296,9 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
         if (!response.ok) {
           throw new Error('Failed to save profile');
         }
+
+        // Mark onboarding as complete in the database
+        await markOnboardingComplete();
 
         toast.success('Profile created successfully!');
         onComplete();
@@ -403,9 +408,17 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           <ArrowLeftIcon className="h-5 w-5" />
           <span className="text-sm">Back</span>
         </button>
-        <span className="text-sm text-text-tertiary">
-          {currentIndex + 1} of {questions.length}
-        </span>
+        <div className="flex flex-col items-center">
+          <ProgressRing
+            percentage={progress}
+            size={48}
+            strokeWidth={5}
+            showMilestones={false}
+          />
+          <span className="text-xs text-text-tertiary mt-1">
+            {currentIndex + 1} of {questions.length}
+          </span>
+        </div>
         <button
           onClick={onSkip}
           className="text-sm text-text-tertiary hover:text-text-secondary min-h-12"

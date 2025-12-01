@@ -1,15 +1,22 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { 
-  OnboardingProgress, 
-  OnboardingStep, 
+import {
+  OnboardingProgress,
+  OnboardingStep,
   ProfileCompleteness,
   COMPANY_ONBOARDING_STEPS,
-  TEAM_ONBOARDING_STEPS 
+  TEAM_ONBOARDING_STEPS
 } from '@/types/onboarding';
 import { useProfileCompletion } from '@/hooks/useProfileCompletion';
+
+interface OnboardingProgressData {
+  isCompleted: boolean;
+  skippedAt: string | null;
+  profileCompleteness: number;
+  nextSteps: string[];
+}
 
 interface OnboardingContextType {
   progress: OnboardingProgress | null;
@@ -21,8 +28,9 @@ interface OnboardingContextType {
   startOnboarding: () => void;
   completeStep: (stepId: string) => void;
   goToStep: (stepId: string) => void;
-  skipOnboarding: () => void;
-  refreshProgress: () => void;
+  skipOnboarding: () => Promise<void>;
+  markOnboardingComplete: () => Promise<void>;
+  refreshProgress: () => Promise<void>;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
@@ -30,9 +38,10 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 export function OnboardingProvider({ children }: { children: React.ReactNode }) {
   const { userData, isIndividual, isCompany } = useAuth();
   const [progress, setProgress] = useState<OnboardingProgress | null>(null);
+  const [progressData, setProgressData] = useState<OnboardingProgressData | null>(null);
   const [profileCompleteness, setProfileCompleteness] = useState<ProfileCompleteness | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Use the profile completion hook
   const profileCompletionData = useProfileCompletion({
     threshold: 80,
@@ -45,27 +54,61 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   // Get current step
   const currentStep = progress ? steps.find(step => step.id === progress.currentStep) || steps[0] : null;
 
-  // Consider onboarding complete if progress is complete or the user is already verified
-  const isOnboardingCompleted = Boolean(progress?.isCompleted || userData?.verified);
+  // Consider onboarding complete if fetched from database
+  const isOnboardingCompleted = Boolean(progressData?.isCompleted);
 
-  // Require onboarding only when not completed
-  const isOnboardingRequired = Boolean(!isOnboardingCompleted && userData);
+  // Require onboarding only when not completed and user exists
+  const isOnboardingRequired = Boolean(!isOnboardingCompleted && userData && !isLoading);
 
-  // Initialize onboarding progress for new users
-  useEffect(() => {
-    if (userData && !isLoading) {
-      initializeProgress();
+  // Fetch onboarding progress from database API
+  const fetchOnboardingProgress = useCallback(async () => {
+    if (!userData) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/onboarding/progress');
+      if (response.ok) {
+        const data: OnboardingProgressData = await response.json();
+        setProgressData(data);
+
+        // Update local progress state
+        setProgress({
+          userId: userData.id,
+          userType: userData.type,
+          currentStep: steps[0]?.id || '',
+          completedSteps: data.isCompleted ? steps.map(s => s.id) : [],
+          isCompleted: data.isCompleted,
+          startedAt: new Date(),
+          profileCompleteness: data.profileCompleteness,
+        });
+
+        // Update profile completeness from API
+        setProfileCompleteness({
+          overall: data.profileCompleteness,
+          sections: {
+            basicInfo: data.profileCompleteness > 25 ? 100 : data.profileCompleteness * 4,
+            experience: data.profileCompleteness > 50 ? 100 : Math.max(0, (data.profileCompleteness - 25) * 4),
+            skills: data.profileCompleteness > 75 ? 100 : Math.max(0, (data.profileCompleteness - 50) * 4),
+            preferences: data.profileCompleteness === 100 ? 100 : Math.max(0, (data.profileCompleteness - 75) * 4),
+            verification: data.isCompleted ? 100 : 0,
+          },
+          missingFields: data.nextSteps,
+          nextRecommendedAction: data.nextSteps[0] || 'Complete your profile to get started',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch onboarding progress:', error);
+    } finally {
+      setIsLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData, isLoading]);
+  }, [userData, steps]);
 
-  // Load onboarding progress
+  // Load onboarding progress on mount
   useEffect(() => {
     if (userData) {
-      loadOnboardingProgress();
+      fetchOnboardingProgress();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
+  }, [userData, fetchOnboardingProgress]);
 
   // Update profile completeness when profile completion data changes
   useEffect(() => {
@@ -74,69 +117,6 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, profileCompletionData.score, profileCompletionData.completionData.breakdown, profileCompletionData.nextSteps]);
-
-  const initializeProgress = async () => {
-    if (!userData) return;
-
-    // Check if user already has onboarding progress
-    const existingProgress = await loadOnboardingProgressFromStorage();
-    if (existingProgress) {
-      setProgress(existingProgress);
-      return;
-    }
-
-    // Create new progress for first-time users
-    const newProgress: OnboardingProgress = {
-      userId: userData.id,
-      userType: userData.type,
-      currentStep: steps[0]?.id || '',
-      completedSteps: [],
-      isCompleted: false,
-      startedAt: new Date(),
-      profileCompleteness: 20, // Basic info from signup
-    };
-
-    setProgress(newProgress);
-    await saveOnboardingProgress(newProgress);
-    await calculateProfileCompleteness();
-  };
-
-  const loadOnboardingProgress = async () => {
-    setIsLoading(true);
-    try {
-      const savedProgress = await loadOnboardingProgressFromStorage();
-      if (savedProgress) {
-        setProgress(savedProgress);
-      }
-      await calculateProfileCompleteness();
-    } catch (error) {
-      console.error('Failed to load onboarding progress:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const loadOnboardingProgressFromStorage = async (): Promise<OnboardingProgress | null> => {
-    if (!userData) return null;
-    
-    // In a real app, this would fetch from your API/database
-    // For now, use localStorage as a demo
-    try {
-      const stored = localStorage.getItem(`onboarding_${userData.id}`);
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const saveOnboardingProgress = async (newProgress: OnboardingProgress) => {
-    if (!userData) return;
-    
-    // In a real app, this would save to your API/database
-    // For now, use localStorage as a demo
-    localStorage.setItem(`onboarding_${userData.id}`, JSON.stringify(newProgress));
-    setProgress(newProgress);
-  };
 
   const calculateProfileCompleteness = async () => {
     if (!userData) return;
@@ -149,7 +129,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         experience: profileCompletionData.completionData.breakdown.professional || profileCompletionData.completionData.breakdown.experience || 0,
         skills: profileCompletionData.completionData.breakdown.skills || 0,
         preferences: profileCompletionData.completionData.breakdown.preferences || profileCompletionData.completionData.breakdown.hiring || 0,
-        verification: userData.verified ? 100 : 0,
+        verification: progressData?.isCompleted ? 100 : 0,
       },
       missingFields: profileCompletionData.missingRequired,
       nextRecommendedAction: profileCompletionData.nextSteps[0] || 'Complete your profile to get started',
@@ -171,7 +151,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
       profileCompleteness: 20,
     };
 
-    saveOnboardingProgress(newProgress);
+    setProgress(newProgress);
   };
 
   const completeStep = async (stepId: string) => {
@@ -187,8 +167,8 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     };
 
     // Find next incomplete step
-    const nextStep = steps.find(step => 
-      !updatedProgress.completedSteps.includes(step.id) && 
+    const nextStep = steps.find(step =>
+      !updatedProgress.completedSteps.includes(step.id) &&
       step.order > (steps.find(s => s.id === stepId)?.order || 0)
     );
 
@@ -201,7 +181,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
       updatedProgress.currentStep = '';
     }
 
-    await saveOnboardingProgress(updatedProgress);
+    setProgress(updatedProgress);
     await calculateProfileCompleteness();
   };
 
@@ -213,24 +193,54 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
       currentStep: stepId,
     };
 
-    await saveOnboardingProgress(updatedProgress);
+    setProgress(updatedProgress);
   };
 
+  // Mark onboarding as complete via API
+  const markOnboardingComplete = async () => {
+    try {
+      const response = await fetch('/api/onboarding/progress', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'complete' }),
+      });
+
+      if (response.ok) {
+        setProgressData(prev => prev ? { ...prev, isCompleted: true } : null);
+        if (progress) {
+          setProgress({
+            ...progress,
+            isCompleted: true,
+            completedAt: new Date(),
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to mark onboarding complete:', error);
+    }
+  };
+
+  // Skip onboarding via API
   const skipOnboarding = async () => {
-    if (!progress || !userData) return;
+    try {
+      const response = await fetch('/api/onboarding/progress', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'skip' }),
+      });
 
-    const updatedProgress = {
-      ...progress,
-      isCompleted: true,
-      completedAt: new Date(),
-      currentStep: '',
-    };
-
-    await saveOnboardingProgress(updatedProgress);
+      if (response.ok) {
+        const data = await response.json();
+        setProgressData(prev => prev ? { ...prev, skippedAt: data.skippedAt } : null);
+        // Note: skipping doesn't complete onboarding, just records the skip
+      }
+    } catch (error) {
+      console.error('Failed to skip onboarding:', error);
+    }
   };
 
   const refreshProgress = async () => {
-    await loadOnboardingProgress();
+    await fetchOnboardingProgress();
   };
 
   const value: OnboardingContextType = {
@@ -244,6 +254,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     completeStep,
     goToStep,
     skipOnboarding,
+    markOnboardingComplete,
     refreshProgress,
   };
 

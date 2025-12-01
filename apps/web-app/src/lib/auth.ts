@@ -64,6 +64,8 @@ const providers: any[] = [
           emailVerified: user.emailVerified ? new Date() : null,
           image: user.profile?.profilePhotoUrl || null,
           accessToken,
+          // Profile completion for onboarding
+          profileCompleted: user.profileCompleted,
           // 2FA fields for admin users
           twoFactorEnabled: user.twoFactorEnabled,
           // twoFactorVerified is set to false initially - gets updated after 2FA verification
@@ -178,6 +180,7 @@ export const authOptions: NextAuthOptions = {
           token.firstName = dbUser.firstName;
           token.lastName = dbUser.lastName;
           token.emailVerified = dbUser.emailVerified ? new Date() : null;
+          token.profileCompleted = dbUser.profileCompleted;
 
           // Generate access token for API calls
           token.accessToken = jwt.sign(
@@ -197,6 +200,7 @@ export const authOptions: NextAuthOptions = {
         token.lastName = user.lastName;
         token.emailVerified = user.emailVerified;
         token.accessToken = user.accessToken;
+        token.profileCompleted = user.profileCompleted;
         // 2FA fields for admin users
         token.twoFactorEnabled = user.twoFactorEnabled;
         token.twoFactorVerified = user.twoFactorVerified;
@@ -220,6 +224,7 @@ export const authOptions: NextAuthOptions = {
         session.user.firstName = token.firstName as string;
         session.user.lastName = token.lastName as string;
         session.user.emailVerified = token.emailVerified as Date | null;
+        session.user.profileCompleted = token.profileCompleted as boolean;
       }
       // Add accessToken to session for API calls
       (session as any).accessToken = token.accessToken;
@@ -306,6 +311,7 @@ declare module 'next-auth' {
       lastName: string;
       userType: string;
       emailVerified: Date | null;
+      profileCompleted: boolean;
       image?: string | null;
     };
     accessToken?: string;
@@ -317,6 +323,7 @@ declare module 'next-auth' {
     lastName: string;
     userType: string;
     emailVerified: Date | null;
+    profileCompleted?: boolean;
     accessToken?: string;
     twoFactorEnabled?: boolean;
     twoFactorVerified?: boolean;
@@ -330,6 +337,7 @@ declare module 'next-auth/jwt' {
     firstName?: string;
     lastName?: string;
     emailVerified?: Date | null;
+    profileCompleted?: boolean;
     twoFactorEnabled?: boolean;
     twoFactorVerified?: boolean;
     isNewUser?: boolean;

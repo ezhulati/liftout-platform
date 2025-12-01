@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { getDemoDataForUser } from '@/lib/demo-accounts';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { ProgressRingCompact } from '@/components/onboarding/ProgressRing';
 import {
   HomeIcon,
   UserGroupIcon,
@@ -29,6 +31,7 @@ import {
   BellIcon,
   HeartIcon,
   ArrowsRightLeftIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 
 // Navigation items that show for team users
@@ -79,6 +82,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isOnboardingCompleted, profileCompleteness } = useOnboarding();
 
   // Get user data from NextAuth session
   const user = session?.user;
@@ -86,6 +90,8 @@ export function AppSidebar() {
   const userType = user?.userType || demoData?.userType || 'individual';
 
   const isCompanyUser = userType === 'company';
+  const showProfileReminder = !isOnboardingCompleted && user;
+  const completionPercentage = profileCompleteness?.overall || 0;
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
 
@@ -168,6 +174,25 @@ export function AppSidebar() {
             </div>
           )}
 
+          {/* Profile completion reminder */}
+          {showProfileReminder && (
+            <Link
+              href="/app/onboarding"
+              className="mx-3 mt-3 p-3 bg-gold/10 border border-gold/30 rounded-lg hover:bg-gold/20 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <ProgressRingCompact percentage={completionPercentage} size={36} strokeWidth={4} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-text-primary">Complete your profile</p>
+                  <p className="text-xs text-text-secondary truncate">
+                    {completionPercentage}% complete
+                  </p>
+                </div>
+                <SparklesIcon className="h-4 w-4 text-gold flex-shrink-0" />
+              </div>
+            </Link>
+          )}
+
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
             {currentNavigation.map((item) => (
@@ -230,6 +255,25 @@ export function AppSidebar() {
                 </span>
               </div>
             </div>
+          )}
+
+          {/* Profile completion reminder */}
+          {showProfileReminder && (
+            <Link
+              href="/app/onboarding"
+              className="mx-3 mt-3 p-3 bg-gold/10 border border-gold/30 rounded-lg hover:bg-gold/20 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <ProgressRingCompact percentage={completionPercentage} size={36} strokeWidth={4} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-text-primary">Complete your profile</p>
+                  <p className="text-xs text-text-secondary truncate">
+                    {completionPercentage}% complete
+                  </p>
+                </div>
+                <SparklesIcon className="h-4 w-4 text-gold flex-shrink-0" />
+              </div>
+            </Link>
           )}
 
           {/* Navigation */}
