@@ -86,11 +86,12 @@ export interface PaginatedResult<T> {
 
 // Valid state transitions
 const VALID_TRANSITIONS: Record<ApplicationStatus, ApplicationStatus[]> = {
-  submitted: ['reviewing', 'rejected'],
-  reviewing: ['interviewing', 'rejected'],
-  interviewing: ['accepted', 'rejected'],
+  submitted: ['reviewing', 'rejected', 'withdrawn'],
+  reviewing: ['interviewing', 'rejected', 'withdrawn'],
+  interviewing: ['accepted', 'rejected', 'withdrawn'],
   accepted: [],
   rejected: [],
+  withdrawn: [],
 };
 
 type ApplicationAction =
