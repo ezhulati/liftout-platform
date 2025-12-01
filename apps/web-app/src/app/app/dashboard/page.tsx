@@ -72,9 +72,9 @@ export default function DashboardPage() {
 
         {/* Upcoming deadlines or recommended content */}
         {isCompanyUser ? (
-          <UpcomingDeadlines />
-        ) : (
           <RecommendedTeams />
+        ) : (
+          <UpcomingDeadlines />
         )}
       </div>
     </div>
