@@ -1,5 +1,9 @@
 # Railway deployment configuration for web-app
-# Build and start commands are set via Railway dashboard/API
+
+[build]
+# Skip browser downloads - only needed for E2E tests
+PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1"
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "1"
 
 [deploy]
 healthcheckPath = "/"
