@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   UserGroupIcon,
   BuildingOfficeIcon,
@@ -15,20 +16,64 @@ import {
   ScaleIcon,
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
-import { 
+import {
   mockCultureProfiles,
   mockCompatibilityAssessment,
   type CultureProfile,
   type CultureCompatibility,
-  type DimensionCompatibility 
+  type DimensionCompatibility
 } from '@/lib/culture';
 
-export function CultureDashboard() {
+interface CultureDashboardProps {
+  teamId?: string;
+  companyId?: string;
+  applicationId?: string;
+}
+
+export function CultureDashboard({ teamId, companyId, applicationId }: CultureDashboardProps = {}) {
   const [selectedProfile, setSelectedProfile] = useState<CultureProfile | null>(null);
   const [viewMode, setViewMode] = useState<'overview' | 'profiles' | 'compatibility' | 'integration'>('overview');
-  
-  const profiles = mockCultureProfiles;
-  const compatibility = mockCompatibilityAssessment;
+
+  // Fetch culture data from API
+  const { data: cultureData, isLoading } = useQuery({
+    queryKey: ['culture', teamId, companyId, applicationId],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (teamId) params.set('teamId', teamId);
+      if (companyId) params.set('companyId', companyId);
+      if (applicationId) params.set('applicationId', applicationId);
+
+      const response = await fetch(`/api/culture?${params}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch culture data');
+      }
+      const result = await response.json();
+      return result.data;
+    },
+    staleTime: 60000, // 1 minute
+  });
+
+  // Use API data if available, fallback to mock data
+  const profiles = cultureData?.teamProfile && cultureData?.companyProfile
+    ? [
+        { ...mockCultureProfiles[0], ...cultureData.teamProfile },
+        { ...mockCultureProfiles[1], ...cultureData.companyProfile },
+      ]
+    : Array.isArray(cultureData)
+      ? cultureData.map((p: any) => ({ ...mockCultureProfiles[0], ...p }))
+      : mockCultureProfiles;
+
+  const compatibility = cultureData?.overallScore !== undefined
+    ? {
+        ...mockCompatibilityAssessment,
+        overallScore: cultureData.overallScore,
+        compatibilityLevel: cultureData.compatibilityLevel || mockCompatibilityAssessment.compatibilityLevel,
+        dimensionCompatibility: cultureData.dimensionCompatibility || mockCompatibilityAssessment.dimensionCompatibility,
+        riskAreas: cultureData.riskAreas || mockCompatibilityAssessment.riskAreas,
+        strengthAreas: cultureData.strengthAreas || mockCompatibilityAssessment.strengthAreas,
+        integrationPlan: cultureData.integrationPlan || mockCompatibilityAssessment.integrationPlan,
+      }
+    : mockCompatibilityAssessment;
   
   const stats = [
     {
@@ -299,7 +344,7 @@ export function CultureDashboard() {
               <div>
                 <h4 className="text-sm font-medium text-text-primary mb-3">Key strengths</h4>
                 <div className="space-y-2">
-                  {compatibility.strengthAreas.slice(0, 2).map((strength, index) => (
+                  {compatibility.strengthAreas.slice(0, 2).map((strength: any, index: number) => (
                     <div key={index} className="flex items-start space-x-2">
                       <CheckCircleIcon className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-text-secondary">{strength.description}</p>
@@ -312,7 +357,7 @@ export function CultureDashboard() {
               <div>
                 <h4 className="text-sm font-medium text-text-primary mb-3">Areas to watch</h4>
                 <div className="space-y-2">
-                  {compatibility.riskAreas.slice(0, 2).map((risk, index) => (
+                  {compatibility.riskAreas.slice(0, 2).map((risk: any, index: number) => (
                     <div key={index} className="flex items-start space-x-2">
                       <ExclamationTriangleIcon className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-text-secondary">{risk.description}</p>
@@ -424,7 +469,7 @@ export function CultureDashboard() {
                   <div>
                     <h4 className="text-sm font-medium text-text-primary mb-3">Core values</h4>
                     <div className="space-y-3">
-                      {selectedProfile.coreValues.slice(0, 3).map((value) => (
+                      {selectedProfile.coreValues.slice(0, 3).map((value: any) => (
                         <div key={value.id} className="border-l-2 border-navy-200 pl-3">
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-text-primary">{value.name}</p>
@@ -531,7 +576,7 @@ export function CultureDashboard() {
             <div className="card p-6">
               <h3 className="text-lg font-bold text-text-primary mb-4">Risk areas</h3>
               <div className="space-y-4">
-                {compatibility.riskAreas.map((risk) => (
+                {compatibility.riskAreas.map((risk: any) => (
                   <div key={risk.id} className="border-l-4 border-gold pl-4">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-medium text-text-primary capitalize">
@@ -559,7 +604,7 @@ export function CultureDashboard() {
             <div className="card p-6">
               <h3 className="text-lg font-bold text-text-primary mb-4">Strength areas</h3>
               <div className="space-y-4">
-                {compatibility.strengthAreas.map((strength) => (
+                {compatibility.strengthAreas.map((strength: any) => (
                   <div key={strength.id} className="border-l-4 border-success pl-4">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-medium text-text-primary">Cultural synergy</h4>
@@ -589,7 +634,7 @@ export function CultureDashboard() {
             <div className="card p-6">
               <h3 className="text-lg font-bold text-text-primary mb-6">Integration plan</h3>
               <div className="space-y-6">
-                {compatibility.integrationPlan.phases.map((phase, index) => (
+                {compatibility.integrationPlan.phases.map((phase: any, index: number) => (
                   <div key={phase.id} className="relative">
                     {index < compatibility.integrationPlan.phases.length - 1 && (
                       <div className="absolute left-4 top-8 w-0.5 h-full bg-border"></div>
@@ -614,7 +659,7 @@ export function CultureDashboard() {
 
                         {/* Activities */}
                         <div className="mt-4 space-y-2">
-                          {phase.activities.slice(0, 2).map((activity) => (
+                          {phase.activities.slice(0, 2).map((activity: any) => (
                             <div key={activity.id} className="bg-bg-alt rounded-lg p-3">
                               <div className="flex items-center justify-between">
                                 <h5 className="text-sm font-medium text-text-primary">{activity.name}</h5>
@@ -648,7 +693,7 @@ export function CultureDashboard() {
             <div className="card p-6">
               <h3 className="text-lg font-bold text-text-primary mb-4">Success metrics</h3>
               <div className="space-y-3">
-                {compatibility.integrationPlan.successMetrics.map((metric, index) => (
+                {compatibility.integrationPlan.successMetrics.map((metric: string, index: number) => (
                   <div key={index} className="flex items-start space-x-2">
                     <CheckCircleIcon className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-text-secondary">{metric}</p>
@@ -661,7 +706,7 @@ export function CultureDashboard() {
             <div className="card p-6">
               <h3 className="text-lg font-bold text-text-primary mb-4">Resources required</h3>
               <div className="space-y-4">
-                {compatibility.integrationPlan.resources.map((resource, index) => (
+                {compatibility.integrationPlan.resources.map((resource: any, index: number) => (
                   <div key={index} className="border-l-2 border-gold-200 pl-3">
                     <h4 className="text-sm font-medium text-text-primary capitalize">
                       {resource.type.replace(/_/g, ' ')}
