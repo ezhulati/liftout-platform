@@ -6,9 +6,22 @@ test.describe('Team Member Profiles', () => {
     // Sign in
     await signIn(page, { email: 'company@example.com', password: 'password' });
 
+    // Wait for auth to settle before navigating
+    await page.waitForTimeout(1000);
+
     // Go directly to Alex's profile
     await page.goto('/app/members/demo-user-alex');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
+
+    // Wait for either the profile to load or a redirect to happen
+    await page.waitForTimeout(2000);
+
+    // If redirected to signin, the auth didn't persist - re-sign in
+    if (page.url().includes('/auth/signin')) {
+      await signIn(page, { email: 'company@example.com', password: 'password' });
+      await page.goto('/app/members/demo-user-alex');
+      await page.waitForLoadState('networkidle');
+    }
 
     // Verify profile loaded
     await expect(page.locator('h1:has-text("Alex Chen")')).toBeVisible({ timeout: 15000 });

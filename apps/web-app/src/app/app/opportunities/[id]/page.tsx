@@ -533,9 +533,15 @@ export default function OpportunityDetailPage() {
                     </div>
                   )}
                   {opportunity.compensation.benefits && (
-                    <div className="flex justify-between">
-                      <span className="text-text-tertiary">Benefits</span>
-                      <span className="text-text-secondary">{opportunity.compensation.benefits}</span>
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <span className="text-text-tertiary block mb-2">Benefits</span>
+                      <div className="space-y-1">
+                        {opportunity.compensation.benefits.split(', ').map((benefit, idx) => (
+                          <span key={idx} className="text-text-secondary block text-right">
+                            {benefit}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
