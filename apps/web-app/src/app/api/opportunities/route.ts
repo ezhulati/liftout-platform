@@ -1,14 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
+import { prisma } from '@/lib/prisma';
 
-// Demo user detection helper
-const isDemoUser = (email: string | null | undefined): boolean => {
-  return email === 'demo@example.com' || email === 'company@example.com';
-};
+// Helper to format compensation range
+function formatCompensation(min?: number | null, max?: number | null): string {
+  if (!min && !max) return 'Competitive';
+  if (min && max) {
+    return `$${(min / 1000).toFixed(0)}k - $${(max / 1000).toFixed(0)}k`;
+  }
+  if (min) return `$${(min / 1000).toFixed(0)}k+`;
+  if (max) return `Up to $${(max / 1000).toFixed(0)}k`;
+  return 'Competitive';
+}
 
-// GET /api/opportunities - List opportunities (API only)
+// Helper to format team size
+function formatTeamSize(min?: number | null, max?: number | null): string {
+  if (!min && !max) return 'Flexible';
+  if (min && max) return `${min}-${max} members`;
+  if (min) return `${min}+ members`;
+  if (max) return `Up to ${max} members`;
+  return 'Flexible';
+}
+
+// GET /api/opportunities - List opportunities from database
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
@@ -16,49 +31,138 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
-    const searchParams = request.nextUrl.searchParams.toString();
-    const path = searchParams ? `/api/opportunities?${searchParams}` : '/api/opportunities';
+    const searchParams = request.nextUrl.searchParams;
+    const search = searchParams.get('search') || '';
+    const industry = searchParams.get('industry') || '';
+    const location = searchParams.get('location') || '';
+    const status = searchParams.get('status') || 'active';
 
-    const response = await proxyToApiServer(path, { method: 'GET' }, session);
-    const data = await response.json();
+    // Build where clause
+    const where: any = {};
 
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
+    // For team users, only show active public opportunities
+    if (session.user.userType === 'individual') {
+      where.status = 'active';
+      where.visibility = 'public';
+    } else if (session.user.userType === 'company') {
+      // Company users see their own opportunities
+      // For now, show all opportunities to company users
+      if (status && status !== 'all') {
+        where.status = status;
+      }
     }
 
-    if (data.success && data.data) {
-      const transformedOpportunities = (data.data.opportunities || []).map((opp: any) => ({
-        ...opp,
-        company: typeof opp.company === 'object' && opp.company !== null ? opp.company.name : opp.company,
-        companyData: typeof opp.company === 'object' ? opp.company : undefined,
-      }));
+    // Search filter
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { industry: { contains: search, mode: 'insensitive' } },
+      ];
+    }
 
-      return NextResponse.json({
-        opportunities: transformedOpportunities,
-        total: data.data.pagination?.total || 0,
-        pagination: data.data.pagination,
-        filters: {
-          industries: [],
-          locations: [],
-          types: [],
+    // Industry filter
+    if (industry) {
+      where.industry = { contains: industry, mode: 'insensitive' };
+    }
+
+    // Location filter
+    if (location) {
+      where.location = { contains: location, mode: 'insensitive' };
+    }
+
+    const opportunities = await prisma.opportunity.findMany({
+      where,
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            industry: true,
+            companySize: true,
+          },
         },
-      });
-    }
+        _count: {
+          select: {
+            applications: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
-    return NextResponse.json(data);
+    // Transform opportunities for frontend
+    const transformedOpportunities = opportunities.map((opp) => {
+      // Parse JSON fields safely
+      let requiredSkills: string[] = [];
+      let benefits: string[] = [];
+
+      try {
+        requiredSkills = opp.requiredSkills ? JSON.parse(opp.requiredSkills as string) : [];
+      } catch {
+        requiredSkills = [];
+      }
+
+      try {
+        benefits = opp.benefits ? JSON.parse(opp.benefits as string) : [];
+      } catch {
+        benefits = [];
+      }
+
+      return {
+        id: opp.id,
+        title: opp.title,
+        description: opp.description,
+        company: opp.company?.name || 'Unknown Company',
+        companyData: opp.company,
+        location: opp.location || 'Remote',
+        compensation: formatCompensation(opp.compensationMin, opp.compensationMax),
+        teamSize: formatTeamSize(opp.teamSizeMin, opp.teamSizeMax),
+        timeline: opp.urgency === 'urgent' ? 'Immediate' : opp.urgency === 'high' ? '1-2 months' : '3-6 months',
+        status: opp.status,
+        urgent: opp.urgency === 'urgent' || opp.urgency === 'high',
+        confidential: opp.visibility === 'private',
+        requirements: requiredSkills,
+        benefits,
+        type: opp.department || 'Strategic Expansion',
+        industry: opp.industry,
+        createdAt: opp.createdAt.toISOString(),
+        updatedAt: opp.updatedAt.toISOString(),
+        applications: { length: opp._count.applications },
+      };
+    });
+
+    // Get unique values for filters
+    const allOpportunities = await prisma.opportunity.findMany({
+      select: {
+        industry: true,
+        location: true,
+        department: true,
+      },
+      distinct: ['industry', 'location', 'department'],
+    });
+
+    const industries = [...new Set(allOpportunities.map(o => o.industry).filter(Boolean))] as string[];
+    const locations = [...new Set(allOpportunities.map(o => o.location).filter(Boolean))] as string[];
+    const types = [...new Set(allOpportunities.map(o => o.department).filter(Boolean))] as string[];
+
+    return NextResponse.json({
+      opportunities: transformedOpportunities,
+      total: transformedOpportunities.length,
+      filters: {
+        industries,
+        locations,
+        types,
+      },
+    });
   } catch (error) {
-    console.error('Error proxying opportunities to API server:', error);
+    console.error('Error fetching opportunities:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch opportunities from API' },
+      { error: 'Failed to fetch opportunities', details: String(error) },
       { status: 500 }
     );
   }
@@ -79,57 +183,64 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Demo user handling - simulate success
-  if (isDemoUser(session.user.email)) {
-    const body = await request.json();
-    const mockOpportunity = {
-      id: `demo-opp-${Date.now()}`,
-      ...body,
-      createdBy: session.user.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: 'active',
-      applications: [],
-    };
-    console.log('[Demo] Opportunity created:', mockOpportunity.id);
-    return NextResponse.json({ opportunity: mockOpportunity }, { status: 201 });
-  }
-
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    return NextResponse.json(
-      { error: 'API server unavailable. Please start the API service.' },
-      { status: 503 }
-    );
-  }
-
   try {
     const body = await request.json();
 
-    const response = await proxyToApiServer(
-      '/api/opportunities',
-      {
-        method: 'POST',
-        body: JSON.stringify(body),
+    // Get company for this user
+    const companyUser = await prisma.companyUser.findFirst({
+      where: { userId: session.user.id },
+      include: { company: true },
+    });
+
+    if (!companyUser) {
+      return NextResponse.json(
+        { error: 'You must be associated with a company to create opportunities' },
+        { status: 403 }
+      );
+    }
+
+    // Create opportunity in database
+    const opportunity = await prisma.opportunity.create({
+      data: {
+        companyId: companyUser.companyId,
+        createdBy: session.user.id,
+        title: body.title,
+        description: body.description,
+        teamSizeMin: body.teamSizeMin || undefined,
+        teamSizeMax: body.teamSizeMax || undefined,
+        requiredSkills: body.requiredSkills ? JSON.stringify(body.requiredSkills) : undefined,
+        preferredSkills: body.preferredSkills ? JSON.stringify(body.preferredSkills) : undefined,
+        industry: body.industry || undefined,
+        department: body.department || undefined,
+        seniorityLevel: body.seniorityLevel || 'senior',
+        location: body.location || undefined,
+        remotePolicy: body.remotePolicy || 'hybrid',
+        compensationMin: body.compensationMin || undefined,
+        compensationMax: body.compensationMax || undefined,
+        equityOffered: body.equityOffered || false,
+        equityRange: body.equityRange || undefined,
+        benefits: body.benefits ? JSON.stringify(body.benefits) : undefined,
+        urgency: body.urgency || 'standard',
+        contractType: body.contractType || 'full_time',
+        status: 'active',
+        visibility: body.visibility || 'public',
       },
-      session
-    );
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
-    }
-
-    if (data.success && data.data) {
-      return NextResponse.json({ opportunity: data.data }, { status: 201 });
-    }
-
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json({ opportunity }, { status: 201 });
   } catch (error) {
-    console.error('Error creating opportunity via API:', error);
+    console.error('Error creating opportunity:', error);
     return NextResponse.json(
-      { error: 'Failed to create opportunity' },
+      { error: 'Failed to create opportunity', details: String(error) },
       { status: 500 }
     );
   }
