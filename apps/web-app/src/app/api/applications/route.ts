@@ -83,18 +83,20 @@ export async function GET(request: NextRequest) {
       opportunityId: app.opportunityId,
       team: app.team,
       opportunity: {
-        ...app.opportunity,
-        company: app.opportunity.company?.name || 'Unknown Company',
-        companyData: app.opportunity.company,
+        id: app.opportunity.id,
+        title: app.opportunity.title,
+        company: app.opportunity.company,
       },
       status: app.status,
       coverLetter: app.coverLetter,
+      submittedAt: app.appliedAt.toISOString(),
       appliedAt: app.appliedAt.toISOString(),
       reviewedAt: app.reviewedAt?.toISOString(),
       interviewScheduledAt: app.interviewScheduledAt?.toISOString(),
+      interviewNotes: app.interviewNotes,
     }));
 
-    return NextResponse.json({ applications: transformedApplications });
+    return NextResponse.json({ data: transformedApplications });
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
