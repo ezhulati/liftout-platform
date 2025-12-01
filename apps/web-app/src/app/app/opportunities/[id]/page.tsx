@@ -563,31 +563,40 @@ export default function OpportunityDetailPage() {
 
       {/* Apply Modal */}
       {showApplyModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-bg-elevated rounded-lg max-w-lg w-full p-6">
-            <h2 className="text-xl font-semibold text-text-primary mb-4">Apply for {opportunity.title}</h2>
-            <p className="text-text-secondary mb-4">
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ zIndex: 9999 }}
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowApplyModal(false)}
+          />
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Apply for {opportunity.title}</h2>
+            <p className="text-gray-600 mb-4">
               Write a cover letter explaining why your team is a great fit for this opportunity.
             </p>
             <textarea
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell the company about your team's relevant experience, achievements, and why you're interested in this opportunity..."
-              className="input-field w-full h-48 resize-none"
+              className="w-full h-48 resize-none border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowApplyModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 min-h-12"
+              >
+                Cancel
+              </button>
               <button
                 onClick={handleApply}
                 disabled={applying || !coverLetter.trim()}
                 className="btn-primary min-h-12 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {applying ? 'Submitting...' : 'Submit application'}
-              </button>
-              <button
-                onClick={() => setShowApplyModal(false)}
-                className="text-link min-h-12"
-              >
-                Cancel
               </button>
             </div>
           </div>
