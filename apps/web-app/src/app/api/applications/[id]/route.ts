@@ -44,23 +44,25 @@ export async function GET(
     }
 
     return NextResponse.json({
-      application: {
+      data: {
         id: application.id,
         teamId: application.teamId,
         opportunityId: application.opportunityId,
         team: application.team,
         opportunity: {
-          ...application.opportunity,
-          company: application.opportunity.company?.name || 'Unknown Company',
-          companyData: application.opportunity.company,
+          id: application.opportunity.id,
+          title: application.opportunity.title,
+          company: application.opportunity.company,
         },
         status: application.status,
         coverLetter: application.coverLetter,
         teamFitExplanation: application.teamFitExplanation,
         questionsForCompany: application.questionsForCompany,
+        submittedAt: application.appliedAt.toISOString(),
         appliedAt: application.appliedAt.toISOString(),
         reviewedAt: application.reviewedAt?.toISOString(),
         interviewScheduledAt: application.interviewScheduledAt?.toISOString(),
+        interviewNotes: application.interviewNotes,
       },
     });
   } catch (error) {
