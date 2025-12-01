@@ -121,7 +121,76 @@ export const authOptions: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, account, trigger, session }) {
+      // For OAuth sign-ins, look up or create user in database
+      if (account && account.provider !== 'credentials' && token.email) {
+        try {
+          // Check if user exists
+          let dbUser = await prisma.user.findUnique({
+            where: { email: token.email },
+            include: {
+              profile: true,
+              companyMemberships: { include: { company: true } },
+            },
+          });
+
+          if (!dbUser) {
+            // Create new user from OAuth data
+            const nameParts = (token.name || '').split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            dbUser = await prisma.user.create({
+              data: {
+                email: token.email,
+                firstName,
+                lastName,
+                userType: 'individual', // Default, will be updated during onboarding
+                emailVerified: true, // OAuth emails are verified
+                authProvider: account.provider,
+                authProviderId: account.providerAccountId,
+              },
+              include: {
+                profile: true,
+                companyMemberships: { include: { company: true } },
+              },
+            });
+
+            // Mark as new user for onboarding redirect
+            token.isNewUser = true;
+          } else {
+            token.isNewUser = false;
+            // Update auth provider info if not set
+            if (!dbUser.authProvider) {
+              await prisma.user.update({
+                where: { id: dbUser.id },
+                data: {
+                  authProvider: account.provider,
+                  authProviderId: account.providerAccountId,
+                },
+              });
+            }
+          }
+
+          // Set token data from database user
+          token.sub = dbUser.id;
+          token.userType = dbUser.userType;
+          token.firstName = dbUser.firstName;
+          token.lastName = dbUser.lastName;
+          token.emailVerified = dbUser.emailVerified ? new Date() : null;
+
+          // Generate access token for API calls
+          token.accessToken = jwt.sign(
+            { userId: dbUser.id, email: dbUser.email, userType: dbUser.userType },
+            JWT_SECRET,
+            { expiresIn: '30d' }
+          );
+        } catch (error) {
+          console.error('OAuth user lookup/create error:', error);
+        }
+      }
+
+      // For credentials sign-in, user data is already set
       if (user) {
         token.userType = user.userType;
         token.firstName = user.firstName;
@@ -132,6 +201,7 @@ export const authOptions: NextAuthOptions = {
         token.twoFactorEnabled = user.twoFactorEnabled;
         token.twoFactorVerified = user.twoFactorVerified;
       }
+
       // Handle session updates (for 2FA verification)
       if (trigger === 'update' && session) {
         if (session.twoFactorVerified !== undefined) {
@@ -153,9 +223,12 @@ export const authOptions: NextAuthOptions = {
       }
       // Add accessToken to session for API calls
       (session as any).accessToken = token.accessToken;
+      // Pass isNewUser flag for redirect logic
+      (session as any).isNewUser = token.isNewUser;
       return session;
     },
-    async signIn({ user }) {
+    async signIn({ user, account }) {
+      // Allow all sign-ins
       return !!user;
     },
     async redirect({ url, baseUrl }) {
@@ -236,6 +309,7 @@ declare module 'next-auth' {
       image?: string | null;
     };
     accessToken?: string;
+    isNewUser?: boolean;
   }
 
   interface User {
@@ -258,5 +332,6 @@ declare module 'next-auth/jwt' {
     emailVerified?: Date | null;
     twoFactorEnabled?: boolean;
     twoFactorVerified?: boolean;
+    isNewUser?: boolean;
   }
 }

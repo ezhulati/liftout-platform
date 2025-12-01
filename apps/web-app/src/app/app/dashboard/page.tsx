@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
@@ -13,7 +15,15 @@ import { useSession } from 'next-auth/react';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  
+  const router = useRouter();
+
+  // Redirect new OAuth users to onboarding
+  useEffect(() => {
+    if (session?.isNewUser) {
+      router.push('/app/onboarding');
+    }
+  }, [session?.isNewUser, router]);
+
   if (status === 'loading') {
     return (
       <div className="min-h-96 flex items-center justify-center">
@@ -24,6 +34,15 @@ export default function DashboardPage() {
 
   if (status === 'unauthenticated' || !session?.user) {
     return null;
+  }
+
+  // Show loading while redirecting new users
+  if (session?.isNewUser) {
+    return (
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="loading-spinner w-12 h-12"></div>
+      </div>
+    );
   }
 
   const user = session.user;

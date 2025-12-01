@@ -227,6 +227,10 @@ model User {
   twoFactorSecret          String?   @map("two_factor_secret")
   backupCodes              Json?     @map("backup_codes")
 
+  // OAuth provider fields
+  authProvider             String?   @map("auth_provider") // 'google', 'linkedin', etc.
+  authProviderId           String?   @map("auth_provider_id") // ID from OAuth provider
+
   // Admin-specific fields
   suspendedAt              DateTime? @map("suspended_at")
   suspendedBy              String?   @map("suspended_by")
