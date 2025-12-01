@@ -45,7 +45,6 @@ const getAllowedOrigins = (): string[] => {
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3002',
-    'https://liftout.netlify.app',
     'https://liftout.com',
     'https://www.liftout.com',
   ];

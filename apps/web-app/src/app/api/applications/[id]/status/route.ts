@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ApplicationStatus } from '@prisma/client';
+import { sendApplicationStatusEmail } from '@/lib/email';
 
 // PATCH /api/applications/[id]/status - Update application status
 export async function PATCH(
@@ -27,12 +28,32 @@ export async function PATCH(
       );
     }
 
-    // Find the application
+    // Find the application with full details for email
     const application = await prisma.teamApplication.findUnique({
       where: { id },
       include: {
         opportunity: {
-          select: { companyId: true },
+          select: {
+            companyId: true,
+            title: true,
+            company: {
+              select: { name: true },
+            },
+          },
+        },
+        team: {
+          select: {
+            name: true,
+            createdBy: true,
+            members: {
+              where: { isLead: true },
+              include: {
+                user: {
+                  select: { email: true, firstName: true },
+                },
+              },
+            },
+          },
         },
       },
     });
@@ -87,6 +108,34 @@ export async function PATCH(
         reviewedAt: new Date(),
       },
     });
+
+    // Send email notification to team lead
+    const teamLead = application.team.members[0]?.user;
+    if (teamLead?.email) {
+      // Map status to email status type
+      const emailStatusMap: Record<string, 'submitted' | 'reviewing' | 'interviewing' | 'accepted' | 'rejected'> = {
+        submitted: 'submitted',
+        reviewing: 'reviewing',
+        interviewing: 'interviewing',
+        accepted: 'accepted',
+        rejected: 'rejected',
+      };
+
+      const emailStatus = emailStatusMap[newStatus] || 'reviewing';
+
+      sendApplicationStatusEmail({
+        to: teamLead.email,
+        recipientName: teamLead.firstName || 'Team Lead',
+        teamName: application.team.name,
+        opportunityTitle: application.opportunity.title,
+        companyName: application.opportunity.company?.name || 'Company',
+        status: emailStatus,
+        message: notes,
+        applicationId: id,
+      }).catch((err) => {
+        console.error('Failed to send application status email:', err);
+      });
+    }
 
     return NextResponse.json({
       application: {

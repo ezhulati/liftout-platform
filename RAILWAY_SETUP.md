@@ -18,7 +18,7 @@ LOG_LEVEL=info
 
 **Note:** After deploying, get the API server URL and add:
 ```
-ALLOWED_ORIGINS=https://liftout.netlify.app,https://<your-web-app>.up.railway.app
+ALLOWED_ORIGINS=https://liftout.com,https://<your-web-app>.up.railway.app
 ```
 
 ---

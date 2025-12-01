@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 async function testLiveSite() {
-  console.log('🚀 Testing live site: https://liftout.netlify.app');
+  console.log('🚀 Testing live site: https://liftout.com');
   
   const browser = await puppeteer.launch({ 
     headless: false,
@@ -32,7 +32,7 @@ async function testLiveSite() {
   
   try {
     console.log('📍 Step 1: Navigate to live site...');
-    await page.goto('https://liftout.netlify.app', { 
+    await page.goto('https://liftout.com', { 
       waitUntil: 'networkidle2',
       timeout: 30000 
     });
@@ -79,7 +79,7 @@ async function testLiveSite() {
     
     // Try to access the signin page directly
     console.log('📍 Step 2: Test signin page directly...');
-    await page.goto('https://liftout.netlify.app/auth/signin', { 
+    await page.goto('https://liftout.com/auth/signin', { 
       waitUntil: 'networkidle2',
       timeout: 15000 
     });
@@ -88,7 +88,7 @@ async function testLiveSite() {
     
     // Check for authentication API endpoint
     console.log('📍 Step 3: Test auth API endpoint...');
-    const authResponse = await page.goto('https://liftout.netlify.app/api/auth/providers', {
+    const authResponse = await page.goto('https://liftout.com/api/auth/providers', {
       waitUntil: 'networkidle2',
       timeout: 15000
     });

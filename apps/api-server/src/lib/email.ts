@@ -16,7 +16,7 @@ function getResendClient(): Resend | null {
 
 // Configuration
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Liftout <noreply@liftout.com>';
-const APP_URL = process.env.APP_URL || 'https://liftout.netlify.app';
+const APP_URL = process.env.APP_URL || 'https://liftout.com';
 
 export interface EmailResult {
   success: boolean;

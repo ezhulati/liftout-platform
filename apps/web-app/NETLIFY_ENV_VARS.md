@@ -6,10 +6,10 @@ Set these environment variables in the Netlify dashboard:
 ## Required Variables:
 
 ```
-NEXTAUTH_URL=https://liftout.netlify.app
+NEXTAUTH_URL=https://liftout.com
 NEXTAUTH_SECRET=secure-production-secret-key-for-liftout-platform-2024
 AUTH_TRUST_HOST=true
-NEXT_PUBLIC_API_URL=https://liftout.netlify.app/api
+NEXT_PUBLIC_API_URL=https://liftout.com/api
 NODE_ENV=production
 ```
 

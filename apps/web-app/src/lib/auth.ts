@@ -233,7 +233,7 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       const prodBaseUrl = process.env.NODE_ENV === 'production'
-        ? 'https://liftout.netlify.app'
+        ? 'https://liftout.com'
         : baseUrl;
 
       // Handle error pages

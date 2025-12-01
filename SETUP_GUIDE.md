@@ -59,7 +59,6 @@ SENTRY_PROJECT=liftout-web
 5. Select **Web application**
 6. Add authorized redirect URIs:
    ```
-   https://liftout.netlify.app/api/auth/callback/google
    https://liftout.com/api/auth/callback/google
    http://localhost:3000/api/auth/callback/google (for dev)
    ```
@@ -87,7 +86,6 @@ GOOGLE_CLIENT_SECRET=your-client-secret
 4. Go to **Auth** tab
 5. Add OAuth 2.0 redirect URLs:
    ```
-   https://liftout.netlify.app/api/auth/callback/linkedin
    https://liftout.com/api/auth/callback/linkedin
    http://localhost:3000/api/auth/callback/linkedin (for dev)
    ```
@@ -153,7 +151,7 @@ Go to **Site settings** → **Environment variables** and add:
 #### Required (Core)
 ```
 DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
-NEXTAUTH_URL=https://liftout.netlify.app
+NEXTAUTH_URL=https://liftout.com
 NEXTAUTH_SECRET=<generate-secure-random-string>
 JWT_SECRET=<generate-secure-random-string>
 ```
@@ -224,7 +222,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 After configuring, verify everything works:
 
 ### Test OAuth
-1. Go to https://liftout.netlify.app/auth/signin
+1. Go to https://liftout.com/auth/signin
 2. You should see Google and LinkedIn buttons
 3. Test each provider login flow
 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { sendWelcomeEmail } from '@/lib/email';
 
 // Validation schema for registration
 const registerSchema = z.object({
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      const company = await prisma.company.create({
+      await prisma.company.create({
         data: {
           name: companyName,
           slug: `${slug}-${Date.now()}`,
@@ -93,6 +94,15 @@ export async function POST(request: Request) {
         },
       });
     }
+
+    // Send welcome email (don't block on failure)
+    sendWelcomeEmail({
+      to: user.email,
+      recipientName: user.firstName,
+      userType: userType as 'individual' | 'company',
+    }).catch((err) => {
+      console.error('Failed to send welcome email:', err);
+    });
 
     return NextResponse.json({
       success: true,

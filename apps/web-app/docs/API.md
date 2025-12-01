@@ -4,7 +4,7 @@
 
 The Liftout API is a RESTful API built with Next.js API Routes. All endpoints are prefixed with `/api`.
 
-**Base URL:** `https://liftout.netlify.app/api` (production) or `http://localhost:3000/api` (development)
+**Base URL:** `https://liftout.com/api` (production) or `http://localhost:3000/api` (development)
 
 ## Authentication
 

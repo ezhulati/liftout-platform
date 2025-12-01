@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   typescript: true,
 });
 
-const APP_URL = process.env.NEXTAUTH_URL || 'https://liftout.netlify.app';
+const APP_URL = process.env.NEXTAUTH_URL || 'https://liftout.com';
 
 // Price IDs - these should be set up in your Stripe dashboard
 const PRICE_IDS = {

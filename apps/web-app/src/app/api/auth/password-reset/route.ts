@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { z } from 'zod';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 // Validation schemas
 const requestResetSchema = z.object({
@@ -107,10 +108,16 @@ export async function POST(request: Request) {
         // Store token
         resetTokens.set(token, { email: email.toLowerCase(), expires });
 
-        // In production, send email here
-        // For demo, we'll log the token (in real app, use SendGrid/etc)
-        console.log(`Password reset token for ${email}: ${token}`);
-        console.log(`Reset URL: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`);
+        // Send password reset email
+        const emailResult = await sendPasswordResetEmail({
+          to: user.email,
+          recipientName: user.firstName || 'there',
+          resetToken: token,
+        });
+
+        if (!emailResult.success) {
+          console.error('Failed to send password reset email:', emailResult.error);
+        }
       }
 
       return NextResponse.json({

@@ -16,7 +16,7 @@ const getResend = () => {
 
 // From email address - use a verified domain in production
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Liftout <noreply@liftout.com>';
-const APP_URL = process.env.NEXTAUTH_URL || 'https://liftout.netlify.app';
+const APP_URL = process.env.NEXTAUTH_URL || 'https://liftout.com';
 
 export interface EmailResult {
   success: boolean;
