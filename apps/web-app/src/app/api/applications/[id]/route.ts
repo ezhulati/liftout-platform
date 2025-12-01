@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
-
-// Demo user detection helper
-const isDemoUser = (email: string | null | undefined): boolean => {
-  return email === 'demo@example.com' || email === 'company@example.com';
-};
-
-const isDemoEntity = (id: string): boolean => {
-  return id?.includes('demo') || id?.startsWith('demo-');
-};
-
-const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
@@ -26,27 +15,58 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const apiAvailable = await isApiServerAvailable();
-    if (!apiAvailable) {
-      return NextResponse.json(
-        { error: 'API server unavailable. Please start the API service.' },
-        { status: 503 }
-      );
-    }
-
-    const response = await fetch(`${API_BASE}/api/applications/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${(session as any).accessToken}`,
+    const application = await prisma.teamApplication.findUnique({
+      where: { id },
+      include: {
+        team: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            size: true,
+          },
+        },
+        opportunity: {
+          include: {
+            company: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    if (!application) {
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      application: {
+        id: application.id,
+        teamId: application.teamId,
+        opportunityId: application.opportunityId,
+        team: application.team,
+        opportunity: {
+          ...application.opportunity,
+          company: application.opportunity.company?.name || 'Unknown Company',
+          companyData: application.opportunity.company,
+        },
+        status: application.status,
+        coverLetter: application.coverLetter,
+        teamFitExplanation: application.teamFitExplanation,
+        questionsForCompany: application.questionsForCompany,
+        appliedAt: application.appliedAt.toISOString(),
+        reviewedAt: application.reviewedAt?.toISOString(),
+        interviewScheduledAt: application.interviewScheduledAt?.toISOString(),
+      },
+    });
   } catch (error) {
     console.error('Error fetching application:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch application' },
+      { error: 'Failed to fetch application', details: String(error) },
       { status: 500 }
     );
   }
@@ -64,41 +84,38 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Demo user handling - simulate success
-    if (isDemoUser(session.user.email) || isDemoEntity(id)) {
-      const body = await request.json();
-      console.log(`[Demo] Application ${id} updated`);
-      return NextResponse.json({
-        success: true,
-        data: { id, ...body, updatedAt: new Date().toISOString() },
-      });
-    }
-
-    const apiAvailable = await isApiServerAvailable();
-    if (!apiAvailable) {
-      return NextResponse.json(
-        { error: 'API server unavailable. Please start the API service.' },
-        { status: 503 }
-      );
-    }
-
     const body = await request.json();
 
-    const response = await fetch(`${API_BASE}/api/applications/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${(session as any).accessToken}`,
+    const application = await prisma.teamApplication.update({
+      where: { id },
+      data: {
+        coverLetter: body.coverLetter,
+        teamFitExplanation: body.teamFitExplanation,
+        questionsForCompany: body.questionsForCompany,
+        status: body.status,
       },
-      body: JSON.stringify(body),
+      include: {
+        team: { select: { id: true, name: true } },
+        opportunity: { select: { id: true, title: true } },
+      },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: application.id,
+        teamId: application.teamId,
+        opportunityId: application.opportunityId,
+        team: application.team,
+        opportunity: application.opportunity,
+        status: application.status,
+        updatedAt: new Date().toISOString(),
+      },
+    });
   } catch (error) {
     console.error('Error updating application:', error);
     return NextResponse.json(
-      { error: 'Failed to update application' },
+      { error: 'Failed to update application', details: String(error) },
       { status: 500 }
     );
   }
