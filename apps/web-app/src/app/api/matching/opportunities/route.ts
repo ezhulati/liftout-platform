@@ -5,6 +5,135 @@ import { prisma } from '@/lib/prisma';
 import type { Decimal } from '@prisma/client/runtime/library';
 import type { JsonValue } from '@prisma/client/runtime/library';
 
+// Demo user detection
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+// Demo matches for team users
+const DEMO_OPPORTUNITY_MATCHES = [
+  {
+    opportunity: {
+      id: 'opp-demo-1',
+      title: 'Lead FinTech Analytics Division',
+      description: 'Strategic opportunity to lead our new FinTech analytics division. Looking for an intact team with strong quantitative skills and financial services experience.',
+      company: {
+        id: 'company-demo-1',
+        name: 'NextGen Financial',
+        industry: 'Financial Services',
+        logoUrl: null,
+        verificationStatus: 'verified',
+      },
+      industry: 'Financial Services',
+      location: 'New York, NY',
+      remotePolicy: 'hybrid',
+      compensation: { min: 180000, max: 250000, currency: 'USD' },
+      teamSize: { min: 3, max: 8 },
+      requiredSkills: ['Python', 'Machine Learning', 'Financial Modeling'],
+      urgency: 'high',
+      featured: true,
+      applicationCount: 5,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    },
+    score: {
+      total: 92,
+      breakdown: {
+        skillsMatch: 95,
+        industryMatch: 90,
+        locationMatch: 85,
+        sizeMatch: 100,
+        compensationMatch: 90,
+        urgencyBonus: 85,
+        companyQuality: 90,
+      },
+      recommendation: 'excellent',
+      strengths: ['Strong skills alignment', 'Direct industry experience', 'Verified company', 'Featured opportunity'],
+      concerns: [],
+      insights: ['High urgency - faster decision process expected', '3 years of team cohesion provides competitive advantage'],
+    },
+  },
+  {
+    opportunity: {
+      id: 'opp-demo-2',
+      title: 'Healthcare AI Team Lead',
+      description: 'Build and lead our healthcare AI initiative. Looking for a team with ML expertise and healthcare domain knowledge.',
+      company: {
+        id: 'company-demo-2',
+        name: 'MedTech Innovations',
+        industry: 'Healthcare Technology',
+        logoUrl: null,
+        verificationStatus: 'verified',
+      },
+      industry: 'Healthcare Technology',
+      location: 'Boston, MA',
+      remotePolicy: 'remote',
+      compensation: { min: 200000, max: 300000, currency: 'USD' },
+      teamSize: { min: 4, max: 10 },
+      requiredSkills: ['Python', 'TensorFlow', 'Healthcare AI'],
+      urgency: 'standard',
+      featured: false,
+      applicationCount: 8,
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    },
+    score: {
+      total: 85,
+      breakdown: {
+        skillsMatch: 88,
+        industryMatch: 75,
+        locationMatch: 100,
+        sizeMatch: 90,
+        compensationMatch: 95,
+        urgencyBonus: 70,
+        companyQuality: 85,
+      },
+      recommendation: 'excellent',
+      strengths: ['Strong skills alignment', 'Compensation meets expectations', 'Remote-friendly'],
+      concerns: ['Significant industry transition'],
+      insights: ['Remote opportunity provides flexibility'],
+    },
+  },
+  {
+    opportunity: {
+      id: 'opp-demo-3',
+      title: 'Enterprise Platform Engineering',
+      description: 'Join our platform team to build next-generation infrastructure. Full team acquisition opportunity.',
+      company: {
+        id: 'company-demo-3',
+        name: 'CloudScale Systems',
+        industry: 'Technology',
+        logoUrl: null,
+        verificationStatus: 'pending',
+      },
+      industry: 'Technology',
+      location: 'San Francisco, CA',
+      remotePolicy: 'hybrid',
+      compensation: { min: 170000, max: 230000, currency: 'USD' },
+      teamSize: { min: 3, max: 6 },
+      requiredSkills: ['Kubernetes', 'AWS', 'Go'],
+      urgency: 'high',
+      featured: true,
+      applicationCount: 12,
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    },
+    score: {
+      total: 78,
+      breakdown: {
+        skillsMatch: 72,
+        industryMatch: 85,
+        locationMatch: 80,
+        sizeMatch: 95,
+        compensationMatch: 80,
+        urgencyBonus: 85,
+        companyQuality: 70,
+      },
+      recommendation: 'good',
+      strengths: ['Direct industry experience', 'Featured opportunity'],
+      concerns: ['Skills gap may require training'],
+      insights: ['High urgency - faster decision process expected', 'Competitive opportunity with 12+ applications'],
+    },
+  },
+];
+
 // Types for matching calculations
 interface TeamMember {
   user: {
@@ -84,6 +213,27 @@ export async function GET(request: NextRequest) {
 
     if (!teamId) {
       return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+    }
+
+    // For demo users, return demo matches
+    if (isDemoUser(session.user.email)) {
+      const filteredMatches = DEMO_OPPORTUNITY_MATCHES
+        .filter(m => m.score.total >= minScore)
+        .slice(0, limit);
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          team: {
+            id: teamId,
+            name: 'TechFlow Analytics',
+            industry: 'Financial Services',
+            skills: ['Python', 'Machine Learning', 'Data Science', 'SQL', 'React'],
+          },
+          matches: filteredMatches,
+          total: filteredMatches.length,
+        }
+      });
     }
 
     // Fetch the team with members and skills
