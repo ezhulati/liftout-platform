@@ -582,6 +582,69 @@ export async function POST(request: NextRequest) {
           }
         }
       }
+
+      // Create demo conversations between team user and company user
+      const existingConversation = await prisma.conversation.findFirst({
+        where: {
+          teamId: demoTeam.id,
+          companyId: demoCompany.id,
+        }
+      });
+
+      if (!existingConversation) {
+        const conversation = await prisma.conversation.create({
+          data: {
+            teamId: demoTeam.id,
+            companyId: demoCompany.id,
+            opportunityId: opportunities[0]?.id,
+            subject: 'Re: Senior Engineering Team - FinTech Platform Application',
+            status: 'active',
+            lastMessageAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+            messageCount: 4,
+            participants: {
+              create: [
+                { userId: demoUser.id, role: 'team_lead' },
+                { userId: demoCompanyUser.id, role: 'company_recruiter' },
+              ]
+            },
+            messages: {
+              create: [
+                {
+                  senderId: demoCompanyUser.id,
+                  senderType: 'company',
+                  content: 'Hi Alex, thank you for your team\'s application to our FinTech Platform opportunity. We\'ve reviewed your profile and are impressed with your experience in financial systems. Would your team be available for an introductory call next week?',
+                  messageType: 'text',
+                  createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+                },
+                {
+                  senderId: demoUser.id,
+                  senderType: 'team',
+                  content: 'Hi! Thank you for reaching out. We\'re very excited about this opportunity. Yes, our team is available next week. Tuesday or Wednesday afternoon would work best for us. Looking forward to discussing how we can contribute to your platform.',
+                  messageType: 'text',
+                  createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                },
+                {
+                  senderId: demoCompanyUser.id,
+                  senderType: 'company',
+                  content: 'Perfect! Let\'s schedule for Tuesday at 2 PM PST. I\'ll send a calendar invite with the video call link. In the meantime, could you share any recent case studies or examples of payment systems your team has built?',
+                  messageType: 'text',
+                  createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                },
+                {
+                  senderId: demoUser.id,
+                  senderType: 'team',
+                  content: 'Tuesday at 2 PM PST works great! I\'ll prepare a brief presentation showcasing our recent work on a real-time transaction processing system that handles 10M+ daily transactions. Looking forward to the call!',
+                  messageType: 'text',
+                  createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                },
+              ]
+            }
+          }
+        });
+        results.push(`Created demo conversation with ${conversation.messageCount} messages`);
+      } else {
+        results.push('Demo conversation already exists');
+      }
     }
 
     return NextResponse.json({
