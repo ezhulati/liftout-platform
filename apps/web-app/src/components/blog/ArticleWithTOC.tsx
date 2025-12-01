@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { type BlogArticle } from '@/lib/blog/articles';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 // Extract headings from content for TOC
 function extractHeadings(content: string): { id: string; text: string; level: number }[] {
@@ -196,7 +197,7 @@ function ArticleContent({ content }: { content: string }) {
             className="list-disc pl-6 space-y-3 my-6 text-text-secondary text-lg leading-relaxed"
           >
             {currentList.map((item, i) => (
-              <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+              <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
             ))}
           </ul>
         );
@@ -281,7 +282,7 @@ function ArticleContent({ content }: { content: string }) {
           <p
             key={index}
             className="text-text-secondary text-lg leading-relaxed my-5"
-            dangerouslySetInnerHTML={{ __html: processedLine }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(processedLine) }}
           />
         );
       }

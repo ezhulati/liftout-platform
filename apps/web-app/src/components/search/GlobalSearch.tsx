@@ -13,6 +13,7 @@ import {
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
 import { useSearch, SearchResult } from '@/hooks/useSearch';
+import { createSafeHtml } from '@/lib/sanitize';
 
 interface GlobalSearchProps {
   isOpen: boolean;
@@ -415,9 +416,7 @@ function ResultItem({ result }: { result: SearchResult }) {
             {result.highlights.length > 0 && (
               <p
                 className="text-xs text-text-tertiary mt-1 line-clamp-1"
-                dangerouslySetInnerHTML={{
-                  __html: result.highlights[0].snippet
-                }}
+                dangerouslySetInnerHTML={createSafeHtml(result.highlights[0].snippet)}
               />
             )}
             {/* Metadata chips */}

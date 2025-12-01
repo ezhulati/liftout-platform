@@ -6,6 +6,23 @@ const nextConfig = {
     // Skip ESLint during production builds - linting is done in CI/development
     ignoreDuringBuilds: true,
   },
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  swcMinify: true,
+  // Optimize production builds
+  productionBrowserSourceMaps: false,
+  optimizeFonts: true,
+  // Modular imports for smaller bundles
+  modularizeImports: {
+    '@heroicons/react/24/outline': {
+      transform: '@heroicons/react/24/outline/{{member}}',
+    },
+    '@heroicons/react/24/solid': {
+      transform: '@heroicons/react/24/solid/{{member}}',
+    },
+  },
   // Security headers
   async headers() {
     return [

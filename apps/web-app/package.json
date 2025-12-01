@@ -38,6 +38,7 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.0",
+    "isomorphic-dompurify": "^2.33.0",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.4",
     "next": "^14.0.0",
