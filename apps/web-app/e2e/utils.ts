@@ -57,21 +57,33 @@ export async function clearOnboardingProgress(page: Page) {
 
 /**
  * Go to onboarding and return what the app did.
+ * Supports both wizard-style and conversational onboarding.
  */
 export async function goToOnboarding(page: Page): Promise<OnboardingState> {
   await page.goto('/app/onboarding');
   await page.waitForLoadState('domcontentloaded');
 
+  // Wait a bit for the page to determine where to go
+  await page.waitForTimeout(2000);
+
+  // Check for conversational onboarding (new style)
+  const conversationalHeader = page.locator('h1:has-text("Hey")');
   const wizardHeader = page.locator('h1:has-text("Welcome to Liftout")');
+  const loadingIndicator = page.locator('text=Loading..., text=Redirecting');
 
   const outcome = await Promise.race<OnboardingState | null>([
     page.waitForURL('**/app/dashboard', { timeout: 8000 }).then((): OnboardingState => 'dashboard').catch(() => null),
+    conversationalHeader.waitFor({ state: 'visible', timeout: 8000 }).then((): OnboardingState => 'wizard').catch(() => null),
     wizardHeader.waitFor({ state: 'visible', timeout: 8000 }).then((): OnboardingState => 'wizard').catch(() => null),
     page.waitForTimeout(8000).then(() => null),
   ]);
 
   if (outcome === 'dashboard') return 'dashboard';
   if (outcome === 'wizard') return 'wizard';
-  const visible = await wizardHeader.isVisible().catch(() => false);
-  return visible ? 'wizard' : 'loading';
+
+  // Check if any header is visible
+  const conversationalVisible = await conversationalHeader.isVisible().catch(() => false);
+  const wizardVisible = await wizardHeader.isVisible().catch(() => false);
+
+  return (conversationalVisible || wizardVisible) ? 'wizard' : 'loading';
 }
