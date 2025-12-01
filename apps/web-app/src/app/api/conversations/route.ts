@@ -52,26 +52,50 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Transform for frontend
+    // Transform for frontend - matching Conversation interface
     const transformedConversations = conversations.map((conv) => ({
       id: conv.id,
+      teamId: conv.teamId,
+      companyId: conv.companyId,
+      opportunityId: conv.opportunityId,
       subject: conv.subject || 'New Conversation',
-      participants: conv.participants.map((p) => ({
-        id: p.user.id,
-        name: `${p.user.firstName || ''} ${p.user.lastName || ''}`.trim() || p.user.email,
-        role: p.role,
-      })),
-      lastMessage: conv.messages[0] || null,
+      status: conv.status,
+      isAnonymous: conv.isAnonymous,
       lastMessageAt: conv.lastMessageAt?.toISOString(),
       messageCount: conv.messageCount,
-      unreadCount: 0, // Would need to calculate based on lastReadAt
+      unreadCounts: {}, // Would need to calculate based on lastReadAt
       createdAt: conv.createdAt.toISOString(),
-      opportunityId: conv.opportunityId,
+      updatedAt: conv.updatedAt.toISOString(),
+      participants: conv.participants.map((p) => ({
+        id: p.id,
+        userId: p.userId,
+        role: p.role,
+        joinedAt: p.joinedAt.toISOString(),
+        leftAt: p.leftAt?.toISOString() || null,
+        lastReadAt: p.lastReadAt?.toISOString() || null,
+        user: {
+          id: p.user.id,
+          firstName: p.user.firstName || '',
+          lastName: p.user.lastName || '',
+        },
+      })),
     }));
 
+    // Parse pagination params
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+
     return NextResponse.json({
-      conversations: transformedConversations,
-      total: transformedConversations.length,
+      data: {
+        data: transformedConversations,
+        pagination: {
+          page,
+          limit,
+          total: transformedConversations.length,
+          pages: Math.ceil(transformedConversations.length / limit),
+        },
+      },
     });
   } catch (error) {
     console.error('Error fetching conversations:', error);

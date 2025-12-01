@@ -44,18 +44,40 @@ export async function GET(
       },
     });
 
+    // Parse pagination params
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+
+    const transformedMessages = messages.map((m) => ({
+      id: m.id,
+      conversationId: m.conversationId,
+      content: m.content,
+      senderId: m.senderId,
+      messageType: 'text' as const,
+      attachments: [],
+      sentAt: m.createdAt.toISOString(),
+      editedAt: null,
+      deletedAt: null,
+      sender: m.sender
+        ? {
+            id: m.sender.id,
+            firstName: m.sender.firstName || '',
+            lastName: m.sender.lastName || '',
+          }
+        : undefined,
+    }));
+
     return NextResponse.json({
-      messages: messages.map((m) => ({
-        id: m.id,
-        content: m.content,
-        senderId: m.senderId,
-        senderName: m.sender
-          ? `${m.sender.firstName || ''} ${m.sender.lastName || ''}`.trim()
-          : 'Unknown',
-        createdAt: m.createdAt.toISOString(),
-        isRead: m.isRead,
-      })),
-      total: messages.length,
+      data: {
+        data: transformedMessages,
+        pagination: {
+          page,
+          limit,
+          total: messages.length,
+          pages: Math.ceil(messages.length / limit),
+        },
+      },
     });
   } catch (error) {
     console.error('Error fetching messages:', error);
@@ -128,15 +150,23 @@ export async function POST(
     });
 
     return NextResponse.json({
-      message: {
+      data: {
         id: message.id,
+        conversationId: message.conversationId,
         content: message.content,
         senderId: message.senderId,
-        senderName: message.sender
-          ? `${message.sender.firstName || ''} ${message.sender.lastName || ''}`.trim()
-          : 'Unknown',
-        createdAt: message.createdAt.toISOString(),
-        isRead: message.isRead,
+        messageType: 'text' as const,
+        attachments: [],
+        sentAt: message.createdAt.toISOString(),
+        editedAt: null,
+        deletedAt: null,
+        sender: message.sender
+          ? {
+              id: message.sender.id,
+              firstName: message.sender.firstName || '',
+              lastName: message.sender.lastName || '',
+            }
+          : undefined,
       },
     }, { status: 201 });
   } catch (error) {

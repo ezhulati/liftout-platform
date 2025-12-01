@@ -60,26 +60,50 @@ export async function GET(
     }
 
     return NextResponse.json({
-      conversation: {
+      data: {
         id: conversation.id,
+        teamId: conversation.teamId,
+        companyId: conversation.companyId,
+        opportunityId: conversation.opportunityId,
         subject: conversation.subject || 'Conversation',
+        status: conversation.status,
+        isAnonymous: conversation.isAnonymous,
+        lastMessageAt: conversation.lastMessageAt?.toISOString(),
+        messageCount: conversation.messageCount,
+        unreadCounts: {},
+        createdAt: conversation.createdAt.toISOString(),
+        updatedAt: conversation.updatedAt.toISOString(),
         participants: conversation.participants.map((p) => ({
-          id: p.user.id,
-          name: `${p.user.firstName || ''} ${p.user.lastName || ''}`.trim() || p.user.email,
+          id: p.id,
+          userId: p.userId,
           role: p.role,
+          joinedAt: p.joinedAt.toISOString(),
+          leftAt: p.leftAt?.toISOString() || null,
+          lastReadAt: p.lastReadAt?.toISOString() || null,
+          user: {
+            id: p.user.id,
+            firstName: p.user.firstName || '',
+            lastName: p.user.lastName || '',
+          },
         })),
         messages: conversation.messages.map((m) => ({
           id: m.id,
+          conversationId: m.conversationId,
           content: m.content,
           senderId: m.senderId,
-          senderName: m.sender
-            ? `${m.sender.firstName || ''} ${m.sender.lastName || ''}`.trim()
-            : 'Unknown',
-          createdAt: m.createdAt.toISOString(),
-          isRead: m.isRead,
+          messageType: 'text' as const,
+          attachments: [],
+          sentAt: m.createdAt.toISOString(),
+          editedAt: null,
+          deletedAt: null,
+          sender: m.sender
+            ? {
+                id: m.sender.id,
+                firstName: m.sender.firstName || '',
+                lastName: m.sender.lastName || '',
+              }
+            : undefined,
         })),
-        createdAt: conversation.createdAt.toISOString(),
-        opportunityId: conversation.opportunityId,
       },
     });
   } catch (error) {
