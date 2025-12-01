@@ -3,6 +3,145 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+// Demo opportunity data for demo users
+const DEMO_OPPORTUNITIES: Record<string, any> = {
+  'opp-demo-1': {
+    id: 'opp-demo-1',
+    title: 'Lead FinTech Analytics Division',
+    description: 'Strategic opportunity to lead our new FinTech analytics division. Looking for an intact team with strong quantitative skills and financial services experience.\n\nWe are seeking a high-performing team to drive our analytics capabilities in the rapidly evolving FinTech space. The ideal team will have deep expertise in quantitative analysis, machine learning, and financial modeling.',
+    company: 'NextGen Financial',
+    companyData: {
+      id: 'company-demo-1',
+      name: 'NextGen Financial',
+      industry: 'Financial Services',
+      description: 'Leading financial services company focused on innovation and technology-driven solutions.',
+    },
+    location: 'New York, NY',
+    remote: false,
+    industry: 'Financial Services',
+    type: 'expansion',
+    teamSize: 5,
+    compensation: {
+      type: 'salary',
+      range: '$180k - $250k',
+      equity: true,
+      benefits: 'Full benefits, 401k match, equity package, flexible PTO',
+    },
+    requirements: [
+      'Team of 3-8 members with at least 2 years working together',
+      'Strong background in quantitative analysis and financial modeling',
+      'Experience with Python, machine learning, and data science tools',
+      'Prior experience in financial services or FinTech',
+      'Track record of delivering high-impact projects',
+    ],
+    responsibilities: [
+      'Lead and grow the FinTech analytics division',
+      'Develop predictive models for risk assessment and market analysis',
+      'Collaborate with product and engineering teams',
+      'Drive innovation in analytics capabilities',
+      'Mentor and develop junior team members',
+    ],
+    strategicRationale: 'NextGen Financial is expanding into AI-driven analytics to maintain our competitive edge. We need a proven team that can hit the ground running and accelerate our roadmap by 12-18 months.',
+    integrationPlan: 'The team will operate as a semi-autonomous unit with direct CEO reporting. Full onboarding support, dedicated resources, and clear success metrics within the first 90 days.',
+    deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'open',
+    postedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    applicants: 5,
+    views: 142,
+    isConfidential: false,
+  },
+  'opp-demo-2': {
+    id: 'opp-demo-2',
+    title: 'Healthcare AI Team Lead',
+    description: 'Build and lead our healthcare AI initiative. Looking for a team with ML expertise and healthcare domain knowledge.\n\nMedTech Innovations is seeking a world-class team to drive our healthcare AI strategy. You will have the opportunity to work on cutting-edge medical imaging and diagnostic tools.',
+    company: 'MedTech Innovations',
+    companyData: {
+      id: 'company-demo-2',
+      name: 'MedTech Innovations',
+      industry: 'Healthcare Technology',
+      description: 'Pioneering healthcare technology company transforming patient care through AI.',
+    },
+    location: 'Boston, MA',
+    remote: true,
+    industry: 'Healthcare Technology',
+    type: 'capability',
+    teamSize: 6,
+    compensation: {
+      type: 'total_package',
+      range: '$200k - $300k',
+      equity: true,
+      benefits: 'Comprehensive health coverage, stock options, unlimited PTO, remote-first',
+    },
+    requirements: [
+      'Team of 4-10 members with healthcare or biotech experience',
+      'Deep expertise in machine learning and computer vision',
+      'Experience with medical imaging analysis or diagnostics',
+      'FDA regulatory experience preferred',
+      'Published research or patents in healthcare AI',
+    ],
+    responsibilities: [
+      'Lead healthcare AI product development',
+      'Build and scale ML infrastructure for medical imaging',
+      'Navigate FDA approval processes',
+      'Collaborate with clinical partners and researchers',
+      'Drive product roadmap and technical strategy',
+    ],
+    strategicRationale: 'MedTech Innovations is entering the AI diagnostics market. We need an experienced team to help us navigate regulatory requirements and build world-class products.',
+    integrationPlan: 'Fully remote team with quarterly in-person gatherings. Direct access to executive leadership and board. Clear path to equity participation and leadership roles.',
+    deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'open',
+    postedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    applicants: 8,
+    views: 234,
+    isConfidential: false,
+  },
+  'opp-demo-3': {
+    id: 'opp-demo-3',
+    title: 'Enterprise Platform Engineering',
+    description: 'Join our platform team to build next-generation infrastructure. Full team acquisition opportunity.\n\nCloudScale Systems is looking for a proven engineering team to accelerate our platform capabilities. You will have ownership of critical infrastructure serving millions of users.',
+    company: 'CloudScale Systems',
+    companyData: {
+      id: 'company-demo-3',
+      name: 'CloudScale Systems',
+      industry: 'Technology',
+      description: 'Fast-growing cloud infrastructure company backed by top-tier VCs.',
+    },
+    location: 'San Francisco, CA',
+    remote: false,
+    industry: 'Technology',
+    type: 'acquisition',
+    teamSize: 4,
+    compensation: {
+      type: 'equity',
+      range: '$170k - $230k',
+      equity: true,
+      benefits: 'Premium health insurance, generous equity, 401k, catered meals',
+    },
+    requirements: [
+      'Team of 3-6 members with platform engineering experience',
+      'Strong Kubernetes, AWS, and infrastructure automation skills',
+      'Experience with Go, Python, or Rust',
+      'Track record of building scalable systems',
+      'DevOps and SRE practices experience',
+    ],
+    responsibilities: [
+      'Design and build next-gen cloud infrastructure',
+      'Lead platform engineering initiatives',
+      'Improve system reliability and performance',
+      'Mentor and grow engineering teams',
+      'Drive technical decisions and architecture',
+    ],
+    strategicRationale: 'CloudScale is preparing for IPO and needs to rapidly scale our platform capabilities. An experienced team can help us achieve our ambitious growth targets.',
+    integrationPlan: 'Team will own a critical platform domain with full autonomy. Fast-track to senior leadership positions with significant equity upside.',
+    deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
+    status: 'open',
+    postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    applicants: 12,
+    views: 189,
+    isConfidential: false,
+  },
+};
+
 // Helper to format compensation range
 function formatCompensation(min?: number | null, max?: number | null): string {
   if (!min && !max) return 'Competitive';
@@ -48,6 +187,15 @@ export async function GET(
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check for demo opportunity IDs
+  if (id.startsWith('opp-demo-')) {
+    const demoOpportunity = DEMO_OPPORTUNITIES[id];
+    if (demoOpportunity) {
+      return NextResponse.json({ opportunity: demoOpportunity });
+    }
+    return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
   }
 
   try {
