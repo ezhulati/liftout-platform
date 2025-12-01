@@ -25,6 +25,10 @@ import {
   AcademicCapIcon,
   GlobeAltIcon,
   XMarkIcon,
+  CalendarIcon,
+  BellIcon,
+  HeartIcon,
+  ArrowsRightLeftIcon,
 } from '@heroicons/react/24/outline';
 
 // Navigation items that show for team users
@@ -34,6 +38,9 @@ const teamNavigation = [
   { name: 'Liftout Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
   { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
   { name: 'My Applications', href: '/app/applications', icon: DocumentTextIcon },
+  { name: 'Interviews', href: '/app/interviews', icon: CalendarIcon },
+  { name: 'Interest Received', href: '/app/eoi', icon: HeartIcon },
+  { name: 'Activity', href: '/app/activity', icon: BellIcon },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
 ];
 
@@ -44,6 +51,10 @@ const companyNavigation = [
   { name: 'My Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
   { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
   { name: 'Team Applications', href: '/app/applications', icon: DocumentTextIcon },
+  { name: 'Interviews', href: '/app/interviews', icon: CalendarIcon },
+  { name: 'Express Interest', href: '/app/eoi', icon: HeartIcon },
+  { name: 'Compare Teams', href: '/app/compare', icon: ArrowsRightLeftIcon },
+  { name: 'Activity', href: '/app/activity', icon: BellIcon },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
   { name: 'Advanced Search', href: '/app/search', icon: MagnifyingGlassIcon },
 ];
