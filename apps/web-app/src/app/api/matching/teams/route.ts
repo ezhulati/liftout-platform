@@ -3,6 +3,33 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import type { Decimal, JsonValue } from '@prisma/client/runtime/library';
+import { Prisma, TeamVisibility } from '@prisma/client';
+
+// Helper to check if user is from a verified company
+async function isVerifiedCompanyUser(userId: string): Promise<boolean> {
+  const companyUser = await prisma.companyUser.findFirst({
+    where: { userId },
+    include: {
+      company: {
+        select: { verificationStatus: true },
+      },
+    },
+  });
+  return companyUser?.company?.verificationStatus === 'verified';
+}
+
+// Helper to anonymize team data for anonymous visibility mode
+function anonymizeTeamData(teamData: any): any {
+  return {
+    ...teamData,
+    name: `Anonymous Team #${teamData.id.slice(-6).toUpperCase()}`,
+    description: 'Team details hidden in anonymous mode. Express interest to learn more.',
+    // Keep key matching data visible
+    industry: teamData.industry,
+    size: teamData.size,
+    location: teamData.location ? 'Location withheld' : null,
+  };
+}
 
 // Types for matching calculations
 interface TeamMember {
@@ -89,12 +116,31 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    // Fetch available teams
+    // Check if current user is from a verified company
+    const isVerified = session.user.userType === 'company'
+      ? await isVerifiedCompanyUser(session.user.id)
+      : false;
+
+    // Build visibility filter - verified companies can see anonymous teams
+    const visibilityFilter: TeamVisibility[] = [TeamVisibility.public];
+    if (isVerified) {
+      visibilityFilter.push(TeamVisibility.anonymous);
+    }
+
+    // Fetch available teams with visibility filter
+    // Only exclude teams that have explicitly set allowDiscovery to false
     const teams = await prisma.team.findMany({
       where: {
-        visibility: 'public',
+        visibility: { in: visibilityFilter },
         availabilityStatus: { not: 'not_available' },
         deletedAt: null,
+        // Exclude teams that have explicitly disabled discovery
+        NOT: {
+          metadata: {
+            path: ['visibilitySettings', 'allowDiscovery'],
+            equals: false,
+          },
+        },
       },
       include: {
         members: {
@@ -129,23 +175,33 @@ export async function GET(request: NextRequest) {
     // Calculate match scores
     const matches = teams.map(team => {
       const score = calculateTeamMatchScore(team, opportunity as unknown as OpportunityWithCompany);
+
+      let teamData = {
+        id: team.id,
+        name: team.name,
+        description: team.description,
+        industry: team.industry,
+        specialization: team.specialization,
+        location: team.location,
+        remoteStatus: team.remoteStatus,
+        size: team.size,
+        yearsWorkingTogether: team.yearsWorkingTogether,
+        availabilityStatus: team.availabilityStatus,
+        verificationStatus: team.verificationStatus,
+        memberCount: team._count.members,
+        applicationCount: team._count.applications,
+        skills: extractTeamSkills(team.members),
+        visibility: team.visibility,
+        isAnonymous: team.isAnonymous,
+      };
+
+      // Anonymize team data if in anonymous mode
+      if (team.visibility === TeamVisibility.anonymous || team.isAnonymous) {
+        teamData = anonymizeTeamData(teamData);
+      }
+
       return {
-        team: {
-          id: team.id,
-          name: team.name,
-          description: team.description,
-          industry: team.industry,
-          specialization: team.specialization,
-          location: team.location,
-          remoteStatus: team.remoteStatus,
-          size: team.size,
-          yearsWorkingTogether: team.yearsWorkingTogether,
-          availabilityStatus: team.availabilityStatus,
-          verificationStatus: team.verificationStatus,
-          memberCount: team._count.members,
-          applicationCount: team._count.applications,
-          skills: extractTeamSkills(team.members),
-        },
+        team: teamData,
         score,
       };
     });

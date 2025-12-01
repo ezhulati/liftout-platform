@@ -70,11 +70,11 @@ export async function POST(
     };
 
     // Update the application with offer
-    // Using 'accepted' status (valid enum: submitted, reviewing, interviewing, accepted, rejected)
+    // Keep status as 'interviewing' until team responds (accepts/rejects)
     const updated = await prisma.teamApplication.update({
       where: { id },
       data: {
-        status: ApplicationStatus.accepted,
+        // Don't change status - team will accept/reject via /offer/respond
         offerDetails: offerDetails,
         offerMadeAt: new Date(),
         responseDeadline: startDate ? new Date(startDate) : null,

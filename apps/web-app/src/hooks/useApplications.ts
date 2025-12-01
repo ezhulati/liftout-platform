@@ -25,6 +25,12 @@ export interface TeamApplication {
   interviewNotes: string | null;
   internalNotes: string | null;
   rejectionReason: string | null;
+  // Offer fields
+  offerMadeAt: string | null;
+  offerDetails: Record<string, unknown> | null;
+  responseDeadline: string | null;
+  finalDecisionAt: string | null;
+  responseMessage: string | null;
   createdAt: string;
   updatedAt: string;
   team?: {
@@ -236,6 +242,11 @@ export function useCreateApplication() {
           interviewNotes: null,
           internalNotes: null,
           rejectionReason: null,
+          offerMadeAt: null,
+          offerDetails: null,
+          responseDeadline: null,
+          finalDecisionAt: null,
+          responseMessage: null,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
@@ -542,6 +553,43 @@ export function useRespondToEOI() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['teamEOIs', result.teamId] });
       queryClient.invalidateQueries({ queryKey: ['companyEOIs', result.companyId] });
+    },
+  });
+}
+
+/**
+ * Hook to respond to an offer (accept or decline)
+ */
+export function useRespondToOffer() {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
+  return useMutation({
+    mutationFn: async ({
+      applicationId,
+      accept,
+      message,
+    }: {
+      applicationId: string;
+      accept: boolean;
+      message?: string;
+    }) => {
+      // Demo user handling
+      if (isDemoUser(session?.user?.email) || applicationId.startsWith('demo-')) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log(`[Demo] Responded to offer for application ${applicationId}: ${accept ? 'accepted' : 'declined'}`);
+        return { success: true, applicationId, accepted: accept };
+      }
+
+      const data = await fetchWithAuth(`/api/applications/${applicationId}/offer/respond`, {
+        method: 'POST',
+        body: JSON.stringify({ accept, message }),
+      });
+      return data.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['application', variables.applicationId] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
     },
   });
 }

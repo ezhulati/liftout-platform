@@ -66,19 +66,26 @@ export async function GET(request: NextRequest) {
       unreadCounts: {}, // Would need to calculate based on lastReadAt
       createdAt: conv.createdAt.toISOString(),
       updatedAt: conv.updatedAt.toISOString(),
-      participants: conv.participants.map((p) => ({
-        id: p.id,
-        userId: p.userId,
-        role: p.role,
-        joinedAt: p.joinedAt.toISOString(),
-        leftAt: p.leftAt?.toISOString() || null,
-        lastReadAt: p.lastReadAt?.toISOString() || null,
-        user: {
-          id: p.user.id,
-          firstName: p.user.firstName || '',
-          lastName: p.user.lastName || '',
-        },
-      })),
+      participants: conv.participants.map((p, index) => {
+        // Anonymize other participants if conversation is anonymous
+        // (current user can see their own name)
+        const isCurrentUser = p.userId === session.user.id;
+        const shouldAnonymize = conv.isAnonymous && !isCurrentUser;
+
+        return {
+          id: p.id,
+          userId: shouldAnonymize ? `anonymous-${index}` : p.userId,
+          role: p.role,
+          joinedAt: p.joinedAt.toISOString(),
+          leftAt: p.leftAt?.toISOString() || null,
+          lastReadAt: p.lastReadAt?.toISOString() || null,
+          user: {
+            id: shouldAnonymize ? `anonymous-${index}` : p.user.id,
+            firstName: shouldAnonymize ? 'Anonymous' : (p.user.firstName || ''),
+            lastName: shouldAnonymize ? `User ${index + 1}` : (p.user.lastName || ''),
+          },
+        };
+      }),
     }));
 
     // Parse pagination params
@@ -116,7 +123,19 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { subject, participantIds, opportunityId, teamId, companyId } = body;
+    const { subject, participantIds, opportunityId, teamId, companyId, isAnonymous } = body;
+
+    // Check if team has anonymous visibility (inherit for the conversation)
+    let shouldBeAnonymous = isAnonymous || false;
+    if (teamId && !shouldBeAnonymous) {
+      const team = await prisma.team.findUnique({
+        where: { id: teamId },
+        select: { visibility: true, isAnonymous: true },
+      });
+      if (team?.visibility === 'anonymous' || team?.isAnonymous) {
+        shouldBeAnonymous = true;
+      }
+    }
 
     // Create conversation
     const conversation = await prisma.conversation.create({
@@ -125,6 +144,7 @@ export async function POST(request: NextRequest) {
         opportunityId,
         teamId,
         companyId,
+        isAnonymous: shouldBeAnonymous,
         participants: {
           create: [
             { userId: session.user.id, role: 'owner' },

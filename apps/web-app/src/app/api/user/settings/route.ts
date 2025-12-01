@@ -296,6 +296,69 @@ export async function PUT(request: Request) {
       update: updateData,
     });
 
+    // Sync privacy settings to user's teams
+    if (updates.privacy) {
+      // Map user privacy visibility to team visibility
+      let teamVisibility: 'public' | 'private' | 'anonymous' = 'public';
+      if (updates.privacy.profileVisibility === 'private') {
+        teamVisibility = 'private';
+      } else if (updates.privacy.profileVisibility === 'selective') {
+        // Selective = anonymous mode (visible to verified companies only)
+        teamVisibility = 'anonymous';
+      }
+
+      // Find all teams where user is a lead/admin
+      const userTeamMemberships = await prisma.teamMember.findMany({
+        where: {
+          userId: session.user.id,
+          status: 'active',
+          OR: [{ isAdmin: true }, { isLead: true }],
+        },
+        select: { teamId: true },
+      });
+
+      // Update visibility for all teams user administers
+      if (userTeamMemberships.length > 0) {
+        const teamIds = userTeamMemberships.map(m => m.teamId);
+
+        // Update basic visibility fields
+        await prisma.team.updateMany({
+          where: { id: { in: teamIds } },
+          data: {
+            visibility: teamVisibility,
+            isAnonymous: teamVisibility === 'anonymous',
+          },
+        });
+
+        // Update visibility settings in metadata for each team individually
+        // (updateMany doesn't support complex JSON operations)
+        const visibilitySettings = {
+          hideCurrentEmployer: !updates.privacy.showCurrentCompany,
+          allowDiscovery: updates.privacy.allowDiscovery,
+          showContactInfo: updates.privacy.showContactInfo,
+          allowDirectContact: updates.privacy.allowDirectContact,
+          showSalaryExpectations: updates.privacy.showSalaryExpectations,
+        };
+
+        for (const teamId of teamIds) {
+          const team = await prisma.team.findUnique({
+            where: { id: teamId },
+            select: { metadata: true },
+          });
+          const currentMetadata = (team?.metadata as Record<string, unknown>) || {};
+          await prisma.team.update({
+            where: { id: teamId },
+            data: {
+              metadata: {
+                ...currentMetadata,
+                visibilitySettings,
+              },
+            },
+          });
+        }
+      }
+    }
+
     // Update 2FA if changed
     if (updates.security?.twoFactorEnabled !== undefined) {
       await prisma.user.update({

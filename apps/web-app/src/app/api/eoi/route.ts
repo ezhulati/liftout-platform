@@ -165,6 +165,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'You already have a pending EOI for this team' }, { status: 400 });
     }
 
+    // Check if the team is in anonymous mode
+    let shouldBeAnonymous = false;
+    if (toType === 'team') {
+      const team = await prisma.team.findUnique({
+        where: { id: toId },
+        select: { visibility: true, isAnonymous: true },
+      });
+      if (team?.visibility === 'anonymous' || team?.isAnonymous) {
+        shouldBeAnonymous = true;
+      }
+    }
+
     // Create the EOI
     const eoi = await prisma.expressionOfInterest.create({
       data: {
@@ -178,6 +190,7 @@ export async function POST(request: NextRequest) {
         timeline,
         budgetRange,
         status: 'pending',
+        metadata: { isAnonymous: shouldBeAnonymous },
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
       },
     });

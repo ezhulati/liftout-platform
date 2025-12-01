@@ -2,7 +2,30 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { OpportunityStatus } from '@prisma/client';
+import { OpportunityStatus, TeamVisibility } from '@prisma/client';
+
+// Helper to check if user is from a verified company
+async function isVerifiedCompanyUser(userId: string): Promise<boolean> {
+  const companyUser = await prisma.companyUser.findFirst({
+    where: { userId },
+    include: {
+      company: {
+        select: { verificationStatus: true },
+      },
+    },
+  });
+  return companyUser?.company?.verificationStatus === 'verified';
+}
+
+// Helper to anonymize team data for anonymous visibility mode
+function anonymizeTeam(team: any): any {
+  return {
+    ...team,
+    name: `Anonymous Team #${team.id.slice(-6).toUpperCase()}`,
+    description: team.description ? 'Team description hidden in anonymous mode' : null,
+    // Keep industry and size visible for matching purposes
+  };
+}
 
 // Helper to map database status to frontend status
 function mapOpportunityStatus(dbStatus: string): 'open' | 'in_review' | 'closed' {
@@ -96,8 +119,23 @@ export async function GET(request: NextRequest) {
       }));
     }
 
-    // Search teams
+    // Search teams - handle visibility based on user type
     if (!type || type === 'teams') {
+      // Check if current user is from a verified company
+      const isVerified = session.user.userType === 'company'
+        ? await isVerifiedCompanyUser(session.user.id)
+        : false;
+
+      // Build visibility filter based on user type
+      const visibilityFilter: any[] = [
+        { visibility: TeamVisibility.public },
+      ];
+
+      // Verified company users can also see anonymous teams
+      if (isVerified) {
+        visibilityFilter.push({ visibility: TeamVisibility.anonymous });
+      }
+
       const teams = await prisma.team.findMany({
         where: {
           OR: [
@@ -105,7 +143,17 @@ export async function GET(request: NextRequest) {
             { description: { contains: query, mode: 'insensitive' } },
             { industry: { contains: query, mode: 'insensitive' } },
           ],
-          visibility: 'public',
+          AND: [
+            { OR: visibilityFilter },
+            // Also check allowDiscovery setting in metadata
+            {
+              OR: [
+                { metadata: { equals: null } },
+                { metadata: { path: ['visibilitySettings', 'allowDiscovery'], equals: true } },
+                { metadata: { path: ['visibilitySettings', 'allowDiscovery'], equals: null } },
+              ],
+            },
+          ],
         },
         include: {
           members: {
@@ -116,14 +164,25 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
       });
 
-      results.teams = teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        description: team.description,
-        size: team.members.length,
-        industry: team.industry,
-        createdAt: team.createdAt.toISOString(),
-      }));
+      results.teams = teams.map((team) => {
+        const baseTeam = {
+          id: team.id,
+          name: team.name,
+          description: team.description,
+          size: team.members.length,
+          industry: team.industry,
+          visibility: team.visibility,
+          isAnonymous: team.isAnonymous,
+          createdAt: team.createdAt.toISOString(),
+        };
+
+        // Anonymize team data if visibility is anonymous
+        if (team.visibility === TeamVisibility.anonymous || team.isAnonymous) {
+          return anonymizeTeam(baseTeam);
+        }
+
+        return baseTeam;
+      });
     }
 
     // Search companies

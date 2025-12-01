@@ -143,7 +143,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, description, industry, location, yearsWorkingTogether, size } = body;
+    const {
+      name,
+      description,
+      industry,
+      location,
+      yearsWorkingTogether,
+      size,
+      visibility = 'public',
+      isAnonymous = false,
+      hideCurrentEmployer = false,
+      allowDiscovery = true,
+    } = body;
 
     // Validation
     if (!name || name.trim().length < 3) {
@@ -155,6 +166,13 @@ export async function POST(request: NextRequest) {
     if (!description || description.trim().length < 20) {
       return NextResponse.json({
         error: 'Team description must be at least 20 characters'
+      }, { status: 400 });
+    }
+
+    // Validate visibility
+    if (!['public', 'private', 'anonymous'].includes(visibility)) {
+      return NextResponse.json({
+        error: 'Invalid visibility. Must be public, private, or anonymous'
       }, { status: 400 });
     }
 
@@ -176,7 +194,14 @@ export async function POST(request: NextRequest) {
         size: size || 1,
         availabilityStatus: 'available',
         remoteStatus: 'hybrid',
-        visibility: 'public',
+        visibility: visibility,
+        isAnonymous: isAnonymous || visibility === 'anonymous',
+        metadata: {
+          visibilitySettings: {
+            hideCurrentEmployer,
+            allowDiscovery,
+          },
+        },
         // Use creator relation to connect to user
         creator: {
           connect: { id: session.user.id },
