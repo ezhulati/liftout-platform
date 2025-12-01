@@ -96,6 +96,7 @@ enum ApplicationStatus {
   interviewing
   accepted
   rejected
+  withdrawn
 }
 
 enum InterestStatus {

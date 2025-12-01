@@ -7,6 +7,8 @@ import { RecommendedTeams } from '@/components/dashboard/RecommendedTeams';
 import { UpcomingDeadlines } from '@/components/dashboard/UpcomingDeadlines';
 import { DashboardOnboarding } from '@/components/dashboard/DashboardOnboarding';
 import { MatchingPreview } from '@/components/dashboard/MatchingPreview';
+import { UpcomingInterviews } from '@/components/dashboard/UpcomingInterviews';
+import { EOISummary } from '@/components/dashboard/EOISummary';
 import { useSession } from 'next-auth/react';
 
 export default function DashboardPage() {
@@ -57,6 +59,12 @@ export default function DashboardPage() {
 
       {/* AI Matching Preview */}
       <MatchingPreview />
+
+      {/* Interviews and EOI Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UpcomingInterviews />
+        <EOISummary />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent activity */}
