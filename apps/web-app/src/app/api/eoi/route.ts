@@ -3,6 +3,77 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@liftout/database';
 
+// Helper to check if user is a demo user
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+// Demo EOI data for demo users
+const DEMO_EOIS = {
+  // For team users (demo@example.com) - received EOIs from companies
+  teamReceived: [
+    {
+      id: 'demo-eoi-1',
+      fromType: 'company',
+      fromId: 'demo-company-1',
+      toType: 'team',
+      toId: 'demo-team-1',
+      status: 'pending',
+      message: 'We were impressed by your team\'s fintech expertise and would love to discuss our analytics platform opportunity.',
+      interestLevel: 'high',
+      specificRole: 'Lead Analytics Division',
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      from: { name: 'NextGen Financial', type: 'company' },
+      to: { name: 'TechFlow Analytics', type: 'team' },
+    },
+    {
+      id: 'demo-eoi-2',
+      fromType: 'company',
+      fromId: 'demo-company-2',
+      toType: 'team',
+      toId: 'demo-team-1',
+      status: 'accepted',
+      message: 'Your team\'s experience in healthcare AI aligns perfectly with our growth plans.',
+      interestLevel: 'medium',
+      specificRole: 'Healthcare AI Team Lead',
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      from: { name: 'MedTech Innovations', type: 'company' },
+      to: { name: 'TechFlow Analytics', type: 'team' },
+    },
+  ],
+  // For company users (company@example.com) - sent EOIs to teams
+  companySent: [
+    {
+      id: 'demo-eoi-3',
+      fromType: 'company',
+      fromId: 'demo-company-user',
+      toType: 'team',
+      toId: 'demo-team-2',
+      status: 'pending',
+      message: 'Your team\'s cloud infrastructure expertise would be valuable for our expansion.',
+      interestLevel: 'high',
+      specificRole: 'Platform Engineering Lead',
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      from: { name: 'Your Company', type: 'company' },
+      to: { name: 'CloudScale Architects', type: 'team' },
+    },
+    {
+      id: 'demo-eoi-4',
+      fromType: 'company',
+      fromId: 'demo-company-user',
+      toType: 'team',
+      toId: 'demo-team-3',
+      status: 'declined',
+      message: 'Interested in your data science capabilities.',
+      interestLevel: 'medium',
+      specificRole: 'Data Science Team',
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      from: { name: 'Your Company', type: 'company' },
+      to: { name: 'DataFlow Insights', type: 'team' },
+    },
+  ],
+};
+
 // GET - List EOIs for the current user
 export async function GET(request: NextRequest) {
   try {
@@ -11,36 +82,54 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const direction = searchParams.get('direction') || 'sent'; // 'sent' or 'received'
-    const status = searchParams.get('status'); // 'pending', 'accepted', 'declined'
+    const isCompanyUser = session.user.userType === 'company';
 
-    const where: Record<string, unknown> = {};
-
-    if (direction === 'sent') {
-      where.fromId = session.user.id;
-    } else {
-      // For received EOIs, find teams where user is a member
-      const teamMemberships = await prisma.teamMember.findMany({
-        where: { userId: session.user.id, status: 'active' },
-        select: { teamId: true },
-      });
-      const teamIds = teamMemberships.map(m => m.teamId);
-      where.toType = 'team';
-      where.toId = { in: teamIds };
+    // Return demo data for demo users
+    if (isDemoUser(session.user.email)) {
+      if (isCompanyUser) {
+        return NextResponse.json({
+          sent: DEMO_EOIS.companySent,
+          received: [],
+        });
+      } else {
+        return NextResponse.json({
+          sent: [],
+          received: DEMO_EOIS.teamReceived,
+        });
+      }
     }
 
-    if (status) {
-      where.status = status;
-    }
-
-    const eois = await prisma.expressionOfInterest.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      take: 50,
+    // Get team memberships for received EOIs
+    const teamMemberships = await prisma.teamMember.findMany({
+      where: { userId: session.user.id, status: 'active' },
+      select: { teamId: true },
     });
+    const teamIds = teamMemberships.map(m => m.teamId);
 
-    return NextResponse.json(eois);
+    // Fetch both sent and received EOIs
+    const [sentEois, receivedEois] = await Promise.all([
+      prisma.expressionOfInterest.findMany({
+        where: { fromId: session.user.id },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      }),
+      teamIds.length > 0
+        ? prisma.expressionOfInterest.findMany({
+            where: {
+              toType: 'team',
+              toId: { in: teamIds },
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 50,
+          })
+        : [],
+    ]);
+
+    // Return in the format expected by the component
+    return NextResponse.json({
+      sent: sentEois,
+      received: receivedEois,
+    });
   } catch (error) {
     console.error('Error fetching EOIs:', error);
     return NextResponse.json({ error: 'Failed to fetch EOIs' }, { status: 500 });

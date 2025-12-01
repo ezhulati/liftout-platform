@@ -3,6 +3,81 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@liftout/database';
 
+// Helper to check if user is a demo user
+const isDemoUser = (email: string | null | undefined): boolean => {
+  return email === 'demo@example.com' || email === 'company@example.com';
+};
+
+// Generate demo interview dates (upcoming)
+const getUpcomingDemoDate = (daysFromNow: number, hour: number) => {
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromNow);
+  date.setHours(hour, 0, 0, 0);
+  return date.toISOString();
+};
+
+// Demo interview data
+const DEMO_INTERVIEWS = {
+  // For team users (demo@example.com)
+  team: [
+    {
+      id: 'demo-interview-1',
+      teamId: 'demo-team-1',
+      teamName: 'TechFlow Analytics',
+      opportunityId: 'demo-opp-1',
+      opportunityTitle: 'Lead FinTech Analytics Division',
+      scheduledAt: getUpcomingDemoDate(2, 10), // 2 days from now at 10 AM
+      format: 'video',
+      duration: 60,
+      location: 'Zoom link will be sent 30 mins before',
+      notes: 'Initial culture fit discussion with leadership team',
+      status: 'interviewing',
+    },
+    {
+      id: 'demo-interview-2',
+      teamId: 'demo-team-1',
+      teamName: 'TechFlow Analytics',
+      opportunityId: 'demo-opp-2',
+      opportunityTitle: 'Healthcare AI Team Lead',
+      scheduledAt: getUpcomingDemoDate(5, 14), // 5 days from now at 2 PM
+      format: 'video',
+      duration: 90,
+      location: 'Google Meet',
+      notes: 'Technical deep-dive with engineering leadership',
+      status: 'interviewing',
+    },
+  ],
+  // For company users (company@example.com)
+  company: [
+    {
+      id: 'demo-interview-3',
+      teamId: 'demo-team-2',
+      teamName: 'CloudScale Architects',
+      opportunityId: 'demo-company-opp-1',
+      opportunityTitle: 'Platform Engineering Lead',
+      scheduledAt: getUpcomingDemoDate(1, 11), // Tomorrow at 11 AM
+      format: 'video',
+      duration: 60,
+      location: 'Microsoft Teams',
+      notes: 'Meet the team and discuss integration approach',
+      status: 'interviewing',
+    },
+    {
+      id: 'demo-interview-4',
+      teamId: 'demo-team-3',
+      teamName: 'DataViz Analytics Core',
+      opportunityId: 'demo-company-opp-1',
+      opportunityTitle: 'Platform Engineering Lead',
+      scheduledAt: getUpcomingDemoDate(3, 15), // 3 days from now at 3 PM
+      format: 'in_person',
+      duration: 120,
+      location: 'Company HQ - 123 Tech Plaza, SF',
+      notes: 'On-site team presentation and facility tour',
+      status: 'interviewing',
+    },
+  ],
+};
+
 // GET - List interviews for the current user
 export async function GET(request: NextRequest) {
   try {
@@ -13,6 +88,22 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status'); // 'upcoming', 'past', 'all'
+
+    // Return demo data for demo users
+    if (isDemoUser(session.user.email)) {
+      const isCompanyUser = session.user.userType === 'company';
+      const demoInterviews = isCompanyUser ? DEMO_INTERVIEWS.company : DEMO_INTERVIEWS.team;
+
+      // Filter by status if needed
+      let filteredInterviews = demoInterviews;
+      if (status === 'upcoming') {
+        filteredInterviews = demoInterviews.filter(i => new Date(i.scheduledAt) >= new Date());
+      } else if (status === 'past') {
+        filteredInterviews = demoInterviews.filter(i => new Date(i.scheduledAt) < new Date());
+      }
+
+      return NextResponse.json(filteredInterviews);
+    }
 
     // Get team memberships for the user
     const teamMemberships = await prisma.teamMember.findMany({
