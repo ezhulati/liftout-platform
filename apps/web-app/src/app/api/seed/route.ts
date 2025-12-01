@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { SeniorityLevel, UrgencyLevel, RemotePreference, OpportunityStatus } from '@prisma/client';
+import { SeniorityLevel, UrgencyLevel, RemotePreference, OpportunityStatus, ApplicationStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 // Secret key to protect this endpoint
@@ -510,6 +510,87 @@ export async function POST(request: NextRequest) {
         }
       }
       results.push(`Created/updated ${demoOpportunities.length} demo opportunities`);
+
+      // Create demo applications from the demo team to opportunities
+      const opportunities = await prisma.opportunity.findMany({
+        where: { companyId: demoCompany.id },
+        orderBy: { createdAt: 'asc' }
+      });
+
+      if (opportunities.length >= 3 && demoTeam) {
+        const demoApplications = [
+          {
+            teamId: demoTeam.id,
+            opportunityId: opportunities[0].id, // FinTech Platform
+            coverLetter: 'Our team has 3.5 years of experience building financial systems together. We specialize in scalable payment processing and have deep expertise in regulatory compliance. We would be excited to bring our proven track record to your next-generation platform.',
+            teamFitExplanation: 'Our team culture of collaboration and data-driven decision making aligns perfectly with your engineering values. We have successfully delivered 23+ projects together.',
+            questionsForCompany: 'What is the current state of the payment platform? What are the main technical challenges you\'re facing?',
+            status: ApplicationStatus.interviewing,
+            appliedBy: demoUser.id,
+            appliedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
+            reviewedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+            interviewScheduledAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+            interviewFormat: 'video',
+            interviewDuration: 60,
+            interviewMeetingLink: 'https://meet.google.com/abc-defg-hij',
+            interviewNotes: 'Technical deep-dive with engineering leadership',
+          },
+          {
+            teamId: demoTeam.id,
+            opportunityId: opportunities[2].id, // Healthcare AI
+            coverLetter: 'While our primary expertise is in fintech, our machine learning and data science capabilities are directly applicable to healthcare AI. We have experience with HIPAA compliance from our work with financial data privacy regulations.',
+            teamFitExplanation: 'Our team has strong ML fundamentals and has worked with sensitive data requiring strict compliance. We\'re eager to apply our skills to healthcare.',
+            questionsForCompany: 'What is the timeline for FDA approval? How does the team interact with clinical stakeholders?',
+            status: ApplicationStatus.submitted,
+            appliedBy: demoUser.id,
+            appliedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+          },
+          {
+            teamId: demoTeam.id,
+            opportunityId: opportunities[3].id, // DevOps & Platform
+            coverLetter: 'Our team has extensive experience with cloud infrastructure and has built ML pipelines processing 10M+ predictions daily. We understand the importance of developer experience and platform engineering.',
+            teamFitExplanation: 'Our ML infrastructure expertise complements platform engineering well. We\'ve built robust CI/CD pipelines and observability systems.',
+            questionsForCompany: 'What is the current cloud provider setup? What are the main pain points in developer productivity?',
+            status: ApplicationStatus.reviewing,
+            appliedBy: demoUser.id,
+            appliedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+            reviewedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+            recruiterNotes: 'Strong ML background but reviewing DevOps specific experience',
+          },
+        ];
+
+        for (const app of demoApplications) {
+          // Check if application already exists
+          const existing = await prisma.teamApplication.findFirst({
+            where: {
+              teamId: app.teamId,
+              opportunityId: app.opportunityId
+            }
+          });
+
+          if (!existing) {
+            await prisma.teamApplication.create({ data: app });
+            results.push(`Created application for opportunity: ${opportunities.find(o => o.id === app.opportunityId)?.title}`);
+          } else {
+            // Update existing application
+            await prisma.teamApplication.update({
+              where: { id: existing.id },
+              data: {
+                status: app.status,
+                coverLetter: app.coverLetter,
+                teamFitExplanation: app.teamFitExplanation,
+                interviewScheduledAt: app.interviewScheduledAt,
+                interviewFormat: app.interviewFormat,
+                interviewDuration: app.interviewDuration,
+                interviewMeetingLink: app.interviewMeetingLink,
+                interviewNotes: app.interviewNotes,
+                recruiterNotes: app.recruiterNotes,
+              }
+            });
+            results.push(`Updated application for opportunity: ${opportunities.find(o => o.id === app.opportunityId)?.title}`);
+          }
+        }
+      }
     }
 
     return NextResponse.json({
