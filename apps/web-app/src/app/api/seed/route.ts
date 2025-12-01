@@ -518,6 +518,8 @@ export async function POST(request: NextRequest) {
       });
 
       if (opportunities.length >= 3 && demoTeam) {
+        // Use only basic fields that exist in production database
+        // (interview_format and other newer columns may not exist yet)
         const demoApplications = [
           {
             teamId: demoTeam.id,
@@ -529,11 +531,6 @@ export async function POST(request: NextRequest) {
             appliedBy: demoUser.id,
             appliedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
             reviewedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-            interviewScheduledAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-            interviewFormat: 'video',
-            interviewDuration: 60,
-            interviewMeetingLink: 'https://meet.google.com/abc-defg-hij',
-            interviewNotes: 'Technical deep-dive with engineering leadership',
           },
           {
             teamId: demoTeam.id,
@@ -555,7 +552,6 @@ export async function POST(request: NextRequest) {
             appliedBy: demoUser.id,
             appliedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
             reviewedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-            recruiterNotes: 'Strong ML background but reviewing DevOps specific experience',
           },
         ];
 
@@ -572,19 +568,14 @@ export async function POST(request: NextRequest) {
             await prisma.teamApplication.create({ data: app });
             results.push(`Created application for opportunity: ${opportunities.find(o => o.id === app.opportunityId)?.title}`);
           } else {
-            // Update existing application
+            // Update existing application with basic fields only
             await prisma.teamApplication.update({
               where: { id: existing.id },
               data: {
                 status: app.status,
                 coverLetter: app.coverLetter,
                 teamFitExplanation: app.teamFitExplanation,
-                interviewScheduledAt: app.interviewScheduledAt,
-                interviewFormat: app.interviewFormat,
-                interviewDuration: app.interviewDuration,
-                interviewMeetingLink: app.interviewMeetingLink,
-                interviewNotes: app.interviewNotes,
-                recruiterNotes: app.recruiterNotes,
+                questionsForCompany: app.questionsForCompany,
               }
             });
             results.push(`Updated application for opportunity: ${opportunities.find(o => o.id === app.opportunityId)?.title}`);
