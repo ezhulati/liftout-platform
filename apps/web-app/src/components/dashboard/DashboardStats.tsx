@@ -21,35 +21,47 @@ interface StatsData {
   marketReach?: number;
 }
 
-const mockTeamStats: StatsData = {
-  teamsOrProfiles: 1, // Your team profile
-  opportunities: 15, // Available liftout opportunities
-  expressionsOfInterest: 3, // Sent expressions of interest
-  activeConversations: 2, // Active discussions with companies
-  liftoutSuccessRate: 67, // Success rate percentage
-  marketReach: 8, // Companies viewing your profile
+const fallbackTeamStats: StatsData = {
+  teamsOrProfiles: 1,
+  opportunities: 15,
+  expressionsOfInterest: 3,
+  activeConversations: 2,
+  liftoutSuccessRate: 67,
+  marketReach: 8,
 };
 
-const mockCompanyStats: StatsData = {
-  teamsOrProfiles: 24, // Teams browsed/engaged
-  opportunities: 5, // Posted liftout opportunities
-  expressionsOfInterest: 12, // Received expressions of interest
-  activeConversations: 7, // Active team conversations
-  liftoutSuccessRate: 80, // Success rate percentage
-  marketReach: 156, // Profile views
+const fallbackCompanyStats: StatsData = {
+  teamsOrProfiles: 24,
+  opportunities: 5,
+  expressionsOfInterest: 12,
+  activeConversations: 7,
+  liftoutSuccessRate: 80,
+  marketReach: 156,
 };
 
 export function DashboardStats({ userType }: DashboardStatsProps) {
+  const isCompanyUser = userType === 'company';
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ['dashboard-stats', userType],
     queryFn: async () => {
-      // This would normally fetch from your API
-      // Return role-specific mock data
-      return isCompanyUser ? mockCompanyStats : mockTeamStats;
+      try {
+        const response = await fetch('/api/dashboard/stats');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            return result.data as StatsData;
+          }
+        }
+        // Fallback to mock data
+        return isCompanyUser ? fallbackCompanyStats : fallbackTeamStats;
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        return isCompanyUser ? fallbackCompanyStats : fallbackTeamStats;
+      }
     },
+    staleTime: 30000, // Cache for 30 seconds
   });
-
-  const isCompanyUser = userType === 'company';
 
   const teamStats = [
     {

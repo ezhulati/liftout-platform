@@ -74,10 +74,35 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setAnalytics(mockLiftoutAnalytics);
-      setIsLoading(false);
-    }, 500);
+    const fetchAnalytics = async () => {
+      try {
+        const queryParams = new URLSearchParams();
+        if (period) queryParams.set('period', period);
+
+        const response = await fetch(`/api/analytics?${queryParams}`);
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            setAnalytics(result.data);
+          } else {
+            // Fallback to mock data if API returns empty
+            setAnalytics(mockLiftoutAnalytics);
+          }
+        } else {
+          // Fallback to mock data on error
+          setAnalytics(mockLiftoutAnalytics);
+        }
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+        // Fallback to mock data on error
+        setAnalytics(mockLiftoutAnalytics);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAnalytics();
   }, [companyId, period]);
 
   if (isLoading) {

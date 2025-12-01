@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
@@ -190,10 +191,44 @@ export function useMessages(conversationId: string | null, page = 1, limit = 50)
 }
 
 /**
- * Hook to fetch unread count
+ * Hook to fetch unread count with smart polling
+ * - Polls every 10 seconds when window is focused
+ * - Polls every 60 seconds when window is in background
+ * - Stops polling when user is idle for 5 minutes
  */
 export function useUnreadCount() {
   const { data: session } = useSession();
+  const [isFocused, setIsFocused] = React.useState(true);
+  const [lastActivity, setLastActivity] = React.useState(Date.now());
+
+  // Track window focus state
+  React.useEffect(() => {
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = () => setIsFocused(false);
+    const handleActivity = () => setLastActivity(Date.now());
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+    window.addEventListener('mousemove', handleActivity);
+    window.addEventListener('keydown', handleActivity);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('mousemove', handleActivity);
+      window.removeEventListener('keydown', handleActivity);
+    };
+  }, []);
+
+  // Calculate polling interval based on focus and activity
+  const getPollingInterval = () => {
+    const idleTime = Date.now() - lastActivity;
+    const FIVE_MINUTES = 5 * 60 * 1000;
+
+    if (idleTime > FIVE_MINUTES) return false; // Stop polling when idle
+    if (isFocused) return 10000; // 10 seconds when focused
+    return 60000; // 60 seconds when in background
+  };
 
   return useQuery({
     queryKey: ['unreadCount'],
@@ -202,7 +237,8 @@ export function useUnreadCount() {
       return data.data.unreadCount as number;
     },
     enabled: !!session,
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: getPollingInterval(),
+    refetchIntervalInBackground: true,
   });
 }
 

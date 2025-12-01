@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
@@ -15,7 +15,7 @@ import {
   BellAlertIcon,
   MapIcon,
 } from '@heroicons/react/24/outline';
-import { 
+import {
   mockMarketIntelligence,
   calculateMarketAttractiveness,
   calculateCompetitiveIntensity,
@@ -23,15 +23,50 @@ import {
   generateMarketAlerts,
   type MarketIntelligence,
   type CompetitorProfile,
-  type MarketTrend 
+  type MarketTrend
 } from '@/lib/market-intelligence';
 
 export function MarketIntelligenceDashboard() {
   const [selectedCompetitor, setSelectedCompetitor] = useState<CompetitorProfile | null>(null);
   const [selectedTrend, setSelectedTrend] = useState<MarketTrend | null>(null);
   const [viewMode, setViewMode] = useState<'overview' | 'competitors' | 'trends' | 'positioning' | 'alerts'>('overview');
-  
-  const marketData = mockMarketIntelligence;
+  const [marketData, setMarketData] = useState<MarketIntelligence>(mockMarketIntelligence);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        const response = await fetch('/api/market-intelligence');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            // Merge API data with mock structure for missing fields
+            setMarketData({
+              ...mockMarketIntelligence,
+              ...result.data,
+              marketHealth: {
+                ...mockMarketIntelligence.marketHealth,
+                ...result.data.marketHealth,
+              },
+              talentSupplyDemand: {
+                ...mockMarketIntelligence.talentSupplyDemand,
+                ...result.data.talentSupplyDemand,
+              },
+              competitorAnalysis: result.data.competitorAnalysis || mockMarketIntelligence.competitorAnalysis,
+              trends: result.data.trends || mockMarketIntelligence.trends,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching market intelligence:', error);
+        // Keep mock data on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMarketData();
+  }, []);
   const attractiveness = calculateMarketAttractiveness(
     marketData.marketHealth,
     marketData.talentSupplyDemand,
