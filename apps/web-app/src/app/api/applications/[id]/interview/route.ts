@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
-import { scheduleMockInterview, getMockApplicationById } from '@/lib/mock-data/applications';
+import { prisma } from '@/lib/prisma';
+import { ApplicationStatus } from '@prisma/client';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
+// POST /api/applications/[id]/interview - Schedule an interview
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -19,7 +18,7 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { interviewDate, notes } = body;
+    const { interviewDate, notes, format, duration, location, meetingLink, participants } = body;
 
     if (!interviewDate) {
       return NextResponse.json(
@@ -28,29 +27,15 @@ export async function POST(
       );
     }
 
-    // Check if API server is available
-    const apiAvailable = await isApiServerAvailable();
-
-    if (apiAvailable) {
-      try {
-        const response = await fetch(`${API_BASE}/api/applications/${id}/interview`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${(session as any).accessToken}`,
-          },
-          body: JSON.stringify(body),
-        });
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.log('API server request failed, falling back to mock data');
-      }
-    }
-
-    // Fallback to mock data
-    const application = getMockApplicationById(id);
+    // Find the application
+    const application = await prisma.teamApplication.findUnique({
+      where: { id },
+      include: {
+        opportunity: {
+          select: { companyId: true },
+        },
+      },
+    });
 
     if (!application) {
       return NextResponse.json(
@@ -59,24 +44,74 @@ export async function POST(
       );
     }
 
-    const updated = scheduleMockInterview(id, interviewDate, notes);
+    // Verify user has permission (company user for this opportunity)
+    if (session.user.userType === 'company') {
+      const companyUser = await prisma.companyUser.findFirst({
+        where: {
+          userId: session.user.id,
+          companyId: application.opportunity.companyId,
+        },
+      });
 
-    if (!updated) {
-      return NextResponse.json(
-        { error: 'Failed to schedule interview' },
-        { status: 500 }
-      );
+      if (!companyUser) {
+        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      }
     }
 
+    // Update the application with interview details
+    // Using 'interviewing' status (valid enum: submitted, reviewing, interviewing, accepted, rejected)
+    const updated = await prisma.teamApplication.update({
+      where: { id },
+      data: {
+        status: ApplicationStatus.interviewing,
+        interviewScheduledAt: new Date(interviewDate),
+        interviewFormat: format || 'video',
+        interviewDuration: duration || 60,
+        interviewLocation: location,
+        interviewMeetingLink: meetingLink,
+        interviewParticipants: participants || [],
+        interviewNotes: notes,
+      },
+      include: {
+        team: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        opportunity: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    });
+
     return NextResponse.json({
-      application: updated,
+      application: {
+        id: updated.id,
+        status: updated.status,
+        teamId: updated.teamId,
+        teamName: updated.team.name,
+        opportunityId: updated.opportunityId,
+        opportunityTitle: updated.opportunity.title,
+        interview: {
+          scheduledAt: updated.interviewScheduledAt?.toISOString(),
+          format: updated.interviewFormat,
+          duration: updated.interviewDuration,
+          location: updated.interviewLocation,
+          meetingLink: updated.interviewMeetingLink,
+          participants: updated.interviewParticipants,
+          notes: updated.interviewNotes,
+        },
+      },
       message: 'Interview scheduled successfully',
-      _mock: true
     });
   } catch (error) {
     console.error('Error scheduling interview:', error);
     return NextResponse.json(
-      { error: 'Failed to schedule interview' },
+      { error: 'Failed to schedule interview', details: String(error) },
       { status: 500 }
     );
   }

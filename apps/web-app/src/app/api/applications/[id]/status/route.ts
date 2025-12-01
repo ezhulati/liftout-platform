@@ -1,20 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
-import { updateMockApplicationStatus, getMockApplicationById } from '@/lib/mock-data/applications';
+import { prisma } from '@/lib/prisma';
+import { ApplicationStatus } from '@prisma/client';
 
-// Demo user detection helper
-const isDemoUser = (email: string | null | undefined): boolean => {
-  return email === 'demo@example.com' || email === 'company@example.com';
-};
-
-const isDemoEntity = (id: string): boolean => {
-  return id?.includes('demo') || id?.startsWith('demo-');
-};
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
+// PATCH /api/applications/[id]/status - Update application status
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -37,56 +27,80 @@ export async function PATCH(
       );
     }
 
-    // Demo user handling - simulate success
-    if (isDemoUser(session.user.email) || isDemoEntity(id)) {
-      console.log(`[Demo] Application ${id} status updated to ${status}`);
-      return NextResponse.json({
-        application: { id, status, notes, updatedAt: new Date().toISOString() },
-        message: `Application status updated to ${status}`,
-        _demo: true,
-      });
-    }
+    // Find the application
+    const application = await prisma.teamApplication.findUnique({
+      where: { id },
+      include: {
+        opportunity: {
+          select: { companyId: true },
+        },
+      },
+    });
 
-    // Check if API server is available
-    const apiAvailable = await isApiServerAvailable();
-
-    if (apiAvailable) {
-      try {
-        const response = await fetch(`${API_BASE}/api/applications/${id}/status`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${(session as any).accessToken}`,
-          },
-          body: JSON.stringify(body),
-        });
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.log('API server request failed, falling back to mock data');
-      }
-    }
-
-    // Fallback to mock data
-    const updated = updateMockApplicationStatus(id, status, notes);
-
-    if (!updated) {
+    if (!application) {
       return NextResponse.json(
         { error: 'Application not found' },
         { status: 404 }
       );
     }
 
+    // Verify user has permission (company user for this opportunity)
+    if (session.user.userType === 'company') {
+      const companyUser = await prisma.companyUser.findFirst({
+        where: {
+          userId: session.user.id,
+          companyId: application.opportunity.companyId,
+        },
+      });
+
+      if (!companyUser) {
+        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      }
+    }
+
+    // Map status string to enum
+    // Enum values: submitted, reviewing, interviewing, accepted, rejected
+    const statusMap: Record<string, ApplicationStatus> = {
+      submitted: ApplicationStatus.submitted,
+      under_review: ApplicationStatus.reviewing,
+      reviewing: ApplicationStatus.reviewing,
+      shortlisted: ApplicationStatus.reviewing,
+      interview_scheduled: ApplicationStatus.interviewing,
+      interviewing: ApplicationStatus.interviewing,
+      interview_completed: ApplicationStatus.interviewing,
+      offer_extended: ApplicationStatus.accepted,
+      offer_accepted: ApplicationStatus.accepted,
+      accepted: ApplicationStatus.accepted,
+      offer_declined: ApplicationStatus.rejected,
+      rejected: ApplicationStatus.rejected,
+      withdrawn: ApplicationStatus.rejected,
+    };
+
+    const newStatus = statusMap[status] || ApplicationStatus.submitted;
+
+    // Update the application
+    const updated = await prisma.teamApplication.update({
+      where: { id },
+      data: {
+        status: newStatus,
+        recruiterNotes: notes || undefined,
+        reviewedAt: new Date(),
+      },
+    });
+
     return NextResponse.json({
-      application: updated,
+      application: {
+        id: updated.id,
+        status: updated.status,
+        notes: updated.recruiterNotes,
+        updatedAt: updated.reviewedAt?.toISOString(),
+      },
       message: `Application status updated to ${status}`,
-      _mock: true
     });
   } catch (error) {
     console.error('Error updating application status:', error);
     return NextResponse.json(
-      { error: 'Failed to update application status' },
+      { error: 'Failed to update application status', details: String(error) },
       { status: 500 }
     );
   }

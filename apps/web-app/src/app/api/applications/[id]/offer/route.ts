@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
-import { makeMockOffer, getMockApplicationById } from '@/lib/mock-data/applications';
+import { prisma } from '@/lib/prisma';
+import { ApplicationStatus } from '@prisma/client';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
+// POST /api/applications/[id]/offer - Make an offer to a team
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -27,30 +26,17 @@ export async function POST(
     }
 
     const body = await request.json();
+    const { compensation, startDate, terms, equity, benefits, notes } = body;
 
-    // Check if API server is available
-    const apiAvailable = await isApiServerAvailable();
-
-    if (apiAvailable) {
-      try {
-        const response = await fetch(`${API_BASE}/api/applications/${id}/offer`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${(session as any).accessToken}`,
-          },
-          body: JSON.stringify(body),
-        });
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.log('API server request failed, falling back to mock data');
-      }
-    }
-
-    // Fallback to mock data
-    const application = getMockApplicationById(id);
+    // Find the application
+    const application = await prisma.teamApplication.findUnique({
+      where: { id },
+      include: {
+        opportunity: {
+          select: { companyId: true },
+        },
+      },
+    });
 
     if (!application) {
       return NextResponse.json(
@@ -59,28 +45,74 @@ export async function POST(
       );
     }
 
-    const updated = makeMockOffer(id, {
-      compensation: body.compensation,
-      startDate: body.startDate,
-      terms: body.terms,
+    // Verify user has permission (company user for this opportunity)
+    const companyUser = await prisma.companyUser.findFirst({
+      where: {
+        userId: session.user.id,
+        companyId: application.opportunity.companyId,
+      },
     });
 
-    if (!updated) {
-      return NextResponse.json(
-        { error: 'Failed to make offer' },
-        { status: 500 }
-      );
+    if (!companyUser) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Build offer details
+    const offerDetails = {
+      compensation,
+      startDate,
+      terms,
+      equity,
+      benefits,
+      notes,
+      extendedBy: session.user.id,
+      extendedAt: new Date().toISOString(),
+    };
+
+    // Update the application with offer
+    // Using 'accepted' status (valid enum: submitted, reviewing, interviewing, accepted, rejected)
+    const updated = await prisma.teamApplication.update({
+      where: { id },
+      data: {
+        status: ApplicationStatus.accepted,
+        offerDetails: offerDetails,
+        offerMadeAt: new Date(),
+        responseDeadline: startDate ? new Date(startDate) : null,
+      },
+      include: {
+        team: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        opportunity: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    });
+
     return NextResponse.json({
-      application: updated,
+      application: {
+        id: updated.id,
+        status: updated.status,
+        teamId: updated.teamId,
+        teamName: updated.team.name,
+        opportunityId: updated.opportunityId,
+        opportunityTitle: updated.opportunity.title,
+        offer: updated.offerDetails,
+        offerMadeAt: updated.offerMadeAt?.toISOString(),
+        responseDeadline: updated.responseDeadline?.toISOString(),
+      },
       message: 'Offer extended successfully',
-      _mock: true
     });
   } catch (error) {
     console.error('Error making offer:', error);
     return NextResponse.json(
-      { error: 'Failed to make offer' },
+      { error: 'Failed to make offer', details: String(error) },
       { status: 500 }
     );
   }

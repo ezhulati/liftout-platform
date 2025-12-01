@@ -1,44 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable, proxyToApiServer } from '@/lib/api-helpers';
+import { prisma } from '@/lib/prisma';
+import { OpportunityStatus } from '@prisma/client';
 
 // GET /api/search/popular - Get popular/trending searches
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  const apiAvailable = await isApiServerAvailable();
-  if (!apiAvailable) {
-    // Return default popular searches if API server is not available
+    // Get popular industries from active opportunities
+    const opportunities = await prisma.opportunity.findMany({
+      where: {
+        status: OpportunityStatus.active,
+        visibility: 'public',
+      },
+      select: {
+        industry: true,
+        location: true,
+      },
+      take: 50,
+    });
+
+    // Extract unique industries
+    const industries = [...new Set(opportunities.map((o) => o.industry).filter(Boolean))] as string[];
+    const locations = [...new Set(opportunities.map((o) => o.location).filter(Boolean))].slice(0, 4);
+
+    // Build popular searches list
+    const popular = [
+      ...industries.slice(0, 4),
+      ...locations,
+    ];
+
+    // Fallback if no data
+    if (popular.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          popular: [
+            'Software Engineering',
+            'Data Science',
+            'Product Management',
+            'Design',
+            'Remote',
+            'Healthcare',
+            'FinTech',
+            'AI/ML',
+          ],
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      data: {
-        popular: [
-          'Software Engineering',
-          'Data Science',
-          'Product Management',
-          'Design',
-          'Remote',
-          'Healthcare',
-          'FinTech',
-          'AI/ML'
-        ]
-      }
+      data: { popular },
     });
-  }
-
-  try {
-    const searchParams = request.nextUrl.searchParams.toString();
-    const path = searchParams ? `/api/search/popular?${searchParams}` : '/api/search/popular';
-
-    const response = await proxyToApiServer(path, { method: 'GET' }, session);
-    const data = await response.json();
-
-    return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error fetching popular searches:', error);
     return NextResponse.json({
@@ -48,9 +68,9 @@ export async function GET(request: NextRequest) {
           'Software Engineering',
           'Data Science',
           'Product Management',
-          'Design'
-        ]
-      }
+          'Design',
+        ],
+      },
     });
   }
 }

@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
-import { getMockConversationById } from '@/lib/mock-data';
+import { prisma } from '@/lib/prisma';
 
-const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
-
+// GET /api/conversations/[id] - Get conversation details
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -18,55 +16,82 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const apiAvailable = await isApiServerAvailable();
-
-    if (apiAvailable) {
-      try {
-        const response = await fetch(`${API_BASE}/api/conversations/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${(session as any).accessToken}`,
+    const conversation = await prisma.conversation.findUnique({
+      where: { id },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
           },
-        });
+        },
+        messages: {
+          orderBy: { createdAt: 'asc' },
+          include: {
+            sender: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-        if (!response.ok) {
-          return returnMockConversation(id);
-        }
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.error('Error fetching conversation from API:', error);
-        return returnMockConversation(id);
-      }
+    if (!conversation) {
+      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 });
     }
 
-    return returnMockConversation(id);
+    // Check if user is a participant
+    const isParticipant = conversation.participants.some(
+      (p) => p.userId === session.user.id
+    );
+
+    if (!isParticipant) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    return NextResponse.json({
+      conversation: {
+        id: conversation.id,
+        subject: conversation.subject || 'Conversation',
+        participants: conversation.participants.map((p) => ({
+          id: p.user.id,
+          name: `${p.user.firstName || ''} ${p.user.lastName || ''}`.trim() || p.user.email,
+          role: p.role,
+        })),
+        messages: conversation.messages.map((m) => ({
+          id: m.id,
+          content: m.content,
+          senderId: m.senderId,
+          senderName: m.sender
+            ? `${m.sender.firstName || ''} ${m.sender.lastName || ''}`.trim()
+            : 'Unknown',
+          createdAt: m.createdAt.toISOString(),
+          isRead: m.isRead,
+        })),
+        createdAt: conversation.createdAt.toISOString(),
+        opportunityId: conversation.opportunityId,
+      },
+    });
   } catch (error) {
     console.error('Error fetching conversation:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch conversation' },
+      { error: 'Failed to fetch conversation', details: String(error) },
       { status: 500 }
     );
   }
 }
 
-function returnMockConversation(id: string) {
-  const conversation = getMockConversationById(id);
-
-  if (!conversation) {
-    return NextResponse.json(
-      { error: 'Conversation not found' },
-      { status: 404 }
-    );
-  }
-
-  return NextResponse.json({
-    conversation,
-    _mock: true
-  });
-}
-
+// DELETE /api/conversations/[id] - Leave/archive conversation
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -79,44 +104,23 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const apiAvailable = await isApiServerAvailable();
+    // Mark user as left the conversation
+    await prisma.conversationParticipant.updateMany({
+      where: {
+        conversationId: id,
+        userId: session.user.id,
+      },
+      data: {
+        leftAt: new Date(),
+      },
+    });
 
-    if (apiAvailable) {
-      try {
-        const response = await fetch(`${API_BASE}/api/conversations/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${(session as any).accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          return returnMockDeleteResponse(id);
-        }
-
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
-      } catch (error) {
-        console.error('Error deleting conversation via API:', error);
-        return returnMockDeleteResponse(id);
-      }
-    }
-
-    return returnMockDeleteResponse(id);
+    return NextResponse.json({ success: true, message: 'Left conversation' });
   } catch (error) {
-    console.error('Error archiving conversation:', error);
+    console.error('Error leaving conversation:', error);
     return NextResponse.json(
-      { error: 'Failed to archive conversation' },
+      { error: 'Failed to leave conversation', details: String(error) },
       { status: 500 }
     );
   }
-}
-
-function returnMockDeleteResponse(id: string) {
-  return NextResponse.json({
-    message: 'Conversation archived successfully (demo mode)',
-    id,
-    _mock: true
-  });
 }

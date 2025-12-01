@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { isApiServerAvailable } from '@/lib/api-helpers';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-const API_BASE = process.env.API_SERVER_URL || 'http://localhost:8000';
-
+// GET /api/conversations/unread - Get total unread message count
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -15,27 +14,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const apiAvailable = await isApiServerAvailable();
-    if (!apiAvailable) {
-      return NextResponse.json(
-        { error: 'API server unavailable. Please start the API service.' },
-        { status: 503 }
-      );
-    }
-
-    const response = await fetch(`${API_BASE}/api/conversations/unread`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${(session as any).accessToken}`,
+    // Get all conversations where user is a participant
+    const participations = await prisma.conversationParticipant.findMany({
+      where: {
+        userId: session.user.id,
+        leftAt: null,
+      },
+      select: {
+        conversationId: true,
+        lastReadAt: true,
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    // Count unread messages across all conversations
+    let totalUnread = 0;
+
+    for (const participation of participations) {
+      const unreadCount = await prisma.message.count({
+        where: {
+          conversationId: participation.conversationId,
+          senderId: { not: session.user.id },
+          createdAt: participation.lastReadAt
+            ? { gt: participation.lastReadAt }
+            : undefined,
+        },
+      });
+      totalUnread += unreadCount;
+    }
+
+    return NextResponse.json({
+      unreadCount: totalUnread,
+      conversationCount: participations.length,
+    });
   } catch (error) {
     console.error('Error fetching unread count:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch unread count' },
+      { error: 'Failed to fetch unread count', details: String(error) },
       { status: 500 }
     );
   }
