@@ -121,14 +121,14 @@ The platform has two primary user types:
 
 - **Hosting**: Netlify (web-app deployed as serverless functions)
 - **Database**: Neon PostgreSQL (serverless, us-east-1)
-- **Domain**: https://liftout.netlify.app
+- **Domain**: https://liftout.com
 
 ### Environment Variables (Netlify)
 
 Required environment variables in Netlify dashboard:
 ```
 DATABASE_URL=postgresql://...@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require
-NEXTAUTH_URL=https://liftout.netlify.app
+NEXTAUTH_URL=https://liftout.com
 NEXTAUTH_SECRET=<secure-secret>
 JWT_SECRET=<jwt-secret>
 ```
@@ -168,7 +168,7 @@ DATABASE_URL="postgresql://...@neon.tech/neondb?sslmode=require" npx prisma stud
 Production database can also be seeded via API:
 ```bash
 # POST to seed endpoint with secret
-curl -X POST "https://liftout.netlify.app/api/seed?secret=liftout-seed-2024"
+curl -X POST "https://liftout.com/api/seed?secret=liftout-seed-2024"
 ```
 
 ## Key Patterns
