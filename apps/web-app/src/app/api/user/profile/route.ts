@@ -28,6 +28,17 @@ const profileUpdateSchema = z.object({
   salaryExpectationMin: z.number().optional(),
   salaryExpectationMax: z.number().optional(),
   willingToRelocate: z.boolean().optional(),
+  // Extended fields for onboarding
+  skills: z.array(z.string()).optional(),
+  certifications: z.array(z.string()).optional(),
+  achievements: z.string().optional(),
+  searchPreferences: z.object({
+    companySizes: z.array(z.string()).optional(),
+    industries: z.array(z.string()).optional(),
+    priorities: z.array(z.string()).optional(),
+    dealbreakers: z.array(z.string()).optional(),
+    preferredLocations: z.array(z.string()).optional(),
+  }).optional(),
 }).partial();
 
 // GET - Retrieve user profile
@@ -187,6 +198,10 @@ export async function PUT(request: Request) {
     if (updates.salaryExpectationMin !== undefined) profileUpdateData.salaryExpectationMin = updates.salaryExpectationMin;
     if (updates.salaryExpectationMax !== undefined) profileUpdateData.salaryExpectationMax = updates.salaryExpectationMax;
     if (updates.willingToRelocate !== undefined) profileUpdateData.willingToRelocate = updates.willingToRelocate;
+    if (updates.skills !== undefined) profileUpdateData.skillsSummary = updates.skills.join(', ');
+    if (updates.certifications !== undefined) profileUpdateData.certifications = updates.certifications;
+    if (updates.achievements !== undefined) profileUpdateData.achievements = updates.achievements;
+    if (updates.searchPreferences !== undefined) profileUpdateData.searchPreferences = updates.searchPreferences;
 
     // Update user and profile in transaction
     await prisma.$transaction(async (tx) => {

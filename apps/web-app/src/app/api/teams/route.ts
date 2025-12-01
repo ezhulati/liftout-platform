@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import { teams, addTeam, type Team } from './_data';
 
 // Demo user detection helper
@@ -127,21 +128,14 @@ export async function POST(request: NextRequest) {
       id: `demo-team-${Date.now()}`,
       name: body.name || 'Demo Team',
       description: body.description || 'Demo team description',
-      size: body.members?.length || 2,
-      yearsWorking: 0,
-      cohesionScore: 75,
-      successfulProjects: 0,
-      clientSatisfaction: 0,
+      size: body.size || 2,
+      yearsWorkingTogether: body.yearsWorkingTogether || 1,
       openToLiftout: true,
       createdBy: session.user.id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      members: body.members || [],
-      achievements: [],
       industry: body.industry || '',
       location: body.location || '',
-      availability: 'Open to strategic opportunities',
-      compensation: body.compensation || { range: '', equity: false, benefits: '' },
     };
     console.log('[Demo] Team created:', mockTeam.id);
     return NextResponse.json({ team: mockTeam, message: 'Team profile created successfully' }, { status: 201 });
@@ -149,121 +143,118 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, description, members, industry, location, compensation } = body;
-    
-    // Enhanced validation
-    if (!name || name.trim().length < 5) {
-      return NextResponse.json({ 
-        error: 'Team name must be at least 5 characters' 
+    const { name, description, industry, location, yearsWorkingTogether, size } = body;
+
+    // Validation
+    if (!name || name.trim().length < 3) {
+      return NextResponse.json({
+        error: 'Team name must be at least 3 characters'
       }, { status: 400 });
     }
 
-    if (!description || description.trim().length < 50) {
-      return NextResponse.json({ 
-        error: 'Team description must be at least 50 characters' 
+    if (!description || description.trim().length < 20) {
+      return NextResponse.json({
+        error: 'Team description must be at least 20 characters'
       }, { status: 400 });
     }
 
-    if (!members || !Array.isArray(members) || members.length < 2) {
-      return NextResponse.json({ 
-        error: 'Team must have at least 2 members' 
-      }, { status: 400 });
-    }
+    // Generate slug from name
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') + '-' + Date.now();
 
-    if (!industry || !location) {
-      return NextResponse.json({ 
-        error: 'Industry and location are required' 
-      }, { status: 400 });
-    }
+    // Create team in database with creator as first member
+    const team = await prisma.team.create({
+      data: {
+        name: name.trim(),
+        slug,
+        description: description.trim(),
+        industry: industry?.trim() || null,
+        location: location?.trim() || null,
+        yearsWorkingTogether: yearsWorkingTogether || null,
+        size: size || 1,
+        availabilityStatus: 'available',
+        remoteStatus: 'hybrid',
+        visibility: 'public',
+        // Use creator relation to connect to user
+        creator: {
+          connect: { id: session.user.id },
+        },
+        // Add creator as team lead
+        members: {
+          create: {
+            userId: session.user.id,
+            role: 'Team Lead',
+            isAdmin: true,
+            isLead: true,
+            status: 'active',
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    // Validate members
-    for (let i = 0; i < members.length; i++) {
-      const member = members[i];
-      if (!member.name || member.name.trim().length < 2) {
-        return NextResponse.json({ 
-          error: `Member ${i + 1} name is required (minimum 2 characters)` 
-        }, { status: 400 });
-      }
-      if (!member.role || member.role.trim().length < 2) {
-        return NextResponse.json({ 
-          error: `Member ${i + 1} role is required (minimum 2 characters)` 
-        }, { status: 400 });
-      }
-      if (typeof member.experience !== 'number' || member.experience < 0 || member.experience > 50) {
-        return NextResponse.json({
-          error: `Member ${i + 1} experience must be between 0 and 50 years`
-        }, { status: 400 });
-      }
-      if (!member.skills || !Array.isArray(member.skills) || member.skills.length < 1) {
-        return NextResponse.json({
-          error: `Member ${i + 1} must have at least 1 skill`
-        }, { status: 400 });
-      }
-    }
-
-    // Validate compensation
-    if (!compensation || !compensation.range) {
-      return NextResponse.json({ 
-        error: 'Compensation range is required' 
-      }, { status: 400 });
-    }
-
-    // Calculate team metrics
-    const avgExperience = members.reduce((sum, member) => sum + member.experience, 0) / members.length;
-    const totalSkills = [...new Set(members.flatMap(member => member.skills))].length;
-    
-    // Calculate initial cohesion score based on team composition
-    const experienceVariance = members.reduce((sum, member) => 
-      sum + Math.pow(member.experience - avgExperience, 2), 0) / members.length;
-    const experienceConsistency = Math.max(0, 100 - (experienceVariance * 2));
-    const skillDiversity = Math.min(100, totalSkills * 5);
-    const initialCohesionScore = Math.round((experienceConsistency + skillDiversity) / 2);
-
-    // Add unique IDs to members
-    const membersWithIds = members.map((member, index) => ({
-      ...member,
-      id: `member_${Date.now()}_${index}`,
-      name: member.name.trim(),
-      role: member.role.trim(),
-      skills: member.skills.map((skill: string) => skill.trim()).filter((skill: string) => skill.length > 0)
-    }));
-
-    const newTeam = {
-      id: `team_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      name: name.trim(),
-      description: description.trim(),
-      size: members.length,
-      yearsWorking: 0,
-      cohesionScore: initialCohesionScore,
+    // Also add to in-memory for demo browsing
+    const memoryTeam = {
+      id: team.id,
+      name: team.name,
+      description: team.description || '',
+      size: team.size,
+      yearsWorking: Number(team.yearsWorkingTogether) || 0,
+      cohesionScore: 75,
       successfulProjects: 0,
       clientSatisfaction: 0,
       openToLiftout: true,
       createdBy: session.user.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      members: membersWithIds,
+      createdAt: team.createdAt.toISOString(),
+      updatedAt: team.updatedAt.toISOString(),
+      members: team.members.map(m => ({
+        id: m.id,
+        name: `${m.user.firstName} ${m.user.lastName}`,
+        role: m.role || 'Member',
+        experience: 0,
+        skills: [],
+      })),
       achievements: [],
-      industry: industry.trim(),
-      location: location.trim(),
+      industry: team.industry || '',
+      location: team.location || '',
       availability: 'Open to strategic opportunities',
-      compensation: {
-        range: compensation.range.trim(),
-        equity: Boolean(compensation.equity),
-        benefits: compensation.benefits ? compensation.benefits.trim() : 'Standard'
-      }
+      compensation: { range: '', equity: false, benefits: '' },
     };
+    addTeam(memoryTeam as Team);
 
-    addTeam(newTeam as Team);
-    
-    return NextResponse.json({ 
-      team: newTeam,
-      message: 'Team profile created successfully' 
+    return NextResponse.json({
+      team: {
+        id: team.id,
+        name: team.name,
+        description: team.description,
+        industry: team.industry,
+        location: team.location,
+        size: team.size,
+        yearsWorkingTogether: team.yearsWorkingTogether,
+        members: team.members,
+      },
+      message: 'Team profile created successfully'
     }, { status: 201 });
-    
+
   } catch (error) {
     console.error('Team creation error:', error);
-    return NextResponse.json({ 
-      error: 'Invalid request data' 
-    }, { status: 400 });
+    return NextResponse.json({
+      error: 'Failed to create team. Please try again.'
+    }, { status: 500 });
   }
 }

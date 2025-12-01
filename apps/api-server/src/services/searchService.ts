@@ -1,5 +1,4 @@
 import { prisma } from '../lib/prisma';
-import { Prisma } from '@prisma/client';
 
 export interface SearchResult {
   type: 'opportunity' | 'team' | 'company';
@@ -61,7 +60,7 @@ class SearchService {
     text: string,
     queryTerms: string[],
     field: string,
-    maxSnippetLength: number = 150
+    _maxSnippetLength: number = 150
   ): { field: string; snippet: string }[] {
     if (!text) return [];
 

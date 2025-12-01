@@ -185,19 +185,30 @@ export function SkillsExperience({ onComplete, onSkip }: SkillsExperienceProps) 
     setIsSubmitting(true);
 
     try {
-      const fullData = {
-        ...data,
-        skills: selectedSkills,
-      };
+      // Save skills and experience to API
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          yearsExperience: data.yearsOfExperience,
+          skills: selectedSkills,
+          certifications: data.certifications || [],
+          achievements: data.achievements?.map((a: { title: string; description: string }) =>
+            `${a.title}: ${a.description}`
+          ).join('\n') || '',
+        }),
+      });
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save skills');
+      }
 
-      console.log('Skills & Experience data:', fullData);
       toast.success('Skills and experience saved!');
       onComplete();
     } catch (error) {
-      toast.error('Failed to save');
+      console.error('Skills save error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save');
     } finally {
       setIsSubmitting(false);
     }

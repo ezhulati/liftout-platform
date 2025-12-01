@@ -144,16 +144,33 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
     setIsSubmitting(true);
 
     try {
-      // In a real app, this would save to your API
-      console.log('Profile data:', data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Save profile to API
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          location: data.location,
+          title: data.title,
+          bio: data.bio,
+          linkedin: data.linkedinUrl,
+          yearsExperience: data.experience?.totalYears,
+          companyName: data.experience?.currentCompany,
+          position: data.experience?.currentRole,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save profile');
+      }
+
       toast.success('Profile saved successfully!');
       onComplete();
     } catch (error) {
-      toast.error('Failed to save profile');
+      console.error('Profile save error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save profile');
     } finally {
       setIsSubmitting(false);
     }

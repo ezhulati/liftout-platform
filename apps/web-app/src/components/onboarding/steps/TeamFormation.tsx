@@ -108,14 +108,69 @@ export function TeamFormation({ onComplete, onSkip }: TeamFormationProps) {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Create team via API - format data to match API expectations
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.teamName,
+          description: data.description,
+          industry: data.industry,
+          location: 'Remote', // Default for onboarding
+          members: [
+            // Create placeholder members based on team size
+            // The team lead is the current user
+            {
+              name: 'Team Lead',
+              role: 'Team Lead',
+              experience: data.yearsWorking,
+              skills: ['Leadership', 'Team Management'],
+            },
+            // Add invited members as placeholders
+            ...invitedMembers.map((member, index) => ({
+              name: `Invited Member ${index + 1}`,
+              role: 'Team Member',
+              experience: 2,
+              skills: ['Collaboration'],
+              email: member.email,
+            })),
+          ],
+          compensation: {
+            range: 'Competitive',
+            equity: false,
+            benefits: 'Standard',
+          },
+        }),
+      });
 
-      console.log('Team data:', data, 'Invited members:', invitedMembers);
-      toast.success('Team created successfully! Invitations sent to team members.');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create team');
+      }
+
+      const result = await response.json();
+
+      // Send invitations if there are any
+      if (invitedMembers.length > 0) {
+        try {
+          await fetch('/api/teams/invitations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              teamId: result.team.id,
+              emails: invitedMembers.map(m => m.email),
+            }),
+          });
+        } catch (inviteError) {
+          console.error('Failed to send some invitations:', inviteError);
+        }
+      }
+
+      toast.success('Team created successfully!' + (invitedMembers.length > 0 ? ' Invitations sent to team members.' : ''));
       onComplete();
     } catch (error) {
-      toast.error('Failed to create team');
+      console.error('Team creation error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create team');
     } finally {
       setIsSubmitting(false);
     }
@@ -130,13 +185,26 @@ export function TeamFormation({ onComplete, onSkip }: TeamFormationProps) {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Join team via API
+      const response = await fetch('/api/teams/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inviteCode: joinCode.trim(),
+        }),
+      });
 
-      toast.success('Successfully joined the team!');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Invalid invite code');
+      }
+
+      const result = await response.json();
+      toast.success(result.message || 'Successfully joined the team!');
       onComplete();
     } catch (error) {
-      toast.error('Invalid invite code');
+      console.error('Join team error:', error);
+      toast.error(error instanceof Error ? error.message : 'Invalid invite code');
     } finally {
       setIsSubmitting(false);
     }

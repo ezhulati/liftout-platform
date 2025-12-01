@@ -169,14 +169,55 @@ export function LiftoutPreferences({ onComplete, onSkip }: LiftoutPreferencesPro
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Map availability to API format
+      const availabilityMap: Record<string, 'available' | 'open_to_opportunities' | 'not_available'> = {
+        'immediately': 'available',
+        '1-3_months': 'open_to_opportunities',
+        '3-6_months': 'open_to_opportunities',
+        '6+_months': 'open_to_opportunities',
+        'exploring': 'not_available',
+      };
 
-      console.log('Liftout preferences:', data);
+      // Map location preference to API format
+      const remoteMap: Record<string, 'remote' | 'hybrid' | 'onsite'> = {
+        'remote': 'remote',
+        'hybrid': 'hybrid',
+        'onsite': 'onsite',
+        'flexible': 'hybrid',
+      };
+
+      // Save preferences to API
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          availabilityStatus: availabilityMap[data.availability] || 'open_to_opportunities',
+          remotePreference: remoteMap[data.locationPreference] || 'hybrid',
+          salaryExpectationMin: data.salaryMin,
+          salaryExpectationMax: data.salaryMax,
+          willingToRelocate: data.relocationWillingness || false,
+          searchPreferences: {
+            companySizes: data.companySize || [],
+            industries: data.industryPreferences || [],
+            priorities: data.priorities || [],
+            dealbreakers: data.dealbreakers || [],
+            preferredLocations: data.preferredLocations || [],
+            compensationType: data.compensationType,
+            equityImportance: data.equityImportance,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save preferences');
+      }
+
       toast.success('Preferences saved! We\'ll match you with relevant opportunities.');
       onComplete();
     } catch (error) {
-      toast.error('Failed to save preferences');
+      console.error('Preferences save error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save preferences');
     } finally {
       setIsSubmitting(false);
     }

@@ -124,16 +124,36 @@ export function CompanyProfileSetup({ onComplete, onSkip }: CompanyProfileSetupP
     setIsSubmitting(true);
 
     try {
-      // In a real app, this would save to your API
-      console.log('Company profile data:', data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Save company profile to API
+      const response = await fetch('/api/company/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyName: data.companyName,
+          description: data.description,
+          industry: data.industry,
+          size: data.size,
+          location: data.location,
+          website: data.website,
+          founded: data.founded,
+          culture: {
+            values: data.culture.values,
+            workStyle: data.culture.workStyle,
+            benefits: data.culture.benefits,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save company profile');
+      }
+
       toast.success('Company profile saved successfully!');
       onComplete();
     } catch (error) {
-      toast.error('Failed to save company profile');
+      console.error('Company profile save error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save company profile');
     } finally {
       setIsSubmitting(false);
     }
