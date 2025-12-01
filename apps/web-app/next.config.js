@@ -145,9 +145,10 @@ const sentryWebpackPluginOptions = {
 
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: true,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
@@ -177,6 +178,11 @@ const sentryWebpackPluginOptions = {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: false,
+
+  // Don't fail the build if source maps fail to upload
+  errorHandler: (err) => {
+    console.warn('Sentry source maps upload warning:', err.message);
+  },
 };
 
 // Only wrap with Sentry if DSN is configured
