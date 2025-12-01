@@ -11,6 +11,7 @@ import {
   BriefcaseIcon,
   AcademicCapIcon,
   CheckIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
 
@@ -377,14 +378,19 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
             </div>
 
             {/* Common skills suggestions */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-text-tertiary">Suggestions:</span>
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-text-tertiary mr-1">Suggestions:</span>
               {commonSkills.slice(0, 12).map((skill) => (
                 <button
                   key={skill}
                   type="button"
                   onClick={() => addSkill(skill)}
-                  className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-bg-alt text-text-secondary hover:bg-bg-elevated"
+                  disabled={selectedSkills.includes(skill)}
+                  className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all min-h-[36px] ${
+                    selectedSkills.includes(skill)
+                      ? 'bg-navy-100 text-navy-600 cursor-not-allowed opacity-50'
+                      : 'bg-bg-elevated text-text-secondary hover:bg-navy-50 hover:text-navy border border-border hover:border-navy/30'
+                  }`}
                 >
                   {skill}
                 </button>
@@ -393,22 +399,28 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
 
             {/* Selected skills */}
             {selectedSkills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedSkills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-navy-100 text-navy-800"
-                  >
-                    {skill}
-                    <button
-                      type="button"
-                      onClick={() => removeSkill(skill)}
-                      className="ml-2 text-navy hover:text-navy-hover"
+              <div className="mt-4 p-4 bg-navy-50/50 rounded-lg border border-navy/10">
+                <p className="text-xs font-medium text-navy-600 mb-3">
+                  Selected skills ({selectedSkills.length})
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedSkills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-navy text-white"
                     >
-                      ×
-                    </button>
-                  </span>
-                ))}
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => removeSkill(skill)}
+                        className="ml-2 hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                        aria-label={`Remove ${skill}`}
+                      >
+                        <XMarkIcon className="h-3.5 w-3.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -420,30 +432,33 @@ export function ProfileSetup({ onComplete, onSkip }: ProfileSetupProps) {
         {/* Interests */}
         <div>
           <label className="label-text">Professional interests *</label>
-          <p className="text-sm text-text-tertiary mb-3">
+          <p className="text-sm text-text-tertiary mb-4">
             What industries or types of work interest you?
           </p>
-          <div className="flex flex-wrap gap-2">
-            {commonInterests.map((interest) => (
-              <button
-                key={interest}
-                type="button"
-                onClick={() => toggleInterest(interest)}
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors min-h-9 ${
-                  selectedInterests.includes(interest)
-                    ? 'bg-success-light text-success-dark border-2 border-success/30'
-                    : 'bg-bg-alt text-text-secondary border-2 border-transparent hover:bg-success-light/50'
-                }`}
-              >
-                {selectedInterests.includes(interest) && (
-                  <CheckIcon className="h-4 w-4 mr-1.5" />
-                )}
-                {interest}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-3">
+            {commonInterests.map((interest) => {
+              const isSelected = selectedInterests.includes(interest);
+              return (
+                <button
+                  key={interest}
+                  type="button"
+                  onClick={() => toggleInterest(interest)}
+                  className={`inline-flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all min-h-[44px] ${
+                    isSelected
+                      ? 'bg-navy text-white shadow-sm'
+                      : 'bg-bg-surface text-text-secondary border-2 border-border hover:border-navy/40 hover:bg-navy-50'
+                  }`}
+                >
+                  {isSelected && (
+                    <CheckIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  )}
+                  {interest}
+                </button>
+              );
+            })}
           </div>
           {errors.interests && (
-            <p className="mt-1 text-sm text-error">{errors.interests.message}</p>
+            <p className="mt-2 text-sm text-error">{errors.interests.message}</p>
           )}
         </div>
 

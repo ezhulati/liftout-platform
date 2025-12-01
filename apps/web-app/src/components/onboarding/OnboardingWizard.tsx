@@ -167,42 +167,72 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
           </div>
         </div>
 
-        {/* Step Navigation */}
-        <div className="bg-bg-surface border-b border-border px-6 py-4">
-          <div className="max-w-4xl mx-auto">
-            <nav className="flex space-x-4">
+        {/* Step Navigation - Clean horizontal stepper */}
+        <div className="bg-bg-surface border-b border-border px-6 py-6">
+          <div className="max-w-3xl mx-auto">
+            <nav className="flex items-center justify-between">
               {steps.map((step, index) => {
                 const isCompleted = progress.completedSteps.includes(step.id);
                 const isCurrent = step.id === currentStep.id;
                 const isAccessible = index <= currentStepIndex || isCompleted;
+                const isLast = index === steps.length - 1;
 
                 return (
-                  <button
-                    key={step.id}
-                    onClick={() => isAccessible && goToStep(step.id)}
-                    disabled={!isAccessible}
-                    className={`flex items-center space-x-2 px-4 py-3 min-h-12 rounded-lg text-base font-medium transition-colors ${
-                      isCurrent
-                        ? 'bg-navy-50 text-navy border-2 border-navy/20'
-                        : isCompleted
-                        ? 'bg-success-light text-success-dark hover:bg-success-light/80'
-                        : isAccessible
-                        ? 'bg-bg-alt text-text-secondary hover:bg-bg-elevated'
-                        : 'bg-bg-alt/50 text-text-tertiary cursor-not-allowed'
-                    }`}
-                  >
-                    {isCompleted ? (
-                      <CheckIcon className="h-5 w-5" />
-                    ) : (
-                      <span className="w-5 h-5 rounded-full border-2 border-current" />
-                    )}
-                    <span className="hidden sm:inline">{step.title}</span>
-                    {step.required && (
-                      <span className="text-base bg-error-light text-error px-2 rounded">
-                        Required
+                  <div key={step.id} className="flex items-center flex-1">
+                    {/* Step indicator */}
+                    <button
+                      onClick={() => isAccessible && goToStep(step.id)}
+                      disabled={!isAccessible}
+                      className="flex flex-col items-center group"
+                    >
+                      {/* Circle with number/check */}
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                          isCompleted
+                            ? 'bg-success text-white'
+                            : isCurrent
+                            ? 'bg-navy text-white ring-4 ring-navy/20'
+                            : isAccessible
+                            ? 'bg-bg-elevated text-text-secondary border-2 border-border group-hover:border-navy/50'
+                            : 'bg-bg-alt text-text-tertiary border-2 border-border/50'
+                        }`}
+                      >
+                        {isCompleted ? (
+                          <CheckIcon className="h-5 w-5" />
+                        ) : (
+                          <span>{index + 1}</span>
+                        )}
+                      </div>
+                      {/* Step label */}
+                      <span
+                        className={`mt-2 text-xs font-medium text-center max-w-[80px] leading-tight ${
+                          isCurrent
+                            ? 'text-navy'
+                            : isCompleted
+                            ? 'text-success-dark'
+                            : 'text-text-tertiary'
+                        }`}
+                      >
+                        {step.title}
                       </span>
+                      {/* Required badge */}
+                      {step.required && !isCompleted && (
+                        <span className="mt-1 text-[10px] font-medium text-error bg-error/10 px-1.5 py-0.5 rounded">
+                          Required
+                        </span>
+                      )}
+                    </button>
+                    {/* Connector line */}
+                    {!isLast && (
+                      <div className="flex-1 mx-2">
+                        <div
+                          className={`h-0.5 transition-colors ${
+                            isCompleted ? 'bg-success' : 'bg-border'
+                          }`}
+                        />
+                      </div>
                     )}
-                  </button>
+                  </div>
                 );
               })}
             </nav>
@@ -210,19 +240,19 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 px-6 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-6">
+        <div className="flex-1 px-6 py-8 overflow-y-auto">
+          <div className="max-w-xl mx-auto">
+            <div className="mb-8">
               <h2 className="text-xl font-bold text-text-primary mb-2">
                 {currentStep.title}
               </h2>
-              <p className="text-base text-text-secondary">
+              <p className="text-base text-text-secondary leading-relaxed">
                 {currentStep.description}
               </p>
             </div>
 
             {/* Step Component */}
-            <div className="card p-6">
+            <div className="bg-bg-surface rounded-xl border border-border p-8">
               {renderStepComponent()}
             </div>
           </div>
