@@ -189,7 +189,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
   // Welcome screen for first-time users
   if (showWelcome && currentStepIndex === 0) {
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-gradient-to-br from-navy-50 via-bg to-bg">
+      <div className="fixed inset-0 z-[100] overflow-y-auto bg-gradient-to-br from-navy-50 via-bg to-bg">
         <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
           <div className="max-w-lg w-full text-center">
             {/* Animated icon */}
@@ -261,7 +261,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
   }
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg">
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-bg">
       <div className="min-h-screen flex flex-col">
         {/* Simplified Header with progress */}
         <div className="bg-bg-surface border-b border-border px-6 py-4">

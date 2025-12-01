@@ -4,7 +4,7 @@ import { AppSidebar } from '@/components/app/AppSidebar';
 import { AppHeader } from '@/components/app/AppHeader';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { DEMO_DATA, getDemoDataForUser } from '@/lib/demo-accounts';
 
@@ -15,6 +15,10 @@ export default function AppLayout({
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Fullscreen routes that don't show sidebar/header
+  const isFullscreenRoute = pathname?.startsWith('/app/onboarding');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -72,6 +76,17 @@ export default function AppLayout({
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+
+  // Fullscreen routes render without sidebar/header
+  if (isFullscreenRoute) {
+    return (
+      <div className="min-h-screen bg-bg">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-bg">
