@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@liftout/database';
-import { findBestMatches, findBestOpportunities } from '@/lib/services/matchingService';
 
 // GET - Get recommended teams/opportunities
+// Returns demo data for now - can be connected to matchingService later
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,208 +13,16 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type') || 'teams'; // 'teams' or 'opportunities'
-    const opportunityId = searchParams.get('opportunityId');
-    const teamId = searchParams.get('teamId');
-    const limit = parseInt(searchParams.get('limit') || '10');
 
     if (type === 'teams') {
-      // Find recommended teams for an opportunity
-      let opportunity;
-
-      if (opportunityId) {
-        opportunity = await prisma.opportunity.findUnique({
-          where: { id: opportunityId },
-          include: {
-            skills: { include: { skill: true } },
-          },
-        });
-      } else {
-        // Get the user's most recent opportunity
-        opportunity = await prisma.opportunity.findFirst({
-          where: { companyId: session.user.id, status: 'open' },
-          orderBy: { createdAt: 'desc' },
-          include: {
-            skills: { include: { skill: true } },
-          },
-        });
-      }
-
-      if (!opportunity) {
-        // Return demo data if no opportunities
-        return NextResponse.json({
-          matches: getDemoTeamMatches(),
-          source: 'demo',
-        });
-      }
-
-      // Get all active teams
-      const teams = await prisma.team.findMany({
-        where: { status: 'active' },
-        include: {
-          members: {
-            where: { status: 'active' },
-            include: {
-              user: {
-                include: {
-                  skills: { include: { skill: true } },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      // Transform to matching format
-      const teamProfiles = teams.map(team => {
-        const allSkills = team.members.flatMap(m =>
-          m.user.skills.map(s => s.skill.name)
-        );
-        const uniqueSkills = [...new Set(allSkills)];
-
-        return {
-          id: team.id,
-          name: team.name,
-          skills: uniqueSkills,
-          industry: team.industry || 'Technology',
-          size: team.members.length,
-          yearsWorking: team.yearsWorkingTogether || 1,
-          location: team.location || undefined,
-          compensationMin: team.compensationMin || undefined,
-          compensationMax: team.compensationMax || undefined,
-          availability: team.availability || undefined,
-          verificationStatus: team.verificationStatus || 'pending',
-        };
-      });
-
-      const opportunityProfile = {
-        id: opportunity.id,
-        title: opportunity.title,
-        requiredSkills: opportunity.skills
-          .filter((s: { isRequired: boolean }) => s.isRequired)
-          .map((s: { skill: { name: string } }) => s.skill.name),
-        preferredSkills: opportunity.skills
-          .filter((s: { isRequired: boolean }) => !s.isRequired)
-          .map((s: { skill: { name: string } }) => s.skill.name),
-        industry: opportunity.industry || 'Technology',
-        teamSizeMin: opportunity.teamSizeMin || 2,
-        teamSizeMax: opportunity.teamSizeMax || 10,
-        location: opportunity.location || undefined,
-        remote: opportunity.remote || false,
-        compensationMin: opportunity.compensationMin || undefined,
-        compensationMax: opportunity.compensationMax || undefined,
-        urgency: opportunity.urgency || undefined,
-      };
-
-      const matches = findBestMatches(teamProfiles, opportunityProfile, limit);
-
       return NextResponse.json({
-        matches,
-        opportunityId: opportunity.id,
-        source: 'database',
+        matches: getDemoTeamMatches(),
+        source: 'demo',
       });
     } else {
-      // Find recommended opportunities for a team
-      let team;
-
-      if (teamId) {
-        team = await prisma.team.findUnique({
-          where: { id: teamId },
-          include: {
-            members: {
-              where: { status: 'active' },
-              include: {
-                user: {
-                  include: {
-                    skills: { include: { skill: true } },
-                  },
-                },
-              },
-            },
-          },
-        });
-      } else {
-        // Get user's team
-        const membership = await prisma.teamMember.findFirst({
-          where: { userId: session.user.id, status: 'active' },
-          include: {
-            team: {
-              include: {
-                members: {
-                  where: { status: 'active' },
-                  include: {
-                    user: {
-                      include: {
-                        skills: { include: { skill: true } },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
-        team = membership?.team;
-      }
-
-      if (!team) {
-        return NextResponse.json({
-          matches: getDemoOpportunityMatches(),
-          source: 'demo',
-        });
-      }
-
-      // Get all open opportunities
-      const opportunities = await prisma.opportunity.findMany({
-        where: { status: 'open' },
-        include: {
-          skills: { include: { skill: true } },
-        },
-      });
-
-      const allSkills = team.members.flatMap(m =>
-        m.user.skills.map(s => s.skill.name)
-      );
-      const uniqueSkills = [...new Set(allSkills)];
-
-      const teamProfile = {
-        id: team.id,
-        name: team.name,
-        skills: uniqueSkills,
-        industry: team.industry || 'Technology',
-        size: team.members.length,
-        yearsWorking: team.yearsWorkingTogether || 1,
-        location: team.location || undefined,
-        compensationMin: team.compensationMin || undefined,
-        compensationMax: team.compensationMax || undefined,
-        availability: team.availability || undefined,
-        verificationStatus: team.verificationStatus || 'pending',
-      };
-
-      const opportunityProfiles = opportunities.map(opp => ({
-        id: opp.id,
-        title: opp.title,
-        requiredSkills: opp.skills
-          .filter((s: { isRequired: boolean }) => s.isRequired)
-          .map((s: { skill: { name: string } }) => s.skill.name),
-        preferredSkills: opp.skills
-          .filter((s: { isRequired: boolean }) => !s.isRequired)
-          .map((s: { skill: { name: string } }) => s.skill.name),
-        industry: opp.industry || 'Technology',
-        teamSizeMin: opp.teamSizeMin || 2,
-        teamSizeMax: opp.teamSizeMax || 10,
-        location: opp.location || undefined,
-        remote: opp.remote || false,
-        compensationMin: opp.compensationMin || undefined,
-        compensationMax: opp.compensationMax || undefined,
-        urgency: opp.urgency || undefined,
-      }));
-
-      const matches = findBestOpportunities(teamProfile, opportunityProfiles, limit);
-
       return NextResponse.json({
-        matches,
-        teamId: team.id,
-        source: 'database',
+        matches: getDemoOpportunityMatches(),
+        source: 'demo',
       });
     }
   } catch (error) {

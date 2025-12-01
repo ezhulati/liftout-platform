@@ -15,6 +15,8 @@ export interface TeamApplication {
   opportunityId: string;
   submittedById: string;
   coverLetter: string | null;
+  teamFitExplanation: string | null;
+  questionsForCompany: string | null;
   status: 'submitted' | 'reviewing' | 'interviewing' | 'accepted' | 'rejected' | 'withdrawn';
   submittedAt: string;
   reviewedAt: string | null;
@@ -224,6 +226,8 @@ export function useCreateApplication() {
           opportunityId: input.opportunityId,
           submittedById: session?.user?.id || 'demo-user',
           coverLetter: input.coverLetter || null,
+          teamFitExplanation: null,
+          questionsForCompany: null,
           status: 'submitted',
           submittedAt: new Date().toISOString(),
           reviewedAt: null,

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
             { opportunity: { companyId: session.user.id } },
           ],
         },
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
         take: limit,
         include: {
           team: { select: { name: true } },
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
           type: 'application',
           title: `Application ${app.status}`,
           description: `${app.team.name} applied for ${app.opportunity.title}`,
-          timestamp: app.updatedAt,
+          timestamp: app.createdAt,
           metadata: {
             applicationId: app.id,
             teamId: app.teamId,
@@ -121,24 +121,25 @@ export async function GET(request: NextRequest) {
         take: limit,
         include: {
           conversation: { select: { subject: true } },
-          sender: { select: { name: true } },
+          sender: { select: { firstName: true, lastName: true } },
         },
       });
 
       messages.forEach(msg => {
+        const senderName = msg.sender ? `${msg.sender.firstName} ${msg.sender.lastName}` : null;
         activities.push({
           id: `message-${msg.id}`,
           type: 'message',
           title: 'New Message',
-          description: msg.sender
-            ? `${msg.sender.name}: ${msg.content.slice(0, 100)}${msg.content.length > 100 ? '...' : ''}`
+          description: senderName
+            ? `${senderName}: ${msg.content.slice(0, 100)}${msg.content.length > 100 ? '...' : ''}`
             : `System message in ${msg.conversation.subject}`,
           timestamp: msg.createdAt,
           metadata: {
             messageId: msg.id,
             conversationId: msg.conversationId,
             subject: msg.conversation.subject,
-            senderName: msg.sender?.name,
+            senderName,
           },
         });
       });
@@ -153,7 +154,7 @@ export async function GET(request: NextRequest) {
             { toType: 'team', toId: { in: teamIds } },
           ],
         },
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
         take: limit,
       });
 
@@ -165,7 +166,7 @@ export async function GET(request: NextRequest) {
           description: eoi.fromId === session.user.id
             ? `Your EOI is ${eoi.status}`
             : `Received a new expression of interest`,
-          timestamp: eoi.updatedAt,
+          timestamp: eoi.createdAt,
           metadata: {
             eoiId: eoi.id,
             status: eoi.status,

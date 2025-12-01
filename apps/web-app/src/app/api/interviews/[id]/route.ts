@@ -108,7 +108,7 @@ export async function DELETE(
         interviewDuration: null,
         interviewLocation: null,
         interviewNotes: null,
-        status: 'in_review',
+        status: 'reviewing',
       },
     });
 
@@ -123,7 +123,7 @@ export async function DELETE(
       for (const member of teamMembers) {
         notifications.push({
           userId: member.userId,
-          type: 'interview_cancelled',
+          type: 'application_update' as const,
           title: 'Interview Cancelled',
           message: `The interview for ${application.opportunity.title} has been cancelled`,
           data: { applicationId: params.id },
@@ -132,7 +132,7 @@ export async function DELETE(
     } else {
       notifications.push({
         userId: application.opportunity.companyId,
-        type: 'interview_cancelled',
+        type: 'application_update' as const,
         title: 'Interview Cancelled',
         message: `${application.team.name} has cancelled the interview`,
         data: { applicationId: params.id },

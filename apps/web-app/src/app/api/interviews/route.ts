@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
       if (member.userId !== session.user.id) {
         notifications.push({
           userId: member.userId,
-          type: 'interview_scheduled',
+          type: 'application_update' as const,
           title: 'Interview Scheduled',
           message: `An interview has been scheduled for ${application.opportunity.title}`,
           data: { applicationId, scheduledAt },
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
     if (!isCompanyOwner) {
       notifications.push({
         userId: application.opportunity.companyId,
-        type: 'interview_scheduled',
+        type: 'application_update' as const,
         title: 'Interview Scheduled',
         message: `${application.team.name} has confirmed an interview`,
         data: { applicationId, scheduledAt },

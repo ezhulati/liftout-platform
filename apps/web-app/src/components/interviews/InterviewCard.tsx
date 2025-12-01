@@ -12,9 +12,10 @@ import {
   PencilIcon,
   TrashIcon,
   ArrowTopRightOnSquareIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { InterviewScheduler } from './InterviewScheduler';
+import toast from 'react-hot-toast';
 
 interface Interview {
   id: string;
@@ -234,21 +235,159 @@ export function InterviewCard({ interview, viewType }: InterviewCardProps) {
 
       {/* Reschedule Modal */}
       {showReschedule && (
-        <InterviewScheduler
-          isOpen={showReschedule}
+        <RescheduleModal
+          interview={interview}
           onClose={() => setShowReschedule(false)}
-          applicationId={interview.id}
-          teamName={interview.teamName}
-          opportunityTitle={interview.opportunityTitle}
-          existingInterview={{
-            scheduledAt: interview.scheduledAt,
-            format: interview.format,
-            duration: interview.duration,
-            location: interview.location,
-            notes: interview.notes,
-          }}
         />
       )}
     </>
+  );
+}
+
+interface RescheduleModalProps {
+  interview: Interview;
+  onClose: () => void;
+}
+
+function RescheduleModal({ interview, onClose }: RescheduleModalProps) {
+  const queryClient = useQueryClient();
+  const [scheduledAt, setScheduledAt] = useState(interview.scheduledAt.slice(0, 16));
+  const [format, setFormat] = useState(interview.format);
+  const [duration, setDuration] = useState(interview.duration.toString());
+  const [location, setLocation] = useState(interview.location || '');
+  const [notes, setNotes] = useState(interview.notes || '');
+
+  const reschedule = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/interviews/${interview.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scheduledAt: new Date(scheduledAt).toISOString(),
+          format,
+          duration: parseInt(duration),
+          location: location || undefined,
+          notes: notes || undefined,
+        }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to reschedule interview');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['interviews'] });
+      toast.success('Interview rescheduled successfully');
+      onClose();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-bg-surface rounded-xl shadow-xl max-w-md w-full">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-text-primary">Reschedule Interview</h3>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-md hover:bg-bg-elevated text-text-tertiary hover:text-text-primary"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-1">
+              Date & Time
+            </label>
+            <input
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={(e) => setScheduledAt(e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-navy"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-1">
+                Format
+              </label>
+              <select
+                value={format}
+                onChange={(e) => setFormat(e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-navy"
+              >
+                <option value="video">Video Call</option>
+                <option value="in-person">In Person</option>
+                <option value="phone">Phone Call</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text-secondary mb-1">
+                Duration
+              </label>
+              <select
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-navy"
+              >
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-1">
+              Location / Meeting Link
+            </label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g., https://zoom.us/... or Office address"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-navy"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-1">
+              Notes
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              placeholder="Any notes or preparation instructions..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-navy resize-none"
+            />
+          </div>
+        </div>
+
+        <div className="px-6 py-4 border-t border-border flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => reschedule.mutate()}
+            disabled={reschedule.isPending}
+            className="btn-primary px-4 py-2 text-sm"
+          >
+            {reschedule.isPending ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
