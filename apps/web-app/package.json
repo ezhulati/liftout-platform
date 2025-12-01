@@ -16,6 +16,7 @@
     "migrate": "tsx src/scripts/run-migrations.ts"
   },
   "dependencies": {
+    "@liftout/database": "workspace:*",
     "@anthropic-ai/sdk": "^0.71.0",
     "@headlessui/react": "^1.7.0",
     "@heroicons/react": "^2.0.0",
