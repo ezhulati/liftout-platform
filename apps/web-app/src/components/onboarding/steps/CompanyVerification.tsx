@@ -151,13 +151,40 @@ export function CompanyVerification({ onComplete, onSkip }: CompanyVerificationP
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Prepare documents list
+      const documents = Object.entries(uploadedDocs).map(([docType, doc]) => ({
+        id: doc.id,
+        name: doc.name,
+        type: docType,
+        uploadedAt: new Date().toISOString(),
+      }));
+
+      // Submit verification to API
+      const response = await fetch('/api/company/verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyRegistrationNumber: data.companyRegistrationNumber,
+          taxId: data.taxId,
+          businessAddress: data.businessAddress,
+          contactName: data.contactName,
+          contactTitle: data.contactTitle,
+          contactEmail: data.contactEmail,
+          contactPhone: data.contactPhone,
+          documents,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit verification');
+      }
 
       toast.success('Verification documents submitted successfully! We\'ll review them within 2 business days.');
       onComplete();
     } catch (error) {
-      toast.error('Failed to submit verification');
+      console.error('Verification submit error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to submit verification');
     } finally {
       setIsSubmitting(false);
     }

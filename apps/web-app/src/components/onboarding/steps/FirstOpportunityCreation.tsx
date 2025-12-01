@@ -134,14 +134,39 @@ export function FirstOpportunityCreation({ onComplete, onSkip }: FirstOpportunit
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Create opportunity via API
+      const response = await fetch('/api/opportunities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.description,
+          industry: data.industry,
+          location: data.location,
+          locationType: data.locationType,
+          teamSizeMin: data.teamSize.min,
+          teamSizeMax: data.teamSize.max,
+          compensationType: data.compensationType,
+          compensationMin: data.compensationRange.min,
+          compensationMax: data.compensationRange.max,
+          timeline: data.timeline,
+          liftoutType: data.liftoutType,
+          requirements: data.requirements,
+          benefits: data.benefits,
+          status: 'active',
+        }),
+      });
 
-      console.log('Opportunity data:', data);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create opportunity');
+      }
+
       toast.success('Your first opportunity has been created! Teams can now discover it.');
       onComplete();
     } catch (error) {
-      toast.error('Failed to create opportunity');
+      console.error('Opportunity creation error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create opportunity');
     } finally {
       setIsSubmitting(false);
     }
