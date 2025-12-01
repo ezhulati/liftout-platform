@@ -118,9 +118,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { teamId, opportunityId, coverLetter, teamFitExplanation, questionsForCompany } = body;
 
-    // Verify opportunity exists
+    // Verify opportunity exists and get company info
     const opportunity = await prisma.opportunity.findUnique({
       where: { id: opportunityId },
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            users: {
+              where: { role: { in: ['owner', 'admin'] } },
+              select: { userId: true },
+              take: 1,
+            },
+          },
+        },
+      },
     });
 
     if (!opportunity) {
@@ -172,6 +185,42 @@ export async function POST(request: NextRequest) {
         opportunity: { select: { id: true, title: true } },
       },
     });
+
+    // Create a conversation for this application
+    const companyUserId = opportunity.company.users[0]?.userId;
+    if (companyUserId) {
+      try {
+        const conversation = await prisma.conversation.create({
+          data: {
+            teamId: actualTeamId,
+            companyId: opportunity.company.id,
+            opportunityId,
+            subject: `Re: ${application.team.name} - ${application.opportunity.title} Application`,
+            status: 'active',
+            participants: {
+              create: [
+                { userId: session.user.id, role: 'member' },
+                { userId: companyUserId, role: 'member' },
+              ],
+            },
+            messages: {
+              create: {
+                senderId: session.user.id,
+                senderType: 'team',
+                content: coverLetter
+                  ? `Application submitted:\n\n${coverLetter}`
+                  : `${application.team.name} has applied for the ${application.opportunity.title} position.`,
+                messageType: 'text',
+              },
+            },
+          },
+        });
+        console.log('Created conversation:', conversation.id);
+      } catch (convError) {
+        // Don't fail the application if conversation creation fails
+        console.error('Error creating conversation:', convError);
+      }
+    }
 
     return NextResponse.json({
       success: true,

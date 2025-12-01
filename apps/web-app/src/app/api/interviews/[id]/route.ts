@@ -6,10 +6,12 @@ import { prisma } from '@liftout/database';
 // PATCH - Update interview details
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const { id } = await params;
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -18,7 +20,7 @@ export async function PATCH(
     const { scheduledAt, format, duration, location, notes, status } = body;
 
     const application = await prisma.teamApplication.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         opportunity: { select: { companyId: true } },
       },
@@ -51,7 +53,7 @@ export async function PATCH(
     if (status) updateData.status = status;
 
     const updated = await prisma.teamApplication.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -65,16 +67,18 @@ export async function PATCH(
 // DELETE - Cancel interview
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const { id } = await params;
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const application = await prisma.teamApplication.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         opportunity: { select: { companyId: true, title: true } },
         team: { select: { name: true } },
@@ -101,7 +105,7 @@ export async function DELETE(
 
     // Clear interview details but keep application
     const updated = await prisma.teamApplication.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         interviewScheduledAt: null,
         interviewFormat: null,
@@ -126,7 +130,7 @@ export async function DELETE(
           type: 'application_update' as const,
           title: 'Interview Cancelled',
           message: `The interview for ${application.opportunity.title} has been cancelled`,
-          data: { applicationId: params.id },
+          data: { applicationId: id },
         });
       }
     } else {
@@ -135,7 +139,7 @@ export async function DELETE(
         type: 'application_update' as const,
         title: 'Interview Cancelled',
         message: `${application.team.name} has cancelled the interview`,
-        data: { applicationId: params.id },
+        data: { applicationId: id },
       });
     }
 
