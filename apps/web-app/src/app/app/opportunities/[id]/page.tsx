@@ -151,23 +151,21 @@ export default function OpportunityDetailPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          toType: 'company',
-          toId: opportunity.company.toLowerCase().replace(/\s+/g, '_'),
-          toName: opportunity.company,
           opportunityId: opportunity.id,
-          opportunityTitle: opportunity.title,
-          message: `I am interested in the ${opportunity.title} opportunity.`,
+          coverLetter: `Our team is interested in the "${opportunity.title}" opportunity at ${opportunity.company}.`,
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to express interest');
+        throw new Error(data.error || 'Failed to express interest');
       }
 
       toast.success('Interest expressed successfully!');
     } catch (error) {
       console.error('Error expressing interest:', error);
-      toast.error('Failed to express interest');
+      toast.error(error instanceof Error ? error.message : 'Failed to express interest');
     }
   };
 
