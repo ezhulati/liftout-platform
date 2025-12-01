@@ -12,6 +12,13 @@ import {
   PlusIcon,
   XMarkIcon,
   CheckIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
+  BuildingOfficeIcon,
+  MagnifyingGlassIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/contexts/AuthContext';
 import { FormField, RequiredFieldsNote, ButtonGroup, TextLink } from '@/components/ui';
@@ -45,6 +52,10 @@ const editTeamSchema = z.object({
   }),
   availability: z.string().min(1, 'Availability status is required'),
   openToLiftout: z.boolean(),
+  // Visibility settings
+  visibility: z.enum(['public', 'selective', 'private']).default('public'),
+  hideCurrentEmployer: z.boolean().default(false),
+  allowDiscovery: z.boolean().default(true),
 });
 
 type EditTeamFormData = z.infer<typeof editTeamSchema>;
@@ -136,6 +147,14 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
   // Update team mutation
   const updateTeamMutation = useMutation({
     mutationFn: async (data: EditTeamFormData) => {
+      // Map form visibility to API visibility (selective -> anonymous)
+      const visibilityMap: Record<string, string> = {
+        public: 'public',
+        selective: 'anonymous',
+        private: 'private',
+      };
+      const apiVisibility = visibilityMap[data.visibility] || 'public';
+
       // For demo users, save to localStorage
       if (isDemoUser) {
         const demoTeams = getDemoTeams();
@@ -143,6 +162,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
         const updatedTeam = {
           ...demoTeams[teamIndex],
           ...data,
+          visibility: apiVisibility,
           updatedAt: new Date().toISOString(),
         };
         if (teamIndex >= 0) {
@@ -154,12 +174,17 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
         return updatedTeam;
       }
 
+      // Use PATCH for visibility/privacy updates
       const response = await fetch(`/api/teams/${teamId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          visibility: apiVisibility,
+          isAnonymous: apiVisibility === 'anonymous',
+        }),
       });
 
       if (!response.ok) {
@@ -183,6 +208,14 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
   // Initialize form with existing team data
   useEffect(() => {
     if (team) {
+      // Map database visibility to form visibility
+      const visibilityMap: Record<string, 'public' | 'selective' | 'private'> = {
+        public: 'public',
+        anonymous: 'selective',
+        private: 'private',
+      };
+      const formVisibility = visibilityMap[team.visibility] || 'public';
+
       reset({
         name: team.name,
         description: team.description,
@@ -193,6 +226,9 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
         compensation: team.compensation,
         availability: team.availability,
         openToLiftout: team.openToLiftout,
+        visibility: formVisibility,
+        hideCurrentEmployer: team.metadata?.visibilitySettings?.hideCurrentEmployer ?? false,
+        allowDiscovery: team.metadata?.visibilitySettings?.allowDiscovery ?? true,
       });
     }
   }, [team, reset]);
@@ -521,6 +557,128 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
                 className="rounded border-border text-navy focus:ring-navy w-5 h-5"
               />
               <span className="text-text-secondary">Open to liftout opportunities</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Team Privacy & Visibility - Practical UI: single column, radio buttons */}
+        <div className="px-6 py-6 border-b border-border">
+          <h3 className="text-lg font-bold text-text-primary mb-2">Privacy and visibility</h3>
+          <p className="text-base text-text-secondary mb-6">
+            Control who can discover your team and what information they can see.
+          </p>
+
+          {/* Visibility Options - Practical UI: radio buttons stacked vertically */}
+          <fieldset className="space-y-3 mb-6" role="radiogroup" aria-label="Team visibility">
+            {[
+              {
+                value: 'public',
+                title: 'Public',
+                description: 'Visible to all users and search engines. Maximum exposure for liftout opportunities.',
+                icon: UserGroupIcon,
+              },
+              {
+                value: 'selective',
+                title: 'Selective (anonymous mode)',
+                description: 'Only visible to verified companies. Your identity is masked until you respond to interest.',
+                icon: ShieldCheckIcon,
+              },
+              {
+                value: 'private',
+                title: 'Private',
+                description: 'Only visible to team members. Companies cannot discover your team.',
+                icon: EyeSlashIcon,
+              },
+            ].map((option) => {
+              const isSelected = watch('visibility') === option.value;
+              return (
+                <label
+                  key={option.value}
+                  className={`relative flex items-start cursor-pointer rounded-lg border-2 p-4 min-h-[64px] transition-colors ${
+                    isSelected
+                      ? 'border-navy bg-navy-50'
+                      : 'border-border bg-bg-surface hover:border-navy-200'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    {...register('visibility')}
+                    value={option.value}
+                    className="sr-only"
+                  />
+                  {/* Radio indicator */}
+                  <div className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full border-2 flex items-center justify-center ${
+                    isSelected ? 'border-navy bg-navy' : 'border-border'
+                  }`}>
+                    {isSelected && (
+                      <div className="w-2 h-2 rounded-full bg-white" />
+                    )}
+                  </div>
+                  {/* Label content */}
+                  <div className="ml-4 flex-1">
+                    <div className="flex items-center gap-2">
+                      <option.icon className={`h-5 w-5 ${isSelected ? 'text-navy' : 'text-text-tertiary'}`} />
+                      <span className="text-base font-bold text-text-primary">{option.title}</span>
+                    </div>
+                    <p className="mt-1 text-base text-text-secondary">{option.description}</p>
+                  </div>
+                </label>
+              );
+            })}
+          </fieldset>
+
+          {/* Warning for private mode */}
+          {watch('visibility') === 'private' && (
+            <div className="bg-gold-50 border border-gold-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <ExclamationTriangleIcon className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-base font-bold text-gold-900">Limited visibility</p>
+                  <p className="mt-1 text-base text-gold-700">
+                    With private visibility, companies won't be able to discover your team through search or matching.
+                    This may significantly reduce your liftout opportunities.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Additional privacy controls - Practical UI: toggles for immediate effect */}
+          <div className="space-y-4">
+            <h4 className="text-base font-bold text-text-primary">Additional privacy controls</h4>
+
+            <label className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer min-h-[64px] transition-colors ${
+              watch('hideCurrentEmployer') ? 'border-navy bg-navy-50' : 'border-border bg-bg-surface hover:border-navy-200'
+            }`}>
+              <div className="flex items-start gap-3 mr-4">
+                <BuildingOfficeIcon className="h-5 w-5 mt-0.5 flex-shrink-0 text-text-tertiary" />
+                <div>
+                  <span className="text-base font-bold text-text-primary block">Hide current employer</span>
+                  <span className="text-base text-text-secondary mt-1 block">Don't show your team's current company to potential employers</span>
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                {...register('hideCurrentEmployer')}
+                className="rounded border-border text-navy focus:ring-navy w-5 h-5"
+              />
+            </label>
+
+            <label className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer min-h-[64px] transition-colors ${
+              watch('allowDiscovery') ? 'border-navy bg-navy-50' : 'border-border bg-bg-surface hover:border-navy-200'
+            }`}>
+              <div className="flex items-start gap-3 mr-4">
+                <MagnifyingGlassIcon className="h-5 w-5 mt-0.5 flex-shrink-0 text-text-tertiary" />
+                <div>
+                  <span className="text-base font-bold text-text-primary block">Allow discovery</span>
+                  <span className="text-base text-text-secondary mt-1 block">Let companies find your team through search and matching</span>
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                {...register('allowDiscovery')}
+                className="rounded border-border text-navy focus:ring-navy w-5 h-5"
+              />
             </label>
           </div>
         </div>

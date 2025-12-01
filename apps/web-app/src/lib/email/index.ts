@@ -671,6 +671,294 @@ export async function sendAccountDeletionEmail(params: {
   }
 }
 
+// ============================================
+// OFFER MADE EMAIL
+// ============================================
+
+export async function sendOfferMadeEmail(params: {
+  to: string | string[];
+  teamName: string;
+  opportunityTitle: string;
+  companyName: string;
+  compensation?: string;
+  startDate?: string;
+  equity?: string;
+  terms?: string;
+  applicationUrl: string;
+}): Promise<EmailResult> {
+  const { to, teamName, opportunityTitle, companyName, compensation, startDate, equity, terms, applicationUrl } = params;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Offer made to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    let offerDetailsHtml = '';
+    if (compensation || startDate || equity) {
+      const details = [];
+      if (compensation) details.push(`<p style="margin: 0 0 8px 0;"><strong>Compensation:</strong> ${compensation}</p>`);
+      if (startDate) details.push(`<p style="margin: 0 0 8px 0;"><strong>Start Date:</strong> ${startDate}</p>`);
+      if (equity) details.push(`<p style="margin: 0 0 8px 0;"><strong>Equity:</strong> ${equity}</p>`);
+      offerDetailsHtml = `
+        <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #10b981; margin: 20px 0;">
+          <p style="font-weight: 600; margin: 0 0 15px 0; color: #333;">Offer Details:</p>
+          ${details.join('')}
+        </div>
+      `;
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Offer received from ${companyName} for ${opportunityTitle}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #10b981; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">🎉 You've Received an Offer!</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
+              <p style="font-size: 16px;">Hi ${teamName},</p>
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                Great news! <strong>${companyName}</strong> has extended an offer to your team for the <strong>${opportunityTitle}</strong> opportunity.
+              </p>
+              ${offerDetailsHtml}
+              ${terms ? `
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="font-weight: 600; margin: 0 0 10px 0; color: #333;">Additional Terms:</p>
+                  <p style="margin: 0; color: #666;">${terms}</p>
+                </div>
+              ` : ''}
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                Please review the offer details and respond through your dashboard.
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${applicationUrl}" style="display: inline-block; background: #10b981; color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                  Review & Respond to Offer
+                </a>
+              </div>
+            </div>
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} Liftout. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send offer made email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending offer made email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+// ============================================
+// OFFER RESPONSE EMAIL
+// ============================================
+
+export async function sendOfferResponseEmail(params: {
+  to: string | string[];
+  companyName: string;
+  teamName: string;
+  opportunityTitle: string;
+  accepted: boolean;
+  message?: string;
+  applicationUrl: string;
+}): Promise<EmailResult> {
+  const { to, companyName, teamName, opportunityTitle, accepted, message, applicationUrl } = params;
+
+  const subject = accepted
+    ? `${teamName} has accepted your offer for ${opportunityTitle}`
+    : `${teamName} has declined your offer for ${opportunityTitle}`;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Offer response to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: ${accepted ? '#10b981' : '#6b7280'}; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px;">${accepted ? '🎉 Offer Accepted!' : '📋 Offer Update'}</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
+              <p style="font-size: 16px;">Hi ${companyName} team,</p>
+              ${accepted ? `
+                <p style="font-size: 16px; margin-bottom: 20px;">
+                  Exciting news! <strong>${teamName}</strong> has accepted your offer for the <strong>${opportunityTitle}</strong> opportunity!
+                </p>
+                <p style="font-size: 16px; margin-bottom: 20px;">
+                  This is a significant milestone - you're one step closer to bringing this talented team on board. The next steps will involve finalizing terms and preparing for the transition.
+                </p>
+              ` : `
+                <p style="font-size: 16px; margin-bottom: 20px;">
+                  <strong>${teamName}</strong> has decided to decline your offer for the <strong>${opportunityTitle}</strong> opportunity.
+                </p>
+                <p style="font-size: 16px; margin-bottom: 20px;">
+                  While this particular match didn't work out, there are many other talented teams on Liftout.
+                </p>
+              `}
+              ${message ? `
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid ${accepted ? '#10b981' : '#6b7280'}; margin: 20px 0;">
+                  <p style="font-weight: 600; margin: 0 0 10px 0; color: #555;">Message from ${teamName}:</p>
+                  <p style="margin: 0; color: #666; font-style: italic;">"${message}"</p>
+                </div>
+              ` : ''}
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${applicationUrl}" style="display: inline-block; background: ${accepted ? '#10b981' : '#6b7280'}; color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                  ${accepted ? 'View Next Steps' : 'View Application'}
+                </a>
+              </div>
+            </div>
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} Liftout. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send offer response email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending offer response email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+// ============================================
+// INTERVIEW SCHEDULED EMAIL
+// ============================================
+
+export async function sendInterviewScheduledEmail(params: {
+  to: string | string[];
+  teamName: string;
+  opportunityTitle: string;
+  companyName: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  duration?: string;
+  format?: string;
+  meetingLink?: string;
+  location?: string;
+  notes?: string;
+  applicationUrl: string;
+}): Promise<EmailResult> {
+  const { to, teamName, opportunityTitle, companyName, scheduledDate, scheduledTime, duration, format, meetingLink, location, notes, applicationUrl } = params;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Interview scheduled to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const formatLabel = format === 'video' ? 'Video Call' : format === 'phone' ? 'Phone Call' : format === 'in_person' ? 'In Person' : format || 'TBD';
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Interview scheduled with ${companyName} for ${scheduledDate}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #8b5cf6; padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px;">📅 Interview Scheduled!</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
+              <p style="font-size: 16px;">Hi ${teamName},</p>
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                Great news! <strong>${companyName}</strong> has scheduled an interview with your team for the <strong>${opportunityTitle}</strong> opportunity.
+              </p>
+
+              <div style="background: #f5f3ff; padding: 20px; border-radius: 8px; border-left: 4px solid #8b5cf6; margin: 20px 0;">
+                <p style="font-weight: 600; margin: 0 0 15px 0; color: #333;">Interview Details:</p>
+                <p style="margin: 0 0 8px 0;">📆 <strong>Date:</strong> ${scheduledDate}</p>
+                <p style="margin: 0 0 8px 0;">🕐 <strong>Time:</strong> ${scheduledTime}</p>
+                ${duration ? `<p style="margin: 0 0 8px 0;">⏱️ <strong>Duration:</strong> ${duration}</p>` : ''}
+                <p style="margin: 0 0 8px 0;">📍 <strong>Format:</strong> ${formatLabel}</p>
+                ${location ? `<p style="margin: 0 0 8px 0;">🏢 <strong>Location:</strong> ${location}</p>` : ''}
+              </div>
+
+              ${meetingLink && format === 'video' ? `
+                <div style="text-align: center; margin: 20px 0;">
+                  <a href="${meetingLink}" style="display: inline-block; background: #8b5cf6; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                    Join Video Call
+                  </a>
+                </div>
+              ` : ''}
+
+              ${notes ? `
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="font-weight: 600; margin: 0 0 10px 0; color: #333;">Notes from ${companyName}:</p>
+                  <p style="margin: 0; color: #666;">${notes}</p>
+                </div>
+              ` : ''}
+
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${applicationUrl}" style="display: inline-block; background: #1f2937; color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                  View Interview Details
+                </a>
+              </div>
+
+              <p style="font-size: 14px; color: #666;">
+                If you need to reschedule, please contact ${companyName} through the platform as soon as possible.
+              </p>
+            </div>
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} Liftout. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Failed to send interview scheduled email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending interview scheduled email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
 // Export all functions
 export const emailService = {
   sendTeamInvitationEmail,
@@ -681,4 +969,7 @@ export const emailService = {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendAccountDeletionEmail,
+  sendOfferMadeEmail,
+  sendOfferResponseEmail,
+  sendInterviewScheduledEmail,
 };

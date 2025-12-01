@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ApplicationStatus } from '@prisma/client';
+import { sendOfferMadeEmail } from '@/lib/email';
 
 // POST /api/applications/[id]/offer - Make an offer to a team
 export async function POST(
@@ -84,16 +85,49 @@ export async function POST(
           select: {
             id: true,
             name: true,
+            members: {
+              where: { status: 'active' },
+              include: {
+                user: {
+                  select: { email: true, firstName: true },
+                },
+              },
+            },
           },
         },
         opportunity: {
           select: {
             id: true,
             title: true,
+            company: {
+              select: { name: true },
+            },
           },
         },
       },
     });
+
+    // Send email notification to team members
+    const teamEmails = updated.team.members
+      .map((m) => m.user.email)
+      .filter((email): email is string => !!email);
+
+    if (teamEmails.length > 0) {
+      try {
+        await sendOfferMadeEmail({
+          to: teamEmails,
+          teamName: updated.team.name,
+          opportunityTitle: updated.opportunity.title,
+          companyName: updated.opportunity.company?.name || 'Company',
+          compensation: compensation || 'To be discussed',
+          startDate: startDate || 'Flexible',
+          applicationUrl: `${process.env.NEXTAUTH_URL || 'https://liftout.com'}/app/applications/${updated.id}`,
+        });
+      } catch (emailError) {
+        console.error('Failed to send offer email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({
       application: {

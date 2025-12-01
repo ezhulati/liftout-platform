@@ -1,29 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { ConversationalOnboarding } from '@/components/onboarding/ConversationalOnboarding';
 import { toast } from 'react-hot-toast';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { userData: user } = useAuth();
+  const { data: session, status } = useSession();
   const { isOnboardingCompleted, skipOnboarding } = useOnboarding();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      setIsLoading(false);
-
-      // If onboarding is already completed, redirect to dashboard
-      if (isOnboardingCompleted) {
-        router.push('/app/dashboard');
-        return;
-      }
+    // If onboarding is already completed, redirect to dashboard
+    if (status === 'authenticated' && isOnboardingCompleted) {
+      router.push('/app/dashboard');
     }
-  }, [user, isOnboardingCompleted, router]);
+  }, [status, isOnboardingCompleted, router]);
 
   const handleOnboardingComplete = () => {
     toast.success('Welcome to Liftout! Your profile is ready.');
@@ -36,7 +30,8 @@ export default function OnboardingPage() {
     router.push('/app/dashboard');
   };
 
-  if (isLoading) {
+  // Show loading while session is being determined
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
@@ -47,14 +42,22 @@ export default function OnboardingPage() {
     );
   }
 
-  if (!user) {
+  // Redirect to signin if not authenticated (shouldn't happen due to AppLayout check)
+  if (status === 'unauthenticated' || !session) {
     router.push('/auth/signin');
     return null;
   }
 
+  // If onboarding completed, redirect (effect handles this, but guard just in case)
   if (isOnboardingCompleted) {
-    router.push('/app/dashboard');
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="text-center">
+          <div className="loading-spinner mx-auto mb-4 w-10 h-10"></div>
+          <p className="text-base text-text-secondary">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

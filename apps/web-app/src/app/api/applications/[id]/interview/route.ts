@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ApplicationStatus } from '@prisma/client';
+import { sendInterviewScheduledEmail } from '@/lib/email';
 
 // POST /api/applications/[id]/interview - Schedule an interview
 export async function POST(
@@ -77,16 +78,64 @@ export async function POST(
           select: {
             id: true,
             name: true,
+            members: {
+              where: { status: 'active' },
+              include: {
+                user: {
+                  select: { email: true },
+                },
+              },
+            },
           },
         },
         opportunity: {
           select: {
             id: true,
             title: true,
+            company: {
+              select: { name: true },
+            },
           },
         },
       },
     });
+
+    // Send email notification to team members
+    const teamEmails = updated.team.members
+      .map((m) => m.user.email)
+      .filter((email): email is string => !!email);
+
+    if (teamEmails.length > 0) {
+      const interviewDateTime = new Date(interviewDate);
+      try {
+        await sendInterviewScheduledEmail({
+          to: teamEmails,
+          teamName: updated.team.name,
+          opportunityTitle: updated.opportunity.title,
+          companyName: updated.opportunity.company?.name || 'Company',
+          scheduledDate: interviewDateTime.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          scheduledTime: interviewDateTime.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short',
+          }),
+          duration: duration ? `${duration} minutes` : '1 hour',
+          format: format || 'video',
+          meetingLink: meetingLink,
+          location: location,
+          notes: notes,
+          applicationUrl: `${process.env.NEXTAUTH_URL || 'https://liftout.com'}/app/applications/${updated.id}`,
+        });
+      } catch (emailError) {
+        console.error('Failed to send interview scheduled email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({
       application: {

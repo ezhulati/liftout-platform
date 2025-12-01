@@ -5,3 +5,6 @@ export { TeamInvitationTemplate } from './team-invitation';
 export { WelcomeTemplate } from './welcome';
 export { ApplicationStatusTemplate } from './application-status';
 export { NewMessageTemplate } from './new-message';
+export { OfferMadeTemplate } from './offer-made';
+export { OfferResponseTemplate } from './offer-response';
+export { InterviewScheduledTemplate } from './interview-scheduled';

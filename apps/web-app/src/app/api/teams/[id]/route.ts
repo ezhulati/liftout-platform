@@ -137,6 +137,8 @@ export async function GET(
       clientTestimonials: team.clientTestimonials || [],
       awardsRecognition: team.awardsRecognition || [],
       visibility: team.visibility,
+      isAnonymous: team.isAnonymous,
+      metadata: team.metadata || {},
       salaryExpectationMin: team.salaryExpectationMin,
       salaryExpectationMax: team.salaryExpectationMax,
       salaryCurrency: team.salaryCurrency,

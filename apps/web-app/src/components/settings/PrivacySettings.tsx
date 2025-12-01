@@ -2,8 +2,8 @@
 
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  EyeIcon, 
+import {
+  EyeIcon,
   EyeSlashIcon,
   ShieldCheckIcon,
   UserGroupIcon,
@@ -22,17 +22,20 @@ interface ToggleSwitchProps {
   disabled?: boolean;
 }
 
+// Practical UI: Toggle for immediate effect settings, min 48pt touch target
 function ToggleSwitch({ enabled, onChange, disabled = false }: ToggleSwitchProps) {
   return (
     <button
       type="button"
       onClick={() => !disabled && onChange(!enabled)}
       className={`${
-        enabled ? 'bg-navy' : 'bg-bg-alt'
+        enabled ? 'bg-navy' : 'bg-border'
       } ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } relative inline-flex flex-shrink-0 h-8 w-14 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy min-h-12 min-w-14 items-center`}
+      } relative inline-flex flex-shrink-0 h-8 w-14 border-2 border-transparent rounded-full transition-colors duration-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy min-h-[48px] min-w-[56px] items-center`}
       disabled={disabled}
+      role="switch"
+      aria-checked={enabled}
     >
       <span
         className={`${
@@ -55,33 +58,25 @@ export function PrivacySettings() {
     updatePrivacySettings({ profileVisibility: visibility });
   };
 
+  // Practical UI: For ≤10 options use radio buttons stacked vertically
   const visibilityOptions = [
     {
       value: 'public' as const,
       title: 'Public',
-      description: 'Visible to all users and search engines',
+      description: 'Visible to all users and search engines. Maximum exposure for liftout opportunities.',
       icon: UserGroupIcon,
-      color: 'text-success',
-      bgColor: 'bg-success-light',
-      risk: 'low',
     },
     {
       value: 'selective' as const,
-      title: 'Selective',
-      description: 'Only visible to verified companies and direct connections',
+      title: 'Selective (anonymous mode)',
+      description: 'Only visible to verified companies. Your identity is masked until you respond to interest.',
       icon: ShieldCheckIcon,
-      color: 'text-navy',
-      bgColor: 'bg-navy-50',
-      risk: 'medium',
     },
     {
       value: 'private' as const,
       title: 'Private',
-      description: 'Only visible to you and direct team members',
+      description: 'Only visible to you and direct team members. Companies cannot discover your profile.',
       icon: EyeSlashIcon,
-      color: 'text-text-secondary',
-      bgColor: 'bg-bg-alt',
-      risk: 'high',
     },
   ];
 
@@ -176,101 +171,104 @@ export function PrivacySettings() {
         </p>
       </div>
 
-      {/* Profile Visibility - Practical UI: bold section headings */}
+      {/* Profile Visibility - Practical UI: single column, radio buttons stacked vertically */}
       <div className="space-y-4">
-        <div className="flex items-center">
-          <EyeIcon className="h-5 w-5 text-text-tertiary mr-2" />
-          <h4 className="text-base font-bold text-text-primary">Profile visibility</h4>
+        <div>
+          <h4 className="text-lg font-bold text-text-primary">Profile visibility</h4>
+          <p className="mt-1 text-base text-text-secondary">
+            Choose who can see your profile and contact information.
+          </p>
         </div>
-        <p className="text-sm font-normal text-text-secondary">
-          Choose who can see your profile and contact information.
-        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {visibilityOptions.map((option) => (
-            <div
-              key={option.value}
-              className={`relative cursor-pointer rounded-lg border-2 p-4 focus:outline-none transition-colors ${
-                settings.privacy.profileVisibility === option.value
-                  ? 'border-navy bg-navy-50'
-                  : 'border-border bg-bg-surface hover:border-navy-300'
-              }`}
-              onClick={() => handleVisibilityChange(option.value)}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className={`flex-shrink-0 ${option.bgColor} p-2 rounded-lg`}>
-                    <option.icon className={`h-6 w-6 ${option.color}`} />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-text-primary">{option.title}</p>
-                  </div>
+        {/* Practical UI: Radio buttons for ≤10 options, stacked vertically, min 48pt touch targets */}
+        <fieldset className="space-y-3" role="radiogroup" aria-label="Profile visibility">
+          {visibilityOptions.map((option) => {
+            const isSelected = settings.privacy.profileVisibility === option.value;
+            return (
+              <label
+                key={option.value}
+                className={`relative flex items-start cursor-pointer rounded-lg border-2 p-4 min-h-[64px] transition-colors ${
+                  isSelected
+                    ? 'border-navy bg-navy-50'
+                    : 'border-border bg-bg-surface hover:border-navy-200'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={option.value}
+                  checked={isSelected}
+                  onChange={() => handleVisibilityChange(option.value)}
+                  className="sr-only"
+                />
+                {/* Radio indicator */}
+                <div className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full border-2 flex items-center justify-center ${
+                  isSelected ? 'border-navy bg-navy' : 'border-border'
+                }`}>
+                  {isSelected && (
+                    <div className="w-2 h-2 rounded-full bg-white" />
+                  )}
                 </div>
-                {settings.privacy.profileVisibility === option.value && (
-                  <div className="flex-shrink-0 text-navy">
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
+                {/* Label content */}
+                <div className="ml-4 flex-1">
+                  <div className="flex items-center gap-2">
+                    <option.icon className={`h-5 w-5 ${isSelected ? 'text-navy' : 'text-text-tertiary'}`} />
+                    <span className="text-base font-bold text-text-primary">{option.title}</span>
                   </div>
-                )}
-              </div>
-              <p className="mt-2 text-xs text-text-tertiary">{option.description}</p>
-            </div>
-          ))}
-        </div>
+                  <p className="mt-1 text-base text-text-secondary">{option.description}</p>
+                </div>
+              </label>
+            );
+          })}
+        </fieldset>
 
-        {/* Visibility Warning */}
+        {/* Visibility Warning - Practical UI: color + icon + text for warnings */}
         {settings.privacy.profileVisibility === 'private' && (
           <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <ExclamationTriangleIcon className="h-5 w-5 text-gold" />
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-gold-900">
-                  Limited visibility
-                </h3>
-                <div className="mt-2 text-sm text-gold-700">
-                  <p>
-                    With private visibility, companies won't be able to discover your profile through search or matching.
-                    This may significantly reduce your liftout opportunities.
-                  </p>
-                </div>
+            <div className="flex items-start gap-3">
+              <ExclamationTriangleIcon className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-base font-bold text-gold-900">Limited visibility</p>
+                <p className="mt-1 text-base text-gold-700">
+                  With private visibility, companies won't be able to discover your profile through search or matching.
+                  This may significantly reduce your liftout opportunities.
+                </p>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Privacy Controls - Practical UI: bold section headings */}
+      {/* Privacy Controls - Practical UI: toggles for immediate effect, min 48pt touch targets */}
       <div className="space-y-4">
-        <h4 className="text-base font-bold text-text-primary">Privacy controls</h4>
-        <div className="space-y-4">
+        <div>
+          <h4 className="text-lg font-bold text-text-primary">Privacy controls</h4>
+          <p className="mt-1 text-base text-text-secondary">
+            Control what information is shared with others.
+          </p>
+        </div>
+        <div className="space-y-3">
           {privacyToggles.map((toggle) => (
             <div
               key={toggle.key}
-              className={`flex items-center justify-between p-4 border rounded-lg transition-colors min-h-20 ${
-                toggle.important ? 'border-navy-200 bg-navy-50 hover:bg-navy-50/80' : 'border-border hover:bg-bg-alt'
+              className={`flex items-center justify-between p-4 border-2 rounded-lg transition-colors min-h-[72px] ${
+                toggle.important ? 'border-navy-200 bg-navy-50' : 'border-border bg-bg-surface'
               }`}
             >
-              <div className="flex items-start space-x-3 mr-4">
-                <div className={`flex-shrink-0 p-1 rounded ${
-                  toggle.important ? 'bg-navy-100' : 'bg-bg-alt'
-                }`}>
-                  <toggle.icon className={`h-5 w-5 ${
-                    toggle.important ? 'text-navy' : 'text-text-tertiary'
-                  }`} />
-                </div>
+              <div className="flex items-start gap-3 mr-4 flex-1">
+                <toggle.icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
+                  toggle.important ? 'text-navy' : 'text-text-tertiary'
+                }`} />
                 <div className="flex-1">
-                  <div className="flex items-center">
-                    <p className="text-base font-bold text-text-primary">{toggle.title}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-base font-bold text-text-primary">{toggle.title}</span>
                     {toggle.important && (
-                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-sm font-bold bg-navy-100 text-navy-800">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-sm font-bold bg-navy-100 text-navy-800">
                         Important
                       </span>
                     )}
                   </div>
-                  <p className="text-sm font-normal text-text-secondary mt-1">{toggle.description}</p>
+                  <p className="text-base text-text-secondary mt-1">{toggle.description}</p>
                 </div>
               </div>
               <ToggleSwitch
@@ -282,10 +280,10 @@ export function PrivacySettings() {
         </div>
       </div>
 
-      {/* Data Privacy Information - Practical UI: bold headings */}
+      {/* Data Privacy Information - Practical UI: readable body text (≥18px) */}
       <div className="bg-bg-alt rounded-xl p-6">
-        <h4 className="text-base font-bold text-text-primary mb-4">Data privacy and security</h4>
-        <div className="space-y-3 text-sm text-text-secondary">
+        <h4 className="text-lg font-bold text-text-primary mb-4">Data privacy and security</h4>
+        <div className="space-y-4 text-base text-text-secondary">
           <p>
             <strong className="text-text-primary">Data protection:</strong> Your personal information is encrypted and stored securely.
             We never sell your data to third parties.
@@ -301,12 +299,13 @@ export function PrivacySettings() {
           </p>
         </div>
         <div className="mt-4 pt-4 border-t border-border">
-          <p className="text-xs text-text-tertiary">
-            Last updated: {new Date().toLocaleDateString()} |
-            <a href="/privacy" className="text-link ml-1">
+          <p className="text-sm text-text-tertiary">
+            Last updated: {new Date().toLocaleDateString()} |{' '}
+            <a href="/privacy" className="text-link underline">
               Privacy policy
-            </a> |
-            <a href="/terms" className="text-link ml-1">
+            </a>{' '}
+            |{' '}
+            <a href="/terms" className="text-link underline">
               Terms of service
             </a>
           </p>

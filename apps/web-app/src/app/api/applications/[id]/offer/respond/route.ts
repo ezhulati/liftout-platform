@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ApplicationStatus } from '@prisma/client';
+import { sendOfferResponseEmail } from '@/lib/email';
 
 // POST /api/applications/[id]/offer/respond - Team responds to an offer
 export async function POST(
@@ -116,6 +117,13 @@ export async function POST(
               select: {
                 id: true,
                 name: true,
+                users: {
+                  include: {
+                    user: {
+                      select: { email: true },
+                    },
+                  },
+                },
               },
             },
           },
@@ -123,14 +131,27 @@ export async function POST(
       },
     });
 
-    // TODO: Send email notification to company about the response
-    // await sendOfferResponseEmail({
-    //   to: companyEmail,
-    //   teamName: updated.team.name,
-    //   opportunityTitle: updated.opportunity.title,
-    //   accepted: accept,
-    //   message,
-    // });
+    // Send email notification to company users
+    const companyEmails = updated.opportunity.company?.users
+      ?.map((cu) => cu.user.email)
+      .filter((email): email is string => !!email) || [];
+
+    if (companyEmails.length > 0) {
+      try {
+        await sendOfferResponseEmail({
+          to: companyEmails,
+          teamName: updated.team.name,
+          opportunityTitle: updated.opportunity.title,
+          companyName: updated.opportunity.company?.name || 'Your company',
+          accepted: accept,
+          message: message || undefined,
+          applicationUrl: `${process.env.NEXTAUTH_URL || 'https://liftout.com'}/app/applications/${updated.id}`,
+        });
+      } catch (emailError) {
+        console.error('Failed to send offer response email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({
       data: {

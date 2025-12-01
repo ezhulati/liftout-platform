@@ -12,6 +12,7 @@ import {
   SwatchIcon,
   Cog6ToothIcon,
   CircleStackIcon,
+  CreditCardIcon,
 } from '@heroicons/react/24/outline';
 import { ProfileSettings } from '@/components/settings/ProfileSettings';
 import { NotificationSettings } from '@/components/settings/NotificationSettings';
@@ -20,6 +21,7 @@ import { SecuritySettings } from '@/components/settings/SecuritySettings';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
 import { AccountSettings } from '@/components/settings/AccountSettings';
 import { DataManagementSettings } from '@/components/settings/DataManagementSettings';
+import { BillingSettings } from '@/components/settings/BillingSettings';
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
@@ -34,6 +36,7 @@ export default function SettingsPage() {
     { id: 'security', name: 'Security', icon: ShieldCheckIcon, description: 'Password and login' },
     { id: 'theme', name: 'Appearance', icon: SwatchIcon, description: 'Theme and display' },
     { id: 'data', name: 'Data', icon: CircleStackIcon, description: 'Export and delete your data' },
+    { id: 'billing', name: 'Billing', icon: CreditCardIcon, description: 'Subscription and payments' },
     { id: 'account', name: 'Account', icon: Cog6ToothIcon, description: 'Plan and account actions' },
   ];
 
@@ -124,6 +127,7 @@ export default function SettingsPage() {
           {activeTab === 'security' && <SecuritySettings />}
           {activeTab === 'theme' && <ThemeSettings />}
           {activeTab === 'data' && <DataManagementSettings />}
+          {activeTab === 'billing' && <BillingSettings />}
           {activeTab === 'account' && <AccountSettings />}
         </main>
       </div>
