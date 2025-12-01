@@ -11,7 +11,7 @@ import {
   BriefcaseIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
-import { Badge, Skeleton, EmptyState } from '@/components/ui';
+import { Skeleton, EmptyState } from '@/components/ui';
 import { getMatchRecommendation } from '@/hooks/useMatching';
 
 interface MatchPreviewItem {
@@ -87,15 +87,16 @@ export function MatchingPreview() {
 
   return (
     <div className="card">
-      <div className="px-6 py-4 border-b border-border">
+      {/* Header - Practical UI: bold headings, 48pt+ touch targets, proper spacing */}
+      <div className="px-6 py-5 border-b border-border">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-navy to-gold flex items-center justify-center">
-              <SparklesIcon className="h-5 w-5 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-navy to-gold flex items-center justify-center shadow-sm">
+              <SparklesIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-text-primary">AI Matches</h2>
-              <p className="text-xs text-text-tertiary">
+              <h2 className="text-xl font-bold text-text-primary font-heading">AI matches</h2>
+              <p className="text-sm text-text-secondary mt-0.5">
                 {isCompanyUser ? 'Top matching teams' : 'Top opportunities for you'}
               </p>
             </div>
@@ -103,29 +104,30 @@ export function MatchingPreview() {
           {entityId && (
             <Link
               href={`/app/matching?${isCompanyUser ? 'opportunityId' : 'teamId'}=${entityId}`}
-              className="text-sm text-navy hover:text-navy-dark flex items-center gap-1 transition-colors"
+              className="text-base font-medium text-navy hover:text-navy-dark flex items-center gap-2 min-h-12 px-3 transition-colors"
             >
               View all
-              <ArrowRightIcon className="h-4 w-4" />
+              <ArrowRightIcon className="h-5 w-5" />
             </Link>
           )}
         </div>
       </div>
 
+      {/* Content - Practical UI: 8pt spacing system, proper typography */}
       <div className="p-6">
         {isLoading ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} variant="rectangular" height="60px" className="rounded-lg" />
+              <Skeleton key={i} variant="rectangular" height="72px" className="rounded-xl" />
             ))}
           </div>
         ) : error ? (
-          <div className="text-center py-6">
-            <p className="text-sm text-text-tertiary">Failed to load matches</p>
+          <div className="text-center py-8">
+            <p className="text-base text-text-secondary">Failed to load matches</p>
           </div>
         ) : matches.length === 0 ? (
           <EmptyState
-            icon={isCompanyUser ? <UserGroupIcon className="w-10 h-10" /> : <BriefcaseIcon className="w-10 h-10" />}
+            icon={isCompanyUser ? <UserGroupIcon className="w-12 h-12" /> : <BriefcaseIcon className="w-12 h-12" />}
             title={!entityId
               ? (isCompanyUser ? "No opportunities posted yet" : "No team profile yet")
               : "No matches found"
@@ -141,18 +143,18 @@ export function MatchingPreview() {
               !entityId && (
                 <Link
                   href={isCompanyUser ? "/app/opportunities/create" : "/app/teams/create"}
-                  className="btn-primary text-sm py-2 px-4"
+                  className="btn-primary min-h-12 px-6"
                 >
-                  {isCompanyUser ? "Post Opportunity" : "Create Team"}
+                  {isCompanyUser ? "Post opportunity" : "Create team"}
                 </Link>
               )
             }
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {entityName && (
-              <p className="text-xs text-text-tertiary mb-2">
-                Matches for <span className="font-medium text-text-secondary">{entityName}</span>
+              <p className="text-sm font-medium text-text-secondary mb-4">
+                Matches for <span className="text-text-primary">{entityName}</span>
               </p>
             )}
             {matches.map((match) => {
@@ -165,39 +167,38 @@ export function MatchingPreview() {
                 <Link
                   key={match.id}
                   href={detailUrl}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-navy hover:bg-bg-alt transition-all duration-200 group"
+                  className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-navy hover:bg-bg-alt transition-all duration-fast group min-h-[72px]"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${
+                  <div className="flex items-center gap-4">
+                    <div className={`h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
                       match.type === 'opportunity' ? 'bg-gold-50' : 'bg-navy-50'
                     }`}>
                       {match.type === 'opportunity' ? (
-                        <BriefcaseIcon className="h-4 w-4 text-gold" />
+                        <BriefcaseIcon className="h-5 w-5 text-gold" />
                       ) : (
-                        <UserGroupIcon className="h-4 w-4 text-navy" />
+                        <UserGroupIcon className="h-5 w-5 text-navy" />
                       )}
                     </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-text-primary group-hover:text-navy transition-colors">
+                    <div className="min-w-0">
+                      <h3 className="text-base font-bold text-text-primary group-hover:text-navy transition-colors truncate">
                         {match.name}
                       </h3>
                       {match.industry && (
-                        <p className="text-xs text-text-tertiary">{match.industry}</p>
+                        <p className="text-sm text-text-secondary mt-0.5 truncate">{match.industry}</p>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant={
-                        recommendation.label === 'Excellent Match' ? 'success' :
-                        recommendation.label === 'Good Match' ? 'info' :
-                        'warning'
-                      }
-                      size="sm"
-                    >
+                  <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold ${
+                      recommendation.label === 'Excellent Match'
+                        ? 'bg-success-light text-success-dark'
+                        : recommendation.label === 'Good Match'
+                        ? 'bg-navy-50 text-navy-800'
+                        : 'bg-gold-100 text-gold-800'
+                    }`}>
                       {match.score}%
-                    </Badge>
-                    <ChevronRightIcon className="h-4 w-4 text-text-tertiary group-hover:text-navy transition-colors" />
+                    </span>
+                    <ChevronRightIcon className="h-5 w-5 text-text-tertiary group-hover:text-navy transition-colors" />
                   </div>
                 </Link>
               );
@@ -205,13 +206,13 @@ export function MatchingPreview() {
           </div>
         )}
 
-        {/* Link to full matching page */}
-        <div className="mt-4 pt-4 border-t border-border">
+        {/* CTA - Practical UI: 48pt touch target, clear visual hierarchy */}
+        <div className="mt-6 pt-6 border-t border-border">
           <Link
             href="/app/matching"
-            className="flex items-center justify-center gap-2 w-full py-2 text-sm text-navy hover:text-navy-dark transition-colors"
+            className="flex items-center justify-center gap-2 w-full min-h-12 py-3 text-base font-medium text-navy hover:text-navy-dark hover:bg-navy-50 rounded-xl transition-colors"
           >
-            <SparklesIcon className="h-4 w-4" />
+            <SparklesIcon className="h-5 w-5" />
             Explore AI-powered matching
           </Link>
         </div>
