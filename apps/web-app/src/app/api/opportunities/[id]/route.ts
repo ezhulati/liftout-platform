@@ -12,6 +12,54 @@ const isDemoEntity = (id: string): boolean => {
   return id?.includes('demo') || id?.startsWith('demo-');
 };
 
+// Demo opportunity data for matching page
+const getDemoOpportunity = (id: string) => {
+  const demoOpportunities: Record<string, object> = {
+    'demo-opp-1': {
+      id: 'demo-opp-1',
+      title: 'Senior Engineering Team - FinTech Expansion',
+      company: 'TechCorp Inc.',
+      companyLogo: null,
+      description: 'Growing fintech startup seeking experienced engineering team to lead our next phase of growth. We are looking for a cohesive team that can hit the ground running and help us build scalable financial products.',
+      teamSize: 5,
+      location: 'San Francisco, CA',
+      remote: true,
+      industry: 'Financial Technology',
+      type: 'expansion',
+      compensation: {
+        type: 'salary',
+        range: '$180k - $250k',
+        equity: true,
+        benefits: 'Full benefits, 401k matching',
+      },
+      requirements: [
+        'Team of 3-6 members with proven track record',
+        '5+ years of collective experience in fintech or financial services',
+        'Strong expertise in TypeScript, React, and Node.js',
+        'Experience with AWS or cloud infrastructure',
+        'History of working together for at least 2 years',
+      ],
+      responsibilities: [
+        'Lead development of core payment processing platform',
+        'Architect and implement scalable microservices',
+        'Mentor junior developers and establish best practices',
+        'Collaborate with product team on feature roadmap',
+        'Drive technical decisions and code quality standards',
+      ],
+      strategicRationale: 'This acquisition is part of our strategic expansion into the B2B payments space. We need a proven team that can accelerate our time-to-market by 12-18 months compared to building a team from scratch.',
+      integrationPlan: 'The team will operate semi-autonomously within our engineering org, with direct reporting to the VP of Engineering. Full onboarding and integration support will be provided during the first 90 days.',
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'open',
+      postedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      applicants: 5,
+      views: 127,
+      isConfidential: false,
+    },
+  };
+
+  return demoOpportunities[id] || null;
+};
+
 // GET /api/opportunities/[id] - Get opportunity details (API only)
 export async function GET(
   request: NextRequest,
@@ -22,6 +70,17 @@ export async function GET(
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Demo entity handling - return mock data for demo opportunity IDs
+  if (isDemoEntity(id)) {
+    const demoOpportunity = getDemoOpportunity(id);
+    if (demoOpportunity) {
+      console.log(`[Demo] Returning demo opportunity: ${id}`);
+      return NextResponse.json({ opportunity: demoOpportunity });
+    }
+    // If demo ID not found, return not found
+    return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
   }
 
   const apiAvailable = await isApiServerAvailable();
