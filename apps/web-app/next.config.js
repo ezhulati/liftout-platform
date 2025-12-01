@@ -3,7 +3,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  transpilePackages: ['next-auth'],
+  transpilePackages: ['next-auth', '@liftout/database'],
   eslint: {
     // Skip ESLint during production builds - linting is done in CI/development
     ignoreDuringBuilds: true,
