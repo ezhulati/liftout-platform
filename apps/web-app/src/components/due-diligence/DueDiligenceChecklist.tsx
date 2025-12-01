@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
 import {
   DueDiligenceWorkflow,
   DueDiligenceCheck,
@@ -24,20 +25,76 @@ import { Button, Badge, Skeleton, EmptyState } from '@/components/ui';
 
 interface DueDiligenceChecklistProps {
   workflowId?: string;
+  applicationId?: string;
 }
 
-export function DueDiligenceChecklist({ workflowId }: DueDiligenceChecklistProps) {
-  const [workflow, setWorkflow] = useState<DueDiligenceWorkflow | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function DueDiligenceChecklist({ workflowId, applicationId }: DueDiligenceChecklistProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedCheck, setExpandedCheck] = useState<string | null>(null);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setWorkflow(mockDueDiligenceWorkflow);
-      setIsLoading(false);
-    }, 500);
-  }, [workflowId]);
+  // Fetch from real API with fallback to mock data
+  const { data: workflow, isLoading } = useQuery({
+    queryKey: ['due-diligence-checklist', workflowId, applicationId],
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams();
+        if (applicationId) params.set('applicationId', applicationId);
+
+        const response = await fetch(`/api/due-diligence?${params}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const result = await response.json();
+        if (result.success && result.data) {
+          return transformApiResponse(result.data);
+        }
+        throw new Error('No data');
+      } catch {
+        return mockDueDiligenceWorkflow;
+      }
+    },
+    staleTime: 60000,
+  });
+
+  function transformApiResponse(apiData: any): DueDiligenceWorkflow {
+    const checks = apiData.categories?.flatMap((category: any) =>
+      category.items.map((item: any) => ({
+        id: item.id,
+        category: mapCategoryId(category.id),
+        title: item.name,
+        description: item.description,
+        status: item.status === 'completed' ? 'completed' :
+                item.status === 'in_progress' ? 'in_progress' :
+                item.status === 'blocked' ? 'requires_attention' : 'pending',
+        priority: item.priority === 'critical' ? 'high' : item.priority,
+        evidence: item.evidence ? [{ id: '1', type: 'document' as const, title: item.evidence, description: '', uploadedBy: 'System', uploadedDate: new Date().toISOString(), verified: true, confidential: false }] : [],
+      }))
+    ) || mockDueDiligenceWorkflow.checks;
+
+    return {
+      id: apiData.id || 'workflow-1',
+      teamId: apiData.team?.id || '',
+      opportunityId: apiData.opportunity?.id || '',
+      status: 'in_progress',
+      startDate: apiData.timeline?.applicationDate || new Date().toISOString(),
+      targetCompletionDate: apiData.timeline?.targetCompletionDate || new Date().toISOString(),
+      riskLevel: apiData.risks?.length > 2 ? 'high' : apiData.risks?.length > 0 ? 'medium' : 'low',
+      checks,
+      keyFindings: apiData.nextActions?.map((a: any) => a.name) || [],
+      recommendations: apiData.risks?.map((r: any) => r.description) || [],
+      approvalStatus: 'pending',
+    };
+  }
+
+  function mapCategoryId(id: string): DueDiligenceCheck['category'] {
+    const mapping: Record<string, DueDiligenceCheck['category']> = {
+      'team-verification': 'team_validation',
+      'legal-review': 'risk_evaluation',
+      'financial-review': 'performance_verification',
+      'culture-fit': 'cultural_assessment',
+      'documentation': 'integration_planning',
+    };
+    return mapping[id] || 'team_validation';
+  }
 
   if (isLoading) {
     return (

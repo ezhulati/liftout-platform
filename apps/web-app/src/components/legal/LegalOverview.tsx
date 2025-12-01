@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
 import {
   DocumentTextIcon,
   ShieldCheckIcon,
@@ -20,11 +20,76 @@ import {
 } from '@/lib/legal';
 
 interface LegalOverviewProps {
+  applicationId?: string;
+  teamId?: string;
   documents?: LegalDocument[];
 }
 
-export function LegalOverview({ documents = mockLegalDocuments }: LegalOverviewProps) {
-  const [isLoading] = useState(false);
+export function LegalOverview({ applicationId, teamId, documents: propDocuments }: LegalOverviewProps) {
+  // Fetch from real API with fallback to mock/prop data
+  const { data: legalData, isLoading } = useQuery({
+    queryKey: ['legal', applicationId, teamId],
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams();
+        if (applicationId) params.set('applicationId', applicationId);
+        if (teamId) params.set('teamId', teamId);
+
+        const response = await fetch(`/api/legal?${params}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const result = await response.json();
+        if (result.success && result.data) {
+          return { apiData: result.data, documents: transformToDocuments(result.data) };
+        }
+        throw new Error('No data');
+      } catch {
+        return { apiData: null, documents: propDocuments || mockLegalDocuments };
+      }
+    },
+    staleTime: 60000,
+  });
+
+  // Transform API legal analysis to document format for existing UI
+  function transformToDocuments(apiData: any): LegalDocument[] {
+    if (!apiData.memberAnalyses) return propDocuments || mockLegalDocuments;
+
+    // Create synthetic documents from member analyses
+    const docs: LegalDocument[] = apiData.memberAnalyses.map((member: any, idx: number) => ({
+      id: `nc-${member.memberId || idx}`,
+      title: `Non-Compete Analysis: ${member.memberName}`,
+      type: 'non_compete' as const,
+      status: member.nonCompeteAnalysis?.hasNonCompete ? 'review' as const : 'approved' as const,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      parties: [{ name: member.memberName, role: member.role }],
+      jurisdiction: apiData.jurisdiction?.primary || 'New York',
+      complianceChecks: apiData.complianceChecks?.flatMap((cat: any) =>
+        cat.items.map((item: any) => ({
+          id: item.id,
+          category: cat.category.toLowerCase().replace(/\s+/g, '_'),
+          requirement: item.requirement,
+          status: item.status === 'pending' ? 'needs_review' as const : 'compliant' as const,
+          riskLevel: item.riskLevel as any,
+          notes: item.name,
+        }))
+      ) || [],
+      riskAssessment: {
+        overallRisk: member.nonCompeteAnalysis?.violationRisk || 'low',
+        riskFactors: member.nonCompeteAnalysis?.factors?.map((f: any) => ({
+          factor: f.factor,
+          impact: f.impact,
+          mitigation: f.description,
+        })) || [],
+        recommendations: member.nonCompeteAnalysis?.recommendations || [],
+        estimatedCost: member.nonCompeteAnalysis?.estimatedGardenLeaveCost,
+      },
+    }));
+
+    return docs.length > 0 ? docs : (propDocuments || mockLegalDocuments);
+  }
+
+  const documents = legalData?.documents || propDocuments || mockLegalDocuments;
 
   // Calculate summary metrics
   const totalDocuments = documents.length;

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { 
-  IntegrationTracker, 
-  calculateIntegrationHealthScore, 
+import { useQuery } from '@tanstack/react-query';
+import {
+  IntegrationTracker,
+  calculateIntegrationHealthScore,
   assessRetentionRisk,
   generateEarlyWarnings,
-  mockIntegrationTracker 
+  mockIntegrationTracker
 } from '@/lib/integration';
 import {
   CheckCircleIcon,
@@ -28,18 +28,70 @@ import {
 
 interface IntegrationDashboardProps {
   integrationId?: string;
+  applicationId?: string;
 }
 
-export function IntegrationDashboard({ integrationId }: IntegrationDashboardProps) {
-  const [integration, setIntegration] = useState<IntegrationTracker | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function IntegrationDashboard({ integrationId, applicationId }: IntegrationDashboardProps) {
+  // Fetch from real API with fallback to mock data
+  const { data: integration, isLoading } = useQuery({
+    queryKey: ['integration', integrationId, applicationId],
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams();
+        if (applicationId) params.set('applicationId', applicationId);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIntegration(mockIntegrationTracker);
-      setIsLoading(false);
-    }, 500);
-  }, [integrationId]);
+        const response = await fetch(`/api/integration?${params}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const result = await response.json();
+        if (result.success && result.data) {
+          return transformApiResponse(result.data);
+        }
+        throw new Error('No data');
+      } catch {
+        return mockIntegrationTracker;
+      }
+    },
+    staleTime: 60000,
+  });
+
+  // Transform API response to match IntegrationTracker interface
+  function transformApiResponse(apiData: any): IntegrationTracker {
+    // Use mock data as base and override with API data where available
+    return {
+      ...mockIntegrationTracker,
+      id: apiData.id || mockIntegrationTracker.id,
+      liftoutId: apiData.applicationId || mockIntegrationTracker.liftoutId,
+      teamId: apiData.team?.id || mockIntegrationTracker.teamId,
+      companyId: apiData.company?.id || mockIntegrationTracker.companyId,
+      teamName: apiData.team?.name || mockIntegrationTracker.teamName,
+      companyName: apiData.company?.name || mockIntegrationTracker.companyName,
+      startDate: apiData.startDate || mockIntegrationTracker.startDate,
+      status: mapApiStatus(apiData.status),
+      overallProgress: apiData.overallProgress || mockIntegrationTracker.overallProgress,
+      projectedCompletionDate: apiData.expectedCompletionDate || mockIntegrationTracker.projectedCompletionDate,
+      healthScore: apiData.healthScore || mockIntegrationTracker.healthScore,
+      phases: apiData.phases?.length > 0
+        ? apiData.phases.map((phase: any) => ({
+            ...mockIntegrationTracker.phases[0],
+            phase: phase.phase || 'onboarding',
+            name: phase.name || phase.phase,
+            status: phase.status || 'in_progress',
+            progress: phase.progress || 0,
+          }))
+        : mockIntegrationTracker.phases,
+    };
+  }
+
+  function mapApiStatus(status: string): IntegrationTracker['status'] {
+    const statusMap: Record<string, IntegrationTracker['status']> = {
+      'pending': 'pre_start',
+      'in_progress': 'integration',
+      'active': 'integration',
+      'completed': 'completed',
+    };
+    return statusMap[status] || 'integration';
+  }
 
   if (isLoading) {
     return (

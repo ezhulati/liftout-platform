@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { 
-  DueDiligenceWorkflow, 
-  calculateWorkflowProgress, 
+import { useQuery } from '@tanstack/react-query';
+import {
+  DueDiligenceWorkflow,
+  calculateWorkflowProgress,
   assessOverallRisk,
-  mockDueDiligenceWorkflow 
+  mockDueDiligenceWorkflow
 } from '@/lib/due-diligence';
 import {
   CheckCircleIcon,
@@ -21,18 +21,78 @@ import {
 
 interface DueDiligenceOverviewProps {
   workflowId?: string;
+  applicationId?: string;
 }
 
-export function DueDiligenceOverview({ workflowId }: DueDiligenceOverviewProps) {
-  const [workflow, setWorkflow] = useState<DueDiligenceWorkflow | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function DueDiligenceOverview({ workflowId, applicationId }: DueDiligenceOverviewProps) {
+  // Fetch from real API with fallback to mock data
+  const { data: workflow, isLoading } = useQuery({
+    queryKey: ['due-diligence', workflowId, applicationId],
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams();
+        if (applicationId) params.set('applicationId', applicationId);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setWorkflow(mockDueDiligenceWorkflow);
-      setIsLoading(false);
-    }, 500);
-  }, [workflowId]);
+        const response = await fetch(`/api/due-diligence?${params}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const result = await response.json();
+        if (result.success && result.data) {
+          // Transform API response to match DueDiligenceWorkflow interface
+          return transformApiResponse(result.data);
+        }
+        throw new Error('No data');
+      } catch {
+        // Fallback to mock data
+        return mockDueDiligenceWorkflow;
+      }
+    },
+    staleTime: 60000, // 1 minute
+  });
+
+  // Transform API response to match existing interface
+  function transformApiResponse(apiData: any): DueDiligenceWorkflow {
+    // Map API categories to workflow checks
+    const checks = apiData.categories?.flatMap((category: any) =>
+      category.items.map((item: any) => ({
+        id: item.id,
+        category: mapCategoryId(category.id),
+        title: item.name,
+        description: item.description,
+        status: item.status === 'completed' ? 'completed' :
+                item.status === 'in_progress' ? 'in_progress' :
+                item.status === 'blocked' ? 'requires_attention' : 'pending',
+        priority: item.priority === 'critical' ? 'high' : item.priority,
+        evidence: item.evidence ? [{ id: '1', type: 'document', title: item.evidence, description: '', uploadedBy: 'System', uploadedDate: new Date().toISOString(), verified: true, confidential: false }] : [],
+      }))
+    ) || mockDueDiligenceWorkflow.checks;
+
+    return {
+      id: apiData.id || 'workflow-1',
+      teamId: apiData.team?.id || '',
+      opportunityId: apiData.opportunity?.id || '',
+      status: apiData.status === 'submitted' ? 'in_progress' :
+              apiData.status === 'reviewing' ? 'in_progress' : 'not_started',
+      startDate: apiData.timeline?.applicationDate || new Date().toISOString(),
+      targetCompletionDate: apiData.timeline?.targetCompletionDate || new Date().toISOString(),
+      riskLevel: apiData.risks?.length > 2 ? 'high' : apiData.risks?.length > 0 ? 'medium' : 'low',
+      checks,
+      keyFindings: apiData.nextActions?.map((a: any) => a.name) || mockDueDiligenceWorkflow.keyFindings,
+      recommendations: apiData.risks?.map((r: any) => r.description) || mockDueDiligenceWorkflow.recommendations,
+      approvalStatus: 'pending',
+    };
+  }
+
+  function mapCategoryId(id: string): DueDiligenceWorkflow['checks'][0]['category'] {
+    const mapping: Record<string, DueDiligenceWorkflow['checks'][0]['category']> = {
+      'team-verification': 'team_validation',
+      'legal-review': 'risk_evaluation',
+      'financial-review': 'performance_verification',
+      'culture-fit': 'cultural_assessment',
+      'documentation': 'integration_planning',
+    };
+    return mapping[id] || 'team_validation';
+  }
 
   if (isLoading) {
     return (
