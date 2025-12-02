@@ -195,23 +195,76 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [hasLoadedProfile, setHasLoadedProfile] = useState(false);
 
   const firstName = userData?.name?.split(' ')[0] || 'there';
   const currentQuestion = currentIndex >= 0 ? questions[currentIndex] : null;
   const progress = ((currentIndex + 1) / questions.length) * 100;
   const isLastQuestion = currentIndex === questions.length - 1;
 
-  // Pre-fill first/last name from user data
+  // Fetch existing profile data and resume from where user left off
   useEffect(() => {
-    if (userData?.name) {
+    if (hasLoadedProfile) return;
+
+    const loadExistingProfile = async () => {
+      try {
+        const response = await fetch('/api/user/profile');
+        if (response.ok) {
+          const profile = await response.json();
+
+          // Map profile data to answer format
+          const existingAnswers: Record<string, string | string[]> = {};
+          if (profile.firstName) existingAnswers.firstName = profile.firstName;
+          if (profile.lastName) existingAnswers.lastName = profile.lastName;
+          if (profile.title || profile.position) existingAnswers.title = profile.title || profile.position;
+          if (profile.location) existingAnswers.location = profile.location;
+          if (profile.companyName) existingAnswers.currentCompany = profile.companyName;
+          if (profile.yearsExperience) {
+            const years = profile.yearsExperience;
+            if (years <= 2) existingAnswers.yearsExperience = '0-2';
+            else if (years <= 5) existingAnswers.yearsExperience = '3-5';
+            else if (years <= 10) existingAnswers.yearsExperience = '6-10';
+            else if (years <= 15) existingAnswers.yearsExperience = '11-15';
+            else existingAnswers.yearsExperience = '15+';
+          }
+          if (profile.bio) existingAnswers.bio = profile.bio;
+
+          setAnswers(existingAnswers);
+
+          // Find first incomplete question to resume from
+          // If user has some data, skip welcome screen and go to first incomplete
+          const filledQuestions = Object.keys(existingAnswers);
+          if (filledQuestions.length > 0) {
+            const firstIncomplete = questions.findIndex(q => !existingAnswers[q.id]);
+            // Don't skip welcome if no questions completed, otherwise go to first incomplete
+            if (firstIncomplete > 0) {
+              setCurrentIndex(firstIncomplete);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      } finally {
+        setIsLoadingProfile(false);
+        setHasLoadedProfile(true);
+      }
+    };
+
+    loadExistingProfile();
+  }, [hasLoadedProfile]);
+
+  // Pre-fill first/last name from user data (fallback if profile is empty)
+  useEffect(() => {
+    if (userData?.name && !answers.firstName) {
       const [first, ...rest] = userData.name.split(' ');
       setAnswers(prev => ({
         ...prev,
-        firstName: first || '',
-        lastName: rest.join(' ') || '',
+        firstName: prev.firstName || first || '',
+        lastName: prev.lastName || rest.join(' ') || '',
       }));
     }
-  }, [userData]);
+  }, [userData, answers.firstName]);
 
   // Set current value when navigating to a question
   useEffect(() => {
@@ -255,21 +308,71 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
     return true;
   }, [currentQuestion, currentValue]);
 
+  // Save current answer to database (incremental save)
+  const saveCurrentAnswer = useCallback(async (questionId: string, value: string | string[]) => {
+    const updateData: Record<string, unknown> = {};
+
+    // Map question ID to API field
+    switch (questionId) {
+      case 'firstName':
+        updateData.firstName = value;
+        break;
+      case 'lastName':
+        updateData.lastName = value;
+        break;
+      case 'title':
+        updateData.title = value;
+        break;
+      case 'location':
+        updateData.location = value;
+        break;
+      case 'currentCompany':
+        updateData.companyName = value;
+        break;
+      case 'yearsExperience':
+        updateData.yearsExperience = parseInt(String(value).split('-')[0]) || 0;
+        break;
+      case 'skills':
+        updateData.skills = value;
+        break;
+      case 'bio':
+        updateData.bio = value;
+        break;
+      // seniorityLevel and interests are stored separately or skipped for now
+      default:
+        return; // Skip fields that don't map to profile
+    }
+
+    try {
+      await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData),
+      });
+    } catch (err) {
+      console.error('Failed to save answer:', err);
+      // Don't block navigation on save failure
+    }
+  }, []);
+
   const handleNext = useCallback(async () => {
     if (!validateAndProceed()) return;
 
-    // Save current answer
+    // Save current answer locally and to database
     if (currentQuestion) {
       setAnswers(prev => ({
         ...prev,
         [currentQuestion.id]: currentValue,
       }));
+
+      // Save to database incrementally (don't wait for it)
+      saveCurrentAnswer(currentQuestion.id, currentValue);
     }
 
     setDirection('forward');
 
     if (isLastQuestion) {
-      // Submit all answers
+      // Submit final answer and mark complete
       setIsSubmitting(true);
       try {
         const finalAnswers = {
@@ -277,6 +380,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           [currentQuestion!.id]: currentValue,
         };
 
+        // Final save to ensure all data is persisted
         const response = await fetch('/api/user/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -288,7 +392,6 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
             companyName: finalAnswers.currentCompany,
             yearsExperience: parseInt(String(finalAnswers.yearsExperience).split('-')[0]) || 0,
             skills: finalAnswers.skills,
-            interests: finalAnswers.interests,
             bio: finalAnswers.bio,
           }),
         });
@@ -311,7 +414,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
     } else {
       setCurrentIndex(prev => prev + 1);
     }
-  }, [validateAndProceed, currentQuestion, currentValue, isLastQuestion, answers, onComplete]);
+  }, [validateAndProceed, currentQuestion, currentValue, isLastQuestion, answers, saveCurrentAnswer, onComplete, markOnboardingComplete]);
 
   const handleBack = useCallback(() => {
     if (currentQuestion) {
@@ -342,6 +445,19 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
     setError(null);
   };
 
+  // Loading state while fetching profile
+  if (isLoadingProfile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-navy-50 via-bg to-bg">
+        <div className="loading-spinner w-10 h-10 mb-4"></div>
+        <p className="text-base text-text-secondary">Loading your profile...</p>
+      </div>
+    );
+  }
+
+  // Check if user is resuming (has some answers filled)
+  const isResuming = Object.keys(answers).length > 2; // More than just first/last name
+
   // Welcome screen
   if (currentIndex === -1) {
     return (
@@ -357,22 +473,25 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           </div>
 
           <h1 className="text-3xl font-bold text-text-primary mb-4">
-            Hey {firstName}!
+            {isResuming ? `Welcome back, ${firstName}!` : `Hey ${firstName}!`}
           </h1>
           <p className="text-lg text-text-secondary leading-relaxed mb-8">
-            Let's set up your profile in a few quick questions. This helps us match you with the best opportunities.
+            {isResuming
+              ? "Let's finish setting up your profile. We saved your progress."
+              : "Let's set up your profile in a few quick questions. This helps us match you with the best opportunities."
+            }
           </p>
 
           <div className="flex items-center justify-center gap-2 text-sm text-text-tertiary mb-10">
             <span className="w-2 h-2 bg-navy rounded-full"></span>
-            <span>Takes about 2 minutes</span>
+            <span>{isResuming ? 'Just a few more questions' : 'Takes about 2 minutes'}</span>
           </div>
 
           <button
             onClick={() => setCurrentIndex(0)}
             className="w-full btn-primary min-h-14 text-base font-semibold flex items-center justify-center gap-2 mb-4"
           >
-            Let's go
+            {isResuming ? 'Continue' : "Let's go"}
             <ArrowRightIcon className="h-5 w-5" />
           </button>
 

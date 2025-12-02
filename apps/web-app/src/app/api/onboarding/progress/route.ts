@@ -107,7 +107,14 @@ export async function PUT(request: NextRequest) {
         message: 'Onboarding completed successfully',
       });
     } else if (action === 'skip') {
-      // Store skip timestamp in UserPreferences
+      // Mark profile as completed AND store skip timestamp
+      // This prevents the redirect loop while still tracking that user skipped
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { profileCompleted: true },
+      });
+
+      // Store skip timestamp in UserPreferences for tracking
       const existingPrefs = await prisma.userPreferences.findUnique({
         where: { userId: session.user.id },
       });
@@ -136,6 +143,7 @@ export async function PUT(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
+        isCompleted: true,
         skippedAt: new Date().toISOString(),
         message: 'Onboarding skipped. You can complete your profile later.',
       });

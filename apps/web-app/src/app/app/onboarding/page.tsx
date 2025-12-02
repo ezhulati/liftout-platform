@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { ConversationalOnboarding } from '@/components/onboarding/ConversationalOnboarding';
 import { toast } from 'react-hot-toast';
 
 export default function OnboardingPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update: updateSession } = useSession();
   const { isOnboardingCompleted, skipOnboarding } = useOnboarding();
+  const router = useRouter();
   const hasRedirected = useRef(false);
   const [isReady, setIsReady] = useState(false);
 
@@ -24,22 +26,32 @@ export default function OnboardingPage() {
   }, [status]);
 
   useEffect(() => {
-    // If onboarding is already completed, redirect to dashboard
+    // If onboarding is already completed (DB says so), update session and redirect to dashboard
+    // This handles the case where JWT has stale profileCompleted value
     if (isReady && isOnboardingCompleted && !hasRedirected.current) {
       hasRedirected.current = true;
-      window.location.href = '/app/dashboard';
+      // Update session to match DB state, then redirect
+      updateSession({ profileCompleted: true }).then(() => {
+        router.push('/app/dashboard');
+      });
     }
-  }, [isReady, isOnboardingCompleted]);
+  }, [isReady, isOnboardingCompleted, router, updateSession]);
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = async () => {
+    // Update session to reflect profile completion
+    await updateSession({ profileCompleted: true });
     toast.success('Welcome to Liftout! Your profile is ready.');
-    window.location.href = '/app/dashboard';
+    // Use router.push to maintain session state (avoid race condition with full page reload)
+    router.push('/app/dashboard');
   };
 
   const handleOnboardingSkip = async () => {
     await skipOnboarding();
+    // Update session to reflect profile completion (skip also marks as complete)
+    await updateSession({ profileCompleted: true });
     toast.success('You can complete your profile anytime from Settings.');
-    window.location.href = '/app/dashboard';
+    // Use router.push to maintain session state (avoid race condition with full page reload)
+    router.push('/app/dashboard');
   };
 
   // Show loading while session is being determined
@@ -56,7 +68,7 @@ export default function OnboardingPage() {
 
   // Redirect to signin if not authenticated (shouldn't happen due to AppLayout check)
   if (status === 'unauthenticated' || !session) {
-    window.location.href = '/auth/signin';
+    router.push('/auth/signin');
     return null;
   }
 
@@ -65,7 +77,7 @@ export default function OnboardingPage() {
     // Trigger redirect if not already done
     if (!hasRedirected.current) {
       hasRedirected.current = true;
-      window.location.href = '/app/dashboard';
+      router.push('/app/dashboard');
     }
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">

@@ -207,13 +207,16 @@ export const authOptions: NextAuthOptions = {
         token.twoFactorVerified = user.twoFactorVerified;
       }
 
-      // Handle session updates (for 2FA verification)
+      // Handle session updates (for 2FA verification and profile completion)
       if (trigger === 'update' && session) {
         if (session.twoFactorVerified !== undefined) {
           token.twoFactorVerified = session.twoFactorVerified;
         }
         if (session.twoFactorEnabled !== undefined) {
           token.twoFactorEnabled = session.twoFactorEnabled;
+        }
+        if (session.profileCompleted !== undefined) {
+          token.profileCompleted = session.profileCompleted;
         }
       }
       return token;
