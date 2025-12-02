@@ -329,10 +329,21 @@
   }
 
   .btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed;
+    @apply cursor-not-allowed;
+    opacity: 0.6; /* Practical UI: 3:1 minimum contrast for disabled */
     transform: none;
     box-shadow: none;
     color: var(--text-on-navy);
+  }
+
+  /* Practical UI: Disabled button with explanation - preferred alternative */
+  .btn-primary[aria-disabled="true"] {
+    @apply cursor-not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+    color: var(--text-on-navy);
+    pointer-events: auto; /* Allow hover for tooltip */
   }
 
   /* Secondary Button - Outline style per Practical UI
@@ -797,7 +808,7 @@
 
   .badge-warning {
     background-color: var(--warning-light);
-    color: hsl(38, 95%, 35%);
+    color: hsl(38, 95%, 30%); /* Darker for better contrast */
   }
 
   .badge-error {

@@ -171,13 +171,10 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
               {/* Hover highlight */}
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-900/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <Image
-                src="/Liftout-logo-dark.png"
+              <img
+                src="/liftout.svg"
                 alt="Liftout"
-                width={180}
-                height={48}
                 className="h-[48px] w-auto relative"
-                priority
               />
             </div>
           </Link>

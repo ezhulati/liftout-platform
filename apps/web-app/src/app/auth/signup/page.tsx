@@ -142,12 +142,10 @@ export default function SignUpPage() {
             <div className="relative bg-gradient-to-b from-white/[0.08] to-white/[0.03] rounded-xl px-5 py-2.5 border border-white/10 group-hover:border-white/20 transition-all duration-300">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.05] via-transparent to-transparent" />
               <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              <Image
-                src="/Liftout-logo-white.png"
+              <img
+                src="/liftout.svg"
                 alt="Liftout"
-                width={200}
-                height={52}
-                className="h-[52px] w-auto relative"
+                className="h-[52px] w-auto relative brightness-0 invert"
               />
             </div>
           </Link>
@@ -199,11 +197,9 @@ export default function SignUpPage() {
             <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-xl px-4 py-2 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/60 via-transparent to-transparent" />
               <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
-              <Image
-                src="/Liftout-logo-dark.png"
+              <img
+                src="/liftout.svg"
                 alt="Liftout"
-                width={160}
-                height={44}
                 className="h-10 w-auto relative"
               />
             </div>

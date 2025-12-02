@@ -1,5 +1,18 @@
 import type { Config } from 'tailwindcss'
 
+/**
+ * PRACTICAL UI DESIGN SYSTEM ALIGNMENT
+ * Based on Adham Dannaway's Practical UI (283 pages)
+ *
+ * ✅ Typography: Inter (single sans-serif), 1.25 Major Third scale
+ * ✅ Spacing: 8pt grid (XS=8, S=16, M=24, L=32, XL=48, XXL=80)
+ * ✅ Colors: HSB monochromatic palette with WCAG 2.1 AA contrast
+ * ✅ Buttons: 3-weight hierarchy (primary/secondary/tertiary), 48px touch targets
+ * ✅ Forms: Labels above, errors above input, 3:1 border contrast
+ * ✅ Line heights: 1.5+ for body, 1.1-1.3 for headings
+ * ✅ Max line length: 65ch for body text
+ */
+
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',

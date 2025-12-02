@@ -120,12 +120,10 @@ export function AdminSidebar() {
       <div className="flex items-center h-16 px-4 border-b border-gray-800">
         <Link href="/admin" className="flex items-center group">
           <div className="relative bg-gray-900 rounded-lg px-3 py-1.5 border border-gray-700 group-hover:border-gray-600 transition-all duration-300">
-            <Image
-              src="/Liftout-logo-dark.png"
+            <img
+              src="/liftout.svg"
               alt="Liftout"
-              width={120}
-              height={32}
-              className="h-7 w-auto invert"
+              className="h-7 w-auto brightness-0 invert"
             />
           </div>
           <span className="ml-2 text-xs font-bold text-red-500 uppercase tracking-wider">

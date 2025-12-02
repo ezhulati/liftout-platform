@@ -61,7 +61,7 @@ export function AppSidebar() {
   const isCompanyUser = userType === 'company';
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
 
-  // Purple sidebar nav link - Figma design: dark bg, lighter selected state
+  // Purple sidebar nav link - Practical UI: 48px touch target, 8pt grid spacing
   const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; badge?: number } }) => {
     const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
     return (
@@ -73,15 +73,15 @@ export function AppSidebar() {
             : 'text-white/80 hover:bg-white/10 hover:text-white'
         }`}
       >
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <item.icon
-            className={`mr-3 flex-shrink-0 h-5 w-5 ${isActive ? 'text-white' : 'text-white/80'}`}
+            className={`flex-shrink-0 h-5 w-5 ${isActive ? 'text-white' : 'text-white/80'}`}
             aria-hidden="true"
           />
           {item.name}
         </div>
         {item.badge && (
-          <span className="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full min-w-6 text-center">
             {item.badge}
           </span>
         )}
@@ -107,12 +107,10 @@ export function AppSidebar() {
           {/* Header with logo */}
           <div className="flex items-center justify-between h-16 px-4">
             <Link href="/app/dashboard" className="flex items-center">
-              <Image
-                src="/Liftout-logo-white.png"
+              <img
+                src="/liftout.svg"
                 alt="Liftout"
-                width={140}
-                height={40}
-                className="h-8 w-auto"
+                className="h-8 w-auto brightness-0 invert"
               />
             </Link>
             <button
@@ -147,12 +145,10 @@ export function AppSidebar() {
           {/* Header with logo */}
           <div className="flex items-center h-16 px-4">
             <Link href="/app/dashboard" className="flex items-center">
-              <Image
-                src="/Liftout-logo-white.png"
+              <img
+                src="/liftout.svg"
                 alt="Liftout"
-                width={140}
-                height={40}
-                className="h-8 w-auto"
+                className="h-8 w-auto brightness-0 invert"
               />
             </Link>
           </div>

@@ -259,9 +259,9 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                 )}
               </div>
 
-              {/* Requirements and type */}
+              {/* Requirements and type - 8pt grid spacing */}
               <div className="flex items-center justify-between gap-4">
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {(opportunity.requirements || []).slice(0, 4).map((requirement: string, index: number) => (
                     <span key={`${requirement}-${index}`} className="badge badge-secondary text-xs">
                       {requirement}
