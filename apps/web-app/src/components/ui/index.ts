@@ -36,3 +36,7 @@ export { ErrorBoundary, PageErrorBoundary, useErrorBoundary } from './ErrorBound
 // Accessibility Components
 export { SkipToContent } from './SkipToContent';
 export { LiveRegionProvider, useLiveAnnounce } from './LiveRegion';
+
+// Additional UI Components
+export { Stepper } from './Stepper';
+export { UnavailableAction } from './UnavailableAction';

@@ -103,7 +103,7 @@ export default function TeamProfilePage() {
       }
 
       setHasExpressedInterest(true);
-      toast.success('Interest expressed successfully! The team will be notified.');
+      toast.success('Interest expressed. The team will be notified.');
       refetch();
     } catch (error) {
       console.error('Express interest error:', error);
@@ -220,7 +220,7 @@ export default function TeamProfilePage() {
           {/* Team Members */}
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
-              <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
+              <h2 className="text-lg font-bold text-text-primary">Team members</h2>
             </div>
             <div className="px-6 py-4">
               <div className="space-y-4">

@@ -110,7 +110,7 @@ export function MemberInvitation({
       onInviteSent(newInvite);
       reset();
       setIsInviting(false);
-      toast.success('Invitation sent successfully!');
+      toast.success('Invitation sent');
     } catch (error) {
       toast.error('Failed to send invitation');
     }
@@ -119,7 +119,7 @@ export function MemberInvitation({
   const resendInvitation = async (inviteId: string) => {
     try {
       // Simulate API call to resend
-      toast.success('Invitation resent successfully!');
+      toast.success('Invitation resent');
     } catch (error) {
       toast.error('Failed to resend invitation');
     }

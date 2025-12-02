@@ -131,7 +131,7 @@ export default function OpportunityDetailPage() {
         throw new Error('Failed to submit application');
       }
 
-      toast.success('Application submitted successfully!');
+      toast.success('Application submitted');
       setShowApplyModal(false);
       setCoverLetter('');
       router.push('/app/applications');
@@ -164,7 +164,7 @@ export default function OpportunityDetailPage() {
         throw new Error(data.error || 'Failed to express interest');
       }
 
-      toast.success('Interest expressed successfully!');
+      toast.success('Interest expressed');
     } catch (error) {
       console.error('Error expressing interest:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to express interest');

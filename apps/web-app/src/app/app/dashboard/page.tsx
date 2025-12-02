@@ -42,17 +42,17 @@ export default function DashboardPage() {
         {isCompanyUser ? (
           <Link
             href="/app/opportunities/create"
-            className="inline-flex items-center gap-2 px-5 py-3 min-h-12 bg-purple-700 hover:bg-purple-800 text-white font-medium rounded-lg transition-colors duration-fast shadow-sm whitespace-nowrap"
+            className="btn-primary"
           >
-            <PlusIcon className="h-5 w-5" />
+            <PlusIcon className="h-5 w-5 mr-2" />
             Post opportunity
           </Link>
         ) : (
           <Link
             href="/app/opportunities"
-            className="inline-flex items-center gap-2 px-5 py-3 min-h-12 bg-purple-700 hover:bg-purple-800 text-white font-medium rounded-lg transition-colors duration-fast shadow-sm whitespace-nowrap"
+            className="btn-primary"
           >
-            <MagnifyingGlassIcon className="h-5 w-5" />
+            <MagnifyingGlassIcon className="h-5 w-5 mr-2" />
             Browse opportunities
           </Link>
         )}
@@ -113,10 +113,10 @@ function RecommendedOpportunities() {
   return (
     <div className="bg-bg-surface rounded-lg border border-border p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-text-primary">Recommended for You</h2>
+        <h2 className="text-lg font-bold text-text-primary">Recommended for you</h2>
         <Link
           href="/app/opportunities"
-          className="text-sm font-medium text-purple-700 hover:text-purple-800"
+          className="text-sm font-bold text-purple-700 hover:text-purple-800"
         >
           View all
         </Link>
@@ -130,16 +130,16 @@ function RecommendedOpportunities() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-text-primary truncate">{opp.title}</h3>
-                <p className="text-sm text-text-secondary mt-0.5">{opp.company}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-text-tertiary">
+                <h3 className="text-sm font-bold text-text-primary truncate">{opp.title}</h3>
+                <p className="text-sm text-text-secondary mt-1">{opp.company}</p>
+                <div className="flex items-center gap-2 mt-2 text-sm text-text-tertiary">
                   <span>{opp.location}</span>
                   <span>•</span>
                   <span>{opp.teamSize} people</span>
                 </div>
               </div>
               <div className="flex-shrink-0">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-success-light text-success-dark">
+                <span className="badge badge-success">
                   {opp.matchScore}% match
                 </span>
               </div>

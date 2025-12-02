@@ -14,6 +14,8 @@ interface FormFieldProps {
   hint?: string;
   /** Whether the field is required (adds * indicator) */
   required?: boolean;
+  /** Whether to show "(optional)" indicator */
+  optional?: boolean;
   /** The form input element(s) */
   children: React.ReactNode;
   /** Additional CSS classes */
@@ -54,6 +56,7 @@ export function FormField({
   error,
   hint,
   required = false,
+  optional = false,
   children,
   className = '',
 }: FormFieldProps) {
@@ -102,6 +105,7 @@ export function FormField({
         className={`label-text ${required ? 'label-required' : ''}`}
       >
         {label}
+        {optional && <span className="text-text-tertiary font-normal ml-1">(optional)</span>}
       </label>
 
       {/* Hint - below label, above input */}

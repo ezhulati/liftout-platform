@@ -173,7 +173,7 @@ export function MemberManagement({
 
     setEditingMember(null);
     onMembersUpdate(updatedMembers);
-    toast.success('Member updated successfully');
+    toast.success('Member updated');
   };
 
   const removeMember = (memberIndex: number) => {
@@ -190,7 +190,7 @@ export function MemberManagement({
         id: m.id || `member_${Date.now()}_${index}`,
       }));
       onMembersUpdate(updatedMembers);
-      toast.success('Member removed successfully');
+      toast.success('Member removed');
     }
   };
 

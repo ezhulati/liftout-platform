@@ -99,7 +99,7 @@ export function Alert({
       {/* Content */}
       <div className="flex-1 min-w-0">
         {title && (
-          <h3 className="font-semibold text-text-primary mb-1">{title}</h3>
+          <h3 className="font-bold text-text-primary mb-1">{title}</h3>
         )}
         <div className="text-sm text-text-secondary">{children}</div>
       </div>

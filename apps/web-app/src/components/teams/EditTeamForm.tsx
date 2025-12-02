@@ -195,7 +195,7 @@ export function EditTeamForm({ teamId }: EditTeamFormProps) {
       return response.json();
     },
     onSuccess: () => {
-      toast.success(isDemoUser ? 'Team updated successfully! (demo mode)' : 'Team updated successfully!');
+      toast.success(isDemoUser ? 'Team updated (demo mode)' : 'Team updated');
       queryClient.invalidateQueries({ queryKey: ['team', teamId] });
       queryClient.invalidateQueries({ queryKey: ['teams'] });
       router.push(`/app/teams/${teamId}`);

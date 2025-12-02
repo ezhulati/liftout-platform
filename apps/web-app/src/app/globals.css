@@ -20,13 +20,14 @@
     --bg-elevated: hsl(270, 15%, 96%);
     --bg-alt: hsl(270, 5%, 97%);
 
-    /* Text hierarchy - High contrast for accessibility */
-    --text-primary: #1e1b4b;              /* Darkest indigo - headings */
-    --text-secondary: #4c4687;            /* Purple-gray - body */
-    --text-tertiary: #6b6494;             /* Muted purple-gray - helper */
-    --text-inverse: hsl(0, 0%, 100%);     /* White on dark */
-    --text-on-primary: hsl(0, 0%, 100%);  /* White on purple */
-    --text-on-accent: #1e1b4b;            /* Dark on amber */
+    /* Text hierarchy - WCAG contrast requirements (4.5:1 for small text) */
+    --text-primary: hsl(220, 60%, 15%);     /* Darker for better contrast */
+    --text-secondary: hsl(220, 35%, 38%);   /* Darker for 4.5:1 */
+    --text-tertiary: hsl(220, 25%, 48%);    /* Darker for 4.5:1 */
+    --text-muted: hsl(220, 15%, 60%);       /* Decorative only (3:1) */
+    --text-inverse: hsl(0, 0%, 100%);       /* White on dark */
+    --text-on-primary: hsl(0, 0%, 100%);    /* White on purple */
+    --text-on-accent: #1e1b4b;              /* Dark on amber */
 
     /* Primary: Deep Royal Purple - Full Scale */
     --primary: #4C1D95;                   /* Main brand color */
@@ -205,37 +206,16 @@
     color: var(--text-primary);
   }
 
-  /* Major Third Scale: 44px, 36px, 28px, 22px, 18px, 15px */
-  h1 {
-    font-size: 2.75rem;      /* 44px */
-    line-height: 1.1;
-    letter-spacing: -0.03em; /* Tighter for larger */
-  }
-  h2 {
-    font-size: 2.25rem;      /* 36px */
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-  }
-  h3 {
-    font-size: 1.75rem;      /* 28px */
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-  h4 {
-    font-size: 1.375rem;     /* 22px */
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-  }
-  h5 {
-    font-size: 1.125rem;     /* 18px - body size */
-    line-height: 1.3;
-    letter-spacing: 0;
-  }
-  h6 {
-    font-size: 0.9375rem;    /* 15px - small */
-    line-height: 1.4;
-    letter-spacing: 0;
-  }
+  /* Heading sizes controlled by Tailwind utilities for flexibility
+     Use text-sm through text-4xl classes to set sizes based on context.
+     This allows card titles to use text-sm while page titles use text-2xl.
+
+     Default heading scale for reference (apply via utility classes):
+     - Page title (h1): text-2xl to text-3xl
+     - Section title (h2): text-xl to text-2xl
+     - Card/widget title (h3): text-lg
+     - List item title (h4): text-sm to text-base
+  */
 
   p {
     max-width: 65ch;
@@ -316,7 +296,7 @@
   .btn-primary {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-xl relative overflow-hidden;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background: linear-gradient(to bottom, var(--navy), var(--navy-600));
     color: var(--text-on-navy);
@@ -360,7 +340,7 @@
   .btn-secondary {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 97%));
     color: var(--navy);
@@ -395,7 +375,7 @@
   .btn-outline {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background-color: transparent;
     color: var(--navy);
@@ -422,7 +402,7 @@
   .btn-ghost {
     @apply inline-flex items-center justify-center px-4 py-3 rounded-md;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-secondary);
     background-color: transparent;
     min-height: var(--touch-target-min);
@@ -443,41 +423,41 @@
     @apply opacity-50 cursor-not-allowed;
   }
 
-  /* Danger Button - For destructive actions */
+  /* Danger Button - Outline style for destructive actions (Practical UI) */
   .btn-danger {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
-    background-color: var(--error);
-    color: var(--text-inverse);
+    background-color: transparent;
+    color: var(--error);
+    border: 2px solid var(--error);
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
     transition: all var(--duration-fast) var(--ease-out-quart);
   }
 
   .btn-danger:hover {
-    background-color: hsl(0, 65%, 45%);
-    color: var(--text-inverse);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px hsl(0 65% 50% / 0.3);
+    background-color: var(--error-light);
+    border-color: var(--error);
+    color: var(--error);
   }
 
   .btn-danger:active {
     transform: translateY(0);
-    color: var(--text-inverse);
+    color: var(--error);
   }
 
   .btn-danger:focus-visible {
     box-shadow: 0 0 0 3px hsl(0 65% 50% / 0.4);
-    color: var(--text-inverse);
+    color: var(--error);
   }
 
   .btn-danger:disabled {
     @apply opacity-50 cursor-not-allowed;
     transform: none;
     box-shadow: none;
-    color: var(--text-inverse);
+    color: var(--error);
   }
 
   /* Tertiary Button - Underlined text only
@@ -717,83 +697,52 @@
   }
 
   /* ============================================
-     CARDS - Premium glass/badge treatment
+     CARDS - Clean, simple per Practical UI
+     Containers with borders, subtle shadow - no gradients
      ============================================ */
 
   .card {
-    position: relative;
-    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    background: hsl(0, 0%, 100%);
     border: 1px solid hsl(220, 20%, 88%);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 24px;
-    transition: all var(--duration-base) var(--ease-out-quart);
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
-    pointer-events: none;
+    transition: border-color var(--duration-fast) var(--ease-out-quart),
+                box-shadow var(--duration-fast) var(--ease-out-quart);
   }
 
   .card:hover {
-    border-color: hsl(220, 25%, 80%);
-    box-shadow: 0 4px 16px hsl(var(--shadow-color) / 0.1);
+    border-color: hsl(270, 40%, 70%);
+    box-shadow: 0 2px 8px hsl(var(--shadow-color) / 0.08);
   }
 
   .card-elevated {
-    position: relative;
-    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    background: hsl(0, 0%, 100%);
     border: 1px solid hsl(220, 20%, 90%);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px -2px hsl(var(--shadow-color) / 0.1),
-                0 2px 4px -2px hsl(var(--shadow-color) / 0.06);
-    transition: all var(--duration-base) var(--ease-out-quart);
-  }
-
-  .card-elevated::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
-    pointer-events: none;
+    box-shadow: 0 1px 3px hsl(var(--shadow-color) / 0.06);
+    transition: border-color var(--duration-fast) var(--ease-out-quart),
+                box-shadow var(--duration-fast) var(--ease-out-quart);
   }
 
   .card-elevated:hover {
-    transform: translateY(-2px);
-    border-color: hsl(220, 25%, 85%);
-    box-shadow: 0 12px 24px -4px hsl(var(--shadow-color) / 0.12),
-                0 4px 8px -4px hsl(var(--shadow-color) / 0.08);
+    border-color: hsl(270, 40%, 70%);
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.1);
   }
 
-  /* Premium glass card variant */
+  /* Glass card for overlays only */
   .card-glass {
-    position: relative;
-    background: hsl(0, 0%, 100% / 0.8);
-    backdrop-filter: blur(12px);
+    background: hsl(0, 0%, 100% / 0.95);
+    backdrop-filter: blur(8px);
     border: 1px solid hsl(220, 20%, 90%);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08);
-    transition: all var(--duration-base) var(--ease-out-quart);
-  }
-
-  .card-glass::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.5), transparent);
-    pointer-events: none;
+    box-shadow: 0 2px 8px hsl(var(--shadow-color) / 0.08);
+    transition: border-color var(--duration-fast) var(--ease-out-quart);
   }
 
   .card-glass:hover {
-    border-color: hsl(220, 25%, 85%);
-    box-shadow: 0 8px 20px hsl(var(--shadow-color) / 0.12);
+    border-color: hsl(270, 40%, 70%);
   }
 
   /* ============================================
@@ -1239,7 +1188,7 @@
   .btn-primary-on-dark {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background-color: hsl(0, 0%, 100%);
     color: hsl(220, 65%, 15%);
@@ -1262,7 +1211,7 @@
   .btn-secondary-on-dark {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background-color: transparent;
     color: hsl(0, 0%, 100%);
@@ -1381,7 +1330,7 @@
   .btn-purple {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     background-color: var(--purple);
     color: white;
@@ -1408,4 +1357,47 @@
     @apply opacity-50 cursor-not-allowed;
     transform: none;
   }
+
+  /* ============================================
+     PRACTICAL UI TYPOGRAPHY UTILITIES
+     Heading and body text styles
+     ============================================ */
+
+  /* Heading classes with Practical UI letter spacing */
+  .heading-1 {
+    @apply text-5xl font-bold leading-tight tracking-tighter;
+  }
+
+  .heading-2 {
+    @apply text-4xl font-bold leading-snug tracking-tighter;
+  }
+
+  .heading-3 {
+    @apply text-3xl font-bold leading-snug tracking-tight;
+  }
+
+  .heading-4 {
+    @apply text-2xl font-bold leading-normal tracking-tight;
+  }
+
+  /* Body text classes */
+  .body-lg {
+    @apply text-lg font-normal leading-relaxed;
+    max-width: 65ch;
+  }
+
+  .body-base {
+    @apply text-base font-normal leading-relaxed;
+  }
+
+  /* ============================================
+     PRACTICAL UI FIELD WIDTH UTILITIES
+     Semantic input field widths
+     ============================================ */
+
+  .input-width-xs { width: 80px; }    /* Zip codes, short codes */
+  .input-width-sm { width: 120px; }   /* Dates, small numbers */
+  .input-width-md { width: 200px; }   /* Names, short text */
+  .input-width-lg { width: 320px; }   /* Email, phone, medium text */
+  .input-width-xl { width: 480px; }   /* Long text, descriptions */
 }

@@ -20,20 +20,20 @@ const isDemoUserEmail = (email: string) =>
 const DEMO_OPPORTUNITIES_STORAGE_KEY = 'liftout_demo_opportunities';
 
 const createOpportunitySchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters'),
-  company: z.string().min(2, 'Company name is required'),
-  type: z.string().min(1, 'Please select a liftout type'),
-  description: z.string().min(50, 'Description must be at least 50 characters'),
-  teamSize: z.string().min(1, 'Team size requirement is required'),
-  compensation: z.string().min(1, 'Compensation details are required'),
-  location: z.string().min(1, 'Location is required'),
-  timeline: z.string().min(1, 'Timeline is required'),
-  requirements: z.array(z.string()).min(1, 'At least one requirement is required'),
-  whatWeOffer: z.array(z.string()).min(1, 'At least one offering is required'),
-  integrationPlan: z.string().min(20, 'Integration plan must be at least 20 characters'),
+  title: z.string().min(5, 'Title too short. Use at least 5 characters.'),
+  company: z.string().min(2, 'Company name missing. Enter your company name.'),
+  type: z.string().min(1, 'No liftout type selected. Choose a type from the list.'),
+  description: z.string().min(50, 'Description too short. Write at least 50 characters.'),
+  teamSize: z.string().min(1, 'Team size missing. Specify how many people you need.'),
+  compensation: z.string().min(1, 'Compensation missing. Enter your compensation details.'),
+  location: z.string().min(1, 'Location missing. Enter the work location.'),
+  timeline: z.string().min(1, 'Timeline missing. Specify when the team should start.'),
+  requirements: z.array(z.string()).min(1, 'No requirements added. Add at least one requirement.'),
+  whatWeOffer: z.array(z.string()).min(1, 'No offerings added. Add at least one offering.'),
+  integrationPlan: z.string().min(20, 'Integration plan too short. Write at least 20 characters.'),
   confidential: z.boolean(),
   urgent: z.boolean(),
-  industry: z.string().min(1, 'Please select an industry'),
+  industry: z.string().min(1, 'No industry selected. Choose an industry from the list.'),
 });
 
 type CreateOpportunityFormData = z.infer<typeof createOpportunitySchema>;
@@ -134,13 +134,13 @@ export function CreateOpportunityForm() {
         };
         existingOpportunities.push(newOpportunity);
         localStorage.setItem(`${DEMO_OPPORTUNITIES_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingOpportunities));
-        toast.success('Liftout opportunity created successfully! (demo mode)');
+        toast.success('Opportunity created (demo mode)');
         router.push('/app/opportunities');
         return;
       }
 
       await createOpportunityMutation.mutateAsync(data);
-      toast.success('Liftout opportunity created successfully!');
+      toast.success('Opportunity created');
       router.push('/app/opportunities');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create opportunity';
@@ -348,7 +348,7 @@ export function CreateOpportunityForm() {
                 onClick={addRequirement}
                 className="btn-outline min-h-12"
               >
-                Add
+                Add requirement
               </button>
             </div>
           </FormField>
@@ -402,7 +402,7 @@ export function CreateOpportunityForm() {
                 onClick={addOffering}
                 className="btn-outline min-h-12"
               >
-                Add
+                Add offering
               </button>
             </div>
           </FormField>

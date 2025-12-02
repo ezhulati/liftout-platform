@@ -163,7 +163,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                   />
                 ) : (
                   <div className="h-8 w-8 rounded-full bg-navy flex items-center justify-center">
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-bold text-white">
                       {initials}
                     </span>
                   </div>
@@ -171,7 +171,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 <span className="hidden lg:flex lg:items-center">
                   <div className="ml-3 text-left">
                     <span
-                      className="block text-sm font-semibold text-text-primary"
+                      className="block text-sm font-bold text-text-primary"
                       aria-hidden="true"
                     >
                       {user.name}
@@ -202,7 +202,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-50 mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
+                <Menu.Items className="absolute right-0 z-[100] mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (

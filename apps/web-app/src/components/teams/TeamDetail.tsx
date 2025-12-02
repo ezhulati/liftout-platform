@@ -192,7 +192,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
       return response.json();
     },
     onSuccess: () => {
-      toast.success('Team deleted successfully');
+      toast.success('Team deleted');
       queryClient.invalidateQueries({ queryKey: ['teams'] });
     },
     onError: (error: Error) => {
@@ -209,7 +209,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
     try {
       // For now, just update local state and show success
       setHasExpressedInterest(true);
-      toast.success('Interest expressed successfully!');
+      toast.success('Interest expressed');
     } catch (error) {
       toast.error('Failed to express interest');
     }
@@ -373,7 +373,7 @@ export function TeamDetail({ teamId }: TeamDetailProps) {
           <div className="card">
             <div className="px-6 py-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-text-primary">Team Members</h2>
+                <h2 className="text-lg font-bold text-text-primary">Team members</h2>
                 {isTeamOwner && (
                   <Link href={`/app/teams/${teamId}/members`} className="btn-outline min-h-12 text-base flex items-center">
                     <PlusIcon className="h-5 w-5 mr-2" />

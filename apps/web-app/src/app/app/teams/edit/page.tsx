@@ -108,7 +108,7 @@ export default function EditTeamPage() {
 
     try {
       await updateTeamMutation.mutateAsync({ id: team.id, ...formData });
-      toast.success('Team profile updated successfully!');
+      toast.success('Team profile updated');
       router.push(`/app/teams/${team.id}`);
     } catch (error) {
       toast.error('Failed to update team profile. Please try again.');

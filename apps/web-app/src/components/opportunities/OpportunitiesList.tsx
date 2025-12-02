@@ -182,15 +182,15 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
         resultCount={opportunities.length}
       />
 
-      {/* Opportunities List - Practical UI cards */}
+      {/* Opportunities List - Practical UI cards with 8pt grid spacing */}
       <div className="space-y-4">
         {opportunities.map((opportunity) => (
         <div key={opportunity.id} className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
-              {/* Header row with title and badges */}
-              <div className="flex flex-wrap items-center gap-2 mb-2">
-                <h3 className="text-lg font-bold text-text-primary leading-snug">
+              {/* Header row - Practical UI: card title smaller than page title */}
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h3 className="text-base font-bold text-text-primary">
                   <Link
                     href={`/app/opportunities/${opportunity.id}`}
                     className="hover:text-purple-700 transition-colors duration-fast"
@@ -198,7 +198,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                     {opportunity.title}
                   </Link>
                 </h3>
-                {/* Badges - Practical UI: consistent badge styling */}
+                {/* Badges - Practical UI: consistent styling */}
                 <span className={classNames(
                   'badge text-xs',
                   opportunity.status === 'active'
@@ -212,65 +212,58 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   {opportunity.status.replace('_', ' ')}
                 </span>
                 {opportunity.urgent && (
-                  <span className="badge badge-error text-xs">
-                    Urgent
-                  </span>
+                  <span className="badge badge-error text-xs">Urgent</span>
                 )}
                 {opportunity.confidential && (
-                  <span className="badge badge-warning text-xs">
-                    Confidential
-                  </span>
+                  <span className="badge badge-warning text-xs">Confidential</span>
                 )}
               </div>
 
-              {/* Meta row - Practical UI: regular weight for secondary info */}
-              <div className="flex flex-wrap items-center text-sm font-normal text-text-tertiary mb-3 gap-x-4 gap-y-1">
-                <span className="font-bold text-text-secondary">{opportunity.company}</span>
+              {/* Meta row - Practical UI: regular weight, icon + text, 8pt grid */}
+              <div className="flex flex-wrap items-center text-sm text-text-tertiary mb-4 gap-x-4 gap-y-1">
+                <span className="text-text-secondary">{opportunity.company}</span>
                 <div className="flex items-center">
-                  <MapPinIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                  <MapPinIcon className="h-4 w-4 mr-1 flex-shrink-0" aria-hidden="true" />
                   {opportunity.location}
                 </div>
                 <div className="flex items-center">
-                  <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+                  <ClockIcon className="h-4 w-4 mr-1 flex-shrink-0" aria-hidden="true" />
                   Posted {formatDistanceToNow(new Date(opportunity.createdAt), { addSuffix: true })}
                 </div>
               </div>
 
-              {/* Description - Practical UI: regular weight, relaxed line height */}
-              <p className="text-base font-normal text-text-secondary mb-4 line-clamp-2 leading-relaxed">
+              {/* Description - Practical UI: ≥1.5 line height for body */}
+              <p className="text-sm text-text-secondary mb-4 line-clamp-2 leading-relaxed">
                 {opportunity.description}
               </p>
 
-              {/* Info grid - Practical UI: icon + text pairs */}
+              {/* Info grid - Practical UI: 8pt grid (16px gap) */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="flex items-center text-sm font-normal text-text-secondary">
-                  <CurrencyDollarIcon className="h-5 w-5 mr-2 text-success flex-shrink-0" aria-hidden="true" />
+                <div className="flex items-center text-sm text-text-secondary">
+                  <CurrencyDollarIcon className="h-4 w-4 mr-2 text-success flex-shrink-0" aria-hidden="true" />
                   <span className="truncate">{opportunity.compensation}</span>
                 </div>
-                <div className="flex items-center text-sm font-normal text-text-secondary">
-                  <ClockIcon className="h-5 w-5 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
+                <div className="flex items-center text-sm text-text-secondary">
+                  <ClockIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
                   <span className="truncate">{opportunity.timeline}</span>
                 </div>
-                <div className="flex items-center text-sm font-normal text-text-secondary">
-                  <UserGroupIcon className="h-5 w-5 mr-2 text-purple-400 flex-shrink-0" aria-hidden="true" />
+                <div className="flex items-center text-sm text-text-secondary">
+                  <UserGroupIcon className="h-4 w-4 mr-2 text-purple-500 flex-shrink-0" aria-hidden="true" />
                   <span className="truncate">{opportunity.teamSize}</span>
                 </div>
                 {isCompanyUser && (
-                  <div className="flex items-center text-sm font-normal text-text-secondary">
-                    <DocumentTextIcon className="h-5 w-5 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
+                  <div className="flex items-center text-sm text-text-secondary">
+                    <DocumentTextIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
                     <span>{opportunity.applications?.length || 0} expressions</span>
                   </div>
                 )}
               </div>
 
-              {/* Requirements and type - Practical UI: secondary badges */}
+              {/* Requirements and type */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-wrap gap-1.5">
                   {(opportunity.requirements || []).slice(0, 4).map((requirement: string, index: number) => (
-                    <span
-                      key={`${requirement}-${index}`}
-                      className="badge badge-secondary text-xs"
-                    >
+                    <span key={`${requirement}-${index}`} className="badge badge-secondary text-xs">
                       {requirement}
                     </span>
                   ))}
@@ -280,10 +273,9 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                     </span>
                   )}
                 </div>
-
-                <div className="text-sm font-normal text-text-tertiary flex-shrink-0">
+                <span className="text-sm text-text-tertiary flex-shrink-0">
                   {opportunity.type || 'Strategic Expansion'}
-                </div>
+                </span>
               </div>
             </div>
 

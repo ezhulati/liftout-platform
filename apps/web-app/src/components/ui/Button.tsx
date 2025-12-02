@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Visual variant - Primary should be ONE per screen */
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'tertiary';
   /** Size variant */
   size?: 'sm' | 'md' | 'lg';
   /** Loading state - shows spinner and disables button */
@@ -74,6 +74,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       outline: 'btn-outline',
       ghost: 'btn-ghost',
       danger: 'btn-danger',
+      tertiary: 'btn-tertiary',
     };
 
     // Size classes

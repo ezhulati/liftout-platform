@@ -107,7 +107,7 @@ export function ProfileSettings() {
       // For demo users, save to localStorage instead of Firestore
       if (isDemoUser) {
         saveDemoSettings(formData);
-        toast.success('Profile updated successfully');
+        toast.success('Profile saved');
         return;
       }
 
@@ -118,7 +118,7 @@ export function ProfileSettings() {
       }
 
       await updateProfile(formData);
-      toast.success('Profile updated successfully');
+      toast.success('Profile saved');
     } catch (error) {
       console.error('Failed to update profile:', error);
       toast.error('Failed to update profile');
@@ -189,7 +189,7 @@ export function ProfileSettings() {
             </div>
           </FormField>
 
-          <FormField label="Phone number" name="phone">
+          <FormField label="Phone number" name="phone" optional>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <PhoneIcon className="h-5 w-5 text-text-tertiary" />
@@ -206,7 +206,7 @@ export function ProfileSettings() {
             </div>
           </FormField>
 
-          <FormField label="Location" name="location">
+          <FormField label="Location" name="location" optional>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MapPinIcon className="h-5 w-5 text-text-tertiary" />
@@ -228,7 +228,7 @@ export function ProfileSettings() {
         <div className="pt-6 border-t border-border space-y-5">
           <h4 className="text-base font-bold text-text-primary">Professional information</h4>
 
-          <FormField label="Current company" name="companyName">
+          <FormField label="Current company" name="companyName" optional>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <BuildingOfficeIcon className="h-5 w-5 text-text-tertiary" />
@@ -245,7 +245,7 @@ export function ProfileSettings() {
             </div>
           </FormField>
 
-          <FormField label="Job title" name="position">
+          <FormField label="Job title" name="position" optional>
             <input
               type="text"
               name="position"
@@ -257,7 +257,7 @@ export function ProfileSettings() {
             />
           </FormField>
 
-          <FormField label="Industry" name="industry">
+          <FormField label="Industry" name="industry" optional>
             <select
               id="industry"
               name="industry"
@@ -285,7 +285,7 @@ export function ProfileSettings() {
         <div className="pt-6 border-t border-border space-y-5">
           <h4 className="text-base font-bold text-text-primary">Additional information</h4>
 
-          <FormField label="Bio" name="bio" hint="Brief description for your profile. Maximum 500 characters.">
+          <FormField label="Bio" name="bio" optional hint="Brief description for your profile. Maximum 500 characters.">
             <textarea
               id="bio"
               name="bio"
@@ -297,7 +297,7 @@ export function ProfileSettings() {
             />
           </FormField>
 
-          <FormField label="Website" name="website">
+          <FormField label="Website" name="website" optional>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <LinkIcon className="h-5 w-5 text-text-tertiary" />
@@ -314,7 +314,7 @@ export function ProfileSettings() {
             </div>
           </FormField>
 
-          <FormField label="LinkedIn profile" name="linkedin">
+          <FormField label="LinkedIn profile" name="linkedin" optional>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <LinkIcon className="h-5 w-5 text-text-tertiary" />

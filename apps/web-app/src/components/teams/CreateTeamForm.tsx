@@ -19,20 +19,20 @@ const isDemoUserEmail = (email: string) =>
 const DEMO_TEAMS_STORAGE_KEY = 'liftout_demo_teams';
 
 const memberSchema = z.object({
-  name: z.string().min(2, 'Member name is required'),
-  role: z.string().min(2, 'Member role is required'),
-  experience: z.number().min(0, 'Experience must be 0 or greater').max(50),
-  skills: z.array(z.string().min(1)).min(1, 'At least one skill is required'),
+  name: z.string().min(2, 'Member name too short. Enter at least 2 characters.'),
+  role: z.string().min(2, 'Member role too short. Enter at least 2 characters.'),
+  experience: z.number().min(0, 'Experience cannot be negative. Enter 0 or greater.').max(50, 'Experience too high. Enter 50 years or less.'),
+  skills: z.array(z.string().min(1)).min(1, 'No skills added. Add at least one skill.'),
 });
 
 const createTeamSchema = z.object({
-  name: z.string().min(5, 'Team name must be at least 5 characters'),
-  description: z.string().min(50, 'Description must be at least 50 characters'),
-  industry: z.string().min(1, 'Please select an industry'),
-  location: z.string().min(1, 'Location is required'),
-  members: z.array(memberSchema).min(2, 'Team must have at least 2 members'),
+  name: z.string().min(5, 'Team name too short. Use at least 5 characters.'),
+  description: z.string().min(50, 'Description too short. Write at least 50 characters.'),
+  industry: z.string().min(1, 'No industry selected. Choose an industry from the list.'),
+  location: z.string().min(1, 'Location missing. Enter your team location.'),
+  members: z.array(memberSchema).min(2, 'Not enough members. Add at least 2 team members.'),
   compensation: z.object({
-    range: z.string().min(1, 'Compensation range is required'),
+    range: z.string().min(1, 'Compensation range missing. Enter your expected range.'),
     equity: z.boolean(),
     benefits: z.string(),
   }),
@@ -108,13 +108,13 @@ export function CreateTeamForm() {
         };
         existingTeams.push(newTeam);
         localStorage.setItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingTeams));
-        toast.success('Team created successfully! (demo mode)');
+        toast.success('Team created (demo mode)');
         router.push('/app/teams');
         return;
       }
 
       await createTeamMutation.mutateAsync(data);
-      toast.success('Team created successfully!');
+      toast.success('Team created');
       router.push('/app/teams');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create team';
@@ -149,7 +149,7 @@ export function CreateTeamForm() {
 
         {/* Team Basic Info */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Team profile</h3>
+          <h3 className="text-lg font-bold text-text-primary">Team profile</h3>
 
           <FormField
             label="Team name"
@@ -217,7 +217,7 @@ export function CreateTeamForm() {
         {/* Team Members */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium text-text-primary">Team members</h3>
+            <h3 className="text-lg font-bold text-text-primary">Team members</h3>
             <TextLink onClick={() => append({ name: '', role: '', experience: 0, skills: [] })}>
               + Add member
             </TextLink>
@@ -226,10 +226,10 @@ export function CreateTeamForm() {
           {fields.map((field, index) => (
             <div key={field.id} className="border border-border rounded-lg p-5 space-y-4">
               <div className="flex justify-between items-center">
-                <h4 className="font-medium text-text-primary">Member {index + 1}</h4>
+                <h4 className="font-bold text-text-primary">Member {index + 1}</h4>
                 {fields.length > 2 && (
                   <TextLink variant="danger" onClick={() => remove(index)}>
-                    Remove
+                    Remove member
                   </TextLink>
                 )}
               </div>
@@ -325,7 +325,7 @@ export function CreateTeamForm() {
                     onClick={() => addSkill(index, skillInput[index] || '')}
                     className="btn-outline min-h-12"
                   >
-                    Add
+                    Add skill
                   </button>
                 </div>
               </FormField>
@@ -335,7 +335,7 @@ export function CreateTeamForm() {
 
         {/* Compensation */}
         <div className="space-y-5">
-          <h3 className="text-lg font-medium text-text-primary">Compensation expectations</h3>
+          <h3 className="text-lg font-bold text-text-primary">Compensation expectations</h3>
 
           <FormField
             label="Compensation range"
@@ -356,6 +356,7 @@ export function CreateTeamForm() {
           <FormField
             label="Benefits package"
             name="compensation.benefits"
+            optional
           >
             <input
               {...register('compensation.benefits')}

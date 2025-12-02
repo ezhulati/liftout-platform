@@ -49,7 +49,7 @@ export default function SignInPage() {
       if (result?.error) {
         toast.error('Invalid credentials');
       } else if (result?.ok) {
-        toast.success('Signed in successfully');
+        toast.success('Signed in');
         window.location.href = '/app/dashboard';
       }
     } catch (error: unknown) {

@@ -88,15 +88,16 @@ const config: Config = {
           900: 'hsl(38, 55%, 28%)',
           950: 'hsl(38, 50%, 20%)',
         },
-        // Text hierarchy - Following Practical UI contrast requirements
+        // Text hierarchy - Following Practical UI WCAG contrast requirements
         // Small text needs 4.5:1, Large text 3:1, UI components 3:1
         text: {
-          primary: 'hsl(220, 60%, 20%)',     // Darkest - headings, primary text
-          secondary: 'hsl(220, 30%, 45%)',   // Dark - secondary text
-          tertiary: 'hsl(220, 20%, 55%)',    // Medium - helper text, placeholders
+          primary: 'hsl(220, 60%, 15%)',     // Darker for better contrast
+          secondary: 'hsl(220, 35%, 38%)',   // Darker for 4.5:1
+          tertiary: 'hsl(220, 25%, 48%)',    // Darker for 4.5:1 (was 55%)
+          muted: 'hsl(220, 15%, 60%)',       // NEW: decorative only (3:1)
           inverse: 'hsl(0, 0%, 100%)',       // White - text on dark backgrounds
           'on-navy': 'hsl(0, 0%, 100%)',     // White text on navy
-          'on-gold': 'hsl(220, 60%, 15%)',   // Dark text on gold
+          'on-gold': 'hsl(220, 60%, 12%)',   // Dark text on gold
         },
         // Borders - Following Practical UI 3:1 contrast for non-decorative
         border: {
@@ -161,17 +162,19 @@ const config: Config = {
         body: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      // Major Third (1.25) type scale
+      // Practical UI Type Scale (Major Third 1.25)
+      // Body: 16px base, 18px minimum for body text
+      // Line height: ≥1.5 for body, 1.1-1.3 for headings
       fontSize: {
-        'xs': ['0.8rem', { lineHeight: '1.5' }],
-        'sm': ['1rem', { lineHeight: '1.5' }],
-        'base': ['1.125rem', { lineHeight: '1.5' }],
-        'lg': ['1.25rem', { lineHeight: '1.4' }],
-        'xl': ['1.563rem', { lineHeight: '1.3' }],
-        '2xl': ['1.953rem', { lineHeight: '1.2' }],
-        '3xl': ['2.441rem', { lineHeight: '1.15' }],
-        '4xl': ['3.052rem', { lineHeight: '1.1' }],
-        '5xl': ['3.815rem', { lineHeight: '1.1' }],
+        'xs': ['0.8125rem', { lineHeight: '1.5' }],      // 13px
+        'sm': ['0.875rem', { lineHeight: '1.5' }],       // 14px
+        'base': ['1rem', { lineHeight: '1.5' }],         // 16px
+        'lg': ['1.125rem', { lineHeight: '1.5' }],       // 18px (body minimum)
+        'xl': ['1.25rem', { lineHeight: '1.4' }],        // 20px
+        '2xl': ['1.375rem', { lineHeight: '1.35' }],     // 22px H4 (was 24px)
+        '3xl': ['1.75rem', { lineHeight: '1.25' }],      // 28px H3
+        '4xl': ['2.1875rem', { lineHeight: '1.2' }],     // 35px H2 (was 36px)
+        '5xl': ['2.75rem', { lineHeight: '1.1' }],       // 44px H1
       },
       // Contextual line heights (Elite UI/UX - different for each element type)
       lineHeight: {
@@ -182,13 +185,16 @@ const config: Config = {
         'relaxed': '1.6',    // Long-form content, code
         'loose': '1.75',     // Extra readable content
       },
-      // Letter spacing
+      // Letter spacing - Practical UI scale for optimal readability
       letterSpacing: {
-        'tighter': '-0.03em',
-        'tight': '-0.02em',
-        'normal': '0',
-        'wide': '0.05em',
-        'wider': '0.08em',
+        'tightest': '-0.04em',  // 44px+ display
+        'tighter': '-0.03em',   // 35-44px H1
+        'tight': '-0.02em',     // 22-35px H2-H3
+        'snug': '-0.01em',      // 18-22px H4
+        'normal': '0',          // Body
+        'wide': '0.02em',       // 14-16px small
+        'wider': '0.05em',      // 12-13px very small
+        'widest': '0.08em',     // Uppercase labels
       },
       // 8-point grid spacing
       spacing: {

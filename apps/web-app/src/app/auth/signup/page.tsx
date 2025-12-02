@@ -283,7 +283,7 @@ export default function SignUpPage() {
                   <UserGroupIcon className={`w-8 h-8 mx-auto mb-2 ${
                     formData.userType === 'individual' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className={`font-semibold text-sm ${
+                  <div className={`font-bold text-sm ${
                     formData.userType === 'individual' ? 'text-white' : 'text-text-primary'
                   }`}>Individual / Team</div>
                   <div className={`text-sm mt-1 ${
@@ -305,7 +305,7 @@ export default function SignUpPage() {
                   <BuildingOffice2Icon className={`w-8 h-8 mx-auto mb-2 ${
                     formData.userType === 'company' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className={`font-semibold text-sm ${
+                  <div className={`font-bold text-sm ${
                     formData.userType === 'company' ? 'text-white' : 'text-text-primary'
                   }`}>Company</div>
                   <div className={`text-sm mt-1 ${

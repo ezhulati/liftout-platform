@@ -110,7 +110,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
     <div className="space-y-4">
       <div className="flex items-center">
         <UserGroupIcon className="h-5 w-5 text-navy mr-2" />
-        <h3 className="text-lg font-medium text-text-primary">
+        <h3 className="text-lg font-bold text-text-primary">
           Team invitations ({invitations.length})
         </h3>
       </div>
@@ -124,10 +124,10 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
-                  <h4 className="text-base font-semibold text-text-primary">
+                  <h4 className="text-base font-bold text-text-primary">
                     {invitation.teamName}
                   </h4>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-navy-100 text-navy-800">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-navy-100 text-navy-800">
                     {getRoleDescription(invitation.role)}
                   </span>
                 </div>
@@ -189,7 +189,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
         <div className="flex">
           <InformationCircleIcon className="h-5 w-5 text-navy flex-shrink-0" />
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-navy-800">
+            <h3 className="text-sm font-bold text-navy-800">
               About team invitations
             </h3>
             <p className="mt-1 text-sm text-navy-700">

@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { getDemoDataForUser } from '@/lib/demo-accounts';
-import { useOnboarding } from '@/contexts/OnboardingContext';
-import { ProgressRingCompact } from '@/components/onboarding/ProgressRing';
 import {
   HomeIcon,
   UserGroupIcon,
@@ -20,7 +18,6 @@ import {
   QuestionMarkCircleIcon,
   MagnifyingGlassIcon,
   UsersIcon,
-  ArrowRightOnRectangleIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 
@@ -55,7 +52,6 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isOnboardingCompleted, profileCompleteness } = useOnboarding();
 
   // Get user data from NextAuth session
   const user = session?.user;
@@ -63,9 +59,6 @@ export function AppSidebar() {
   const userType = user?.userType || demoData?.userType || 'individual';
 
   const isCompanyUser = userType === 'company';
-  const showProfileReminder = !isOnboardingCompleted && user;
-  const completionPercentage = profileCompleteness?.overall || 0;
-
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
 
   // Purple sidebar nav link - Figma design: dark bg, lighter selected state
@@ -74,7 +67,7 @@ export function AppSidebar() {
     return (
       <Link
         href={item.href}
-        className={`group flex items-center justify-between px-4 py-3 min-h-12 text-base font-medium rounded-lg transition-all duration-200 ${
+        className={`group flex items-center justify-between px-4 py-3 min-h-12 text-base font-bold rounded-lg transition-all duration-200 ${
           isActive
             ? 'bg-white/15 text-white'
             : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -139,29 +132,11 @@ export function AppSidebar() {
             ))}
           </nav>
 
-          {/* Bottom section - Support, Settings, User */}
+          {/* Bottom section - Support, Settings */}
           <div className="px-3 pb-4 space-y-1">
             {secondaryNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
-
-            {/* User profile */}
-            {user && (
-              <div className="mt-4 px-4 py-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
-                  {(user.name || user.email || 'U')[0].toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {user.name || demoData?.profile?.name || 'User'}
-                  </p>
-                  <p className="text-xs text-white/70 truncate">
-                    {demoData?.profile?.company || demoData?.company?.name || user.email}
-                  </p>
-                </div>
-                <ArrowRightOnRectangleIcon className="h-5 w-5 text-white/70" />
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -189,29 +164,11 @@ export function AppSidebar() {
             ))}
           </nav>
 
-          {/* Bottom section - Support, Settings, User */}
+          {/* Bottom section - Support, Settings */}
           <div className="px-3 pb-4 space-y-1">
             {secondaryNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
-
-            {/* User profile */}
-            {user && (
-              <div className="mt-4 px-4 py-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
-                  {(user.name || user.email || 'U')[0].toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {user.name || demoData?.profile?.name || 'User'}
-                  </p>
-                  <p className="text-xs text-white/70 truncate">
-                    {demoData?.profile?.company || demoData?.company?.name || user.email}
-                  </p>
-                </div>
-                <ArrowRightOnRectangleIcon className="h-5 w-5 text-white/70" />
-              </div>
-            )}
           </div>
         </div>
       </div>
