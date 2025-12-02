@@ -2,6 +2,7 @@ import { LandingHero } from '@/components/landing/LandingHero';
 import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
+import { HBRInsight } from '@/components/landing/HBRInsight';
 import { Testimonials } from '@/components/landing/Testimonials';
 import { FAQTabs } from '@/components/landing/FAQTabs';
 import { LandingCTA } from '@/components/landing/LandingCTA';
@@ -77,6 +78,7 @@ export default function HomePage() {
         <HowItWorksTabs />
         <LandingFeatures />
         <TrustIndicators />
+        <HBRInsight />
         <Testimonials />
         <FAQTabs />
         <LandingCTA />

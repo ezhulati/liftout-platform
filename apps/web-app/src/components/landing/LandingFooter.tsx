@@ -109,6 +109,14 @@ export function LandingFooter() {
             <ul className="space-y-4">
               <li>
                 <Link
+                  href="/what-is-a-liftout"
+                  className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
+                >
+                  What is a Liftout?
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/for-companies"
                   className="text-white/70 hover:text-white transition-colors duration-200 text-lg inline-block py-1"
                 >
