@@ -26,22 +26,22 @@ interface Team {
 
 const mockTeams: Team[] = [
   {
-    id: '1',
-    name: 'DataViz Analytics Core',
-    description: 'High-performing analytics team specializing in enterprise data visualization and business intelligence solutions',
+    id: 'team_demo_001',
+    name: 'TechFlow Data Science Team',
+    description: 'Elite data science team with proven track record in fintech analytics and machine learning solutions',
     industry: 'Financial Services',
     location: 'San Francisco, CA',
-    size: 5,
+    size: 4,
     rating: 4.8,
-    skills: ['React', 'D3.js', 'Python', 'PostgreSQL'],
+    skills: ['Machine Learning', 'Python', 'SQL', 'Financial Modeling'],
     yearsWorkingTogether: 3,
     successfulLiftouts: 2,
     currentCompany: 'DataFlow Inc.',
   },
   {
-    id: '2',
+    id: 'team_demo_002',
     name: 'Mobile First Team',
-    description: 'Intact mobile development team with proven track record in consumer and enterprise applications',
+    description: 'Intact mobile development team with proven track record in consumer and enterprise applications across iOS and Android',
     industry: 'Technology',
     location: 'Austin, TX',
     size: 4,
@@ -52,14 +52,14 @@ const mockTeams: Team[] = [
     currentCompany: 'MobileTech Solutions',
   },
   {
-    id: '3',
+    id: 'team_demo_003',
     name: 'AI Strategy Group',
-    description: 'Elite machine learning team that has successfully implemented AI solutions across multiple industries',
+    description: 'Elite machine learning team that has successfully implemented AI solutions across healthcare, finance, and retail',
     industry: 'Healthcare Technology',
     location: 'Boston, MA',
     size: 6,
     rating: 4.7,
-    skills: ['Python', 'TensorFlow', 'PyTorch', 'AWS'],
+    skills: ['Deep Learning', 'TensorFlow', 'PyTorch', 'Computer Vision'],
     yearsWorkingTogether: 5,
     successfulLiftouts: 3,
     currentCompany: 'MedAI Innovations',
@@ -99,16 +99,9 @@ export function RecommendedTeams() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-6">
-        {/* Section heading - Practical UI: bold weight */}
-        <h3 className="text-lg font-bold text-text-primary font-heading">Recommended Teams</h3>
-        {/* Tertiary action - underlined link style */}
-        <Link
-          href="/app/search?type=teams"
-          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
-        >
-          Browse all
-        </Link>
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+        {/* Section heading - matches Figma exactly */}
+        <h3 className="text-lg font-bold text-text-primary">Teams you may be interested in</h3>
       </div>
 
       <div className="space-y-4">
@@ -194,21 +187,32 @@ export function RecommendedTeams() {
         ))}
       </div>
 
+      {/* CTA Card - matches Figma "Get matched with teams..." design */}
+      <div className="bg-purple-700 rounded-xl p-6 text-white">
+        <h3 className="text-xl font-bold mb-2">Get matched with teams...</h3>
+        <p className="text-white/80 mb-6">
+          Post your team opportunity and have teams find you.
+        </p>
+        <Link
+          href="/app/opportunities/create"
+          className="inline-flex items-center gap-2 px-5 py-3 bg-white text-purple-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          Post a team opportunity
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </Link>
+      </div>
+
       {(!teams || teams.length === 0) && (
         <div className="text-center py-8">
           <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
             <UserGroupIcon className="h-7 w-7 text-text-tertiary" />
           </div>
-          <h4 className="text-base font-semibold text-text-primary mb-1">No team recommendations</h4>
-          <p className="text-base text-text-secondary mb-6">
-            Complete your company profile to get personalized team recommendations for liftout opportunities.
+          <h4 className="text-base font-semibold text-text-primary mb-1">No team recommendations yet</h4>
+          <p className="text-base text-text-secondary">
+            Post an opportunity to start receiving team recommendations.
           </p>
-          <Link
-            href="/app/profile"
-            className="btn-primary min-h-12"
-          >
-            Complete profile
-          </Link>
         </div>
       )}
     </div>

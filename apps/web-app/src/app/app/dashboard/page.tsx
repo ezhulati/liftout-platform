@@ -1,29 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { RecommendedTeams } from '@/components/dashboard/RecommendedTeams';
-import { DashboardOnboarding } from '@/components/dashboard/DashboardOnboarding';
 import { useSession } from 'next-auth/react';
 import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const hasRedirected = useRef(false);
-
-  // Only redirect NEW users (first login) to onboarding
-  // Use isNewUser flag which is set only on first OAuth sign-in
-  // Don't redirect returning users with incomplete profiles (they see inline prompt instead)
-  useEffect(() => {
-    if (status === 'authenticated' && session?.isNewUser && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.push('/app/onboarding');
-    }
-  }, [status, session?.isNewUser, router]);
 
   if (status === 'loading') {
     return (
@@ -37,32 +22,20 @@ export default function DashboardPage() {
     return null;
   }
 
-  // Show loading while redirecting new users to onboarding
-  if (session?.isNewUser) {
-    return (
-      <div className="min-h-96 flex items-center justify-center">
-        <div className="loading-spinner w-12 h-12"></div>
-      </div>
-    );
-  }
-
   const user = session.user;
   const isCompanyUser = user.userType === 'company';
   const firstName = user.firstName || user.name?.split(' ')[0] || user.name || 'User';
 
   return (
     <div className="space-y-6">
-      {/* Page header with action button */}
+      {/* Page header with action button - matches Figma */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-            Welcome back, {firstName}!
+            Welcome, {firstName}
           </h1>
           <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
-            {isCompanyUser
-              ? 'Manage your opportunities and find the perfect teams'
-              : 'Discover opportunities and connect with top companies'
-            }
+            Your dashboard shows a glimpse of everything.
           </p>
         </div>
         {/* Primary action button based on user type */}
@@ -85,23 +58,24 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Onboarding and Profile Completeness */}
-      <DashboardOnboarding />
-
       {/* Dashboard stats - 4 cards in a row */}
       <DashboardStats userType={user.userType || 'individual'} />
 
-      {/* Two-column layout for activity and recommendations */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent activity */}
-        <RecentActivity />
+      {/* Two-column layout - matches Figma: Teams wider (2/3), Activity narrower (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recommended teams/opportunities - wider column (2/3) */}
+        <div className="lg:col-span-2">
+          {isCompanyUser ? (
+            <RecommendedTeams />
+          ) : (
+            <RecommendedOpportunities />
+          )}
+        </div>
 
-        {/* Recommended teams/opportunities based on user type */}
-        {isCompanyUser ? (
-          <RecommendedTeams />
-        ) : (
-          <RecommendedOpportunities />
-        )}
+        {/* Recent activity - narrower column (1/3) */}
+        <div className="lg:col-span-1">
+          <RecentActivity />
+        </div>
       </div>
     </div>
   );

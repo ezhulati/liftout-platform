@@ -227,26 +227,10 @@ export function RecentActivity() {
       </div>
 
       {(!activities || activities.length === 0) && (
-        <div className="text-center py-8">
-          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
-            <svg
-              className="h-7 w-7 text-text-tertiary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </svg>
-          </div>
-          <h4 className="text-base font-semibold text-text-primary mb-1">No recent activity</h4>
-          <p className="text-base text-text-secondary">
-            Get started by updating your team profile or browsing liftout opportunities.
+        <div className="py-4">
+          <p className="font-semibold text-text-primary mb-1">No recent activity</p>
+          <p className="text-text-secondary">
+            Company requests to apply will appear here.
           </p>
         </div>
       )}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import {
   QuestionMarkCircleIcon,
   EnvelopeIcon,
@@ -217,16 +218,16 @@ export default function SupportPage() {
             </p>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-purple-500 hover:text-purple-600">Getting Started Guide</a>
+                <Link href="/app/onboarding" className="text-purple-500 hover:text-purple-600">Getting Started Guide</Link>
               </li>
               <li>
-                <a href="#" className="text-purple-500 hover:text-purple-600">Team Profile Best Practices</a>
+                <Link href="/app/teams/create" className="text-purple-500 hover:text-purple-600">Team Profile Best Practices</Link>
               </li>
               <li>
-                <a href="#" className="text-purple-500 hover:text-purple-600">Company User Guide</a>
+                <Link href="/app/opportunities/create" className="text-purple-500 hover:text-purple-600">Company User Guide</Link>
               </li>
               <li>
-                <a href="#" className="text-purple-500 hover:text-purple-600">Privacy & Security</a>
+                <Link href="/privacy" className="text-purple-500 hover:text-purple-600">Privacy & Security</Link>
               </li>
             </ul>
           </div>

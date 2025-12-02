@@ -3,6 +3,9 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   UserGroupIcon,
+  ChatBubbleLeftRightIcon,
+  MagnifyingGlassIcon,
+  UserPlusIcon,
   BriefcaseIcon,
   DocumentTextIcon,
   ChartBarIcon,
@@ -13,30 +16,33 @@ interface DashboardStatsProps {
 }
 
 interface StatsData {
-  teamsOrProfiles: number;
-  opportunities: number;
-  expressionsOfInterest: number;
-  activeConversations: number;
-  liftoutSuccessRate?: number;
-  marketReach?: number;
+  activePosts: number;
+  newMessages: number;
+  newTeams: number;
+  newCandidates: number;
+  // Team-specific
+  profileViews?: number;
+  opportunities?: number;
+  expressionsOfInterest?: number;
+  activeConversations?: number;
 }
 
 const fallbackTeamStats: StatsData = {
-  teamsOrProfiles: 1,
+  activePosts: 0,
+  newMessages: 0,
+  newTeams: 0,
+  newCandidates: 0,
+  profileViews: 8,
   opportunities: 15,
   expressionsOfInterest: 3,
   activeConversations: 2,
-  liftoutSuccessRate: 67,
-  marketReach: 8,
 };
 
 const fallbackCompanyStats: StatsData = {
-  teamsOrProfiles: 24,
-  opportunities: 5,
-  expressionsOfInterest: 12,
-  activeConversations: 7,
-  liftoutSuccessRate: 80,
-  marketReach: 156,
+  activePosts: 0,
+  newMessages: 0,
+  newTeams: 0,
+  newCandidates: 0,
 };
 
 export function DashboardStats({ userType }: DashboardStatsProps) {
@@ -63,65 +69,51 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
     staleTime: 30000, // Cache for 30 seconds
   });
 
+  // Team user stats
   const teamStats = [
     {
-      name: 'Team Profile Views',
-      value: stats?.marketReach || 0,
+      name: 'Profile Views',
+      value: stats?.profileViews || 0,
       icon: ChartBarIcon,
-      color: 'text-navy',
-      bgColor: 'bg-navy-50',
+    },
+    {
+      name: 'New Messages',
+      value: stats?.newMessages || 0,
+      icon: ChatBubbleLeftRightIcon,
     },
     {
       name: 'Available Opportunities',
       value: stats?.opportunities || 0,
       icon: BriefcaseIcon,
-      color: 'text-success',
-      bgColor: 'bg-success-light',
     },
     {
-      name: 'Expressions of Interest',
+      name: 'Interested Companies',
       value: stats?.expressionsOfInterest || 0,
       icon: DocumentTextIcon,
-      color: 'text-gold-700',
-      bgColor: 'bg-gold-50',
-    },
-    {
-      name: 'Active Discussions',
-      value: stats?.activeConversations || 0,
-      icon: UserGroupIcon,
-      color: 'text-navy-600',
-      bgColor: 'bg-navy-100',
     },
   ];
 
+  // Company user stats - matches Figma exactly
   const companyStats = [
     {
-      name: 'Active Liftout Opportunities',
-      value: stats?.opportunities || 0,
-      icon: BriefcaseIcon,
-      color: 'text-navy',
-      bgColor: 'bg-navy-50',
+      name: 'Active Posts',
+      value: stats?.activePosts || 0,
+      icon: UserPlusIcon,
     },
     {
-      name: 'Team Interest Received',
-      value: stats?.expressionsOfInterest || 0,
-      icon: DocumentTextIcon,
-      color: 'text-success',
-      bgColor: 'bg-success-light',
+      name: 'New Messages',
+      value: stats?.newMessages || 0,
+      icon: ChatBubbleLeftRightIcon,
     },
     {
-      name: 'Teams in Discussion',
-      value: stats?.activeConversations || 0,
+      name: 'New Teams',
+      value: stats?.newTeams || 0,
+      icon: MagnifyingGlassIcon,
+    },
+    {
+      name: 'New Candidates',
+      value: stats?.newCandidates || 0,
       icon: UserGroupIcon,
-      color: 'text-gold-700',
-      bgColor: 'bg-gold-50',
-    },
-    {
-      name: 'Success Rate',
-      value: `${stats?.liftoutSuccessRate || 0}%`,
-      icon: ChartBarIcon,
-      color: 'text-navy-600',
-      bgColor: 'bg-navy-100',
     },
   ];
 
@@ -150,28 +142,20 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {displayStats.map((stat) => (
-        <div key={stat.name} className="card group min-h-[120px]">
-          <div className="flex items-start gap-4">
-            {/* Icon container - 48px min touch target */}
-            <div className="flex-shrink-0">
-              <div className={`${stat.bgColor} rounded-xl p-3 min-w-12 min-h-12 flex items-center justify-center transition-transform duration-fast group-hover:scale-105`}>
-                <stat.icon className={`h-6 w-6 ${stat.color}`} aria-hidden="true" />
-              </div>
-            </div>
-            {/* Content - Practical UI typography */}
-            <div className="flex-1 min-w-0">
-              <dl>
-                {/* Stat value - prominent, bold */}
-                <dd className="text-2xl font-bold text-text-primary font-heading leading-tight">
-                  {typeof stat.value === 'string' ? stat.value : stat.value.toLocaleString()}
-                </dd>
-                {/* Stat label - regular weight, secondary color */}
-                <dt className="text-base font-normal text-text-secondary mt-1 leading-snug">
-                  {stat.name}
-                </dt>
-              </dl>
-            </div>
+        <div key={stat.name} className="bg-bg-surface rounded-xl border border-border p-6 hover:shadow-sm transition-shadow">
+          {/* Icon - matches Figma design */}
+          <div className="mb-4">
+            <stat.icon className="h-6 w-6 text-text-tertiary" aria-hidden="true" />
           </div>
+          {/* Label first, then value - matches Figma */}
+          <dl>
+            <dt className="text-base font-normal text-text-secondary leading-snug">
+              {stat.name}
+            </dt>
+            <dd className="text-3xl font-bold text-text-primary font-heading leading-tight mt-1">
+              {typeof stat.value === 'string' ? stat.value : stat.value.toLocaleString()}
+            </dd>
+          </dl>
         </div>
       ))}
     </div>

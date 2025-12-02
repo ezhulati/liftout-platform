@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { Providers } from './providers';
 import { SkipToContent } from '@/components/ui';
@@ -8,19 +8,13 @@ import './globals.css';
 // Force dynamic rendering to avoid SSG issues with SessionProvider
 export const dynamic = 'force-dynamic';
 
-// Heading font - Elegant serif for premium feel
-const playfair = Playfair_Display({
+// Inter - The gold standard for modern dashboards
+// Used by Linear, Stripe, Vercel, Notion - designed specifically for screens
+// Per Practical UI: "Use single sans serif for most interfaces"
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['700', '900'],
-  variable: '--font-heading',
-  display: 'swap',
-});
-
-// Body font - Clean sans-serif for readability
-const sourceSans = Source_Sans_3({
-  subsets: ['latin'],
-  weight: ['300', '400', '600', '700'],
-  variable: '--font-body',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -104,7 +98,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${playfair.variable} ${sourceSans.variable}`}
+      className={inter.variable}
     >
       <head>
         {/* Google Analytics */}

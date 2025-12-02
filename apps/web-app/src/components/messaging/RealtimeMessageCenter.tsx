@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { useSocket } from '@/contexts/SocketContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -29,11 +28,9 @@ import {
   EllipsisVerticalIcon,
   MagnifyingGlassIcon,
   PlusIcon,
-  ExclamationTriangleIcon,
   CheckCircleIcon,
   ClockIcon,
   WifiIcon,
-  SignalIcon,
   ArrowLeftIcon,
   XMarkIcon,
   PaperAirplaneIcon,
@@ -108,16 +105,6 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const { user } = useAuth();
   const { checkAccess } = useProfileGate();
   const queryClient = useQueryClient();
-  const {
-    socket,
-    isConnected,
-    onlineUsers,
-    joinConversation,
-    leaveConversation,
-    typingUsers,
-    startTyping,
-    stopTyping,
-  } = useSocket();
 
   // Check if this is a demo user - use email check since AuthContext creates
   // user records for all authenticated users (so `user` will exist even for demo)
@@ -135,14 +122,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [newMessage, setNewMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'demo'>('connecting');
   const [demoMessages, setDemoMessages] = useState<APIMessage[]>([]);
   const [showNewConversationModal, setShowNewConversationModal] = useState(false);
   const [mobileShowConversation, setMobileShowConversation] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Use demo mode if API failed or user is demo user
@@ -169,8 +153,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     ? (selectedConversationId ? getMessagesWithSession(selectedConversationId).map(msg => transformMessage(msg, session?.user?.id)) : [])
     : (messagesData?.data?.map(msg => transformMessage(msg, session?.user?.id)) || []);
 
-  // Simulated connection for demo mode (always "connected")
-  const effectiveIsConnected = useDemoMode ? true : isConnected;
+  // REST API is always "connected" - no WebSocket dependency
+  const effectiveIsConnected = true;
 
   // Select first conversation on load (desktop only)
   useEffect(() => {
@@ -185,82 +169,30 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     }
   }, [conversationsData, selectedConversationId, useDemoMode]);
 
-  // Socket event listeners for real-time updates
+  // Poll for new messages every 10 seconds (replaces WebSocket real-time)
   useEffect(() => {
-    const handleNewMessage = (event: CustomEvent) => {
-      const message = event.detail;
-      queryClient.invalidateQueries({ queryKey: ['messages', message.conversationId] });
+    if (useDemoMode || !selectedConversationId) return;
+
+    const pollInterval = setInterval(() => {
+      queryClient.invalidateQueries({ queryKey: ['messages', selectedConversationId] });
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    }, 10000); // Poll every 10 seconds
 
-      if (message.senderId !== session?.user?.id) {
-        playNotificationSound();
-      }
-    };
-
-    const handleMessageUpdated = (event: CustomEvent) => {
-      const message = event.detail;
-      queryClient.invalidateQueries({ queryKey: ['messages', message.conversationId] });
-    };
-
-    const handleMessageDeleted = (event: CustomEvent) => {
-      if (selectedConversationId) {
-        queryClient.invalidateQueries({ queryKey: ['messages', selectedConversationId] });
-      }
-    };
-
-    const handleMessagesRead = (event: CustomEvent) => {
-      const { conversationId } = event.detail;
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
-      queryClient.invalidateQueries({ queryKey: ['conversation', conversationId] });
-    };
-
-    const handleConversationUpdated = (event: CustomEvent) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
-    };
-
-    window.addEventListener('socket:new_message', handleNewMessage as EventListener);
-    window.addEventListener('socket:message_updated', handleMessageUpdated as EventListener);
-    window.addEventListener('socket:message_deleted', handleMessageDeleted as EventListener);
-    window.addEventListener('socket:messages_read', handleMessagesRead as EventListener);
-    window.addEventListener('socket:conversation_updated', handleConversationUpdated as EventListener);
-
-    return () => {
-      window.removeEventListener('socket:new_message', handleNewMessage as EventListener);
-      window.removeEventListener('socket:message_updated', handleMessageUpdated as EventListener);
-      window.removeEventListener('socket:message_deleted', handleMessageDeleted as EventListener);
-      window.removeEventListener('socket:messages_read', handleMessagesRead as EventListener);
-      window.removeEventListener('socket:conversation_updated', handleConversationUpdated as EventListener);
-    };
-  }, [session?.user?.id, selectedConversationId, queryClient]);
-
-  // Update connection status
-  useEffect(() => {
-    if (useDemoMode) {
-      setConnectionStatus('connected');
-    } else {
-      setConnectionStatus(isConnected ? 'connected' : 'disconnected');
-    }
-  }, [isConnected, useDemoMode]);
+    return () => clearInterval(pollInterval);
+  }, [selectedConversationId, queryClient, useDemoMode]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages?.length]);
 
-  // Join conversation room when selected conversation changes
+  // Mark messages as read when conversation is selected
   useEffect(() => {
     if (selectedConversationId) {
-      joinConversation(selectedConversationId);
       markAsReadMutation.mutate(selectedConversationId);
     }
-
-    return () => {
-      if (selectedConversationId) {
-        leaveConversation(selectedConversationId);
-      }
-    };
   // eslint-disable-next-line react-hooks/exhaustive-deps -- markAsReadMutation.mutate is stable from react-query
-  }, [selectedConversationId, joinConversation, leaveConversation]);
+  }, [selectedConversationId]);
 
   // Handle Escape key to close modal - must be before early returns
   useEffect(() => {
@@ -350,32 +282,13 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     });
 
     setNewMessage('');
-    stopTyping(selectedConversationId);
-    setIsTyping(false);
     messageInputRef.current?.focus();
-  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping, useDemoMode, checkAccess]);
+  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, useDemoMode, checkAccess]);
 
   const handleTyping = useCallback((value: string) => {
     setNewMessage(value);
-
-    if (!selectedConversationId) return;
-
-    if (value.trim() && !isTyping) {
-      setIsTyping(true);
-      startTyping(selectedConversationId);
-    }
-
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    typingTimeoutRef.current = setTimeout(() => {
-      if (isTyping) {
-        setIsTyping(false);
-        stopTyping(selectedConversationId);
-      }
-    }, 2000);
-  }, [selectedConversationId, isTyping, startTyping, stopTyping]);
+    // Typing indicators disabled - no WebSocket support
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -423,14 +336,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   };
 
   const getConnectionStatusIcon = () => {
-    switch (connectionStatus) {
-      case 'connected':
-        return <WifiIcon className="h-4 w-4 text-success" />;
-      case 'connecting':
-        return <SignalIcon className="h-4 w-4 text-gold animate-pulse" />;
-      default:
-        return <WifiIcon className="h-4 w-4 text-error" />;
-    }
+    // Always show connected - REST API is always available
+    return <WifiIcon className="h-4 w-4 text-success" />;
   };
 
   const filteredConversations = conversations.filter(conv =>
@@ -439,13 +346,6 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   );
 
   const conversationMessages = messages;
-
-  const currentTypingUsers = selectedConversationId
-    ? typingUsers.filter(u =>
-        u.conversationId === selectedConversationId &&
-        u.userId !== session?.user?.id
-      )
-    : [];
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -458,8 +358,9 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     return date.toLocaleDateString();
   };
 
-  const isUserOnline = (participantUserId: string) => {
-    return onlineUsers.some(u => u.userId === participantUserId);
+  // Online status disabled - no WebSocket support
+  const isUserOnline = (_participantUserId: string) => {
+    return false;
   };
 
   // New Conversation Modal
@@ -532,11 +433,8 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
             <h1 className="text-xl font-bold text-text-primary">Messages</h1>
             <div className="flex items-center gap-1">
               {getConnectionStatusIcon()}
-              <span className={`text-xs font-normal ${
-                connectionStatus === 'connected' ? 'text-success' :
-                connectionStatus === 'connecting' ? 'text-gold' : 'text-error'
-              }`}>
-                {connectionStatus === 'connected' ? (useDemoMode ? 'demo' : 'live') : connectionStatus}
+              <span className="text-xs font-normal text-success">
+                {useDemoMode ? 'demo' : 'connected'}
               </span>
             </div>
           </div>
@@ -776,23 +674,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
             );
           })}
 
-          {/* Typing indicator */}
-          {currentTypingUsers.length > 0 && (
-            <div className="flex justify-start">
-              <div className="bg-bg-alt rounded-2xl rounded-bl-md px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce"></span>
-                    <span className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></span>
-                    <span className="w-2 h-2 bg-text-tertiary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                  </div>
-                  <span className="text-sm text-text-secondary">
-                    {currentTypingUsers.map(u => u.userName).join(', ')} typing...
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Typing indicators removed - no WebSocket support */}
 
           <div ref={messagesEndRef} />
         </div>

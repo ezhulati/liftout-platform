@@ -28,16 +28,16 @@ function OpportunitiesContent() {
 
   return (
     <div className="space-y-6">
-      {/* Page header - Practical UI: bold headings, regular body */}
+      {/* Page header - matches Figma */}
       <div className="page-header flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-            {isCompanyUser ? 'Liftout Opportunities' : 'Browse Liftout Opportunities'}
+            {isCompanyUser ? 'Opportunity listings' : 'Opportunities'}
           </h1>
-          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed max-w-2xl">
+          <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
             {isCompanyUser
-              ? 'Post strategic team acquisition opportunities and manage incoming team expressions of interest'
-              : 'Discover strategic opportunities for your team to join new organizations and accelerate growth'
+              ? 'Manage your team opportunity listings here.'
+              : 'Discover opportunities for your team to join new organizations'
             }
           </p>
         </div>
@@ -47,7 +47,7 @@ function OpportunitiesContent() {
             className="btn-primary min-h-12 flex items-center"
           >
             <PlusIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-            Post liftout opportunity
+            Post an opportunity
           </Link>
         )}
       </div>

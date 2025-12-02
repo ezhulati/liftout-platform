@@ -21,6 +21,7 @@ import {
   MagnifyingGlassIcon,
   UsersIcon,
   ArrowRightOnRectangleIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 
 // Navigation items that show for team users (8 items per Figma)
@@ -30,6 +31,7 @@ const teamNavigation = [
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
   { name: 'Find Companies', href: '/app/find-companies', icon: BuildingOfficeIcon },
   { name: 'Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
+  { name: 'AI Matching', href: '/app/matching', icon: SparklesIcon },
   { name: 'Activity', href: '/app/activity', icon: BellIcon, badge: 10 },
 ];
 
@@ -39,6 +41,7 @@ const companyNavigation = [
   { name: 'My Posts', href: '/app/opportunities', icon: BriefcaseIcon },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
   { name: 'Find teams', href: '/app/teams', icon: MagnifyingGlassIcon },
+  { name: 'AI Matching', href: '/app/matching', icon: SparklesIcon },
   { name: 'Candidates', href: '/app/applications', icon: UsersIcon },
   { name: 'Activity', href: '/app/activity', icon: BellIcon, badge: 10 },
 ];

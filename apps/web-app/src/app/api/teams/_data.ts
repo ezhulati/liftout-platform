@@ -112,6 +112,134 @@ export const teams: Team[] = [
       equity: true,
       benefits: 'Full package'
     }
+  },
+  {
+    id: 'team_demo_002',
+    name: 'Mobile First Team',
+    description: 'Intact mobile development team with proven track record in consumer and enterprise applications across iOS and Android platforms.',
+    size: 4,
+    yearsWorking: 4,
+    cohesionScore: 92,
+    successfulProjects: 18,
+    clientSatisfaction: 94,
+    openToLiftout: true,
+    createdBy: '2',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    members: [
+      {
+        id: 'member_5',
+        name: 'David Kim',
+        role: 'Mobile Lead',
+        experience: 8,
+        skills: ['React Native', 'Flutter', 'iOS', 'Android', 'Team Leadership'],
+      },
+      {
+        id: 'member_6',
+        name: 'Lisa Thompson',
+        role: 'iOS Developer',
+        experience: 6,
+        skills: ['Swift', 'SwiftUI', 'Objective-C', 'Core Data'],
+      },
+      {
+        id: 'member_7',
+        name: 'James Wilson',
+        role: 'Android Developer',
+        experience: 5,
+        skills: ['Kotlin', 'Jetpack Compose', 'Java', 'Firebase'],
+      },
+      {
+        id: 'member_8',
+        name: 'Emily Rodriguez',
+        role: 'UX Designer',
+        experience: 4,
+        skills: ['Figma', 'Mobile UX', 'Prototyping', 'User Research'],
+      }
+    ],
+    achievements: [
+      'Shipped 3 apps with 1M+ downloads each',
+      'Reduced app crash rate by 80%',
+      '4.7+ star ratings across all published apps'
+    ],
+    industry: 'Technology',
+    location: 'Austin, TX',
+    availability: 'Open to strategic opportunities',
+    compensation: {
+      range: '$160k-$240k',
+      equity: true,
+      benefits: 'Full package'
+    }
+  },
+  {
+    id: 'team_demo_003',
+    name: 'AI Strategy Group',
+    description: 'Elite machine learning team that has successfully implemented AI solutions across healthcare, finance, and retail industries.',
+    size: 6,
+    yearsWorking: 5,
+    cohesionScore: 96,
+    successfulProjects: 31,
+    clientSatisfaction: 98,
+    openToLiftout: true,
+    createdBy: '3',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    members: [
+      {
+        id: 'member_9',
+        name: 'Dr. Michael Chen',
+        role: 'AI Research Lead',
+        experience: 12,
+        skills: ['Deep Learning', 'Computer Vision', 'Research', 'Python', 'PyTorch'],
+      },
+      {
+        id: 'member_10',
+        name: 'Jennifer Park',
+        role: 'ML Engineer',
+        experience: 7,
+        skills: ['TensorFlow', 'MLOps', 'AWS SageMaker', 'Kubernetes'],
+      },
+      {
+        id: 'member_11',
+        name: 'Robert Taylor',
+        role: 'Data Engineer',
+        experience: 8,
+        skills: ['Spark', 'Airflow', 'Snowflake', 'dbt', 'Python'],
+      },
+      {
+        id: 'member_12',
+        name: 'Amanda Foster',
+        role: 'NLP Specialist',
+        experience: 6,
+        skills: ['Transformers', 'BERT', 'LLMs', 'Text Mining', 'Python'],
+      },
+      {
+        id: 'member_13',
+        name: 'Kevin Brown',
+        role: 'Computer Vision Engineer',
+        experience: 5,
+        skills: ['OpenCV', 'YOLO', 'Image Processing', 'Edge AI'],
+      },
+      {
+        id: 'member_14',
+        name: 'Rachel Green',
+        role: 'Product Manager',
+        experience: 6,
+        skills: ['AI Product Strategy', 'Roadmapping', 'Stakeholder Management'],
+      }
+    ],
+    achievements: [
+      'Published 5 papers in top-tier ML conferences',
+      'Built AI system processing 10M+ medical images',
+      '3 successful liftouts as a team'
+    ],
+    industry: 'Healthcare Technology',
+    location: 'Boston, MA',
+    availability: 'Open to strategic opportunities',
+    compensation: {
+      range: '$200k-$350k',
+      equity: true,
+      benefits: 'Full package'
+    }
   }
 ];
 

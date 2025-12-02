@@ -154,11 +154,12 @@ const config: Config = {
           900: '#3B0764',
         },
       },
-      // Typography - Playfair Display + Source Sans 3
+      // Typography - Inter (single font family per Practical UI)
+      // "Use single sans serif for most interfaces"
       fontFamily: {
-        heading: ['Playfair Display', 'Georgia', 'serif'],
-        body: ['Source Sans 3', 'system-ui', '-apple-system', 'sans-serif'],
-        sans: ['Source Sans 3', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        body: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       // Major Third (1.25) type scale
       fontSize: {

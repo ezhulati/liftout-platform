@@ -163,13 +163,8 @@ export default withAuth(
       }
     }
 
-    // For protected routes accessible to both types, ensure user has a type set
-    // Skip this check for the onboarding page to avoid redirect loop
-    if (isProtectedRoute(pathname) && !userType && pathname !== '/app/onboarding') {
-      // Redirect to onboarding if user doesn't have a type set
-      return NextResponse.redirect(new URL('/app/onboarding', req.url));
-    }
-
+    // Allow access to protected routes even without userType set
+    // Users can complete their profile from the dashboard
     return NextResponse.next();
   },
   {
