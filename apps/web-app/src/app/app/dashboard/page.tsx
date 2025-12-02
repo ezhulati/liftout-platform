@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
@@ -17,15 +16,9 @@ export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect users who haven't completed onboarding
-  // This catches: 1) New OAuth users (isNewUser=true), 2) Returning users who skipped onboarding
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      if (session.isNewUser || session.user.profileCompleted === false) {
-        router.push('/app/onboarding');
-      }
-    }
-  }, [status, session, router]);
+  // NOTE: We no longer auto-redirect to onboarding to avoid redirect loops
+  // The DashboardOnboarding component shows an inline prompt instead
+  // Users can manually go to /app/onboarding or complete profile from Settings
 
   if (status === 'loading') {
     return (
@@ -37,15 +30,6 @@ export default function DashboardPage() {
 
   if (status === 'unauthenticated' || !session?.user) {
     return null;
-  }
-
-  // Show loading while redirecting users to onboarding
-  if (session?.isNewUser || session?.user?.profileCompleted === false) {
-    return (
-      <div className="min-h-96 flex items-center justify-center">
-        <div className="loading-spinner w-12 h-12"></div>
-      </div>
-    );
   }
 
   const user = session.user;
