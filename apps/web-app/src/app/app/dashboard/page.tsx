@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
@@ -15,10 +16,17 @@ import { useSession } from 'next-auth/react';
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const hasRedirected = useRef(false);
 
-  // NOTE: We no longer auto-redirect to onboarding to avoid redirect loops
-  // The DashboardOnboarding component shows an inline prompt instead
-  // Users can manually go to /app/onboarding or complete profile from Settings
+  // Only redirect NEW users (first login) to onboarding
+  // Use isNewUser flag which is set only on first OAuth sign-in
+  // Don't redirect returning users with incomplete profiles (they see inline prompt instead)
+  useEffect(() => {
+    if (status === 'authenticated' && session?.isNewUser && !hasRedirected.current) {
+      hasRedirected.current = true;
+      router.push('/app/onboarding');
+    }
+  }, [status, session?.isNewUser, router]);
 
   if (status === 'loading') {
     return (
@@ -30,6 +38,15 @@ export default function DashboardPage() {
 
   if (status === 'unauthenticated' || !session?.user) {
     return null;
+  }
+
+  // Show loading while redirecting new users to onboarding
+  if (session?.isNewUser) {
+    return (
+      <div className="min-h-96 flex items-center justify-center">
+        <div className="loading-spinner w-12 h-12"></div>
+      </div>
+    );
   }
 
   const user = session.user;
