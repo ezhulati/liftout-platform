@@ -30,7 +30,8 @@ const individualOnlyRoutes = [
 // Routes only accessible to company users
 const companyOnlyRoutes = [
   '/app/opportunities/create',
-  '/app/company',
+  '/app/company/settings',
+  '/app/company/edit',
 ];
 
 // Routes only accessible to admin users

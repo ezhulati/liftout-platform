@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useSearch, SearchResult } from '@/hooks/useSearch';
 import { createSafeHtml } from '@/lib/sanitize';
+import { useAuth } from '@/hooks/useAuth';
 
 interface GlobalSearchProps {
   isOpen: boolean;
@@ -65,6 +66,7 @@ function getResultTypeLabel(type: SearchResult['type']): string {
 
 export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
   const router = useRouter();
+  const { isCompany } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
@@ -155,7 +157,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
@@ -168,19 +170,19 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="mx-auto max-w-2xl transform overflow-hidden rounded-xl bg-bg-surface shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+            <Dialog.Panel className="mx-auto max-w-2xl transform overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-gray-900/10 transition-all">
               <Combobox
                 onChange={(result: SearchResult) => handleSelectResult(result)}
               >
-                <div className="relative">
+                <div className="relative bg-white">
                   <MagnifyingGlassIcon
-                    className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-text-tertiary"
+                    className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
                   <Combobox.Input
                     ref={inputRef}
-                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-text-primary placeholder:text-text-tertiary focus:ring-0 sm:text-base"
-                    placeholder="Search opportunities, teams, or companies..."
+                    className="h-12 w-full border-0 bg-white pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-base"
+                    placeholder={isCompany ? "Search teams..." : "Search opportunities..."}
                     value={query}
                     onChange={(e) => search(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}
@@ -188,7 +190,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                   {query && (
                     <button
                       onClick={clearSearch}
-                      className="absolute right-4 top-3.5 p-0.5 text-text-tertiary hover:text-text-secondary"
+                      className="absolute right-4 top-3.5 p-0.5 text-gray-400 hover:text-gray-600"
                     >
                       <XMarkIcon className="h-4 w-4" />
                     </button>
@@ -198,7 +200,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                 {/* Loading indicator */}
                 {isSearching && (
                   <div className="border-t border-border px-6 py-4 text-center">
-                    <div className="inline-flex items-center gap-2 text-text-secondary">
+                    <div className="inline-flex items-center gap-2 text-gray-600">
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-navy border-t-transparent" />
                       Searching...
                     </div>
@@ -214,10 +216,10 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                     {/* Results by type */}
                     {(searchResults?.opportunities?.length ?? 0) > 0 && (
                       <li>
-                        <h2 className="bg-bg-alt px-4 py-2 text-xs font-semibold text-text-tertiary">
+                        <h2 className="bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-500">
                           Opportunities ({searchResults?.opportunities?.length})
                         </h2>
-                        <ul className="text-base text-text-secondary">
+                        <ul className="text-base text-gray-600">
                           {searchResults?.opportunities?.map((result) => (
                             <ResultItem key={result.id} result={result} />
                           ))}
@@ -227,10 +229,10 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
 
                     {(searchResults?.teams?.length ?? 0) > 0 && (
                       <li>
-                        <h2 className="bg-bg-alt px-4 py-2 text-xs font-semibold text-text-tertiary">
+                        <h2 className="bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-500">
                           Teams ({searchResults?.teams?.length})
                         </h2>
-                        <ul className="text-base text-text-secondary">
+                        <ul className="text-base text-gray-600">
                           {searchResults?.teams?.map((result) => (
                             <ResultItem key={result.id} result={result} />
                           ))}
@@ -240,10 +242,10 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
 
                     {(searchResults?.companies?.length ?? 0) > 0 && (
                       <li>
-                        <h2 className="bg-bg-alt px-4 py-2 text-xs font-semibold text-text-tertiary">
+                        <h2 className="bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-500">
                           Companies ({searchResults?.companies?.length})
                         </h2>
-                        <ul className="text-base text-text-secondary">
+                        <ul className="text-base text-gray-600">
                           {searchResults?.companies?.map((result) => (
                             <ResultItem key={result.id} result={result} />
                           ))}
@@ -257,13 +259,13 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                 {isEmpty && !isSearching && (
                   <div className="border-t border-border px-6 py-14 text-center">
                     <MagnifyingGlassIcon
-                      className="mx-auto h-6 w-6 text-text-tertiary"
+                      className="mx-auto h-6 w-6 text-gray-500"
                       aria-hidden="true"
                     />
-                    <p className="mt-4 text-base text-text-secondary">
+                    <p className="mt-4 text-base text-gray-600">
                       No results found for &quot;{query}&quot;
                     </p>
-                    <p className="mt-1 text-sm text-text-tertiary">
+                    <p className="mt-1 text-sm text-gray-500">
                       Try adjusting your search terms
                     </p>
                   </div>
@@ -275,7 +277,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                     {/* Recent searches */}
                     {recentSearches.length > 0 && (
                       <div className="px-4 py-3">
-                        <h3 className="flex items-center gap-2 text-xs font-semibold text-text-tertiary mb-2">
+                        <h3 className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2">
                           <ClockIcon className="h-4 w-4" />
                           Recent Searches
                         </h3>
@@ -284,7 +286,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                             <button
                               key={recent}
                               onClick={() => handleSelectSuggestion(recent)}
-                              className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-bg-alt text-text-secondary hover:bg-navy-100 hover:text-navy transition-colors"
+                              className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-navy-100 hover:text-navy transition-colors"
                             >
                               {recent}
                             </button>
@@ -296,7 +298,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                     {/* Popular searches */}
                     {popularSearches.length > 0 && (
                       <div className="px-4 py-3 border-t border-border">
-                        <h3 className="flex items-center gap-2 text-xs font-semibold text-text-tertiary mb-2">
+                        <h3 className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2">
                           <ArrowTrendingUpIcon className="h-4 w-4" />
                           Popular Searches
                         </h3>
@@ -305,7 +307,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                             <button
                               key={popular}
                               onClick={() => handleSelectSuggestion(popular)}
-                              className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-bg-alt text-text-secondary hover:bg-navy-100 hover:text-navy transition-colors"
+                              className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-navy-100 hover:text-navy transition-colors"
                             >
                               {popular}
                             </button>
@@ -319,7 +321,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                 {/* Suggestions dropdown (while typing) */}
                 {showSuggestions && suggestions.length > 0 && query.length >= 2 && !hasResults && !isSearching && (
                   <div className="border-t border-border px-4 py-3">
-                    <h3 className="text-xs font-semibold text-text-tertiary mb-2">
+                    <h3 className="text-xs font-semibold text-gray-500 mb-2">
                       Suggestions
                     </h3>
                     <ul className="space-y-1">
@@ -327,7 +329,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                         <li key={suggestion}>
                           <button
                             onClick={() => handleSelectSuggestion(suggestion)}
-                            className="w-full text-left px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-bg-alt transition-colors"
+                            className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors"
                           >
                             {suggestion}
                           </button>
@@ -338,21 +340,21 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                 )}
 
                 {/* Keyboard hint */}
-                <div className="flex flex-wrap items-center bg-bg-alt px-4 py-2.5 text-xs text-text-tertiary border-t border-border">
+                <div className="flex flex-wrap items-center bg-gray-100 px-4 py-2.5 text-xs text-gray-500 border-t border-border">
                   <span className="mr-4">
-                    <kbd className="rounded border border-border bg-bg-surface px-1.5 py-0.5 font-mono">
+                    <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono">
                       ↵
                     </kbd>
                     {' '}to select
                   </span>
                   <span className="mr-4">
-                    <kbd className="rounded border border-border bg-bg-surface px-1.5 py-0.5 font-mono">
+                    <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono">
                       ↑↓
                     </kbd>
                     {' '}to navigate
                   </span>
                   <span>
-                    <kbd className="rounded border border-border bg-bg-surface px-1.5 py-0.5 font-mono">
+                    <kbd className="rounded border border-border bg-white px-1.5 py-0.5 font-mono">
                       esc
                     </kbd>
                     {' '}to close
@@ -400,38 +402,40 @@ function ResultItem({ result }: { result: SearchResult }) {
               <p
                 className={classNames(
                   'text-sm font-medium truncate',
-                  active ? 'text-navy' : 'text-text-primary'
+                  active ? 'text-navy' : 'text-gray-900'
                 )}
               >
                 {result.title}
               </p>
-              <span className="ml-2 text-xs text-text-tertiary">
+              <span className="ml-2 text-xs text-gray-500">
                 {getResultTypeLabel(result.type)}
               </span>
             </div>
-            <p className="text-sm text-text-secondary line-clamp-1 mt-0.5">
+            <p className="text-sm text-gray-600 line-clamp-1 mt-0.5">
               {result.description}
             </p>
             {/* Show highlights if available */}
-            {result.highlights.length > 0 && (
+            {result.highlights && result.highlights.length > 0 && (
               <p
-                className="text-xs text-text-tertiary mt-1 line-clamp-1"
+                className="text-xs text-gray-500 mt-1 line-clamp-1"
                 dangerouslySetInnerHTML={createSafeHtml(result.highlights[0].snippet)}
               />
             )}
             {/* Metadata chips */}
-            <div className="flex flex-wrap gap-1 mt-1.5">
-              {typeof result.metadata.industry === 'string' && result.metadata.industry && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-bg-alt text-text-tertiary">
-                  {result.metadata.industry}
-                </span>
-              )}
-              {typeof result.metadata.location === 'string' && result.metadata.location && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-bg-alt text-text-tertiary">
-                  {result.metadata.location}
-                </span>
-              )}
-            </div>
+            {result.metadata && (
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {typeof result.metadata.industry === 'string' && result.metadata.industry && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500">
+                    {result.metadata.industry}
+                  </span>
+                )}
+                {typeof result.metadata.location === 'string' && result.metadata.location && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500">
+                    {result.metadata.location}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </>
       )}
@@ -444,11 +448,11 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary bg-bg-alt rounded-lg border border-border hover:border-navy-300 hover:text-navy transition-colors min-w-[200px]"
+      className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg border border-border hover:border-navy-300 hover:text-navy transition-colors min-w-[200px]"
     >
       <MagnifyingGlassIcon className="h-4 w-4" />
       <span className="flex-1 text-left">Search...</span>
-      <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-border bg-bg-surface px-1.5 py-0.5 text-xs text-text-tertiary">
+      <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-border bg-white px-1.5 py-0.5 text-xs text-gray-500">
         <span className="text-xs">⌘</span>K
       </kbd>
     </button>

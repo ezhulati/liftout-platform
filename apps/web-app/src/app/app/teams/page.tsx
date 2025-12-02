@@ -501,7 +501,7 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           {/* Team Member Avatars */}
           <div className="mb-4">
             <TeamMemberAvatars
-              members={team.members.map((m: any) => ({ name: m.name, avatar: m.avatar }))}
+              members={(team.members || []).map((m: any) => ({ name: m.name, avatar: m.avatar }))}
               size="md"
               maxDisplay={5}
             />
@@ -542,25 +542,25 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <div className="flex items-center text-sm font-normal text-text-secondary">
               <StarIcon className="h-4 w-4 mr-2 text-gold flex-shrink-0" aria-hidden="true" />
-              <span>Cohesion: <strong className="font-bold">{team.cohesionScore}</strong>/100</span>
+              <span>Cohesion: <strong className="font-bold">{team.cohesionScore || 'N/A'}</strong>/100</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
               <CheckCircleIcon className="h-4 w-4 mr-2 text-success flex-shrink-0" aria-hidden="true" />
-              <span><strong className="font-bold">{team.successfulProjects}</strong> projects</span>
+              <span><strong className="font-bold">{team.successfulProjects || 0}</strong> projects</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
               <CurrencyDollarIcon className="h-4 w-4 mr-2 text-navy flex-shrink-0" aria-hidden="true" />
-              <span>{team.compensation.range}</span>
+              <span>{team.compensation?.range || 'Negotiable'}</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
               <MapPinIcon className="h-4 w-4 mr-2 text-gold-600 flex-shrink-0" aria-hidden="true" />
-              <span>{team.location}</span>
+              <span>{team.location || 'Remote'}</span>
             </div>
           </div>
 
           {/* Skills badges */}
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {team.members.slice(0, 5).flatMap((member: any) => member.skills.slice(0, 2)).slice(0, 6).map((skill: string, index: number) => (
+            {(team.members || []).slice(0, 5).flatMap((member: any) => (member.skills || []).slice(0, 2)).slice(0, 6).map((skill: string, index: number) => (
               <span key={`${skill}-${index}`} className="badge badge-primary text-xs">
                 {skill}
               </span>
@@ -570,14 +570,14 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           {/* Achievements and industry */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex flex-wrap gap-2">
-              {team.achievements.slice(0, 2).map((achievement: string, index: number) => (
+              {(team.achievements || []).slice(0, 2).map((achievement: string, index: number) => (
                 <span key={index} className="text-xs font-normal text-text-secondary bg-bg-alt px-2.5 py-1 rounded-lg">
                   {achievement.length > 50 ? `${achievement.substring(0, 50)}...` : achievement}
                 </span>
               ))}
             </div>
             <div className="text-sm font-normal text-text-tertiary">
-              Industry: <strong className="font-bold">{team.industry}</strong>
+              Industry: <strong className="font-bold">{team.industry || 'Various'}</strong>
             </div>
           </div>
         </div>

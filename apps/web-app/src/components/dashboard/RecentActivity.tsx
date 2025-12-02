@@ -19,48 +19,52 @@ interface Activity {
   href?: string;
 }
 
-const mockActivities: Activity[] = [
-  {
-    id: '1',
-    type: 'liftout_interest',
-    title: 'Application status updated',
-    description: 'NextGen Financial moved your FinTech Analytics application to "Under Review"',
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    href: '/app/applications',
-  },
-  {
-    id: '2',
-    type: 'message',
-    title: 'Interview scheduled',
-    description: 'MedTech Innovations scheduled a technical presentation for Healthcare AI Innovation Lab',
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    href: '/app/applications',
-  },
-  {
-    id: '3',
-    type: 'team_profile_view',
-    title: 'Team profile viewed',
-    description: 'DataFlow Analytics viewed your team profile - potential new opportunity match',
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    href: '/app/teams',
-  },
-  {
-    id: '4',
-    type: 'liftout_opportunity',
-    title: 'New opportunity posted',
-    description: 'European Market Expansion Team at Confidential Fortune 500 - matches your skills',
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    href: '/app/opportunities',
-  },
-  {
-    id: '5',
-    type: 'liftout_interest',
-    title: 'Application submitted',
-    description: 'Successfully submitted application to DataFlow Analytics for Quantitative Analysts role',
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    href: '/app/applications',
-  }
-];
+// Helper to generate activity dates relative to now (called inside component to avoid hydration issues)
+function generateMockActivities(): Activity[] {
+  const now = Date.now();
+  return [
+    {
+      id: '1',
+      type: 'liftout_interest',
+      title: 'Application status updated',
+      description: 'NextGen Financial moved your FinTech Analytics application to "Under Review"',
+      createdAt: new Date(now - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      href: '/app/applications',
+    },
+    {
+      id: '2',
+      type: 'message',
+      title: 'Interview scheduled',
+      description: 'MedTech Innovations scheduled a technical presentation for Healthcare AI Innovation Lab',
+      createdAt: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      href: '/app/applications',
+    },
+    {
+      id: '3',
+      type: 'team_profile_view',
+      title: 'Team profile viewed',
+      description: 'DataFlow Analytics viewed your team profile - potential new opportunity match',
+      createdAt: new Date(now - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      href: '/app/teams',
+    },
+    {
+      id: '4',
+      type: 'liftout_opportunity',
+      title: 'New opportunity posted',
+      description: 'European Market Expansion Team at Confidential Fortune 500 - matches your skills',
+      createdAt: new Date(now - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      href: '/app/opportunities',
+    },
+    {
+      id: '5',
+      type: 'liftout_interest',
+      title: 'Application submitted',
+      description: 'Successfully submitted application to DataFlow Analytics for Quantitative Analysts role',
+      createdAt: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      href: '/app/applications',
+    }
+  ];
+}
 
 const activityIcons = {
   liftout_interest: DocumentTextIcon,
@@ -99,7 +103,7 @@ export function RecentActivity() {
         throw new Error('No activities');
       } catch {
         // Fallback to mock data
-        return mockActivities;
+        return generateMockActivities();
       }
     },
     staleTime: 30000, // 30 seconds

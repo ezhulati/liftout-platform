@@ -152,7 +152,12 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     : (conversationsData?.data?.map(transformConversation) || []);
 
   const selectedConversation = useDemoMode
-    ? (selectedConversationId ? transformConversation(demoConversations.find(c => c.id === selectedConversationId)!) : null)
+    ? (selectedConversationId
+        ? (() => {
+            const found = demoConversations.find(c => c.id === selectedConversationId);
+            return found ? transformConversation(found) : null;
+          })()
+        : null)
     : (selectedConversationData ? transformConversation(selectedConversationData) : null);
 
   // Use demoMessages state to trigger re-render when messages change in demo mode

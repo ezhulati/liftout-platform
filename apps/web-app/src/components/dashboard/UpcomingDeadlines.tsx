@@ -20,48 +20,52 @@ interface Deadline {
   status?: 'upcoming' | 'overdue' | 'completed';
 }
 
-const mockDeadlines: Deadline[] = [
-  {
-    id: '1',
-    type: 'liftout_deadline',
-    title: 'Strategic Analytics Team Opportunity',
-    description: 'Expression of interest deadline for FinTech expansion liftout',
-    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-    priority: 'high',
-    status: 'upcoming',
-    href: '/app/opportunities/1',
-  },
-  {
-    id: '2',
-    type: 'interview_scheduled',
-    title: 'Liftout interview with TechCorp',
-    description: 'Final team assessment for potential acquisition',
-    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-    priority: 'high',
-    status: 'upcoming',
-    href: '/app/interviews/2',
-  },
-  {
-    id: '3',
-    type: 'due_diligence',
-    title: 'Due diligence submission',
-    description: 'Submit team credentials and performance history to MedTech Solutions',
-    dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    priority: 'medium',
-    status: 'upcoming',
-    href: '/app/applications/3',
-  },
-  {
-    id: '4',
-    type: 'negotiation_deadline',
-    title: 'Contract negotiation deadline',
-    description: 'Finalize terms for team acquisition with DataFlow Inc.',
-    dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
-    priority: 'high',
-    status: 'upcoming',
-    href: '/app/negotiations/4',
-  },
-];
+// Helper to generate deadline dates relative to now (called inside component to avoid hydration issues)
+function generateMockDeadlines(): Deadline[] {
+  const now = Date.now();
+  return [
+    {
+      id: '1',
+      type: 'liftout_deadline',
+      title: 'Strategic Analytics Team Opportunity',
+      description: 'Expression of interest deadline for FinTech expansion liftout',
+      dueDate: new Date(now + 2 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: 'high',
+      status: 'upcoming',
+      href: '/app/opportunities/1',
+    },
+    {
+      id: '2',
+      type: 'interview_scheduled',
+      title: 'Liftout interview with TechCorp',
+      description: 'Final team assessment for potential acquisition',
+      dueDate: new Date(now + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: 'high',
+      status: 'upcoming',
+      href: '/app/interviews/2',
+    },
+    {
+      id: '3',
+      type: 'due_diligence',
+      title: 'Due diligence submission',
+      description: 'Submit team credentials and performance history to MedTech Solutions',
+      dueDate: new Date(now + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: 'medium',
+      status: 'upcoming',
+      href: '/app/applications/3',
+    },
+    {
+      id: '4',
+      type: 'negotiation_deadline',
+      title: 'Contract negotiation deadline',
+      description: 'Finalize terms for team acquisition with DataFlow Inc.',
+      dueDate: new Date(now + 1 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: 'high',
+      status: 'upcoming',
+      href: '/app/negotiations/4',
+    },
+  ];
+}
 
 const deadlineIcons = {
   liftout_deadline: ClockIcon,
@@ -87,7 +91,7 @@ export function UpcomingDeadlines() {
     queryKey: ['upcoming-deadlines'],
     queryFn: async () => {
       // This would normally fetch from your API
-      return mockDeadlines.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      return generateMockDeadlines().sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
     },
   });
 

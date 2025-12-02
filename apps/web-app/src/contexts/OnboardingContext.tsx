@@ -103,20 +103,22 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     }
   }, [userData, steps]);
 
-  // Load onboarding progress on mount
+  // Load onboarding progress on mount (only when user ID changes, not on every userData reference change)
   useEffect(() => {
-    if (userData) {
+    if (userData?.id) {
       fetchOnboardingProgress();
     }
-  }, [userData, fetchOnboardingProgress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData?.id]);
 
-  // Update profile completeness when profile completion data changes
+  // Update profile completeness when profile completion score changes
+  // Only depend on score (a primitive) to avoid infinite loops from object/array references
   useEffect(() => {
     if (userData && profileCompletionData.score > 0) {
       calculateProfileCompleteness();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData, profileCompletionData.score, profileCompletionData.completionData.breakdown, profileCompletionData.nextSteps]);
+  }, [userData?.id, profileCompletionData.score]);
 
   const calculateProfileCompleteness = async () => {
     if (!userData) return;
@@ -221,6 +223,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   };
 
   // Skip onboarding via API
+  // Skip also marks onboarding as complete to prevent redirect loops
   const skipOnboarding = async () => {
     try {
       const response = await fetch('/api/onboarding/progress', {
@@ -231,8 +234,18 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
       if (response.ok) {
         const data = await response.json();
-        setProgressData(prev => prev ? { ...prev, skippedAt: data.skippedAt } : null);
-        // Note: skipping doesn't complete onboarding, just records the skip
+        // Update both skippedAt and isCompleted (skip marks profile as complete)
+        setProgressData(prev => prev ? {
+          ...prev,
+          skippedAt: data.skippedAt,
+          isCompleted: data.isCompleted || true
+        } : null);
+        if (progress) {
+          setProgress({
+            ...progress,
+            isCompleted: true,
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to skip onboarding:', error);
