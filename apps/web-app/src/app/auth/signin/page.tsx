@@ -96,7 +96,7 @@ export default function SignInPage() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.05] via-transparent to-transparent" />
               <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <img
-                src="/liftout.svg"
+                src="/liftout.png"
                 alt="Liftout"
                 className="h-10 w-auto relative brightness-0 invert"
               />
@@ -138,7 +138,7 @@ export default function SignInPage() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/60 via-transparent to-transparent" />
               <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
               <img
-                src="/liftout.svg"
+                src="/liftout.png"
                 alt="Liftout"
                 className="h-10 w-auto relative"
               />
@@ -154,29 +154,29 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Demo Credentials - Less prominent, below main form conceptually */}
+          {/* Demo Credentials - Practical UI: 48px touch targets, 8pt grid spacing */}
           <details className="mb-6 group">
             <summary className="cursor-pointer text-sm text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
               <span className="text-purple-700 group-open:rotate-90 transition-transform">▸</span>
               <span className="group-open:hidden">Try demo credentials</span>
               <span className="hidden group-open:inline">Hide demo credentials</span>
             </summary>
-            <div className="mt-3 bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <p className="text-text-secondary text-sm mb-3">
+            <div className="mt-4 bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <p className="text-text-secondary text-sm mb-4">
                 Click to auto-fill credentials:
               </p>
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('individual')}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                  className="flex-1 min-h-12 px-4 py-3 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Team lead
                 </button>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('company')}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                  className="flex-1 min-h-12 px-4 py-3 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Company
                 </button>
@@ -184,8 +184,8 @@ export default function SignInPage() {
             </div>
           </details>
 
-          {/* OAuth Sign In Buttons */}
-          <div className="space-y-3">
+          {/* OAuth Sign In Buttons - Practical UI: 8pt grid spacing */}
+          <div className="space-y-4">
             {/* Google Sign In */}
             <button
               type="button"

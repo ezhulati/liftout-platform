@@ -172,7 +172,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               {/* Hover highlight */}
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-900/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <img
-                src="/liftout.svg"
+                src="/liftout.png"
                 alt="Liftout"
                 className="h-8 w-auto relative"
               />

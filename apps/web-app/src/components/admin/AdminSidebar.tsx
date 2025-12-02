@@ -121,7 +121,7 @@ export function AdminSidebar() {
         <Link href="/admin" className="flex items-center group">
           <div className="relative bg-gray-900 rounded-lg px-3 py-1.5 border border-gray-700 group-hover:border-gray-600 transition-all duration-300">
             <img
-              src="/liftout.svg"
+              src="/liftout.png"
               alt="Liftout"
               className="h-7 w-auto brightness-0 invert"
             />

@@ -143,7 +143,7 @@ export default function SignUpPage() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.05] via-transparent to-transparent" />
               <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <img
-                src="/liftout.svg"
+                src="/liftout.png"
                 alt="Liftout"
                 className="h-10 w-auto relative brightness-0 invert"
               />
@@ -198,7 +198,7 @@ export default function SignUpPage() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/60 via-transparent to-transparent" />
               <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
               <img
-                src="/liftout.svg"
+                src="/liftout.png"
                 alt="Liftout"
                 className="h-10 w-auto relative"
               />
