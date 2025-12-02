@@ -100,7 +100,7 @@ export function AppHeader({ user }: AppHeaderProps) {
 
   return (
     <header
-      className={`sticky top-0 z-40 bg-bg-surface transition-transform duration-300 ease-out ${
+      className={`sticky top-0 z-50 bg-bg-surface transition-transform duration-300 ease-out ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
@@ -202,7 +202,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-[100] mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
+                <Menu.Items className="absolute right-0 z-[9999] mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (

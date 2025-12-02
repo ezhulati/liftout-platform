@@ -223,7 +223,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
             <div className="space-y-4">
               <button
                 onClick={handleStartOnboarding}
-                className="w-full btn-primary min-h-14 text-base font-semibold flex items-center justify-center gap-2"
+                className="w-full btn-primary min-h-14 text-base font-bold flex items-center justify-center gap-2"
               >
                 Let's get started
                 <ArrowRightIcon className="h-5 w-5" />
@@ -371,7 +371,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
               )}
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <button
                 onClick={handleSkip}
                 className="text-sm text-text-tertiary hover:text-text-secondary min-h-12"

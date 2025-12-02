@@ -31,7 +31,7 @@ export function LandingCTA() {
           {/* Primary button - solid fill on dark, Verb+Noun label */}
           <Link
             href="/auth/signup"
-            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-semibold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
             <span className="relative">Browse verified teams</span>

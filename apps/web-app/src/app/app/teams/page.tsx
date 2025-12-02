@@ -314,11 +314,11 @@ export default function TeamsPage() {
             </div>
 
             <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 <MapPinIcon className="h-4 w-4" />
                 San Francisco, CA
               </span>
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2">
                 <ClockIcon className="h-4 w-4" />
                 Full-time
               </span>
@@ -509,8 +509,8 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           {/* Description */}
           <p className="text-base font-normal text-text-secondary mb-4 line-clamp-2 leading-relaxed">{team.description}</p>
 
-          {/* Stats grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+          {/* Stats grid - Practical UI: 8pt grid spacing */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div className="flex items-center text-sm font-normal text-text-secondary">
               <StarIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
               <span>Cohesion: <strong className="font-bold">{team.cohesionScore || 'N/A'}</strong>/100</span>
@@ -529,8 +529,8 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
             </div>
           </div>
 
-          {/* Skills badges */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          {/* Skills badges - Practical UI: 8pt grid spacing */}
+          <div className="flex flex-wrap gap-2 mb-4">
             {(team.members || []).slice(0, 5).flatMap((member: any) => (member.skills || []).slice(0, 2)).slice(0, 6).map((skill: string, index: number) => (
               <span key={`${skill}-${index}`} className="badge badge-primary text-xs">
                 {skill}
@@ -553,8 +553,8 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-row lg:flex-col items-center lg:items-end gap-3 lg:ml-4">
+        {/* Actions - Practical UI: 8pt grid spacing */}
+        <div className="flex flex-row lg:flex-col items-center lg:items-end gap-4 lg:ml-4">
           {team.openToLiftout && (
             <span className="badge badge-success text-xs">
               Available
