@@ -100,7 +100,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['assets.liftout.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
+    domains: ['assets.liftout.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com', 'randomuser.me'],
     remotePatterns: [
       {
         protocol: 'https',
