@@ -145,7 +145,7 @@ export default function SignUpPage() {
               <img
                 src="/liftout.svg"
                 alt="Liftout"
-                className="h-[52px] w-auto relative brightness-0 invert"
+                className="h-10 w-auto relative brightness-0 invert"
               />
             </div>
           </Link>

@@ -174,7 +174,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               <img
                 src="/liftout.svg"
                 alt="Liftout"
-                className="h-[48px] w-auto relative"
+                className="h-8 w-auto relative"
               />
             </div>
           </Link>

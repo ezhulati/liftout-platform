@@ -63,7 +63,7 @@ export function LandingFooter() {
                 <img
                   src="/liftout_white.svg"
                   alt="Liftout"
-                  className="h-16 w-auto relative"
+                  className="h-10 w-auto relative"
                 />
               </div>
             </Link>
