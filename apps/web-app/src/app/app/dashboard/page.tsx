@@ -17,12 +17,15 @@ export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect new OAuth users to onboarding
+  // Redirect users who haven't completed onboarding
+  // This catches: 1) New OAuth users (isNewUser=true), 2) Returning users who skipped onboarding
   useEffect(() => {
-    if (session?.isNewUser) {
-      router.push('/app/onboarding');
+    if (status === 'authenticated' && session?.user) {
+      if (session.isNewUser || session.user.profileCompleted === false) {
+        router.push('/app/onboarding');
+      }
     }
-  }, [session?.isNewUser, router]);
+  }, [status, session, router]);
 
   if (status === 'loading') {
     return (
@@ -36,8 +39,8 @@ export default function DashboardPage() {
     return null;
   }
 
-  // Show loading while redirecting new users
-  if (session?.isNewUser) {
+  // Show loading while redirecting users to onboarding
+  if (session?.isNewUser || session?.user?.profileCompleted === false) {
     return (
       <div className="min-h-96 flex items-center justify-center">
         <div className="loading-spinner w-12 h-12"></div>

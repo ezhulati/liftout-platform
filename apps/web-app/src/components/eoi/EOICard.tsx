@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   CheckIcon,
   XMarkIcon,
@@ -128,11 +129,27 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div>
-            <h3 className="font-semibold text-text-primary">
-              {direction === 'sent'
-                ? eoi.metadata?.toTeamName || 'Team'
-                : eoi.metadata?.fromCompanyName || 'Company'}
-            </h3>
+            {direction === 'received' && eoi.fromType === 'company' ? (
+              <Link
+                href={`/app/company/${eoi.fromId}`}
+                className="font-semibold text-text-primary hover:text-navy transition-colors"
+              >
+                {eoi.metadata?.fromCompanyName || 'Company'}
+              </Link>
+            ) : direction === 'sent' && eoi.toType === 'team' ? (
+              <Link
+                href={`/app/teams/${eoi.toId}`}
+                className="font-semibold text-text-primary hover:text-navy transition-colors"
+              >
+                {eoi.metadata?.toTeamName || 'Team'}
+              </Link>
+            ) : (
+              <h3 className="font-semibold text-text-primary">
+                {direction === 'sent'
+                  ? eoi.metadata?.toTeamName || 'Team'
+                  : eoi.metadata?.fromCompanyName || 'Company'}
+              </h3>
+            )}
             <p className="text-sm text-text-tertiary">
               {direction === 'sent' ? 'Sent' : 'Received'} on {formatDate(eoi.createdAt)}
             </p>

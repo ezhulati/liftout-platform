@@ -149,6 +149,7 @@ export const authOptions: NextAuthOptions = {
                 lastName,
                 userType: 'individual', // Default, will be updated during onboarding
                 emailVerified: true, // OAuth emails are verified
+                profileCompleted: false, // New OAuth users need to complete onboarding
                 authProvider: account.provider,
                 authProviderId: account.providerAccountId,
               },

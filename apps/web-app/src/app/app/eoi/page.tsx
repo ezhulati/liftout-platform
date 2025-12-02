@@ -55,7 +55,7 @@ const DEMO_EOIS = {
     {
       id: 'demo-eoi-3',
       fromType: 'company',
-      fromId: 'demo-company-2',
+      fromId: 'techcorp-demo',
       toType: 'team',
       toId: 'demo-team',
       message: 'We\'ve been following your team\'s impressive work in the fintech space. Your expertise in building scalable data pipelines and ML models aligns perfectly with our expansion plans. We\'d love to explore bringing your entire team onboard.',
@@ -74,7 +74,7 @@ const DEMO_EOIS = {
     {
       id: 'demo-eoi-4',
       fromType: 'company',
-      fromId: 'demo-company-3',
+      fromId: 'healthstart-demo',
       toType: 'team',
       toId: 'demo-team',
       message: 'We are an emerging healthtech startup looking for experienced teams to help us build our core platform. Your track record speaks for itself.',
