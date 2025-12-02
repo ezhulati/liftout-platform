@@ -94,7 +94,7 @@ export function FAQTabs() {
           {/* Left column - Header, tabs, and support options */}
           <div className="lg:col-span-1">
             <div className={`lg:sticky lg:top-32 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <p className="font-semibold text-base mb-3 text-navy">
+              <p className="font-semibold text-base mb-3 text-[#4C1D95]">
                 Common questions
               </p>
               <h2
@@ -126,9 +126,9 @@ export function FAQTabs() {
                         className={`
                           flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md min-h-12
                           font-medium text-base transition-all duration-fast
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2
+                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-900 focus-visible:ring-offset-2
                           ${isActive
-                            ? 'bg-bg-surface text-navy shadow-sm'
+                            ? 'bg-bg-surface text-[#4C1D95] shadow-sm'
                             : 'text-text-tertiary hover:text-text-primary'
                           }
                         `}
@@ -147,8 +147,8 @@ export function FAQTabs() {
                 href="/contact"
                 className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-border-hover hover:shadow-sm transition-all group min-h-12"
               >
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-navy transition-colors" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
-                  <EnvelopeIcon className="w-6 h-6 text-navy group-hover:text-on-dark" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-[#4C1D95] transition-colors" style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.1)' }}>
+                  <EnvelopeIcon className="w-6 h-6 text-[#4C1D95] group-hover:text-on-dark" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="font-semibold text-text-primary text-base">Still have questions?</p>
@@ -164,7 +164,7 @@ export function FAQTabs() {
               {faqs.map((faq, index) => (
                 <div
                   key={`${activeTab}-${index}`}
-                  className={`bg-bg-surface border border-border rounded-xl overflow-hidden transition-all duration-300 hover:border-navy/20 ${
+                  className={`bg-bg-surface border border-border rounded-xl overflow-hidden transition-all duration-300 hover:border-purple-900/20 ${
                     isVisible
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-4'
@@ -205,7 +205,7 @@ export function FAQTabs() {
             </div>
 
             {/* Additional help text */}
-            <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.05)' }}>
+            <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
                 <span className="font-semibold text-text-primary">Need help with something specific?</span>
                 {' '}Our team has helped 150+ companies and teams navigate the process.

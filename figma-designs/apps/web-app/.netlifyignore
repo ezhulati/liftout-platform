@@ -1,0 +1,7 @@
+../../pnpm-workspace.yaml
+../../pnpm-lock.yaml
+../../.npmrc
+../../packages/
+../../apps/api-server/
+../.git
+*.log

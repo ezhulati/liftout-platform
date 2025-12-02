@@ -29,7 +29,7 @@ export function TeamHero() {
           {/* Left - Copy */}
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Eyebrow - Practical UI: simple, no decorative icons */}
-            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-navy">
+            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-[#4C1D95]">
               For Teams
             </p>
 
@@ -52,7 +52,7 @@ export function TeamHero() {
                   className={`flex items-center gap-3 transition-all duration-500 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                   style={{ transitionDelay: `${(index + 2) * 100}ms` }}
                 >
-                  <CheckIcon className="w-5 h-5 text-navy flex-shrink-0" aria-hidden="true" />
+                  <CheckIcon className="w-5 h-5 text-[#4C1D95] flex-shrink-0" aria-hidden="true" />
                   <span className="text-text-secondary text-lg">{benefit}</span>
                 </li>
               ))}

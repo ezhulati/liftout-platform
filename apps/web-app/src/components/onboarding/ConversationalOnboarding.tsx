@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import {
   ArrowRightIcon,
@@ -15,12 +16,17 @@ import {
   MapPinIcon,
   WrenchScrewdriverIcon,
   HeartIcon,
+  BuildingOfficeIcon,
+  UserGroupIcon,
+  EnvelopeIcon,
+  GlobeAltIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 import { ProgressRing } from './ProgressRing';
 
 interface Question {
   id: string;
-  type: 'text' | 'select' | 'multiselect' | 'chips' | 'textarea';
+  type: 'text' | 'select' | 'multiselect' | 'chips' | 'textarea' | 'email-list';
   question: string;
   subtext?: string;
   placeholder?: string;
@@ -28,9 +34,11 @@ interface Question {
   required?: boolean;
   icon?: React.ComponentType<{ className?: string }>;
   validation?: (value: string | string[]) => string | null;
+  userTypes?: ('individual' | 'company')[]; // Which user types see this question
 }
 
-const questions: Question[] = [
+// Questions for TEAM/INDIVIDUAL users
+const teamQuestions: Question[] = [
   {
     id: 'firstName',
     type: 'text',
@@ -179,6 +187,150 @@ const questions: Question[] = [
       return null;
     },
   },
+  // Team-specific questions
+  {
+    id: 'teamName',
+    type: 'text',
+    question: "What would you like to name your team?",
+    subtext: "Choose a name that represents your team's identity.",
+    placeholder: 'e.g., The Innovation Squad',
+    required: true,
+    icon: UserGroupIcon,
+  },
+  {
+    id: 'teamDescription',
+    type: 'textarea',
+    question: "Describe your team",
+    subtext: "Tell companies what makes your team special.",
+    placeholder: "Our team excels at...",
+    required: true,
+    icon: DocumentTextIcon,
+    validation: (value) => {
+      if (typeof value === 'string' && value.length < 30) {
+        return 'Please write at least 30 characters';
+      }
+      return null;
+    },
+  },
+  {
+    id: 'inviteMembers',
+    type: 'email-list',
+    question: "Invite your team members",
+    subtext: "Enter email addresses of colleagues you'd like to invite.",
+    placeholder: 'colleague@company.com',
+    required: false,
+    icon: EnvelopeIcon,
+  },
+];
+
+// Questions for COMPANY users
+const companyQuestions: Question[] = [
+  {
+    id: 'firstName',
+    type: 'text',
+    question: "What's your first name?",
+    subtext: "Let's start with the basics.",
+    placeholder: 'Enter your first name',
+    required: true,
+    icon: UserIcon,
+  },
+  {
+    id: 'lastName',
+    type: 'text',
+    question: "And your last name?",
+    placeholder: 'Enter your last name',
+    required: true,
+    icon: UserIcon,
+  },
+  {
+    id: 'title',
+    type: 'text',
+    question: "What is your role at the company?",
+    subtext: "Your position or job title.",
+    placeholder: 'e.g., Head of Talent Acquisition',
+    required: true,
+    icon: BriefcaseIcon,
+  },
+  {
+    id: 'location',
+    type: 'text',
+    question: "Where is your company headquartered?",
+    subtext: "City and country is perfect.",
+    placeholder: 'e.g., New York, NY',
+    required: true,
+    icon: MapPinIcon,
+  },
+  {
+    id: 'companyName',
+    type: 'text',
+    question: "What's your company name?",
+    subtext: "The official name of your organization.",
+    placeholder: 'Enter company name',
+    required: true,
+    icon: BuildingOfficeIcon,
+  },
+  {
+    id: 'companyIndustry',
+    type: 'select',
+    question: "What industry is your company in?",
+    subtext: "Select the primary industry.",
+    required: true,
+    icon: BuildingOfficeIcon,
+    options: [
+      { value: 'financial-services', label: 'Financial Services' },
+      { value: 'healthcare', label: 'Healthcare Technology' },
+      { value: 'enterprise-software', label: 'Enterprise Software' },
+      { value: 'consulting', label: 'Management Consulting' },
+      { value: 'private-equity', label: 'Private Equity' },
+      { value: 'legal', label: 'Legal Services' },
+      { value: 'investment-banking', label: 'Investment Banking' },
+      { value: 'technology', label: 'Technology' },
+      { value: 'retail', label: 'Retail & E-commerce' },
+      { value: 'other', label: 'Other' },
+    ],
+  },
+  {
+    id: 'companyDescription',
+    type: 'textarea',
+    question: "Tell us about your company",
+    subtext: "A brief description helps teams understand your organization.",
+    placeholder: "We are a company that...",
+    required: true,
+    icon: DocumentTextIcon,
+    validation: (value) => {
+      if (typeof value === 'string' && value.length < 50) {
+        return 'Please write at least 50 characters';
+      }
+      return null;
+    },
+  },
+  {
+    id: 'companyWebsite',
+    type: 'text',
+    question: "Company website (optional)",
+    subtext: "Help teams learn more about you.",
+    placeholder: 'https://www.company.com',
+    required: false,
+    icon: GlobeAltIcon,
+  },
+  {
+    id: 'opportunityHeadline',
+    type: 'text',
+    question: "What kind of team are you looking for?",
+    subtext: "A brief headline for your first opportunity.",
+    placeholder: 'e.g., Experienced FinTech Engineering Team',
+    required: false,
+    icon: UserGroupIcon,
+  },
+  {
+    id: 'opportunityDescription',
+    type: 'textarea',
+    question: "Describe your ideal team",
+    subtext: "What would make a team a great fit?",
+    placeholder: "We're looking for a team that...",
+    required: false,
+    icon: DocumentTextIcon,
+  },
 ];
 
 interface ConversationalOnboardingProps {
@@ -188,15 +340,26 @@ interface ConversationalOnboardingProps {
 
 export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalOnboardingProps) {
   const { userData } = useAuth();
+  const { data: session } = useSession();
   const { markOnboardingComplete, skipOnboarding: contextSkipOnboarding } = useOnboarding();
   const [currentIndex, setCurrentIndex] = useState(-1); // -1 = welcome screen
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [currentValue, setCurrentValue] = useState<string | string[]>('');
+  const [emailInput, setEmailInput] = useState(''); // For email-list type
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [hasLoadedProfile, setHasLoadedProfile] = useState(false);
+
+  // Determine user type from session
+  const userType = session?.user?.userType || 'individual';
+  const isCompanyUser = userType === 'company';
+
+  // Select questions based on user type
+  const questions = useMemo(() => {
+    return isCompanyUser ? companyQuestions : teamQuestions;
+  }, [isCompanyUser]);
 
   const firstName = userData?.name?.split(' ')[0] || 'there';
   const currentQuestion = currentIndex >= 0 ? questions[currentIndex] : null;
@@ -312,7 +475,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
   const saveCurrentAnswer = useCallback(async (questionId: string, value: string | string[]) => {
     const updateData: Record<string, unknown> = {};
 
-    // Map question ID to API field
+    // Map question ID to API field based on user type
     switch (questionId) {
       case 'firstName':
         updateData.firstName = value;
@@ -329,6 +492,9 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
       case 'currentCompany':
         updateData.companyName = value;
         break;
+      case 'companyName':
+        updateData.companyName = value;
+        break;
       case 'yearsExperience':
         updateData.yearsExperience = parseInt(String(value).split('-')[0]) || 0;
         break;
@@ -338,9 +504,26 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
       case 'bio':
         updateData.bio = value;
         break;
-      // seniorityLevel and interests are stored separately or skipped for now
+      case 'companyIndustry':
+        updateData.industry = value;
+        break;
+      case 'companyDescription':
+        updateData.companyDescription = value;
+        break;
+      case 'companyWebsite':
+        updateData.website = value;
+        break;
+      // Team and opportunity fields are handled in final save
+      case 'teamName':
+      case 'teamDescription':
+      case 'inviteMembers':
+      case 'opportunityHeadline':
+      case 'opportunityDescription':
+      case 'seniorityLevel':
+      case 'interests':
+        return; // Skip - these are handled in final save or stored separately
       default:
-        return; // Skip fields that don't map to profile
+        return; // Skip unknown fields
     }
 
     try {
@@ -354,6 +537,82 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
       // Don't block navigation on save failure
     }
   }, []);
+
+  // Create team for team users
+  const createTeam = useCallback(async (teamName: string, teamDescription: string, industry: string) => {
+    try {
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: teamName,
+          description: teamDescription,
+          industry: industry,
+        }),
+      });
+      if (response.ok) {
+        const team = await response.json();
+        return team.id;
+      }
+    } catch (err) {
+      console.error('Failed to create team:', err);
+    }
+    return null;
+  }, []);
+
+  // Send team invitations
+  const sendTeamInvitations = useCallback(async (teamId: string, emails: string[]) => {
+    for (const email of emails) {
+      try {
+        await fetch('/api/teams/invitations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ teamId, email }),
+        });
+      } catch (err) {
+        console.error('Failed to send invitation to:', email, err);
+      }
+    }
+  }, []);
+
+  // Create opportunity for company users
+  const createOpportunity = useCallback(async (title: string, description: string) => {
+    if (!title) return;
+    try {
+      await fetch('/api/opportunities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          status: 'draft',
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to create opportunity:', err);
+    }
+  }, []);
+
+  // Add email to list
+  const addEmail = useCallback(() => {
+    const email = emailInput.trim().toLowerCase();
+    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      const currentEmails = Array.isArray(currentValue) ? currentValue : [];
+      if (!currentEmails.includes(email)) {
+        setCurrentValue([...currentEmails, email]);
+      }
+      setEmailInput('');
+      setError(null);
+    } else {
+      setError('Please enter a valid email address');
+    }
+  }, [emailInput, currentValue]);
+
+  // Remove email from list
+  const removeEmail = useCallback((emailToRemove: string) => {
+    const currentEmails = Array.isArray(currentValue) ? currentValue : [];
+    setCurrentValue(currentEmails.filter(e => e !== emailToRemove));
+  }, [currentValue]);
 
   const handleNext = useCallback(async () => {
     if (!validateAndProceed()) return;
@@ -380,30 +639,77 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           [currentQuestion!.id]: currentValue,
         };
 
-        // Final save to ensure all data is persisted
-        const response = await fetch('/api/user/profile', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            firstName: finalAnswers.firstName,
-            lastName: finalAnswers.lastName,
-            title: finalAnswers.title,
-            location: finalAnswers.location,
-            companyName: finalAnswers.currentCompany,
-            yearsExperience: parseInt(String(finalAnswers.yearsExperience).split('-')[0]) || 0,
-            skills: finalAnswers.skills,
-            bio: finalAnswers.bio,
-          }),
-        });
+        if (isCompanyUser) {
+          // Company user final save
+          const response = await fetch('/api/user/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firstName: finalAnswers.firstName,
+              lastName: finalAnswers.lastName,
+              title: finalAnswers.title,
+              location: finalAnswers.location,
+              companyName: finalAnswers.companyName,
+              industry: finalAnswers.companyIndustry,
+              companyDescription: finalAnswers.companyDescription,
+              website: finalAnswers.companyWebsite,
+            }),
+          });
 
-        if (!response.ok) {
-          throw new Error('Failed to save profile');
+          if (!response.ok) {
+            throw new Error('Failed to save profile');
+          }
+
+          // Create opportunity if provided
+          if (finalAnswers.opportunityHeadline) {
+            await createOpportunity(
+              String(finalAnswers.opportunityHeadline),
+              String(finalAnswers.opportunityDescription || '')
+            );
+          }
+
+          toast.success('Company profile created successfully!');
+        } else {
+          // Team user final save
+          const response = await fetch('/api/user/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firstName: finalAnswers.firstName,
+              lastName: finalAnswers.lastName,
+              title: finalAnswers.title,
+              location: finalAnswers.location,
+              companyName: finalAnswers.currentCompany,
+              yearsExperience: parseInt(String(finalAnswers.yearsExperience).split('-')[0]) || 0,
+              skills: finalAnswers.skills,
+              bio: finalAnswers.bio,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to save profile');
+          }
+
+          // Create team
+          if (finalAnswers.teamName) {
+            const teamId = await createTeam(
+              String(finalAnswers.teamName),
+              String(finalAnswers.teamDescription || ''),
+              Array.isArray(finalAnswers.interests) ? finalAnswers.interests[0] : ''
+            );
+
+            // Send invitations if team was created and emails were provided
+            if (teamId && Array.isArray(finalAnswers.inviteMembers) && finalAnswers.inviteMembers.length > 0) {
+              await sendTeamInvitations(teamId, finalAnswers.inviteMembers);
+            }
+          }
+
+          toast.success('Profile and team created successfully!');
         }
 
         // Mark onboarding as complete in the database
         await markOnboardingComplete();
 
-        toast.success('Profile created successfully!');
         onComplete();
       } catch (err) {
         console.error('Save error:', err);
@@ -414,7 +720,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
     } else {
       setCurrentIndex(prev => prev + 1);
     }
-  }, [validateAndProceed, currentQuestion, currentValue, isLastQuestion, answers, saveCurrentAnswer, onComplete, markOnboardingComplete]);
+  }, [validateAndProceed, currentQuestion, currentValue, isLastQuestion, answers, saveCurrentAnswer, onComplete, markOnboardingComplete, isCompanyUser, createOpportunity, createTeam, sendTeamInvitations]);
 
   const handleBack = useCallback(() => {
     if (currentQuestion) {
@@ -478,7 +784,9 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           <p className="text-lg text-text-secondary leading-relaxed mb-8">
             {isResuming
               ? "Let's finish setting up your profile. We saved your progress."
-              : "Let's set up your profile in a few quick questions. This helps us match you with the best opportunities."
+              : isCompanyUser
+                ? "Let's set up your company profile. This helps teams learn about your organization and opportunities."
+                : "Let's set up your profile and create your team. This helps companies discover your team's unique strengths."
             }
           </p>
 
@@ -640,6 +948,65 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
                 })}
               </div>
             )}
+
+            {currentQuestion?.type === 'email-list' && (
+              <div className="space-y-4">
+                {/* Email input */}
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={emailInput}
+                    onChange={(e) => { setEmailInput(e.target.value); setError(null); }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addEmail();
+                      }
+                    }}
+                    placeholder={currentQuestion.placeholder}
+                    className="flex-1 text-lg border-2 border-border focus:border-purple-500 rounded-lg p-3 outline-none transition-colors placeholder:text-text-tertiary"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={addEmail}
+                    className="px-4 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors min-h-12"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                {/* Email list */}
+                {Array.isArray(currentValue) && currentValue.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-text-secondary">{currentValue.length} team member{currentValue.length > 1 ? 's' : ''} to invite:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {currentValue.map((email) => (
+                        <span
+                          key={email}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm"
+                        >
+                          {email}
+                          <button
+                            type="button"
+                            onClick={() => removeEmail(email)}
+                            className="ml-1 hover:text-purple-900"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <p className="text-sm text-text-tertiary">
+                  You can skip this and invite team members later.
+                </p>
+              </div>
+            )}
           </div>
 
           {error && (
@@ -671,7 +1038,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
           </button>
 
           {/* Keyboard hint */}
-          {currentQuestion?.type !== 'textarea' && currentQuestion?.type !== 'chips' && currentQuestion?.type !== 'select' && (
+          {currentQuestion?.type !== 'textarea' && currentQuestion?.type !== 'chips' && currentQuestion?.type !== 'select' && currentQuestion?.type !== 'email-list' && (
             <p className="text-center text-sm text-text-tertiary mt-4">
               Press <kbd className="px-2 py-0.5 bg-bg-elevated rounded text-xs font-mono">Enter</kbd> to continue
             </p>

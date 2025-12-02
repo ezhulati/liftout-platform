@@ -67,8 +67,8 @@ export function Testimonials() {
 
               {/* Author */}
               <footer className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-navy/10">
-                  <span className="font-semibold text-navy text-sm">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-purple-100">
+                  <span className="font-semibold text-[#4C1D95] text-sm">
                     {testimonial.name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>

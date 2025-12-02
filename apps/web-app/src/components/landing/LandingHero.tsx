@@ -41,9 +41,9 @@ export function LandingHero() {
                 Tired of hiring individuals who take months to gel?
               </p>
 
-              {/* H1 - 44px bold per Practical UI */}
-              <h1 className="font-heading text-4xl sm:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-                Acquire teams that deliver from day one
+              {/* H1 - Large, bold hero headline */}
+              <h1 className="font-heading text-5xl sm:text-6xl font-bold text-text-primary tracking-tight leading-tight mb-6">
+                Acquire Teams That Deliver From Day One
               </h1>
 
               {/* Subhead - 18px body */}
@@ -59,7 +59,7 @@ export function LandingHero() {
                 {/* Primary button - ONE per screen, solid fill, Verb+Noun */}
                 <Link
                   href="/auth/signup"
-                  className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-navy text-white font-semibold rounded-lg shadow-lg shadow-navy/25 hover:shadow-xl hover:shadow-navy/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+                  className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-[#4C1D95] text-white font-semibold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                 >
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                   <span className="relative">Browse verified teams</span>
@@ -68,7 +68,7 @@ export function LandingHero() {
                 {/* Tertiary button - underlined text, for secondary action */}
                 <Link
                   href="/for-teams"
-                  className="min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center text-navy font-medium underline underline-offset-4 decoration-navy/30 hover:decoration-navy transition-colors"
+                  className="min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center text-[#4C1D95] font-medium underline underline-offset-4 decoration-purple-900/30 hover:decoration-purple-900 transition-colors"
                 >
                   List your team
                 </Link>

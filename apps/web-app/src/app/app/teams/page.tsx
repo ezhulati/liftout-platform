@@ -247,170 +247,141 @@ export default function TeamsPage() {
 
   // Different experience for team members vs companies
   if (isTeamUser) {
-    // Team member view - show their team profile
+    // Team member view - matches Figma "My Team" design
+    const teamMembers = [
+      { name: 'Alex Chen', role: 'Team Lead', experience: '10 yrs', education: "Master's Degree", avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+      { name: 'Sarah Park', role: 'Senior Analyst', experience: '6 yrs', education: "Bachelor's Degree", avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+      { name: 'Marcus Johnson', role: 'Data Scientist', experience: '4 yrs', education: "Master's Degree", avatar: 'https://randomuser.me/api/portraits/men/75.jpg' },
+      { name: 'Emily Rodriguez', role: 'ML Engineer', experience: '3 yrs', education: "Bachelor's Degree", avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
+    ];
+
     return (
       <div className="space-y-6">
-        {/* Page Header - Practical UI: One primary action per screen */}
-        <div className="page-header">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div>
-              <h1 className="page-title">My Team Profile</h1>
-              <p className="page-subtitle">
-                Manage your team profile and track liftout opportunities
-              </p>
-            </div>
-            {/* Button group - Primary first, then secondary */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/app/opportunities" className="btn-primary min-h-12">
-                Browse opportunities
-              </Link>
-              <Link href="/app/teams/edit" className="btn-secondary min-h-12">
-                Edit team profile
-              </Link>
-            </div>
-          </div>
+        {/* Page Header - Figma style */}
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
+          <p className="text-text-secondary mt-1">
+            Manage your team post, team members and their permissions.
+          </p>
         </div>
 
-        {/* Team Profile Card - Practical UI: Bold for emphasis, regular for body */}
+        {/* Invite Section */}
         <div className="card">
           <div className="p-6">
-            {/* Team Member Avatars - overlapping stack */}
-            <div className="mb-6">
-              <TeamMemberAvatars
-                members={[
-                  { name: 'Alex Chen' },
-                  { name: 'Sarah Park' },
-                  { name: 'Marcus Johnson' },
-                  { name: 'Emily Rodriguez' },
-                ]}
-                size="lg"
-                maxDisplay={5}
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-text-primary font-heading leading-tight">TechFlow Data Science Team</h2>
-                <p className="text-base font-normal text-text-secondary mt-1">Led by Alex Chen · 4 Members · 3.5 Years Together</p>
-                {/* Badges */}
-                <div className="flex flex-wrap items-center mt-3 gap-2">
-                  <span className="badge badge-success text-xs">
-                    Available for Liftout
-                  </span>
-                  <span className="badge badge-primary text-xs">
-                    Verified Team
-                  </span>
+            <h2 className="text-lg font-semibold text-text-primary mb-2">Invite people to join your team</h2>
+            <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
+            <div className="flex gap-3">
+              <div className="flex-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
                 </div>
+                <input
+                  type="email"
+                  placeholder="olivia@untitledui.com"
+                  className="input-field pl-12"
+                />
               </div>
-            </div>
-
-            {/* Description - max 65ch */}
-            <div className="mb-6">
-              <p className="text-base font-normal text-text-secondary leading-relaxed max-w-prose">
-                Elite data science team with proven track record in fintech analytics and machine learning solutions.
-                We've successfully delivered $2M+ in value through predictive modeling and risk assessment systems.
-              </p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-bg-alt rounded-xl">
-                <div className="text-3xl font-bold text-navy font-heading">23</div>
-                <div className="text-sm font-normal text-text-secondary mt-1">Successful Projects</div>
-              </div>
-              <div className="text-center p-4 bg-bg-alt rounded-xl">
-                <div className="text-3xl font-bold text-success font-heading">96%</div>
-                <div className="text-sm font-normal text-text-secondary mt-1">Client Satisfaction</div>
-              </div>
-              <div className="text-center p-4 bg-bg-alt rounded-xl">
-                <div className="text-3xl font-bold text-gold-600 font-heading">$2.1M</div>
-                <div className="text-sm font-normal text-text-secondary mt-1">Annual Value Generated</div>
-              </div>
-            </div>
-
-            {/* Key Achievements - Practical UI: icon + text */}
-            <div className="mb-6">
-              <h3 className="text-lg font-bold text-text-primary mb-4 font-heading">Key Achievements</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" aria-hidden="true" />
-                  <span className="text-base font-normal text-text-secondary leading-relaxed">Reduced fraud detection false positives by 35%</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" aria-hidden="true" />
-                  <span className="text-base font-normal text-text-secondary leading-relaxed">Built predictive models generating $2.1M annual savings</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" aria-hidden="true" />
-                  <span className="text-base font-normal text-text-secondary leading-relaxed">Mentored 12+ junior data scientists across 3 years</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Skills Badges */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {['Machine Learning', 'Python', 'SQL', 'Team Leadership', 'Financial Modeling', 'Risk Assessment'].map((skill) => (
-                <span key={skill} className="badge badge-primary text-xs">
-                  {skill}
-                </span>
-              ))}
-            </div>
-
-            {/* Profile Stats */}
-            <div className="border-t border-border pt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-sm font-bold text-text-primary mb-1">Profile Views</h4>
-                  <p className="text-3xl font-bold text-navy font-heading">847</p>
-                  <p className="text-sm font-normal text-text-tertiary mt-1">↑ 23% this month</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-text-primary mb-1">Liftout Inquiries</h4>
-                  <p className="text-3xl font-bold text-success font-heading">12</p>
-                  <p className="text-sm font-normal text-text-tertiary mt-1">3 active discussions</p>
-                </div>
-              </div>
+              <button className="btn-outline min-h-12 flex items-center gap-2 text-[#5B21B6] border-[#5B21B6] hover:bg-[#5B21B6]/5">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Send Invite
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Quick Actions - 48px touch targets */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link href="/app/applications" className="card hover:shadow-md transition-shadow duration-fast min-h-12">
-            <div className="p-5 flex items-center gap-4">
-              <div className="p-3 bg-navy-50 rounded-xl min-w-12 min-h-12 flex items-center justify-center">
-                <DocumentTextIcon className="h-6 w-6 text-navy" aria-hidden="true" />
-              </div>
+        {/* Team Post Card - Figma style */}
+        <div className="card">
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-base font-bold text-text-primary">My Applications</h3>
-                <p className="text-sm font-normal text-text-tertiary mt-0.5">Track application status</p>
+                <span className="text-[#5B21B6] text-sm font-medium">Data Science</span>
+                <h3 className="text-xl font-bold text-text-primary mt-1 flex items-center gap-3">
+                  TechFlow Data Science Team
+                  <span className="text-[#5B21B6] text-sm font-normal">Team of 4</span>
+                </h3>
               </div>
+              <button className="p-2 hover:bg-bg-alt rounded-lg transition-colors">
+                <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="6" r="2" />
+                  <circle cx="12" cy="12" r="2" />
+                  <circle cx="12" cy="18" r="2" />
+                </svg>
+              </button>
             </div>
-          </Link>
 
-          <Link href="/app/opportunities" className="card hover:shadow-md transition-shadow duration-fast min-h-12">
-            <div className="p-5 flex items-center gap-4">
-              <div className="p-3 bg-success-light rounded-xl min-w-12 min-h-12 flex items-center justify-center">
-                <BriefcaseIcon className="h-6 w-6 text-success" aria-hidden="true" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-text-primary">Browse Opportunities</h3>
-                <p className="text-sm font-normal text-text-tertiary mt-0.5">Find new liftout opportunities</p>
-              </div>
+            <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
+              <span className="flex items-center gap-1.5">
+                <MapPinIcon className="h-4 w-4" />
+                San Francisco, CA
+              </span>
+              <span className="flex items-center gap-1.5">
+                <ClockIcon className="h-4 w-4" />
+                Full-time
+              </span>
             </div>
-          </Link>
 
-          <Link href="/app/messages" className="card hover:shadow-md transition-shadow duration-fast min-h-12">
-            <div className="p-5 flex items-center gap-4">
-              <div className="p-3 bg-gold-50 rounded-xl min-w-12 min-h-12 flex items-center justify-center">
-                <ChatBubbleLeftRightIcon className="h-6 w-6 text-gold-700" aria-hidden="true" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-text-primary">Messages</h3>
-                <p className="text-sm font-normal text-text-tertiary mt-0.5">Company communications</p>
-              </div>
-            </div>
-          </Link>
+            <p className="text-text-secondary mb-4 leading-relaxed">
+              Elite data science team with proven track record in fintech analytics and machine learning solutions.
+              We specialize in predictive modeling, risk assessment, and building scalable ML pipelines.
+            </p>
+
+            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-[#5B21B6]/10 text-[#5B21B6]">
+              15 years combined experience
+            </span>
+          </div>
+        </div>
+
+        {/* Team Members Table - Figma style */}
+        <div className="card overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Name</th>
+                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Experience</th>
+                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Education</th>
+                  <th className="w-12 px-6 py-4"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamMembers.map((member, index) => (
+                  <tr key={member.name} className={index !== teamMembers.length - 1 ? 'border-b border-border' : ''}>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={member.avatar}
+                          alt={member.name}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                        <div>
+                          <div className="font-medium text-text-primary">{member.name}</div>
+                          <div className="text-sm text-text-tertiary">{member.role}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-text-secondary">{member.experience}</td>
+                    <td className="px-6 py-4 text-text-secondary">{member.education}</td>
+                    <td className="px-6 py-4">
+                      {index > 0 && (
+                        <button className="p-2 hover:bg-bg-alt rounded-lg transition-colors">
+                          <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="6" r="2" />
+                            <circle cx="12" cy="12" r="2" />
+                            <circle cx="12" cy="18" r="2" />
+                          </svg>
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
@@ -493,8 +464,8 @@ interface TeamCardProps {
 function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
   return (
     <div className={classNames(
-      "card hover:shadow-md transition-shadow duration-fast",
-      featured ? 'ring-2 ring-gold-200' : ''
+      "card hover:shadow-md hover:border-purple-300 transition-all duration-fast",
+      featured ? 'ring-2 ring-purple-200' : ''
     )}>
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1 min-w-0">
@@ -510,12 +481,12 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           {/* Header */}
           <div className="mb-4">
             <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-2 leading-snug">
-              <Link href={`/app/teams/${team.id}`} className="hover:text-navy transition-colors duration-fast">
+              <Link href={`/app/teams/${team.id}`} className="hover:text-purple-700 transition-colors duration-fast">
                 {team.name}
               </Link>
-              <CheckBadgeIconSolid className="h-5 w-5 text-navy flex-shrink-0" aria-label="Verified" />
+              <CheckBadgeIconSolid className="h-5 w-5 text-purple-700 flex-shrink-0" aria-label="Verified" />
               {featured && (
-                <StarIcon className="h-5 w-5 text-gold fill-current flex-shrink-0" aria-label="Featured" />
+                <StarIcon className="h-5 w-5 text-purple-400 fill-current flex-shrink-0" aria-label="Featured" />
               )}
             </h3>
             {/* Meta info */}
@@ -541,7 +512,7 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
           {/* Stats grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <div className="flex items-center text-sm font-normal text-text-secondary">
-              <StarIcon className="h-4 w-4 mr-2 text-gold flex-shrink-0" aria-hidden="true" />
+              <StarIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
               <span>Cohesion: <strong className="font-bold">{team.cohesionScore || 'N/A'}</strong>/100</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
@@ -549,11 +520,11 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
               <span><strong className="font-bold">{team.successfulProjects || 0}</strong> projects</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
-              <CurrencyDollarIcon className="h-4 w-4 mr-2 text-navy flex-shrink-0" aria-hidden="true" />
+              <CurrencyDollarIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
               <span>{team.compensation?.range || 'Negotiable'}</span>
             </div>
             <div className="flex items-center text-sm font-normal text-text-secondary">
-              <MapPinIcon className="h-4 w-4 mr-2 text-gold-600 flex-shrink-0" aria-hidden="true" />
+              <MapPinIcon className="h-4 w-4 mr-2 text-purple-400 flex-shrink-0" aria-hidden="true" />
               <span>{team.location || 'Remote'}</span>
             </div>
           </div>

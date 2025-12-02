@@ -42,7 +42,7 @@ export default function ActivityPage() {
         </div>
         <div className="card p-4">
           <p className="text-sm text-text-tertiary mb-1">Pending Actions</p>
-          <p className="text-xl font-bold text-gold-600">3 items</p>
+          <p className="text-xl font-bold text-purple-500">3 items</p>
         </div>
       </div>
     </div>

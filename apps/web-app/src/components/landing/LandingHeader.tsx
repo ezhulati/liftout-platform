@@ -151,7 +151,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
       }`}
     >
       {/* Subtle top accent line */}
-      <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-navy/20 to-transparent transition-opacity duration-300 ${isScrolled ? 'opacity-100' : 'opacity-0'}`} />
+      <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-900/20 to-transparent transition-opacity duration-300 ${isScrolled ? 'opacity-100' : 'opacity-0'}`} />
 
       <nav className={`max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-300 ${
         isScrolled ? 'py-2.5' : 'py-4'
@@ -170,7 +170,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               {/* Subtle bottom shadow for depth */}
               <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
               {/* Hover highlight */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-navy/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-900/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <Image
                 src="/Liftout-logo-dark.png"
                 alt="Liftout"
@@ -228,7 +228,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
                           className="group/item relative flex flex-col gap-0.5 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-150 min-h-12"
                           onClick={() => setActiveDropdown(null)}
                         >
-                          <span className="font-semibold text-gray-900 group-hover/item:text-navy transition-colors text-[17px] leading-tight">
+                          <span className="font-semibold text-gray-900 group-hover/item:text-[#4C1D95] transition-colors text-[17px] leading-tight">
                             {item.label}
                           </span>
                           <span className="text-sm text-gray-500 group-hover/item:text-gray-600 transition-colors leading-snug">
@@ -251,7 +251,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               className={`hidden sm:flex font-medium text-lg transition-all duration-200 min-h-12 items-center px-5 rounded-xl border ${
                 useTransparentStyle
                   ? 'text-white border-white/30 hover:border-white/50 hover:bg-white/10'
-                  : 'text-navy border-navy/20 hover:border-navy/40 hover:bg-navy/5'
+                  : 'text-[#4C1D95] border-purple-900/20 hover:border-purple-900/40 hover:bg-purple-900/5'
               }`}
             >
               Sign in
@@ -262,9 +262,9 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
               className={`group relative min-h-12 px-6 text-lg hidden sm:inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${
                 useTransparentStyle
                   ? 'bg-white hover:bg-gray-50 shadow-black/10'
-                  : 'text-white shadow-navy/30 hover:shadow-navy/40'
+                  : 'text-white shadow-purple-900/30 hover:shadow-purple-900/40'
               }`}
-              style={{ backgroundColor: useTransparentStyle ? undefined : 'hsl(220, 60%, 20%)', color: useTransparentStyle ? 'hsl(220, 60%, 20%)' : undefined }}
+              style={{ backgroundColor: useTransparentStyle ? undefined : '#4C1D95', color: useTransparentStyle ? '#4C1D95' : undefined }}
             >
               {/* Inner highlight for depth */}
               <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -337,7 +337,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="block px-4 py-3 text-gray-600 hover:text-navy hover:bg-gray-50 text-base rounded-lg transition-colors duration-150 min-h-12"
+                        className="block px-4 py-3 text-gray-600 hover:text-[#4C1D95] hover:bg-gray-50 text-base rounded-lg transition-colors duration-150 min-h-12"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {item.label}
@@ -357,8 +357,8 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Primary button first on mobile (stacked vertically) */}
             <Link
               href="/auth/signup"
-              className="group relative flex items-center justify-center w-full px-4 py-4 text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-navy/30 overflow-hidden"
-              style={{ backgroundColor: 'hsl(220, 60%, 20%)' }}
+              className="group relative flex items-center justify-center w-full px-4 py-4 text-white font-semibold text-lg rounded-xl transition-all duration-200 min-h-12 shadow-lg shadow-purple-900/30 overflow-hidden"
+              style={{ backgroundColor: '#4C1D95' }}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -368,7 +368,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Secondary button - border + action color (Practical UI) */}
             <Link
               href="/auth/signin"
-              className="flex items-center justify-center w-full px-4 py-4 text-navy hover:bg-navy/5 font-medium text-lg rounded-xl transition-all duration-200 min-h-12 border border-navy/20 hover:border-navy/40"
+              className="flex items-center justify-center w-full px-4 py-4 text-[#4C1D95] hover:bg-purple-900/5 font-medium text-lg rounded-xl transition-all duration-200 min-h-12 border border-purple-900/20 hover:border-purple-900/40"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Sign in

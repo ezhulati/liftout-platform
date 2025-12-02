@@ -91,8 +91,8 @@ const ACTIVITY_ICONS: Record<string, typeof BriefcaseIcon> = {
 };
 
 const ACTIVITY_COLORS: Record<string, string> = {
-  application: 'bg-navy-50 text-navy',
-  interview: 'bg-gold-100 text-gold-700',
+  application: 'bg-purple-50 text-purple-600',
+  interview: 'bg-purple-100 text-purple-700',
   message: 'bg-purple-50 text-purple-600',
   eoi: 'bg-pink-50 text-pink-600',
   team: 'bg-success/10 text-success',
@@ -138,7 +138,7 @@ export function ActivityFeed({ limit = 10, showFilter = false, className = '' }:
       return <XCircleIcon className="h-3 w-3 text-red-500" />;
     }
     if (status === 'pending') {
-      return <ClockIcon className="h-3 w-3 text-gold-500" />;
+      return <ClockIcon className="h-3 w-3 text-purple-700" />;
     }
     return null;
   };
@@ -170,7 +170,7 @@ export function ActivityFeed({ limit = 10, showFilter = false, className = '' }:
               onClick={() => setFilter(type)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
                 filter === type
-                  ? 'bg-navy text-white'
+                  ? 'bg-purple-700 text-white'
                   : 'bg-bg-alt text-text-secondary hover:bg-bg-elevated'
               }`}
             >

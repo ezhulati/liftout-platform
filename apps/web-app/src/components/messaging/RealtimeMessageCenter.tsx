@@ -20,6 +20,7 @@ import {
   getMessagesWithSession,
   addDemoMessage,
 } from '@/lib/demo-conversations';
+import { useProfileGate } from '@/hooks/useProfileGate';
 import {
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
@@ -105,6 +106,7 @@ function transformMessage(msg: APIMessage, currentUserId?: string) {
 export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
   const { data: session } = useSession();
   const { user } = useAuth();
+  const { checkAccess } = useProfileGate();
   const queryClient = useQueryClient();
   const {
     socket,
@@ -313,6 +315,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
       return;
     }
 
+    // Check profile completion before sending
+    if (!checkAccess({ message: 'Complete your profile to send messages' })) {
+      return;
+    }
+
     if (useDemoMode) {
       const sessionUser = session?.user as any;
       addDemoMessage(selectedConversationId, {
@@ -346,7 +353,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     stopTyping(selectedConversationId);
     setIsTyping(false);
     messageInputRef.current?.focus();
-  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping, useDemoMode]);
+  }, [newMessage, selectedConversationId, session?.user, sendMessageMutation, stopTyping, useDemoMode, checkAccess]);
 
   const handleTyping = useCallback((value: string) => {
     setNewMessage(value);
@@ -382,7 +389,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
     return (
       <div className="h-full flex items-center justify-center bg-bg-surface">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-navy border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin h-8 w-8 border-4 border-purple-700 border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-text-secondary">Loading conversations...</p>
         </div>
       </div>
@@ -396,15 +403,15 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
       case 'high':
         return <LockClosedIcon className="h-4 w-4 text-gold" />;
       default:
-        return <ChatBubbleLeftRightIcon className="h-4 w-4 text-navy" />;
+        return <ChatBubbleLeftRightIcon className="h-4 w-4 text-purple-700" />;
     }
   };
 
   const getSecurityBadge = (level: string) => {
     const colors = {
       maximum: 'bg-error-light text-error-dark',
-      high: 'bg-gold-100 text-gold-800',
-      standard: 'bg-navy-50 text-navy-800',
+      high: 'bg-purple-100 text-purple-800',
+      standard: 'bg-purple-50 text-purple-800',
     };
     return colors[level as keyof typeof colors] || colors.standard;
   };
@@ -578,19 +585,19 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
                 onClick={() => handleSelectConversation(conversation.id)}
                 className={`w-full p-4 border-b border-border text-left transition-colors min-h-[72px] ${
                   isSelected
-                    ? 'bg-navy-50 border-l-4 border-l-navy'
+                    ? 'bg-purple-50 border-l-4 border-l-purple-700'
                     : 'hover:bg-bg-alt active:bg-bg-alt'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   {/* Avatar/Icon */}
                   <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                    conversation.isConfidential ? 'bg-error-light' : 'bg-navy-50'
+                    conversation.isConfidential ? 'bg-error-light' : 'bg-purple-100'
                   }`}>
                     {conversation.isConfidential ? (
                       <ShieldCheckIcon className="h-5 w-5 text-error" />
                     ) : (
-                      <ChatBubbleLeftRightIcon className="h-5 w-5 text-navy" />
+                      <ChatBubbleLeftRightIcon className="h-5 w-5 text-purple-700" />
                     )}
                   </div>
 
@@ -727,7 +734,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
               >
                 <div className={`max-w-[85%] sm:max-w-[70%] lg:max-w-[60%] ${
                   isOwnMessage
-                    ? 'bg-navy text-white rounded-2xl rounded-br-md'
+                    ? 'bg-purple-700 text-white rounded-2xl rounded-br-md'
                     : 'bg-bg-alt text-text-primary rounded-2xl rounded-bl-md'
                 } px-4 py-3`}>
                   {/* Sender name (for received messages) */}

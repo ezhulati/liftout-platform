@@ -12,69 +12,39 @@ import {
   HomeIcon,
   UserGroupIcon,
   BriefcaseIcon,
-  DocumentTextIcon,
   ChatBubbleLeftRightIcon,
-  MagnifyingGlassIcon,
   CogIcon,
   BuildingOfficeIcon,
-  ChartBarIcon,
-  CpuChipIcon,
-  ShieldCheckIcon,
-  DocumentCheckIcon,
-  RocketLaunchIcon,
-  EyeIcon,
-  ScaleIcon,
-  AcademicCapIcon,
-  GlobeAltIcon,
   XMarkIcon,
-  CalendarIcon,
   BellIcon,
-  HeartIcon,
-  ArrowsRightLeftIcon,
-  SparklesIcon,
+  QuestionMarkCircleIcon,
+  MagnifyingGlassIcon,
+  UsersIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
-// Navigation items that show for team users
+// Navigation items that show for team users (8 items per Figma)
 const teamNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
-  { name: 'My Team Profile', href: '/app/teams', icon: UserGroupIcon },
-  { name: 'Liftout Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
-  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
-  { name: 'My Applications', href: '/app/applications', icon: DocumentTextIcon },
-  { name: 'Interviews', href: '/app/interviews', icon: CalendarIcon },
-  { name: 'Interest Received', href: '/app/eoi', icon: HeartIcon },
-  { name: 'Activity', href: '/app/activity', icon: BellIcon },
-  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
+  { name: 'My Team', href: '/app/teams', icon: UserGroupIcon },
+  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
+  { name: 'Find Companies', href: '/app/find-companies', icon: BuildingOfficeIcon },
+  { name: 'Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
+  { name: 'Activity', href: '/app/activity', icon: BellIcon, badge: 10 },
 ];
 
-// Navigation items that show for company users
+// Navigation items that show for company users (8 items per Figma)
 const companyNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
-  { name: 'Browse Teams', href: '/app/teams', icon: UserGroupIcon },
-  { name: 'My Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
-  { name: 'AI Matching', href: '/app/ai-matching', icon: CpuChipIcon },
-  { name: 'Team Applications', href: '/app/applications', icon: DocumentTextIcon },
-  { name: 'Interviews', href: '/app/interviews', icon: CalendarIcon },
-  { name: 'Express Interest', href: '/app/eoi', icon: HeartIcon },
-  { name: 'Compare Teams', href: '/app/compare', icon: ArrowsRightLeftIcon },
-  { name: 'Activity', href: '/app/activity', icon: BellIcon },
-  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon },
-  { name: 'Advanced Search', href: '/app/search', icon: MagnifyingGlassIcon },
-];
-
-const companyExtendedNavigation = [
-  { name: 'Market Intelligence', href: '/app/market-intelligence', icon: GlobeAltIcon },
-  { name: 'Team Discovery', href: '/app/discovery', icon: EyeIcon },
-  { name: 'Culture Assessment', href: '/app/culture', icon: AcademicCapIcon },
-  { name: 'Due Diligence', href: '/app/due-diligence', icon: ShieldCheckIcon },
-  { name: 'Negotiations', href: '/app/negotiations', icon: DocumentCheckIcon },
-  { name: 'Legal & Compliance', href: '/app/legal', icon: ScaleIcon },
-  { name: 'Integration Tracking', href: '/app/integration', icon: RocketLaunchIcon },
-  { name: 'Liftout Analytics', href: '/app/analytics', icon: ChartBarIcon },
-  { name: 'Company Profile', href: '/app/company', icon: BuildingOfficeIcon },
+  { name: 'My Posts', href: '/app/opportunities', icon: BriefcaseIcon },
+  { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
+  { name: 'Find teams', href: '/app/teams', icon: MagnifyingGlassIcon },
+  { name: 'Candidates', href: '/app/applications', icon: UsersIcon },
+  { name: 'Activity', href: '/app/activity', icon: BellIcon, badge: 10 },
 ];
 
 const secondaryNavigation = [
+  { name: 'Support', href: '/app/support', icon: QuestionMarkCircleIcon },
   { name: 'Settings', href: '/app/settings', icon: CogIcon },
 ];
 
@@ -95,25 +65,30 @@ export function AppSidebar() {
 
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
 
-  // Practical UI: 48px minimum touch target (min-h-12), proper text sizing
-  const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }> } }) => {
-    const isActive = pathname === item.href;
+  // Purple sidebar nav link - Figma design: dark bg, lighter selected state
+  const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; badge?: number } }) => {
+    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
     return (
       <Link
         href={item.href}
-        className={`group flex items-center px-3 py-3 min-h-12 text-base font-medium rounded-lg transition-all duration-fast ${
+        className={`group flex items-center justify-between px-4 py-3 min-h-12 text-base font-medium rounded-lg transition-all duration-200 ${
           isActive
-            ? 'bg-navy text-white'
-            : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+            ? 'bg-white/15 text-white'
+            : 'text-white/80 hover:bg-white/10 hover:text-white'
         }`}
       >
-        <item.icon
-          className={`mr-3 flex-shrink-0 h-5 w-5 transition-colors duration-fast ${
-            isActive ? 'text-gold' : 'text-text-tertiary group-hover:text-navy'
-          }`}
-          aria-hidden="true"
-        />
-        {item.name}
+        <div className="flex items-center">
+          <item.icon
+            className={`mr-3 flex-shrink-0 h-5 w-5 ${isActive ? 'text-white' : 'text-white/80'}`}
+            aria-hidden="true"
+          />
+          {item.name}
+        </div>
+        {item.badge && (
+          <span className="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            {item.badge}
+          </span>
+        )}
       </Link>
     );
   };
@@ -128,29 +103,25 @@ export function AppSidebar() {
         />
       )}
 
-      {/* Mobile sidebar */}
+      {/* Mobile sidebar - Purple Figma design */}
       <div className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-base ease-out-quart ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex h-full flex-col bg-bg-surface border-r border-border">
-          {/* Header */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center group">
-              {/* Premium badge - app variant */}
-              <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-lg px-3 py-1.5 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/60 via-transparent to-transparent" />
-                <Image
-                  src="/Liftout-logo-dark.png"
-                  alt="Liftout"
-                  width={160}
-                  height={44}
-                  className="h-9 w-auto relative"
-                />
-              </div>
+        <div className="flex h-full flex-col bg-[#4C1D95]">
+          {/* Header with logo */}
+          <div className="flex items-center justify-between h-16 px-4">
+            <Link href="/app/dashboard" className="flex items-center">
+              <Image
+                src="/Liftout-logo-white.png"
+                alt="Liftout"
+                width={140}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
             <button
               type="button"
-              className="p-3 min-h-12 min-w-12 flex items-center justify-center rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-fast"
+              className="p-3 min-h-12 min-w-12 flex items-center justify-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="sr-only">Close sidebar</span>
@@ -158,149 +129,87 @@ export function AppSidebar() {
             </button>
           </div>
 
-          {/* User type badge */}
-          {user && (
-            <div className="px-4 py-3 border-b border-border">
-              <div className="flex items-center gap-2">
-                {isCompanyUser ? (
-                  <BuildingOfficeIcon className="h-4 w-4 text-navy" />
-                ) : (
-                  <UserGroupIcon className="h-4 w-4 text-gold" />
-                )}
-                <span className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
-                  {isCompanyUser ? 'Company Account' : 'Team Account'}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Profile completion reminder */}
-          {showProfileReminder && (
-            <Link
-              href="/app/onboarding"
-              className="mx-3 mt-3 p-3 bg-gold/10 border border-gold/30 rounded-lg hover:bg-gold/20 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <ProgressRingCompact percentage={completionPercentage} size={36} strokeWidth={4} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary">Complete your profile</p>
-                  <p className="text-xs text-text-secondary truncate">
-                    {completionPercentage}% complete
-                  </p>
-                </div>
-                <SparklesIcon className="h-4 w-4 text-gold flex-shrink-0" />
-              </div>
-            </Link>
-          )}
-
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
             {currentNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
-
-            {isCompanyUser && (
-              <>
-                <div className="pt-6 pb-2">
-                  <h3 className="px-3 text-sm font-semibold text-text-tertiary uppercase tracking-wider">
-                    Company Tools
-                  </h3>
-                </div>
-                {companyExtendedNavigation.map((item) => (
-                  <NavLink key={item.name} item={item} />
-                ))}
-              </>
-            )}
-
-            <div className="pt-6 border-t border-border mt-6">
-              {secondaryNavigation.map((item) => (
-                <NavLink key={item.name} item={item} />
-              ))}
-            </div>
           </nav>
+
+          {/* Bottom section - Support, Settings, User */}
+          <div className="px-3 pb-4 space-y-1">
+            {secondaryNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+
+            {/* User profile */}
+            {user && (
+              <div className="mt-4 px-4 py-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
+                  {(user.name || user.email || 'U')[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {user.name || demoData?.profile?.name || 'User'}
+                  </p>
+                  <p className="text-xs text-white/70 truncate">
+                    {demoData?.profile?.company || demoData?.company?.name || user.email}
+                  </p>
+                </div>
+                <ArrowRightOnRectangleIcon className="h-5 w-5 text-white/70" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar - Purple Figma design */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow bg-bg-surface border-r border-border">
-          {/* Header */}
-          <div className="flex items-center h-16 px-4 border-b border-border">
-            <Link href="/app/dashboard" className="flex items-center group">
-              {/* Premium badge - app variant */}
-              <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-lg px-3 py-1.5 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300">
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/60 via-transparent to-transparent" />
-                <Image
-                  src="/Liftout-logo-dark.png"
-                  alt="Liftout"
-                  width={160}
-                  height={44}
-                  className="h-9 w-auto relative"
-                />
-              </div>
+        <div className="flex flex-col flex-grow bg-[#4C1D95]">
+          {/* Header with logo */}
+          <div className="flex items-center h-16 px-4">
+            <Link href="/app/dashboard" className="flex items-center">
+              <Image
+                src="/Liftout-logo-white.png"
+                alt="Liftout"
+                width={140}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
           </div>
-
-          {/* User type badge */}
-          {user && (
-            <div className="px-4 py-3 border-b border-border">
-              <div className="flex items-center gap-2">
-                {isCompanyUser ? (
-                  <BuildingOfficeIcon className="h-4 w-4 text-navy" />
-                ) : (
-                  <UserGroupIcon className="h-4 w-4 text-gold" />
-                )}
-                <span className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
-                  {isCompanyUser ? 'Company Account' : 'Team Account'}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Profile completion reminder */}
-          {showProfileReminder && (
-            <Link
-              href="/app/onboarding"
-              className="mx-3 mt-3 p-3 bg-gold/10 border border-gold/30 rounded-lg hover:bg-gold/20 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <ProgressRingCompact percentage={completionPercentage} size={36} strokeWidth={4} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary">Complete your profile</p>
-                  <p className="text-xs text-text-secondary truncate">
-                    {completionPercentage}% complete
-                  </p>
-                </div>
-                <SparklesIcon className="h-4 w-4 text-gold flex-shrink-0" />
-              </div>
-            </Link>
-          )}
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
             {currentNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
-
-            {isCompanyUser && (
-              <>
-                <div className="pt-6 pb-2">
-                  <h3 className="px-3 text-sm font-semibold text-text-tertiary uppercase tracking-wider">
-                    Company Tools
-                  </h3>
-                </div>
-                {companyExtendedNavigation.map((item) => (
-                  <NavLink key={item.name} item={item} />
-                ))}
-              </>
-            )}
-
-            <div className="pt-6 border-t border-border mt-6">
-              {secondaryNavigation.map((item) => (
-                <NavLink key={item.name} item={item} />
-              ))}
-            </div>
           </nav>
+
+          {/* Bottom section - Support, Settings, User */}
+          <div className="px-3 pb-4 space-y-1">
+            {secondaryNavigation.map((item) => (
+              <NavLink key={item.name} item={item} />
+            ))}
+
+            {/* User profile */}
+            {user && (
+              <div className="mt-4 px-4 py-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
+                  {(user.name || user.email || 'U')[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {user.name || demoData?.profile?.name || 'User'}
+                  </p>
+                  <p className="text-xs text-white/70 truncate">
+                    {demoData?.profile?.company || demoData?.company?.name || user.email}
+                  </p>
+                </div>
+                <ArrowRightOnRectangleIcon className="h-5 w-5 text-white/70" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

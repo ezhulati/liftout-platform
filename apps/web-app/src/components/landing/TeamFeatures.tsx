@@ -82,7 +82,7 @@ export function TeamFeatures() {
           ref={featuresRef as React.RefObject<HTMLDivElement>}
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          <p className="font-semibold text-base mb-3 text-navy">
+          <p className="font-semibold text-base mb-3 text-[#4C1D95]">
             Platform features
           </p>
           <h2
@@ -110,7 +110,7 @@ export function TeamFeatures() {
               style={{ transitionDelay: featuresVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon container */}
-              <div className="w-12 h-12 rounded-lg bg-navy flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-lg bg-[#4C1D95] flex items-center justify-center mb-6">
                 <feature.icon className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
 
@@ -154,7 +154,7 @@ export function TeamFeatures() {
                 style={{ transitionDelay: stepsVisible ? `${(index + 1) * 150}ms` : '0ms' }}
               >
                 {/* Step number */}
-                <div className="w-14 h-14 rounded-full bg-navy mb-4 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-[#4C1D95] mb-4 flex items-center justify-center">
                   <span className="font-heading text-lg font-bold text-white">{item.step}</span>
                 </div>
                 {/* Title */}

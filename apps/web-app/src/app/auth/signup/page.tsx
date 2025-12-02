@@ -156,7 +156,7 @@ export default function SignUpPage() {
           <div>
             <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
               Join the Future of
-              <span className="block text-gold">Team Acquisition</span>
+              <span className="block text-purple-300">Team Acquisition</span>
             </h1>
             <p className="text-white/90 text-lg leading-relaxed max-w-md mb-8">
               Whether you&apos;re a high-performing team seeking opportunities or a company looking
@@ -171,8 +171,8 @@ export default function SignUpPage() {
                 'Streamlined acquisition process',
               ].map((benefit, i) => (
                 <li key={i} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-3 h-3 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-5 h-5 rounded-full bg-purple-700/20 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3 h-3 text-purple-300" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -273,8 +273,8 @@ export default function SignUpPage() {
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'individual' }))}
                   className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'individual'
-                      ? 'border-navy bg-navy ring-2 ring-navy/30 ring-offset-2 shadow-lg'
-                      : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
+                      ? 'border-purple-700 bg-purple-700 ring-2 ring-purple-700/30 ring-offset-2 shadow-lg'
+                      : 'border-border bg-white hover:border-purple-200 hover:bg-purple-50'
                   }`}
                 >
                   {formData.userType === 'individual' && (
@@ -295,8 +295,8 @@ export default function SignUpPage() {
                   onClick={() => setFormData(prev => ({ ...prev, userType: 'company' }))}
                   className={`relative rounded-xl border-2 p-4 text-center transition-all duration-200 ${
                     formData.userType === 'company'
-                      ? 'border-gold bg-gold ring-2 ring-gold/30 ring-offset-2 shadow-lg'
-                      : 'border-border bg-white hover:border-gray-300 hover:bg-gray-50'
+                      ? 'border-purple-600 bg-purple-600 ring-2 ring-purple-600/30 ring-offset-2 shadow-lg'
+                      : 'border-border bg-white hover:border-purple-200 hover:bg-purple-50'
                   }`}
                 >
                   {formData.userType === 'company' && (
@@ -457,11 +457,11 @@ export default function SignUpPage() {
             {/* Terms */}
             <p className="text-text-tertiary text-sm">
               By creating an account, you agree to our{' '}
-              <Link href="/terms" className="text-gold hover:text-gold-dark underline underline-offset-2">
+              <Link href="/terms" className="text-purple-700 hover:text-purple-600 underline underline-offset-2">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link href="/privacy" className="text-gold hover:text-gold-dark underline underline-offset-2">
+              <Link href="/privacy" className="text-purple-700 hover:text-purple-600 underline underline-offset-2">
                 Privacy Policy
               </Link>
               .

@@ -61,7 +61,7 @@ export function FAQTeams() {
           {/* Left column - Header and support options */}
           <div className="lg:col-span-1">
             <div className={`lg:sticky lg:top-32 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <p className="font-semibold text-base mb-3 text-navy">
+              <p className="font-semibold text-base mb-3 text-[#4C1D95]">
                 Questions from teams
               </p>
               <h2
@@ -79,8 +79,8 @@ export function FAQTeams() {
                 href="/contact"
                 className="flex items-center gap-4 p-4 bg-bg-surface rounded-xl border border-border hover:border-border-hover hover:shadow-sm transition-all group min-h-12"
               >
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-navy transition-colors" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
-                  <EnvelopeIcon className="w-6 h-6 text-navy group-hover:text-on-dark" aria-hidden="true" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-[#4C1D95] transition-colors" style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.1)' }}>
+                  <EnvelopeIcon className="w-6 h-6 text-[#4C1D95] group-hover:text-on-dark" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="font-semibold text-text-primary text-base">Contact us</p>
@@ -96,7 +96,7 @@ export function FAQTeams() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className={`bg-bg-surface border border-border rounded-xl overflow-hidden transition-all duration-500 hover:border-navy/20 ${
+                  className={`bg-bg-surface border border-border rounded-xl overflow-hidden transition-all duration-500 hover:border-purple-900/20 ${
                     isVisible
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-4'
@@ -137,7 +137,7 @@ export function FAQTeams() {
             </div>
 
             {/* Additional help text */}
-            <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.05)' }}>
+            <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
                 <span className="font-semibold text-text-primary">Ready to explore?</span>
                 {' '}Creating your team profile is free and takes just a few minutes. Your current employer will never know.

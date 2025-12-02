@@ -185,7 +185,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
       {/* Opportunities List - Practical UI cards */}
       <div className="space-y-4">
         {opportunities.map((opportunity) => (
-        <div key={opportunity.id} className="card hover:shadow-md hover:border-navy/30 transition-all duration-base">
+        <div key={opportunity.id} className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
               {/* Header row with title and badges */}
@@ -193,7 +193,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                 <h3 className="text-lg font-bold text-text-primary leading-snug">
                   <Link
                     href={`/app/opportunities/${opportunity.id}`}
-                    className="hover:text-navy transition-colors duration-fast"
+                    className="hover:text-purple-700 transition-colors duration-fast"
                   >
                     {opportunity.title}
                   </Link>
@@ -248,16 +248,16 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                   <span className="truncate">{opportunity.compensation}</span>
                 </div>
                 <div className="flex items-center text-sm font-normal text-text-secondary">
-                  <ClockIcon className="h-5 w-5 mr-2 text-navy flex-shrink-0" aria-hidden="true" />
+                  <ClockIcon className="h-5 w-5 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
                   <span className="truncate">{opportunity.timeline}</span>
                 </div>
                 <div className="flex items-center text-sm font-normal text-text-secondary">
-                  <UserGroupIcon className="h-5 w-5 mr-2 text-gold flex-shrink-0" aria-hidden="true" />
+                  <UserGroupIcon className="h-5 w-5 mr-2 text-purple-400 flex-shrink-0" aria-hidden="true" />
                   <span className="truncate">{opportunity.teamSize}</span>
                 </div>
                 {isCompanyUser && (
                   <div className="flex items-center text-sm font-normal text-text-secondary">
-                    <DocumentTextIcon className="h-5 w-5 mr-2 text-gold-700 flex-shrink-0" aria-hidden="true" />
+                    <DocumentTextIcon className="h-5 w-5 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
                     <span>{opportunity.applications?.length || 0} expressions</span>
                   </div>
                 )}

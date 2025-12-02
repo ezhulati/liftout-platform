@@ -1,0 +1,1280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   LIFTOUT DESIGN SYSTEM
+   Deep Navy + Gold Premium Executive Theme
+   ============================================ */
+
+@layer base {
+  /* ============================================
+     PRACTICAL UI DESIGN SYSTEM
+     HSB Monochromatic Color System
+     Navy (H=220) + Gold (H=38)
+     ============================================ */
+  :root {
+    /* Background layers - Warm cream (H=40), not pure white */
+    --bg: hsl(40, 30%, 97%);
+    --bg-surface: hsl(0, 0%, 100%);
+    --bg-elevated: hsl(40, 25%, 95%);
+    --bg-alt: hsl(220, 2%, 98%);
+
+    /* Text hierarchy - Practical UI contrast requirements
+       Small text: 4.5:1, Large text: 3:1, UI: 3:1 */
+    --text-primary: hsl(220, 60%, 20%);    /* Darkest - headings */
+    --text-secondary: hsl(220, 30%, 45%);  /* Secondary text */
+    --text-tertiary: hsl(220, 20%, 55%);   /* Helper text */
+    --text-inverse: hsl(0, 0%, 100%);      /* White on dark */
+    --text-on-navy: hsl(0, 0%, 100%);      /* White on navy */
+    --text-on-gold: hsl(220, 60%, 15%);    /* Dark on gold */
+
+    /* Primary: Navy (H=220) - HSB Monochromatic Scale */
+    --navy: hsl(220, 70%, 50%);            /* Primary actions */
+    --navy-darkest: hsl(220, 60%, 20%);    /* Headings */
+    --navy-dark: hsl(220, 30%, 45%);       /* Secondary text */
+    --navy-medium: hsl(220, 20%, 66%);     /* Borders (3:1) */
+    --navy-light: hsl(220, 10%, 95%);      /* Decorative */
+    --navy-lightest: hsl(220, 2%, 98%);    /* Alt bg */
+    --navy-hover: hsl(220, 70%, 45%);      /* Button hover */
+    --navy-50: hsl(220, 10%, 95%);
+    --navy-100: hsl(220, 15%, 90%);
+    --navy-200: hsl(220, 20%, 80%);
+    --navy-300: hsl(220, 25%, 66%);
+    --navy-400: hsl(220, 35%, 50%);
+    --navy-500: hsl(220, 50%, 40%);
+    --navy-600: hsl(220, 60%, 30%);
+    --navy-700: hsl(220, 60%, 25%);
+    --navy-800: hsl(220, 60%, 20%);
+    --navy-900: hsl(220, 65%, 15%);
+
+    /* Secondary: Gold (H=38) - HSB Monochromatic Scale */
+    --gold: hsl(38, 70%, 50%);             /* Secondary actions */
+    --gold-darkest: hsl(38, 60%, 20%);     /* Gold text */
+    --gold-dark: hsl(38, 50%, 40%);
+    --gold-medium: hsl(38, 30%, 60%);
+    --gold-light: hsl(38, 20%, 85%);
+    --gold-lightest: hsl(38, 10%, 95%);
+    --gold-hover: hsl(38, 70%, 45%);       /* Button hover */
+    --gold-50: hsl(38, 60%, 95%);
+    --gold-100: hsl(38, 60%, 90%);
+    --gold-200: hsl(38, 60%, 82%);
+    --gold-300: hsl(38, 55%, 70%);
+    --gold-400: hsl(38, 60%, 55%);
+    --gold-500: hsl(38, 70%, 50%);
+    --gold-600: hsl(38, 70%, 45%);
+    --gold-700: hsl(38, 65%, 40%);
+
+    /* Semantic colors - always pair with icons */
+    --success: hsl(142, 55%, 38%);
+    --success-light: hsl(142, 40%, 92%);
+    --warning: hsl(38, 90%, 50%);
+    --warning-light: hsl(38, 80%, 92%);
+    --error: hsl(0, 65%, 50%);
+    --error-light: hsl(0, 50%, 95%);
+    --info: hsl(220, 70%, 50%);
+    --info-light: hsl(220, 50%, 95%);
+
+    /* Borders - 3:1 contrast for non-decorative */
+    --border: hsl(220, 20%, 85%);
+    --border-hover: hsl(220, 25%, 70%);
+    --border-focus: hsl(220, 70%, 50%);
+    --border-decorative: hsl(220, 10%, 90%);
+
+    /* Shadows */
+    --shadow-color: 220 60% 15%;
+
+    /* Animation */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --duration-instant: 0.1s;
+    --duration-fast: 0.2s;
+    --duration-base: 0.3s;
+    --duration-slow: 0.4s;
+
+    /* Typography */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+
+    /* Focus ring */
+    --focus-ring: 0 0 0 3px hsl(220, 70%, 50% / 0.4);
+    --focus-ring-offset: 2px;
+
+    /* Touch targets - Practical UI minimum 48px */
+    --touch-target-min: 48px;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Base resets */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background-color: var(--bg);
+    line-height: 1.5;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Typography defaults - Practical UI Major Third (1.25) Scale
+     - Use regular (400) + bold (700) weights only
+     - Line height: 1.1-1.3 for headings (decrease as size increases)
+     - Letter spacing: decrease for large headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* Major Third Scale: 44px, 36px, 28px, 22px, 18px, 15px */
+  h1 {
+    font-size: 2.75rem;      /* 44px */
+    line-height: 1.1;
+    letter-spacing: -0.03em; /* Tighter for larger */
+  }
+  h2 {
+    font-size: 2.25rem;      /* 36px */
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-size: 1.75rem;      /* 28px */
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  h4 {
+    font-size: 1.375rem;     /* 22px */
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  h5 {
+    font-size: 1.125rem;     /* 18px - body size */
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+  h6 {
+    font-size: 0.9375rem;    /* 15px - small */
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  p {
+    max-width: 65ch;
+    line-height: 1.6;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  /* Note: Links on dark backgrounds should explicitly set hover color */
+
+  /* Focus states - accessibility */
+  :focus-visible {
+    outline: 3px solid var(--border-focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 4px;
+  }
+
+  /* Remove default focus outline for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--gold-200);
+    color: var(--navy-900);
+  }
+
+  /* Custom scrollbar - Navy themed */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-elevated);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--navy-300);
+    border-radius: 4px;
+    border: 2px solid var(--bg-elevated);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--navy-400);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--navy-300) var(--bg-elevated);
+  }
+}
+
+@layer components {
+  /* ============================================
+     BUTTONS
+     ============================================ */
+
+  /* ============================================
+     PRACTICAL UI BUTTON SYSTEM
+     - Primary: Solid fill (ONE per screen)
+     - Secondary: Solid gold fill
+     - Outline: Border only (Practical UI secondary)
+     - Ghost: Minimal styling
+     - Tertiary/TextLink: Underlined text (for cancel)
+     - Min 48px touch target
+     ============================================ */
+
+  /* Primary Button - Navy gradient fill, white text
+     Use for the MOST IMPORTANT action (ONE per screen) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl relative overflow-hidden;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background: linear-gradient(to bottom, var(--navy), var(--navy-600));
+    color: var(--text-on-navy);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    border: 1px solid hsl(220, 50%, 40% / 0.5);
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.25),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.1);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to bottom, var(--navy-hover), var(--navy-700));
+    color: var(--text-on-navy);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px hsl(var(--shadow-color) / 0.3),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.15);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    color: var(--text-on-navy);
+    box-shadow: 0 2px 8px hsl(var(--shadow-color) / 0.2),
+                inset 0 1px 0 hsl(0, 0%, 100% / 0.1);
+  }
+
+  .btn-primary:focus-visible {
+    box-shadow: var(--focus-ring), 0 4px 12px hsl(var(--shadow-color) / 0.25);
+    color: var(--text-on-navy);
+  }
+
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+    color: var(--text-on-navy);
+  }
+
+  /* Secondary Button - Outline style per Practical UI
+     Use for alternative actions or equal-importance multiple actions */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 97%));
+    color: var(--navy);
+    border: 1px solid hsl(220, 30%, 80%);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.05);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-secondary:hover {
+    background: linear-gradient(to bottom, hsl(220, 10%, 97%), hsl(220, 15%, 94%));
+    border-color: hsl(220, 40%, 70%);
+    box-shadow: 0 2px 4px hsl(var(--shadow-color) / 0.1);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.05);
+  }
+
+  .btn-secondary:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-secondary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Outline Button - Border only, no fill
+     Practical UI "secondary" style for alternative actions */
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: transparent;
+    color: var(--navy);
+    border: 1px solid hsl(220, 30%, 80%);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-outline:hover {
+    background-color: hsl(220, 20%, 97%);
+    border-color: hsl(220, 40%, 70%);
+  }
+
+  .btn-outline:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-outline:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Ghost Button - Minimal styling */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text-secondary);
+    background-color: transparent;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  .btn-ghost:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-ghost:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Danger Button - For destructive actions */
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--error);
+    color: var(--text-inverse);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-danger:hover {
+    background-color: hsl(0, 65%, 45%);
+    color: var(--text-inverse);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px hsl(0 65% 50% / 0.3);
+  }
+
+  .btn-danger:active {
+    transform: translateY(0);
+    color: var(--text-inverse);
+  }
+
+  .btn-danger:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0 65% 50% / 0.4);
+    color: var(--text-inverse);
+  }
+
+  .btn-danger:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+    color: var(--text-inverse);
+  }
+
+  /* Tertiary Button - Underlined text only
+     Practical UI "tertiary" - for cancel, back, less important actions */
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--navy);
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    min-height: var(--touch-target-min);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-tertiary:hover {
+    color: var(--navy-hover);
+  }
+
+  .btn-tertiary:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .btn-tertiary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Text Link - For cancel/tertiary actions
+     Practical UI "tertiary" - underlined text, no button styling */
+  .text-link {
+    @apply inline-flex items-center justify-center;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    min-height: var(--touch-target-min);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .text-link:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .text-link:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .text-link:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Danger text link - for destructive actions */
+  .text-link-danger {
+    @apply text-link;
+    color: var(--error);
+  }
+
+  .text-link-danger:hover {
+    color: var(--error-dark, hsl(0, 65%, 40%));
+    text-decoration: underline;
+  }
+
+  /* ============================================
+     PRACTICAL UI FORM SYSTEM
+     - Labels on TOP of fields
+     - Errors ABOVE fields (not below)
+     - Hints ABOVE fields (below label)
+     - Single column layout
+     - 48px touch targets
+     - 3:1 border contrast
+     ============================================ */
+
+  .input-field {
+    @apply block w-full rounded-xl font-body text-base;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 99%));
+    border: 1px solid hsl(220, 20%, 85%);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    min-height: var(--touch-target-min);
+    box-shadow: inset 0 1px 2px hsl(var(--shadow-color) / 0.04);
+    transition: border-color var(--duration-fast) var(--ease-out-quart),
+                box-shadow var(--duration-fast) var(--ease-out-quart),
+                background var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .input-field::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  .input-field:hover {
+    border-color: hsl(220, 30%, 75%);
+    background: hsl(0, 0%, 100%);
+  }
+
+  .input-field:focus {
+    border-color: var(--border-focus);
+    background: hsl(0, 0%, 100%);
+    box-shadow: var(--focus-ring), inset 0 1px 2px hsl(var(--shadow-color) / 0.02);
+    outline: none;
+  }
+
+  .input-field:disabled {
+    background: hsl(220, 10%, 96%);
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Error state for inputs */
+  .input-field-error {
+    border-color: var(--error);
+    background: hsl(0, 50%, 99%);
+  }
+
+  .input-field-error:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px hsl(0 65% 50% / 0.2);
+  }
+
+  /* Select dropdown styling */
+  select.input-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23566388'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+    padding-right: 44px;
+    cursor: pointer;
+  }
+
+  select.input-field option {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    padding: 12px;
+  }
+
+  /* Textarea styling */
+  textarea.input-field {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+
+  /* Label - Above input, close proximity (<8px gap)
+     Practical UI: Use regular + bold only, no semibold */
+  .label-text {
+    @apply block font-body;
+    font-weight: 700; /* Bold, not semibold */
+    color: var(--text-primary);
+    font-size: 0.9375rem; /* 15px - small text */
+    margin-bottom: 4px;
+  }
+
+  /* Required indicator */
+  .label-required::after {
+    content: ' *';
+    color: var(--error);
+  }
+
+  /* Form field container - groups label, hint, error, input */
+  .form-field {
+    @apply flex flex-col;
+    gap: 4px;
+  }
+
+  /* Error message - ABOVE input, color + icon */
+  .form-field-error {
+    @apply flex items-center gap-2 text-sm font-medium;
+    color: var(--error);
+    padding: 8px 12px;
+    background-color: var(--error-light);
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+
+  /* Hint text - ABOVE input, below label */
+  .form-field-hint {
+    @apply text-sm;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+
+  /* Required fields instruction */
+  .form-required-note {
+    @apply text-sm;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+  }
+
+  /* Single column form layout - Practical UI standard */
+  .form-single-column {
+    @apply flex flex-col;
+    gap: 24px;
+    max-width: 480px;
+  }
+
+  /* Form section with title */
+  .form-section {
+    @apply flex flex-col;
+    gap: 16px;
+  }
+
+  .form-section-title {
+    @apply font-heading font-semibold text-lg;
+    color: var(--text-primary);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-decorative);
+    margin-bottom: 8px;
+  }
+
+  /* Button group - LEFT aligned, primary first */
+  .btn-group {
+    @apply flex items-center;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-decorative);
+    margin-top: 8px;
+  }
+
+  /* Right-aligned button group (use sparingly) */
+  .btn-group-right {
+    @apply btn-group justify-end;
+  }
+
+  /* ============================================
+     CARDS - Premium glass/badge treatment
+     ============================================ */
+
+  .card {
+    position: relative;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    border: 1px solid hsl(220, 20%, 88%);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: hsl(220, 25%, 80%);
+    box-shadow: 0 4px 16px hsl(var(--shadow-color) / 0.1);
+  }
+
+  .card-elevated {
+    position: relative;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100%), hsl(220, 10%, 98%));
+    border: 1px solid hsl(220, 20%, 90%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px -2px hsl(var(--shadow-color) / 0.1),
+                0 2px 4px -2px hsl(var(--shadow-color) / 0.06);
+    transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card-elevated::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.6), transparent);
+    pointer-events: none;
+  }
+
+  .card-elevated:hover {
+    transform: translateY(-2px);
+    border-color: hsl(220, 25%, 85%);
+    box-shadow: 0 12px 24px -4px hsl(var(--shadow-color) / 0.12),
+                0 4px 8px -4px hsl(var(--shadow-color) / 0.08);
+  }
+
+  /* Premium glass card variant */
+  .card-glass {
+    position: relative;
+    background: hsl(0, 0%, 100% / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(220, 20%, 90%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.08);
+    transition: all var(--duration-base) var(--ease-out-quart);
+  }
+
+  .card-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, hsl(0, 0%, 100% / 0.5), transparent);
+    pointer-events: none;
+  }
+
+  .card-glass:hover {
+    border-color: hsl(220, 25%, 85%);
+    box-shadow: 0 8px 20px hsl(var(--shadow-color) / 0.12);
+  }
+
+  /* ============================================
+     PAGE LAYOUT
+     ============================================ */
+
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  .page-title {
+    font-family: var(--font-heading);
+    font-size: 2.441rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-top: 8px;
+    max-width: 65ch;
+  }
+
+  /* ============================================
+     BADGES
+     ============================================ */
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+    min-height: 24px;
+  }
+
+  .badge-primary {
+    background-color: var(--navy-100);
+    color: var(--navy-800);
+  }
+
+  .badge-secondary {
+    background-color: var(--bg-elevated);
+    color: var(--text-secondary);
+  }
+
+  .badge-success {
+    background-color: var(--success-light);
+    color: var(--success);
+  }
+
+  .badge-warning {
+    background-color: var(--warning-light);
+    color: hsl(38, 95%, 35%);
+  }
+
+  .badge-error {
+    background-color: var(--error-light);
+    color: var(--error);
+  }
+
+  .badge-gold {
+    background-color: var(--gold-100);
+    color: var(--gold-700);
+  }
+
+  /* ============================================
+     LOADING STATES
+     ============================================ */
+
+  .loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8;
+    border: 3px solid var(--border);
+    border-top-color: var(--navy);
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--bg-elevated) 25%,
+      var(--bg-surface) 50%,
+      var(--bg-elevated) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 8px;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ============================================
+     NAVIGATION
+     ============================================ */
+
+  .nav-link {
+    @apply inline-flex items-center px-3 py-2 rounded-md font-body font-medium;
+    color: var(--text-secondary);
+    min-height: 44px;
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-elevated);
+  }
+
+  .nav-link.active {
+    color: var(--navy);
+    background-color: var(--navy-50);
+  }
+
+  .nav-link:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+}
+
+@layer utilities {
+  /* ============================================
+     TYPOGRAPHY UTILITIES
+     ============================================ */
+
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-tertiary {
+    color: var(--text-tertiary);
+  }
+
+  /* Max width for readable text */
+  .max-w-prose {
+    max-width: 65ch;
+  }
+
+  .max-w-heading {
+    max-width: 40ch;
+  }
+
+  /* ============================================
+     COLOR UTILITIES
+     ============================================ */
+
+  .bg-cream {
+    background-color: var(--bg);
+  }
+
+  .bg-surface {
+    background-color: var(--bg-surface);
+  }
+
+  .bg-elevated {
+    background-color: var(--bg-elevated);
+  }
+
+  .border-subtle {
+    border-color: var(--border);
+  }
+
+  /* ============================================
+     ANIMATION UTILITIES
+     ============================================ */
+
+  .animate-fade-in {
+    animation: fadeIn var(--duration-base) var(--ease-out-expo);
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .animate-scale-in {
+    animation: scaleIn var(--duration-fast) var(--ease-out-expo);
+  }
+
+  /* Stagger delays for sequential animations */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+
+  /* Scroll-triggered animation base (use with IntersectionObserver) */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered scroll animations for children */
+  .animate-on-scroll.is-visible .stagger-child:nth-child(1) { transition-delay: 0.1s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(2) { transition-delay: 0.2s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(3) { transition-delay: 0.3s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(4) { transition-delay: 0.4s; }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(5) { transition-delay: 0.5s; }
+
+  /* Conversational onboarding animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .animate-slideInRight {
+    animation: slideInRight 0.4s ease-out forwards;
+  }
+
+  .animate-slideInLeft {
+    animation: slideInLeft 0.4s ease-out forwards;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+  .animate-on-scroll.is-visible .stagger-child:nth-child(6) { transition-delay: 0.6s; }
+
+  .stagger-child {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-on-scroll.is-visible .stagger-child {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* GPU acceleration for smooth animations */
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  /* ============================================
+     ACCESSIBILITY UTILITIES
+     ============================================ */
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Focus within container */
+  .focus-within-ring:focus-within {
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Touch-friendly tap targets - Practical UI 48px minimum */
+  .touch-target {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+
+  /* ============================================
+     SCROLLBAR UTILITIES
+     ============================================ */
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  /* ============================================
+     LINE CLAMP UTILITIES
+     ============================================ */
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* ============================================
+     SHADOW UTILITIES
+     ============================================ */
+
+  .shadow-soft {
+    box-shadow: 0 1px 3px 0 hsl(var(--shadow-color) / 0.1),
+                0 1px 2px 0 hsl(var(--shadow-color) / 0.06);
+  }
+
+  .shadow-gold {
+    box-shadow: 0 4px 14px 0 hsl(38 50% 55% / 0.3);
+  }
+
+  .shadow-navy {
+    box-shadow: 0 4px 14px 0 hsl(220 60% 20% / 0.3);
+  }
+
+  /* ============================================
+     PRACTICAL UI UTILITY CLASSES
+     Button Heights, Container Patterns, Typography
+     ============================================ */
+
+  /* Button Heights - Touch Target Compliant */
+  .btn-height-sm { @apply min-h-10; } /* 40px */
+  .btn-height-md { @apply min-h-11; } /* 44px */
+  .btn-height-lg { @apply min-h-12; } /* 48px - DEFAULT */
+  .btn-height-xl { min-height: 52px; }
+
+  /* Container Patterns */
+  .container-padding { @apply px-4 lg:px-8; }
+  .section-padding { @apply py-16 lg:py-24; }
+  .card-padding { @apply p-6; }
+
+  /* Typography Helpers */
+  .text-body { @apply text-lg leading-relaxed; } /* 18px, 1.5+ line height */
+  .text-small { @apply text-base leading-relaxed; } /* 16px fallback */
+
+  /* Card Variants */
+  .card-featured { @apply bg-bg-surface rounded-xl p-6 border border-border; }
+
+  /* Form Field Spacing */
+  .form-gap { @apply space-y-6; } /* 24px between fields */
+  .label-gap { @apply mb-1.5; } /* 6px label to field gap */
+
+  /* Dark Section Backgrounds - Using explicit HSL values for reliability */
+  .bg-section-dark {
+    background-color: hsl(220, 65%, 15%); /* navy-900 */
+  }
+  .bg-section-darker {
+    background-color: hsl(220, 70%, 10%); /* navy-950 */
+  }
+
+  /* ============================================
+     PRACTICAL UI DARK SECTION COMPONENTS
+     For CTA sections, footers, dark backgrounds
+     ============================================ */
+
+  /* Dark section container - use for CTAs, footers */
+  .dark-section {
+    background-color: hsl(220, 65%, 15%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  .dark-section-deep {
+    background-color: hsl(220, 70%, 10%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  /* Primary button on dark background - white fill */
+  .btn-primary-on-dark {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(220, 65%, 15%);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-primary-on-dark:hover {
+    background-color: hsl(0, 0%, 95%);
+    color: hsl(220, 65%, 15%);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary-on-dark:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0, 0%, 100%, 0.4);
+  }
+
+  /* Secondary button on dark background - outlined white */
+  .btn-secondary-on-dark {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: transparent;
+    color: hsl(0, 0%, 100%);
+    border: 2px solid hsl(0, 0%, 100%, 0.3);
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-secondary-on-dark:hover {
+    background-color: hsl(0, 0%, 100%, 0.1);
+    border-color: hsl(0, 0%, 100%, 0.5);
+    color: hsl(0, 0%, 100%);
+  }
+
+  .btn-secondary-on-dark:focus-visible {
+    box-shadow: 0 0 0 3px hsl(0, 0%, 100%, 0.4);
+  }
+
+  /* Text colors for dark sections */
+  .text-on-dark {
+    color: hsl(0, 0%, 100%);
+  }
+
+  .text-on-dark-muted {
+    color: hsl(0, 0%, 100%, 0.8);
+  }
+
+  .text-on-dark-subtle {
+    color: hsl(0, 0%, 100%, 0.6);
+  }
+
+  /* ============================================
+     PRACTICAL UI LIGHT SECTION COMPONENTS
+     For sections on light/cream backgrounds
+     ============================================ */
+
+  /* Navy accent text - for eyebrow labels, accents on light bg */
+  .text-navy {
+    color: hsl(220, 70%, 50%);
+  }
+
+  /* Navy icon/element background */
+  .bg-navy {
+    background-color: hsl(220, 70%, 50%);
+  }
+
+  /* Gold accent text - for eyebrow labels, accents on light bg */
+  .text-gold {
+    color: hsl(38, 70%, 50%);
+  }
+
+  /* Gold darker text - for better contrast */
+  .text-gold-dark {
+    color: hsl(38, 65%, 40%);
+  }
+
+  /* Gold icon/element background */
+  .bg-gold {
+    background-color: hsl(38, 70%, 50%);
+  }
+
+  /* Text on gold background (dark navy) */
+  .text-on-gold {
+    color: hsl(220, 65%, 15%);
+  }
+}

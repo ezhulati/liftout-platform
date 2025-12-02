@@ -109,7 +109,7 @@ export default function SignInPage() {
           <div>
             <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
               Strategic Team
-              <span className="block text-gold">Acquisition Platform</span>
+              <span className="block text-purple-300">Acquisition Platform</span>
             </h1>
             <p className="text-white/90 text-lg leading-relaxed max-w-md">
               Connect with proven, intact teams ready for new opportunities.
@@ -120,11 +120,11 @@ export default function SignInPage() {
           {/* Stats */}
           <div className="flex gap-8">
             <div>
-              <p className="text-gold font-heading text-3xl font-bold">85%</p>
+              <p className="text-purple-300 font-heading text-3xl font-bold">85%</p>
               <p className="text-white/70 text-sm">Faster Integration</p>
             </div>
             <div>
-              <p className="text-gold font-heading text-3xl font-bold">3x</p>
+              <p className="text-purple-300 font-heading text-3xl font-bold">3x</p>
               <p className="text-white/70 text-sm">Productivity Gain</p>
             </div>
           </div>
@@ -161,11 +161,11 @@ export default function SignInPage() {
           {/* Demo Credentials - Less prominent, below main form conceptually */}
           <details className="mb-6 group">
             <summary className="cursor-pointer text-sm text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
-              <span className="text-gold group-open:rotate-90 transition-transform">▸</span>
+              <span className="text-purple-700 group-open:rotate-90 transition-transform">▸</span>
               <span className="group-open:hidden">Try demo credentials</span>
               <span className="hidden group-open:inline">Hide demo credentials</span>
             </summary>
-            <div className="mt-3 bg-bg-alt border border-border rounded-lg p-4">
+            <div className="mt-3 bg-purple-50 border border-purple-200 rounded-lg p-4">
               <p className="text-text-secondary text-sm mb-3">
                 Click to auto-fill credentials:
               </p>
@@ -173,14 +173,14 @@ export default function SignInPage() {
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('individual')}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-navy bg-white border border-navy/20 rounded-lg hover:bg-navy-50 hover:border-navy/40 transition-colors"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Team lead
                 </button>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('company')}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-navy bg-white border border-navy/20 rounded-lg hover:bg-navy-50 hover:border-navy/40 transition-colors"
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Company
                 </button>

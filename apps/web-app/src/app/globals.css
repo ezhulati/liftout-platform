@@ -4,66 +4,117 @@
 
 /* ============================================
    LIFTOUT DESIGN SYSTEM
-   Deep Navy + Gold Premium Executive Theme
+   Deep Royal Purple + Amber Gold Premium Theme
    ============================================ */
 
 @layer base {
   /* ============================================
-     PRACTICAL UI DESIGN SYSTEM
-     HSB Monochromatic Color System
-     Navy (H=220) + Gold (H=38)
+     LIFTOUT COLOR SYSTEM
+     Primary: Deep Royal Purple (#4C1D95)
+     Accent: Warm Amber Gold (#F59E0B)
      ============================================ */
   :root {
-    /* Background layers - Warm cream (H=40), not pure white */
-    --bg: hsl(40, 30%, 97%);
+    /* Background layers - Cool tinted whites */
+    --bg: hsl(270, 20%, 98%);
     --bg-surface: hsl(0, 0%, 100%);
-    --bg-elevated: hsl(40, 25%, 95%);
-    --bg-alt: hsl(220, 2%, 98%);
+    --bg-elevated: hsl(270, 15%, 96%);
+    --bg-alt: hsl(270, 5%, 97%);
 
-    /* Text hierarchy - Practical UI contrast requirements
-       Small text: 4.5:1, Large text: 3:1, UI: 3:1 */
-    --text-primary: hsl(220, 60%, 20%);    /* Darkest - headings */
-    --text-secondary: hsl(220, 30%, 45%);  /* Secondary text */
-    --text-tertiary: hsl(220, 20%, 55%);   /* Helper text */
-    --text-inverse: hsl(0, 0%, 100%);      /* White on dark */
-    --text-on-navy: hsl(0, 0%, 100%);      /* White on navy */
-    --text-on-gold: hsl(220, 60%, 15%);    /* Dark on gold */
+    /* Text hierarchy - High contrast for accessibility */
+    --text-primary: #1e1b4b;              /* Darkest indigo - headings */
+    --text-secondary: #4c4687;            /* Purple-gray - body */
+    --text-tertiary: #6b6494;             /* Muted purple-gray - helper */
+    --text-inverse: hsl(0, 0%, 100%);     /* White on dark */
+    --text-on-primary: hsl(0, 0%, 100%);  /* White on purple */
+    --text-on-accent: #1e1b4b;            /* Dark on amber */
 
-    /* Primary: Navy (H=220) - HSB Monochromatic Scale */
-    --navy: hsl(220, 70%, 50%);            /* Primary actions */
-    --navy-darkest: hsl(220, 60%, 20%);    /* Headings */
-    --navy-dark: hsl(220, 30%, 45%);       /* Secondary text */
-    --navy-medium: hsl(220, 20%, 66%);     /* Borders (3:1) */
-    --navy-light: hsl(220, 10%, 95%);      /* Decorative */
-    --navy-lightest: hsl(220, 2%, 98%);    /* Alt bg */
-    --navy-hover: hsl(220, 70%, 45%);      /* Button hover */
-    --navy-50: hsl(220, 10%, 95%);
-    --navy-100: hsl(220, 15%, 90%);
-    --navy-200: hsl(220, 20%, 80%);
-    --navy-300: hsl(220, 25%, 66%);
-    --navy-400: hsl(220, 35%, 50%);
-    --navy-500: hsl(220, 50%, 40%);
-    --navy-600: hsl(220, 60%, 30%);
-    --navy-700: hsl(220, 60%, 25%);
-    --navy-800: hsl(220, 60%, 20%);
-    --navy-900: hsl(220, 65%, 15%);
+    /* Primary: Deep Royal Purple - Full Scale */
+    --primary: #4C1D95;                   /* Main brand color */
+    --primary-hover: #3B0764;             /* Darker on hover */
+    --primary-light: #7C3AED;             /* Lighter variant */
+    --primary-50: #faf5ff;
+    --primary-100: #f3e8ff;
+    --primary-200: #e9d5ff;
+    --primary-300: #d8b4fe;
+    --primary-400: #c084fc;
+    --primary-500: #a855f7;
+    --primary-600: #9333ea;
+    --primary-700: #7c3aed;
+    --primary-800: #6d28d9;
+    --primary-900: #4C1D95;
+    --primary-950: #3B0764;
 
-    /* Secondary: Gold (H=38) - HSB Monochromatic Scale */
-    --gold: hsl(38, 70%, 50%);             /* Secondary actions */
-    --gold-darkest: hsl(38, 60%, 20%);     /* Gold text */
-    --gold-dark: hsl(38, 50%, 40%);
-    --gold-medium: hsl(38, 30%, 60%);
-    --gold-light: hsl(38, 20%, 85%);
-    --gold-lightest: hsl(38, 10%, 95%);
-    --gold-hover: hsl(38, 70%, 45%);       /* Button hover */
-    --gold-50: hsl(38, 60%, 95%);
-    --gold-100: hsl(38, 60%, 90%);
-    --gold-200: hsl(38, 60%, 82%);
-    --gold-300: hsl(38, 55%, 70%);
-    --gold-400: hsl(38, 60%, 55%);
-    --gold-500: hsl(38, 70%, 50%);
-    --gold-600: hsl(38, 70%, 45%);
-    --gold-700: hsl(38, 65%, 40%);
+    /* Accent: Warm Amber Gold - Complementary */
+    --accent: #F59E0B;                    /* Main accent */
+    --accent-hover: #D97706;              /* Darker on hover */
+    --accent-light: #FCD34D;              /* Lighter variant */
+    --accent-50: #FFFBEB;
+    --accent-100: #FEF3C7;
+    --accent-200: #FDE68A;
+    --accent-300: #FCD34D;
+    --accent-400: #FBBF24;
+    --accent-500: #F59E0B;
+    --accent-600: #D97706;
+    --accent-700: #B45309;
+
+    /* Legacy Navy (mapped to purple for consistency) */
+    --navy: #4C1D95;
+    --navy-darkest: #1e1b4b;
+    --navy-dark: #4c4687;
+    --navy-medium: #8b85b1;
+    --navy-light: #f3e8ff;
+    --navy-lightest: #faf5ff;
+    --navy-hover: #3B0764;
+    --text-on-navy: #FFFFFF;
+    --navy-50: #faf5ff;
+    --navy-100: #f3e8ff;
+    --navy-200: #e9d5ff;
+    --navy-300: #d8b4fe;
+    --navy-400: #c084fc;
+    --navy-500: #a855f7;
+    --navy-600: #7c3aed;
+    --navy-700: #6d28d9;
+    --navy-800: #4C1D95;
+    --navy-900: #3B0764;
+
+    /* Legacy Gold (mapped to amber for consistency) */
+    --gold: #F59E0B;
+    --gold-darkest: #78350F;
+    --gold-dark: #B45309;
+    --gold-medium: #D97706;
+    --gold-light: #FDE68A;
+    --gold-lightest: #FFFBEB;
+    --gold-hover: #D97706;
+    --gold-50: #FFFBEB;
+    --gold-100: #FEF3C7;
+    --gold-200: #FDE68A;
+    --gold-300: #FCD34D;
+    --gold-400: #FBBF24;
+    --gold-500: #F59E0B;
+    --gold-600: #D97706;
+    --gold-700: #B45309;
+
+    /* Purple - Deep Royal Purple (primary alias) */
+    --purple: #4C1D95;
+    --purple-hover: #3B0764;
+    --purple-active: #2e1065;
+    --purple-50: #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-300: #d8b4fe;
+    --purple-400: #c084fc;
+    --purple-500: #a855f7;
+    --purple-600: #9333ea;
+    --purple-700: #7c3aed;
+    --purple-800: #6d28d9;
+    --purple-900: #4C1D95;
+
+    /* Sidebar - Deep Royal Purple */
+    --sidebar-bg: #4C1D95;
+    --sidebar-hover: #3B0764;
+    --sidebar-active: #6d28d9;
+    --sidebar-text: #FFFFFF;
+    --sidebar-text-muted: rgba(255, 255, 255, 0.7);
 
     /* Semantic colors - always pair with icons */
     --success: hsl(142, 55%, 38%);
@@ -1172,14 +1223,14 @@
      For CTA sections, footers, dark backgrounds
      ============================================ */
 
-  /* Dark section container - use for CTAs, footers */
+  /* Dark section container - use for CTAs, footers (Deep Royal Purple) */
   .dark-section {
-    background-color: hsl(220, 65%, 15%);
+    background-color: #4C1D95;
     color: hsl(0, 0%, 100%);
   }
 
   .dark-section-deep {
-    background-color: hsl(220, 70%, 10%);
+    background-color: #3B0764;
     color: hsl(0, 0%, 100%);
   }
 
@@ -1248,14 +1299,14 @@
      For sections on light/cream backgrounds
      ============================================ */
 
-  /* Navy accent text - for eyebrow labels, accents on light bg */
+  /* Primary accent text - for eyebrow labels, accents on light bg (Deep Royal Purple) */
   .text-navy {
-    color: hsl(220, 70%, 50%);
+    color: #4C1D95;
   }
 
-  /* Navy icon/element background */
+  /* Primary icon/element background (Deep Royal Purple) */
   .bg-navy {
-    background-color: hsl(220, 70%, 50%);
+    background-color: #4C1D95;
   }
 
   /* Gold accent text - for eyebrow labels, accents on light bg */
@@ -1276,5 +1327,84 @@
   /* Text on gold background (dark navy) */
   .text-on-gold {
     color: hsl(220, 65%, 15%);
+  }
+
+  /* ============================================
+     PURPLE SIDEBAR UTILITIES
+     For Figma-style purple sidebar
+     ============================================ */
+
+  /* Purple backgrounds */
+  .bg-sidebar {
+    background-color: var(--sidebar-bg);
+  }
+
+  .bg-sidebar-hover {
+    background-color: var(--sidebar-hover);
+  }
+
+  .bg-sidebar-active {
+    background-color: var(--sidebar-active);
+  }
+
+  /* Purple text */
+  .text-purple {
+    color: var(--purple);
+  }
+
+  .text-on-purple {
+    color: var(--sidebar-text);
+  }
+
+  .text-on-purple-muted {
+    color: var(--sidebar-text-muted);
+  }
+
+  /* Sidebar nav item styling */
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg;
+    color: var(--sidebar-text);
+    min-height: 48px;
+    transition: background-color 0.2s ease;
+  }
+
+  .sidebar-nav-item:hover {
+    background-color: var(--sidebar-hover);
+  }
+
+  .sidebar-nav-item.active {
+    background-color: var(--sidebar-active);
+  }
+
+  /* Purple button for auth pages */
+  .btn-purple {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--purple);
+    color: white;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    transition: all var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .btn-purple:hover {
+    background-color: var(--purple-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-purple:active {
+    background-color: var(--purple-active);
+    transform: translateY(0);
+  }
+
+  .btn-purple:focus-visible {
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.4);
+  }
+
+  .btn-purple:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
   }
 }

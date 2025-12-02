@@ -23,6 +23,14 @@ const config: Config = {
     'ring-navy-600/30',
     'bg-gold-600',
     'text-gold-200',
+    // Purple sidebar colors
+    'bg-purple-500',
+    'bg-purple-600',
+    'bg-purple-700',
+    'hover:bg-purple-600',
+    'hover:bg-purple-700',
+    'text-purple-500',
+    'border-purple-500',
   ],
   darkMode: 'class', // Disabled - only activates with explicit .dark class
   theme: {
@@ -37,27 +45,27 @@ const config: Config = {
           elevated: 'hsl(40, 25%, 95%)',     // Hover states, elevated surfaces
           alt: 'hsl(220, 2%, 98%)',          // Lightest navy-tinted alt bg
         },
-        // Primary: Navy (H=220) - HSB Monochromatic Scale
-        // Following Practical UI formula for light interfaces
+        // Primary: Deep Royal Purple (H=270) - HSB Monochromatic Scale
+        // Base: #4C1D95 = hsl(270, 70%, 35%)
         navy: {
-          DEFAULT: 'hsl(220, 70%, 50%)',     // Primary actions HSB(220,70,80) → hsl approx
-          darkest: 'hsl(220, 50%, 12%)',     // Dark backgrounds - very dark navy
-          dark: 'hsl(220, 30%, 45%)',        // Secondary text HSB(220,30,45)
-          medium: 'hsl(220, 20%, 66%)',      // Non-decorative borders HSB(220,20,66)
-          light: 'hsl(220, 10%, 95%)',       // Decorative borders HSB(220,10,95)
-          lightest: 'hsl(220, 2%, 98%)',     // Alt backgrounds HSB(220,2,98)
+          DEFAULT: '#4C1D95',                // Primary actions - Deep Royal Purple
+          darkest: '#3B0764',                // Dark backgrounds - darkest purple
+          dark: 'hsl(270, 40%, 40%)',        // Secondary text
+          medium: 'hsl(270, 25%, 60%)',      // Non-decorative borders
+          light: 'hsl(270, 15%, 92%)',       // Decorative borders
+          lightest: 'hsl(270, 10%, 97%)',    // Alt backgrounds
           // Full scale for compatibility
-          50: 'hsl(220, 10%, 95%)',
-          100: 'hsl(220, 15%, 90%)',
-          200: 'hsl(220, 20%, 80%)',
-          300: 'hsl(220, 25%, 66%)',
-          400: 'hsl(220, 35%, 50%)',
-          500: 'hsl(220, 50%, 40%)',
-          600: 'hsl(220, 60%, 30%)',
-          700: 'hsl(220, 60%, 25%)',
-          800: 'hsl(220, 60%, 20%)',
-          900: 'hsl(220, 65%, 15%)',
-          950: 'hsl(220, 70%, 10%)',
+          50: 'hsl(270, 20%, 97%)',
+          100: 'hsl(270, 25%, 93%)',
+          200: 'hsl(270, 30%, 85%)',
+          300: 'hsl(270, 35%, 70%)',
+          400: 'hsl(270, 50%, 50%)',
+          500: '#4C1D95',                     // Base purple
+          600: 'hsl(270, 70%, 30%)',
+          700: 'hsl(270, 70%, 25%)',
+          800: 'hsl(270, 70%, 20%)',
+          900: '#3B0764',                     // Darkest purple
+          950: 'hsl(270, 80%, 12%)',
         },
         // Secondary: Gold (H=38) - HSB Monochromatic Scale
         gold: {
@@ -131,6 +139,19 @@ const config: Config = {
           800: 'hsl(220, 60%, 20%)',
           900: 'hsl(220, 65%, 15%)',
           950: 'hsl(220, 70%, 10%)',
+        },
+        // Purple - Figma sidebar color (#7C3AED)
+        purple: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#7C3AED',   // Primary purple from Figma
+          600: '#6D28D9',   // Hover state
+          700: '#5B21B6',   // Active state
+          800: '#4C1D95',
+          900: '#3B0764',
         },
       },
       // Typography - Playfair Display + Source Sans 3
@@ -211,7 +232,7 @@ const config: Config = {
         '2xl': '0 25px 50px -12px hsl(220 60% 15% / 0.25)',
         'inner': 'inset 0 2px 4px 0 hsl(220 60% 15% / 0.05)',
         'gold': '0 4px 14px 0 hsl(38 50% 55% / 0.3)',
-        'navy': '0 4px 14px 0 hsl(220 60% 20% / 0.3)',
+        'navy': '0 4px 14px 0 hsl(270 70% 25% / 0.3)',
       },
       // Custom animations with cubic-bezier easing
       transitionTimingFunction: {
@@ -281,9 +302,9 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-navy': 'linear-gradient(135deg, hsl(220, 60%, 20%) 0%, hsl(220, 70%, 15%) 100%)',
+        'gradient-navy': 'linear-gradient(135deg, #4C1D95 0%, #3B0764 100%)',
         'gradient-gold': 'linear-gradient(135deg, hsl(38, 50%, 55%) 0%, hsl(38, 60%, 42%) 100%)',
-        'gradient-premium': 'linear-gradient(135deg, hsl(220, 60%, 20%) 0%, hsl(220, 50%, 30%) 50%, hsl(38, 50%, 55%) 100%)',
+        'gradient-premium': 'linear-gradient(135deg, #4C1D95 0%, hsl(270, 50%, 40%) 50%, hsl(38, 50%, 55%) 100%)',
       },
     },
   },

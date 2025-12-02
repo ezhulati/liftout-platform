@@ -82,8 +82,8 @@ export function LandingFeatures() {
               style={{ transitionDelay: isVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Icon */}
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(220, 70%, 50%, 0.1)' }}>
-                <feature.icon className="w-6 h-6 text-navy" aria-hidden="true" />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-purple-100">
+                <feature.icon className="w-6 h-6 text-[#4C1D95]" aria-hidden="true" />
               </div>
 
               {/* Title */}
@@ -103,7 +103,7 @@ export function LandingFeatures() {
         <div className={`mt-16 transition-all duration-500 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <Link
             href="/auth/signup"
-            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-lg shadow-lg shadow-navy/25 hover:shadow-xl hover:shadow-navy/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center gap-2 bg-[#4C1D95] text-white font-semibold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             <span className="relative">Browse verified teams</span>

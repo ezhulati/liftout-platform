@@ -69,7 +69,7 @@ export function HowItWorksTabs() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-12 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="font-semibold text-base mb-3 text-navy">
+          <p className="font-semibold text-base mb-3 text-[#4C1D95]">
             How it works
           </p>
           <h2
@@ -102,9 +102,9 @@ export function HowItWorksTabs() {
                   className={`
                     flex items-center gap-2 px-5 py-3 rounded-md min-h-12
                     font-medium text-base transition-all duration-fast
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-900 focus-visible:ring-offset-2
                     ${isActive
-                      ? 'bg-bg-surface text-navy shadow-sm'
+                      ? 'bg-bg-surface text-[#4C1D95] shadow-sm'
                       : 'text-text-tertiary hover:text-text-primary'
                     }
                   `}
@@ -131,10 +131,10 @@ export function HowItWorksTabs() {
             >
               {/* Step number and icon */}
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full bg-navy flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-[#4C1D95] flex items-center justify-center">
                   <span className="font-heading text-lg font-bold text-white">{step.number}</span>
                 </div>
-                <step.icon className="w-6 h-6 text-navy" aria-hidden="true" />
+                <step.icon className="w-6 h-6 text-[#4C1D95]" aria-hidden="true" />
               </div>
 
               {/* Content - Practical UI: 18px body text minimum */}
