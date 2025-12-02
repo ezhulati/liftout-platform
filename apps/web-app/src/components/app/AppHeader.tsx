@@ -117,23 +117,24 @@ export function AppHeader({ user }: AppHeaderProps) {
         {/* Separator */}
         <div className="h-6 w-px bg-border lg:hidden" aria-hidden="true" />
 
-        <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+        <div className="flex flex-1 gap-x-4 self-stretch items-center lg:gap-x-6">
           {/* Search trigger button */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="relative flex flex-1 items-center gap-2 px-3 text-sm text-text-tertiary hover:text-text-secondary transition-colors"
+            className="group relative flex items-center gap-2 px-3 py-2 min-h-10 text-sm text-text-secondary rounded-lg hover:bg-bg-alt transition-colors"
           >
             <MagnifyingGlassIcon
-              className="h-5 w-5 text-text-tertiary"
+              className="h-5 w-5 flex-shrink-0 text-text-tertiary"
               aria-hidden="true"
             />
-            <span className="hidden sm:inline">Search teams, opportunities...</span>
-            <span className="sm:hidden">Search...</span>
-            <kbd className="hidden lg:inline-flex items-center gap-1 ml-auto rounded border border-border bg-bg-alt px-1.5 py-0.5 text-xs text-text-tertiary">
-              <span className="text-xs">⌘</span>K
+            <span className="hidden sm:inline">{isCompanyUser ? 'Search teams...' : 'Search opportunities...'}</span>
+            <kbd className="hidden lg:inline-flex items-center gap-0.5 ml-2 rounded border border-border bg-bg-surface px-1.5 py-0.5 text-xs text-text-tertiary">
+              <span>⌘</span>K
             </kbd>
           </button>
-          <div className="flex items-center gap-x-4 lg:gap-x-6">
+
+          {/* Right side actions */}
+          <div className="flex items-center gap-x-2 lg:gap-x-4 ml-auto">
             <button
               type="button"
               className="min-h-12 min-w-12 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-elevated rounded-lg transition-colors duration-fast"
@@ -201,7 +202,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
+                <Menu.Items className="absolute right-0 z-50 mt-2 w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none">
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (
