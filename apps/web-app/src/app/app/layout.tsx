@@ -27,21 +27,8 @@ export default function AppLayout({
     }
   }, [status, router]);
 
-  // Redirect to onboarding if profile not completed (unless already on onboarding page)
-  useEffect(() => {
-    if (
-      status === 'authenticated' &&
-      session?.user &&
-      !session.user.profileCompleted &&
-      !isOnboardingRoute
-    ) {
-      // Check if this is a demo user - demo users skip onboarding
-      const demoData = getDemoDataForUser(session.user.email);
-      if (!demoData) {
-        router.push('/app/onboarding');
-      }
-    }
-  }, [status, session, isOnboardingRoute, router]);
+  // NOTE: Onboarding redirect is handled by OnboardingContext in the onboarding page itself
+  // We removed the redirect here to prevent redirect loops between layout and onboarding page
 
   if (status === 'loading') {
     return (
