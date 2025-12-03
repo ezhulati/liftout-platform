@@ -17,6 +17,8 @@ const publicRoutes = [
   '/contact',
   '/privacy',
   '/terms',
+  '/what-is-a-liftout',
+  '/pricing',
 ];
 
 // Routes only accessible to individual users (team members/leaders)
