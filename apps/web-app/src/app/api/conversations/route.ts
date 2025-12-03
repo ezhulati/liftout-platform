@@ -125,6 +125,32 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { subject, participantIds, opportunityId, teamId, companyId, isAnonymous } = body;
 
+    // Check if company user is verified before allowing contact with teams
+    if (session.user.userType === 'company' && teamId) {
+      const companyUser = await prisma.companyUser.findFirst({
+        where: { userId: session.user.id },
+        include: { company: true },
+      });
+
+      if (!companyUser?.company) {
+        return NextResponse.json(
+          { error: 'Company profile not found. Please complete your company profile first.' },
+          { status: 403 }
+        );
+      }
+
+      if (companyUser.company.verificationStatus !== 'verified') {
+        return NextResponse.json(
+          {
+            error: 'Company verification required',
+            message: 'Your company must be verified before contacting teams. Please complete verification in your company profile.',
+            verificationStatus: companyUser.company.verificationStatus,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // Check if team has anonymous visibility (inherit for the conversation)
     let shouldBeAnonymous = isAnonymous || false;
     if (teamId && !shouldBeAnonymous) {
