@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/teams/user-teams - Get all teams for the current user
 export async function GET(request: NextRequest) {
   try {

@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { OpportunityStatus } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/search/suggestions - Get search suggestions/autocomplete
 export async function GET(request: NextRequest) {
   try {

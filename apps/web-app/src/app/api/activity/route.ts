@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@liftout/database';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Get activity feed for the current user
 export async function GET(request: NextRequest) {
   try {

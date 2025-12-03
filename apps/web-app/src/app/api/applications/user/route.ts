@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { isDemoAccount, DEMO_ACCOUNTS } from '@/lib/demo-accounts';
 
+export const dynamic = 'force-dynamic';
+
 // Demo applications data for team user
 const DEMO_TEAM_APPLICATIONS = [
   {

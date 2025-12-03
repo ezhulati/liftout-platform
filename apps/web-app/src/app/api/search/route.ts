@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { OpportunityStatus, TeamVisibility } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 // Helper to check if user is from a verified company
 async function isVerifiedCompanyUser(userId: string): Promise<boolean> {
   const companyUser = await prisma.companyUser.findFirst({

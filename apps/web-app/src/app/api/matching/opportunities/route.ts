@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma';
 import type { Decimal } from '@prisma/client/runtime/library';
 import type { JsonValue } from '@prisma/client/runtime/library';
 
+export const dynamic = 'force-dynamic';
+
 // Demo user detection
 const isDemoUser = (email: string | null | undefined): boolean => {
   return email === 'demo@example.com' || email === 'company@example.com';
