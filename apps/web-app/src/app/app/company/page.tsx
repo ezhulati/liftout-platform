@@ -343,8 +343,145 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
     );
   }
 
-  // Editing mode would be similar to overview editing
-  return <div className="card p-6"><p className="text-text-secondary">Culture editing form would go here...</p></div>;
+  // Editing mode - form for updating culture values
+  const [newValue, setNewValue] = useState('');
+  const [newBenefit, setNewBenefit] = useState('');
+
+  const handleAddValue = () => {
+    if (newValue.trim() && !cultureData.values.includes(newValue.trim())) {
+      setCultureData({ ...cultureData, values: [...cultureData.values, newValue.trim()] });
+      setNewValue('');
+    }
+  };
+
+  const handleRemoveValue = (valueToRemove: string) => {
+    setCultureData({ ...cultureData, values: cultureData.values.filter(v => v !== valueToRemove) });
+  };
+
+  const handleAddBenefit = () => {
+    if (newBenefit.trim() && !cultureData.benefits.includes(newBenefit.trim())) {
+      setCultureData({ ...cultureData, benefits: [...cultureData.benefits, newBenefit.trim()] });
+      setNewBenefit('');
+    }
+  };
+
+  const handleRemoveBenefit = (benefitToRemove: string) => {
+    setCultureData({ ...cultureData, benefits: cultureData.benefits.filter(b => b !== benefitToRemove) });
+  };
+
+  const handleSave = async () => {
+    // TODO: Save to API when endpoint is ready
+    console.log('Saving culture data:', cultureData);
+  };
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6">
+      <div className="card p-6 space-y-6">
+        <h3 className="text-lg font-bold text-text-primary">Edit company culture</h3>
+
+        {/* Culture Description */}
+        <div>
+          <label className="block text-base font-bold text-text-primary mb-2">Culture description</label>
+          <textarea
+            rows={3}
+            value={cultureData.cultureDescription}
+            onChange={(e) => setCultureData({ ...cultureData, cultureDescription: e.target.value })}
+            className="input-field"
+            placeholder="Describe your company culture..."
+          />
+        </div>
+
+        {/* Core Values */}
+        <div>
+          <label className="block text-base font-bold text-text-primary mb-2">Core values</label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {cultureData.values.map((value, index) => (
+              <span key={index} className="badge badge-primary text-sm flex items-center gap-2">
+                {value}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveValue(value)}
+                  className="text-navy-600 hover:text-navy-800"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddValue(); } }}
+              className="input-field flex-1"
+              placeholder="Add a value..."
+            />
+            <button type="button" onClick={handleAddValue} className="btn-outline min-h-12 px-4">
+              Add
+            </button>
+          </div>
+        </div>
+
+        {/* Work Style */}
+        <div>
+          <label className="block text-base font-bold text-text-primary mb-2">Work style</label>
+          <select
+            value={cultureData.workStyle}
+            onChange={(e) => setCultureData({ ...cultureData, workStyle: e.target.value })}
+            className="input-field"
+          >
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="On-site">On-site</option>
+            <option value="Flexible">Flexible</option>
+          </select>
+        </div>
+
+        {/* Benefits */}
+        <div>
+          <label className="block text-base font-bold text-text-primary mb-2">Benefits & perks</label>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {cultureData.benefits.map((benefit, index) => (
+              <div key={index} className="flex items-center justify-between bg-bg-alt rounded-lg px-3 py-2">
+                <div className="flex items-center">
+                  <div className="h-2 w-2 bg-navy rounded-full mr-3 flex-shrink-0"></div>
+                  <span className="text-sm font-normal text-text-secondary">{benefit}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveBenefit(benefit)}
+                  className="text-text-tertiary hover:text-error ml-2"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newBenefit}
+              onChange={(e) => setNewBenefit(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddBenefit(); } }}
+              className="input-field flex-1"
+              placeholder="Add a benefit..."
+            />
+            <button type="button" onClick={handleAddBenefit} className="btn-outline min-h-12 px-4">
+              Add
+            </button>
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <div className="pt-6 border-t border-border flex items-center gap-4">
+          <button type="submit" className="btn-primary min-h-12">
+            Save changes
+          </button>
+        </div>
+      </div>
+    </form>
+  );
 }
 
 function LiftoutHistory() {
