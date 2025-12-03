@@ -19,12 +19,29 @@ export default function AppLayout({
 
   // Fullscreen routes that don't show sidebar/header
   const isFullscreenRoute = pathname?.startsWith('/app/onboarding');
+  const isOnboardingRoute = pathname?.startsWith('/app/onboarding');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
     }
   }, [status, router]);
+
+  // Redirect to onboarding if profile not completed (unless already on onboarding page)
+  useEffect(() => {
+    if (
+      status === 'authenticated' &&
+      session?.user &&
+      !session.user.profileCompleted &&
+      !isOnboardingRoute
+    ) {
+      // Check if this is a demo user - demo users skip onboarding
+      const demoData = getDemoDataForUser(session.user.email);
+      if (!demoData) {
+        router.push('/app/onboarding');
+      }
+    }
+  }, [status, session, isOnboardingRoute, router]);
 
   if (status === 'loading') {
     return (
