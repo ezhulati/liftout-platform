@@ -70,7 +70,7 @@ export async function sendTeamInvitationEmail(params: {
                 </div>
               ` : ''}
               <p style="font-size: 14px; color: #666; margin-bottom: 25px;">
-                Liftout is a platform that connects high-performing teams with companies looking to acquire proven talent. By joining this team, you'll be part of a group that can explore new opportunities together.
+                Liftout is the first platform for team-based hiring. By joining this team, you'll be part of a group that can post a shared profile and explore opportunities together—something that didn't exist before.
               </p>
               <div style="text-align: center; margin: 30px 0;">
                 <a href="${invitationUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px;">
@@ -540,14 +540,14 @@ export async function sendWelcomeEmail(params: {
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; border-radius: 12px 12px 0 0; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Liftout!</h1>
-              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">The platform for strategic team acquisition</p>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">The first platform for team-based hiring</p>
             </div>
             <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
               <p style="font-size: 16px;">Hi ${recipientName},</p>
               <p style="font-size: 16px; margin-bottom: 25px;">
                 ${isTeamUser
-                  ? "We're excited to have you join Liftout! You're now part of a platform that connects high-performing teams with companies looking for proven talent."
-                  : "Welcome to Liftout! You now have access to a curated marketplace of high-performing teams ready for their next chapter."
+                  ? "Welcome to the first platform for team-based hiring. Create a team profile, post a smoke signal, and let companies find you. This didn't exist before—you're among the first."
+                  : "Welcome to the first platform for team-based hiring. Browse teams that have posted profiles together, connect, and hire intact groups. This is a new way to build."
                 }
               </p>
 

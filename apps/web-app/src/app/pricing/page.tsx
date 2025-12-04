@@ -43,7 +43,7 @@ const plans: Plan[] = [
   {
     id: 'free',
     name: 'Starter',
-    description: 'Perfect for exploring the platform',
+    description: 'Explore how team-based hiring works',
     monthlyPrice: 0,
     yearlyPrice: 0,
     icon: UserGroupIcon,
@@ -62,7 +62,7 @@ const plans: Plan[] = [
   {
     id: 'pro',
     name: 'Pro',
-    description: 'For growing teams ready to scale',
+    description: 'For teams ready to find their next opportunity',
     monthlyPrice: 49,
     yearlyPrice: 470,
     icon: SparklesIcon,
@@ -81,7 +81,7 @@ const plans: Plan[] = [
   {
     id: 'premium',
     name: 'Premium',
-    description: 'For serious teams and companies',
+    description: 'For teams and companies executing liftouts',
     monthlyPrice: 149,
     yearlyPrice: 1430,
     icon: RocketLaunchIcon,
@@ -101,7 +101,7 @@ const plans: Plan[] = [
   {
     id: 'enterprise',
     name: 'Enterprise',
-    description: 'Custom solutions for large organizations',
+    description: 'For high-volume team acquisitions',
     monthlyPrice: 499,
     yearlyPrice: 4790,
     icon: BuildingOffice2Icon,
@@ -226,11 +226,11 @@ export default function PricingPage() {
       {/* Hero Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-          Simple, Transparent Pricing
+          Pricing for Team-Based Hiring
         </h1>
         <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-8">
-          Choose the plan that's right for your team or company. All plans include
-          a 14-day free trial with no credit card required.
+          We built the first platform for liftouts. Choose the plan that fits your needs.
+          Start free—no credit card required.
         </p>
 
         {/* Billing Toggle */}

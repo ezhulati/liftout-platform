@@ -35,7 +35,9 @@ export default function DashboardPage() {
             Welcome, {firstName}
           </h1>
           <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
-            Your dashboard shows a glimpse of everything.
+            {isCompanyUser
+              ? "Track team matches, conversations, and opportunities you've posted."
+              : "Track your team's profile views, matches, and applications."}
           </p>
         </div>
         {/* Primary action button based on user type */}
