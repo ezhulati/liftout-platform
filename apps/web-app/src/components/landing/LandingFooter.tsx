@@ -70,8 +70,7 @@ export function LandingFooter() {
 
             {/* Practical UI: 18px body text */}
             <p className="text-white/70 text-lg max-w-md leading-relaxed mb-6">
-              The strategic alternative to individual hiring and costly acquisitions.
-              Connect with proven teams ready for new challenges.
+              The first platform for team-based hiring. We&apos;re building something new—join us.
             </p>
 
             {/* Social links - Practical UI: 48pt touch targets */}

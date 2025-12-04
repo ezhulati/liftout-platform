@@ -7,22 +7,22 @@ const features = [
   {
     icon: UserGroupIcon,
     title: 'Intact Teams',
-    description: 'Hire proven groups who already work well together',
+    description: 'The first place teams can post profiles together',
   },
   {
     icon: ClockIcon,
     title: 'Day One Ready',
-    description: 'Skip the 6-month team-building phase entirely',
+    description: 'Skip the team-building phase entirely',
   },
   {
     icon: ShieldCheckIcon,
     title: 'Verified History',
-    description: 'Every team comes with documented track records',
+    description: 'Teams document their track records',
   },
   {
     icon: LockClosedIcon,
     title: 'Confidential',
-    description: 'NDA-protected throughout the entire process',
+    description: 'Explore discreetly. Your employer never knows.',
   },
 ];
 

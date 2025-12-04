@@ -24,18 +24,18 @@ const navLinks = [
     href: '/for-companies',
     label: 'For Companies',
     submenu: [
-      { href: '/for-companies#discover', label: 'Discover teams', description: 'Find pre-vetted, high-performing teams' },
-      { href: '/for-companies#process', label: 'How it works', description: 'Our streamlined liftout process' },
-      { href: '/for-companies#pricing', label: 'Pricing', description: 'Transparent, success-based pricing' },
+      { href: '/for-companies#discover', label: 'Discover teams', description: 'Browse teams open to opportunities' },
+      { href: '/for-companies#process', label: 'How it works', description: 'The first marketplace for team hiring' },
+      { href: '/for-companies#pricing', label: 'Pricing', description: 'Free to explore, pay on success' },
     ]
   },
   {
     href: '/for-teams',
     label: 'For Teams',
     submenu: [
-      { href: '/for-teams#opportunities', label: 'Explore opportunities', description: 'Browse confidential liftout positions' },
-      { href: '/for-teams#profile', label: 'Create team profile', description: 'Showcase your team\'s capabilities' },
-      { href: '/for-teams#success', label: 'Success stories', description: 'Teams that made the move' },
+      { href: '/for-teams#opportunities', label: 'Explore opportunities', description: 'See who\'s looking for teams like yours' },
+      { href: '/for-teams#profile', label: 'Create team profile', description: 'Post a smoke signal for companies to find you' },
+      { href: '/for-teams#how', label: 'How it works', description: 'The first platform built for teams' },
     ]
   },
 ];

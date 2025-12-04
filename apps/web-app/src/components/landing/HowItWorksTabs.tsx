@@ -76,10 +76,10 @@ export function HowItWorksTabs() {
             id="how-it-works-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            For companies hiring teams. For teams moving together.
+            A new way to hire. A new way to move.
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            Select your path below to see how Liftout works for you.
+            We built the first platform for team-based hiring. Here&apos;s how it works.
           </p>
         </div>
 

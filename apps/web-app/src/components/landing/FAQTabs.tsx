@@ -16,7 +16,7 @@ const teamFaqs = [
   },
   {
     question: 'How is this different from job boards?',
-    answer: 'Traditional job sites focus on individuals posting resumes. Liftout enables entire teams to explore opportunities together, confidentially. Companies here are specifically seeking proven teams that can hit the ground running—not just individuals.',
+    answer: 'Job boards are for individuals. Liftout is the first platform built for teams. Think of it as a team board—you post a profile together, and companies who want to hire intact teams find you. This didn\'t exist before.',
   },
   {
     question: 'Who is Liftout for?',
@@ -28,7 +28,7 @@ const teamFaqs = [
   },
   {
     question: 'Are companies actually looking for teams?',
-    answer: 'Yes. Liftouts are common practice in law, investment banking, consulting, advertising, and technology. Companies value the immediate productivity that only an established team can provide.',
+    answer: 'Yes. Liftouts have been common practice in law, investment banking, and consulting for decades—Harvard Business Review has written about them since 2006. But there was never a platform for it. We built one.',
   },
 ];
 
@@ -47,7 +47,7 @@ const companyFaqs = [
   },
   {
     question: 'What industries do you cover?',
-    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records—the same industries where liftouts have been common practice for decades.',
+    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. We\'re starting with professional services—the same industries where liftouts have happened for decades. We\'re just making them accessible to everyone.',
   },
   {
     question: 'What if an acquisition doesn\'t work out?',
@@ -104,7 +104,7 @@ export function FAQTabs() {
                 Frequently asked questions
               </h2>
               <p className="text-text-secondary text-lg leading-relaxed mb-8">
-                Everything you need to know about Liftout. Select your perspective below.
+                We&apos;re building something new. Here&apos;s what you need to know.
               </p>
 
               {/* Tabs */}
