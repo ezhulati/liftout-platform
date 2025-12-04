@@ -300,6 +300,8 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
     benefits: ['Equity Participation', 'Unlimited PTO', 'Remote Work', 'Professional Development'],
     cultureDescription: 'We foster an environment of innovation and collaboration where the best ideas win.'
   });
+  const [newValue, setNewValue] = useState('');
+  const [newBenefit, setNewBenefit] = useState('');
 
   // Fetch culture data from API
   useEffect(() => {
@@ -386,9 +388,6 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
   }
 
   // Editing mode - form for updating culture values
-  const [newValue, setNewValue] = useState('');
-  const [newBenefit, setNewBenefit] = useState('');
-
   const handleAddValue = () => {
     if (newValue.trim() && !cultureData.values.includes(newValue.trim())) {
       setCultureData({ ...cultureData, values: [...cultureData.values, newValue.trim()] });

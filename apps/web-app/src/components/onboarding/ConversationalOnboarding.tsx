@@ -415,6 +415,7 @@ export function ConversationalOnboarding({ onComplete, onSkip }: ConversationalO
     };
 
     loadExistingProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLoadedProfile]);
 
   // Pre-fill first/last name from user data (fallback if profile is empty)

@@ -65,6 +65,7 @@ export function BillingSettings() {
 
   useEffect(() => {
     fetchBillingInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBillingInfo = async () => {
