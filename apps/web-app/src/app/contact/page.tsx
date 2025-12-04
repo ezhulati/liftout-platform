@@ -27,12 +27,12 @@ export default function ContactPage() {
                 Get in touch
               </p>
               <h1 className="font-heading text-4xl sm:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-                We&apos;re here to help
+                We&apos;re building something new
               </h1>
               <p className="text-text-secondary text-lg leading-relaxed mb-8">
-                Whether you&apos;re a company looking to acquire proven teams,
-                a team exploring new opportunities, or just curious about how liftouts work
-                — we&apos;d love to hear from you.
+                This is the first platform for team-based hiring. Whether you&apos;re a company
+                looking to hire intact teams, a team exploring opportunities together, or just
+                curious about liftouts—we&apos;d love to hear from you.
               </p>
 
               {/* Response time promise - builds trust (#12, #47) */}
@@ -137,10 +137,10 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Trust signal - HBR insight */}
+                {/* Pioneer signal */}
                 <div className="mt-8 p-5 bg-navy/5 rounded-xl">
                   <p className="text-text-secondary text-sm leading-relaxed">
-                    Liftouts are common practice in <span className="font-semibold text-text-primary">law, investment banking, consulting, and technology</span>—industries where team chemistry drives results.
+                    Liftouts have been common in <span className="font-semibold text-text-primary">law, banking, and consulting</span> for decades. We built the first platform to make this accessible to everyone.
                   </p>
                 </div>
               </div>

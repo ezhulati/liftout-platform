@@ -83,17 +83,17 @@ export function CompanyFeatures() {
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           <p className="font-semibold text-base mb-3 text-[#4C1D95]">
-            Platform features
+            What we built
           </p>
           <h2
             id="features-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            Everything you need to acquire proven teams
+            The first marketplace for team hiring
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            Our platform streamlines the entire team acquisition process, from discovery through
-            successful integration.
+            Teams can now post profiles together. You can browse them, connect, and hire.
+            This didn&apos;t exist before.
           </p>
         </div>
 
@@ -134,10 +134,10 @@ export function CompanyFeatures() {
         >
           <div className={`max-w-2xl mb-12 transition-all duration-500 ${stepsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
-              How team acquisition works
+              A new way to hire
             </h3>
             <p className="text-text-secondary text-lg leading-relaxed">
-              A streamlined process designed for strategic, confidential talent acquisition.
+              We built this process from scratch. Here&apos;s how it works.
             </p>
           </div>
 

@@ -114,12 +114,12 @@ export default function SignInPage() {
           {/* Content */}
           <div>
             <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
-              Strategic Team
-              <span className="block text-purple-300">Acquisition Platform</span>
+              The first platform
+              <span className="block text-purple-300">for team-based hiring</span>
             </h1>
             <p className="text-white/90 text-lg leading-relaxed max-w-md">
-              Connect with proven, intact teams ready for new opportunities.
-              Transform your growth strategy today.
+              Teams post profiles. Companies find them. Everyone skips the team-building phase.
+              We built something new—welcome back.
             </p>
           </div>
 

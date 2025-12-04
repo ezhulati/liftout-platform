@@ -83,17 +83,17 @@ export function TeamFeatures() {
           className={`max-w-2xl mb-16 lg:mb-20 transition-all duration-500 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           <p className="font-semibold text-base mb-3 text-[#4C1D95]">
-            Platform features
+            What we built
           </p>
           <h2
             id="team-features-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            Everything you need to move together
+            The first team board
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            From showcasing your team to securing your next opportunity, we support every step
-            of your collective journey.
+            Job boards are for individuals. We built something for teams. Post a profile together
+            and let companies find you.
           </p>
         </div>
 
@@ -134,10 +134,10 @@ export function TeamFeatures() {
         >
           <div className={`max-w-2xl mb-12 transition-all duration-500 ${stepsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-4">
-              Your journey to the next chapter
+              A new way to move
             </h3>
             <p className="text-text-secondary text-lg leading-relaxed">
-              A confidential, team-first process designed for high-performing groups.
+              This didn&apos;t exist before. Here&apos;s how it works for teams.
             </p>
           </div>
 
