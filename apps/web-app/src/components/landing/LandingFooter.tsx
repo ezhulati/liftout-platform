@@ -212,7 +212,7 @@ export function LandingFooter() {
               &copy; {currentYear} Liftout. All rights reserved.
             </p>
             <span className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 bg-white/5 rounded text-white/50 text-sm">
-              Founded 2024
+              Founded 2023
             </span>
           </div>
           <div className="flex items-center gap-6 text-white/50 text-base">
