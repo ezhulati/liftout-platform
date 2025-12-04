@@ -25,7 +25,11 @@ export default function AppLayout({
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
     }
-  }, [status, router]);
+    // Redirect admin users to the admin dashboard
+    if (status === 'authenticated' && session?.user?.userType === 'admin') {
+      router.push('/admin');
+    }
+  }, [status, session, router]);
 
   // NOTE: Onboarding redirect is handled by OnboardingContext in the onboarding page itself
   // We removed the redirect here to prevent redirect loops between layout and onboarding page
@@ -40,6 +44,18 @@ export default function AppLayout({
 
   if (status === 'unauthenticated' || !session?.user) {
     return null;
+  }
+
+  // Admin users get redirected to /admin - show loading while redirecting
+  if (session?.user?.userType === 'admin') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="flex flex-col items-center gap-4">
+          <div className="loading-spinner w-12 h-12"></div>
+          <p className="text-text-secondary text-sm">Redirecting to admin panel...</p>
+        </div>
+      </div>
+    );
   }
 
   // Create userData from session for demo users
