@@ -41,11 +41,6 @@ const adminRoutes = [
   '/admin',
 ];
 
-// Admin routes that don't require 2FA (for setup flow)
-const admin2FASetupRoutes = [
-  '/admin/setup-2fa',
-  '/admin/verify-2fa',
-];
 
 // Protected routes that require authentication but are accessible to both user types
 const protectedRoutes = [
@@ -95,9 +90,6 @@ function isAdminRoute(pathname: string): boolean {
   return adminRoutes.some(route => pathname.startsWith(route));
 }
 
-function isAdmin2FASetupRoute(pathname: string): boolean {
-  return admin2FASetupRoutes.some(route => pathname.startsWith(route));
-}
 
 export default withAuth(
   function middleware(req: NextRequestWithAuth) {
@@ -126,26 +118,7 @@ export default withAuth(
         return NextResponse.redirect(new URL('/', req.url));
       }
 
-      // 2FA enforcement for admin users in production
-      const isProduction = process.env.NODE_ENV === 'production';
-      const enforce2FA = process.env.ENFORCE_ADMIN_2FA === 'true' || isProduction;
-
-      if (enforce2FA) {
-        const twoFactorEnabled = token.twoFactorEnabled as boolean | undefined;
-        const twoFactorVerified = token.twoFactorVerified as boolean | undefined;
-
-        // If 2FA is not set up, redirect to setup
-        if (!twoFactorEnabled && !isAdmin2FASetupRoute(pathname)) {
-          return NextResponse.redirect(new URL('/admin/setup-2fa', req.url));
-        }
-
-        // If 2FA is enabled but not verified this session, redirect to verify
-        if (twoFactorEnabled && !twoFactorVerified && !isAdmin2FASetupRoute(pathname)) {
-          return NextResponse.redirect(new URL('/admin/verify-2fa', req.url));
-        }
-      }
-
-      // Admin is authenticated (and 2FA verified if required), allow access
+      // Admin is authenticated, allow access
       return NextResponse.next();
     }
 
