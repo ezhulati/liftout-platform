@@ -108,7 +108,7 @@ export function RecommendedTeams() {
         {teams?.map((team) => (
           <div
             key={team.id}
-            className="group relative rounded-xl border border-border p-4 hover:border-navy/30 hover:shadow-md transition-all duration-base"
+            className="group relative rounded-xl border border-border p-4 hover:border-purple-300 hover:shadow-soft transition-all duration-base"
           >
             <div className="flex items-start gap-4">
               {/* Avatar - 48px touch target */}

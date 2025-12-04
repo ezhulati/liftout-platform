@@ -111,7 +111,7 @@ function RecommendedOpportunities() {
   ];
 
   return (
-    <div className="bg-bg-surface rounded-lg border border-border p-6">
+    <div className="card">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-text-primary">Recommended for you</h2>
         <Link
@@ -126,7 +126,7 @@ function RecommendedOpportunities() {
           <Link
             key={opp.id}
             href={`/app/opportunities/${opp.id}`}
-            className="block p-4 rounded-lg border border-border hover:border-purple-300 hover:bg-bg-elevated transition-all duration-fast"
+            className="block p-4 rounded-xl border border-border hover:border-purple-300 hover:shadow-soft transition-all duration-base"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
@@ -139,7 +139,7 @@ function RecommendedOpportunities() {
                 </div>
               </div>
               <div className="flex-shrink-0">
-                <span className="badge badge-success">
+                <span className="badge badge-success text-xs">
                   {opp.matchScore}% match
                 </span>
               </div>

@@ -135,7 +135,7 @@ export default function FindCompaniesPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-bg-surface rounded-lg border border-border p-4">
+      <div className="card">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search Input */}
           <div className="flex-1 relative">
@@ -145,7 +145,7 @@ export default function FindCompaniesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search companies..."
-              className="w-full pl-10 pr-4 py-3 min-h-12 rounded-lg border border-border bg-bg-surface text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="input-field pl-10"
             />
           </div>
 
@@ -154,7 +154,7 @@ export default function FindCompaniesPage() {
             <select
               value={selectedIndustry}
               onChange={(e) => setSelectedIndustry(e.target.value)}
-              className="px-4 py-3 min-h-12 rounded-lg border border-border bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="input-field"
             >
               {industries.map((industry) => (
                 <option key={industry} value={industry}>{industry}</option>
@@ -164,7 +164,7 @@ export default function FindCompaniesPage() {
             <select
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
-              className="px-4 py-3 min-h-12 rounded-lg border border-border bg-bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="input-field"
             >
               {locations.map((location) => (
                 <option key={location} value={location}>{location}</option>
@@ -173,7 +173,7 @@ export default function FindCompaniesPage() {
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden px-4 py-3 min-h-12 rounded-lg border border-border bg-bg-surface text-text-primary hover:bg-bg-elevated transition-colors"
+              className="lg:hidden btn-outline min-h-12 min-w-12 flex items-center justify-center"
             >
               <AdjustmentsHorizontalIcon className="h-5 w-5" />
             </button>
@@ -191,7 +191,7 @@ export default function FindCompaniesPage() {
         {filteredCompanies.map((company) => (
           <div
             key={company.id}
-            className="bg-bg-surface rounded-lg border border-border p-6 hover:border-purple-300 hover:shadow-md transition-all duration-fast"
+            className="card hover:shadow-md hover:border-purple-300 transition-all duration-base"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-4">
@@ -203,21 +203,19 @@ export default function FindCompaniesPage() {
                 <div className="flex-1 min-w-0">
                   {/* Company Header */}
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-lg font-bold text-text-primary">{company.name}</h3>
+                    <h3 className="text-base font-bold text-text-primary">{company.name}</h3>
                     {company.verified && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success-light text-success-dark">
-                        Verified
-                      </span>
+                      <span className="badge badge-success text-xs">Verified</span>
                     )}
                   </div>
 
                   {/* Industry Tag */}
-                  <span className="inline-block px-2 py-1 rounded bg-purple-100 text-purple-700 text-xs font-medium mb-2">
+                  <span className="badge badge-primary text-xs mb-2">
                     {company.industry}
                   </span>
 
                   {/* Meta Info */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary mb-3">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary mb-3">
                     <span className="flex items-center gap-1">
                       <MapPinIcon className="h-4 w-4" />
                       {company.location}
@@ -229,13 +227,13 @@ export default function FindCompaniesPage() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-text-secondary text-sm line-clamp-2 mb-4">
+                  <p className="text-text-secondary text-sm line-clamp-2 mb-4 leading-relaxed">
                     {company.description}
                   </p>
 
                   {/* Open Opportunities */}
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-purple-600">
+                    <span className="text-sm font-bold text-purple-600">
                       {company.openOpportunities} open {company.openOpportunities === 1 ? 'opportunity' : 'opportunities'}
                     </span>
                   </div>
@@ -245,10 +243,10 @@ export default function FindCompaniesPage() {
               {/* Action Button */}
               <Link
                 href={`/app/company/${company.id}`}
-                className="flex items-center gap-2 px-4 py-2 min-h-10 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors text-sm whitespace-nowrap"
+                className="btn-primary min-h-12 whitespace-nowrap"
               >
                 View Company
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRightIcon className="h-4 w-4 ml-2" />
               </Link>
             </div>
           </div>
@@ -257,10 +255,12 @@ export default function FindCompaniesPage() {
 
       {/* Empty State */}
       {filteredCompanies.length === 0 && (
-        <div className="text-center py-12 bg-bg-surface rounded-lg border border-border">
-          <BuildingOfficeIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+        <div className="card text-center py-12">
+          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+            <BuildingOfficeIcon className="h-7 w-7 text-text-tertiary" />
+          </div>
           <h3 className="text-lg font-bold text-text-primary mb-2">No companies found</h3>
-          <p className="text-text-secondary mb-4">
+          <p className="text-base text-text-secondary mb-4 leading-relaxed max-w-md mx-auto">
             Try adjusting your search or filters to find more companies.
           </p>
           <button
@@ -269,7 +269,7 @@ export default function FindCompaniesPage() {
               setSelectedIndustry('All Industries');
               setSelectedLocation('All Locations');
             }}
-            className="text-purple-500 hover:text-purple-600 font-medium"
+            className="text-purple-600 hover:text-purple-700 font-bold transition-colors"
           >
             Clear all filters
           </button>

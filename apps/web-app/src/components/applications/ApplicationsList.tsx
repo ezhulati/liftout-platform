@@ -29,12 +29,12 @@ function classNames(...classes: string[]) {
 }
 
 const statusColors = {
-  pending: 'bg-gold-100 text-gold-800',
-  under_review: 'bg-navy-50 text-navy-800',
-  interview_scheduled: 'bg-gold-100 text-gold-800',
-  accepted: 'bg-success-light text-success-dark',
-  rejected: 'bg-error-light text-error-dark',
-  withdrawn: 'bg-bg-alt text-text-secondary',
+  pending: 'badge-warning',
+  under_review: 'badge-primary',
+  interview_scheduled: 'badge-gold',
+  accepted: 'badge-success',
+  rejected: 'badge-error',
+  withdrawn: 'badge-secondary',
 };
 
 const statusIcons = {
@@ -132,177 +132,175 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
         const StatusIcon = statusIcons[application.status];
 
         return (
-          <div key={application.id} className="card hover:shadow-md transition-shadow duration-fast">
-            <div className="px-6 py-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <StatusIcon className="h-5 w-5 text-text-tertiary" />
-                    <span className={classNames(
-                      'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
-                      statusColors[application.status]
-                    )}>
-                      {application.status.replace('_', ' ')}
+          <div key={application.id} className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center space-x-3 mb-2">
+                  <StatusIcon className="h-5 w-5 text-text-tertiary" />
+                  <span className={classNames(
+                    'badge text-xs',
+                    statusColors[application.status]
+                  )}>
+                    {application.status.replace('_', ' ')}
+                  </span>
+                  {isCompanyUser && !application.viewedByCompany && (
+                    <span className="badge badge-error text-xs">
+                      New
                     </span>
-                    {isCompanyUser && !application.viewedByCompany && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-error-light text-error-dark">
-                        New
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-lg font-medium text-text-primary mb-2">
-                    {getOpportunityTitle(application.opportunityId)}
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-base text-text-secondary mb-4">
-                    <div className="flex items-center">
-                      <ClockIcon className="h-5 w-5 mr-2" />
-                      <span>
-                        Submitted {formatDistanceToNow(application.submittedAt, { addSuffix: true })}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center">
-                      <UserGroupIcon className="h-5 w-5 mr-2" />
-                      <span>Team ID: {application.teamId.slice(-6)}</span>
-                    </div>
-
-                    {application.compensationExpectations && (
-                      <div className="flex items-center">
-                        <CurrencyDollarIcon className="h-5 w-5 mr-2" />
-                        <span>
-                          {application.compensationExpectations.currency} {application.compensationExpectations.min.toLocaleString()} - {application.compensationExpectations.max.toLocaleString()}
-                        </span>
-                      </div>
-                    )}
-
-                    {application.viewedAt && (
-                      <div className="flex items-center">
-                        <EyeIcon className="h-5 w-5 mr-2" />
-                        <span>
-                          Viewed {formatDistanceToNow(application.viewedAt, { addSuffix: true })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="prose prose-sm max-w-none">
-                    <p className="text-text-secondary line-clamp-3 mb-2">
-                      <strong className="text-text-primary">Cover letter:</strong> {application.coverLetter}
-                    </p>
-                    <p className="text-text-secondary line-clamp-2">
-                      <strong className="text-text-primary">Availability:</strong> {application.availabilityTimeline}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="ml-6 flex flex-col space-y-2">
-                  {isCompanyUser ? (
-                    <>
-                      {!application.viewedByCompany && (
-                        <button
-                          onClick={() => handleMarkAsViewed(application.id)}
-                          className="btn-outline min-h-12"
-                        >
-                          Mark as viewed
-                        </button>
-                      )}
-
-                      {application.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'under_review')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-primary min-h-12"
-                          >
-                            Review
-                          </button>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'rejected')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-danger min-h-12"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-
-                      {application.status === 'under_review' && (
-                        <>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'interview_scheduled')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-primary min-h-12"
-                          >
-                            Schedule interview
-                          </button>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'accepted')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-success min-h-12"
-                          >
-                            Accept
-                          </button>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'rejected')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-danger min-h-12"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-
-                      {application.status === 'interview_scheduled' && (
-                        <>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'accepted')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-success min-h-12"
-                          >
-                            Accept
-                          </button>
-                          <button
-                            onClick={() => handleStatusUpdate(application.id, 'rejected')}
-                            disabled={updatingStatus === application.id}
-                            className="btn-danger min-h-12"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-
-                      <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
-                        <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
-                        Message
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      {application.status === 'pending' && (
-                        <button
-                          onClick={() => handleWithdraw(application.id)}
-                          className="btn-danger min-h-12"
-                        >
-                          Withdraw
-                        </button>
-                      )}
-
-                      <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
-                        <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
-                        Message company
-                      </Link>
-
-                      <Link
-                        href={`/app/opportunities/${application.opportunityId}`}
-                        className="btn-outline min-h-12 text-center flex items-center justify-center"
-                      >
-                        View opportunity
-                      </Link>
-                    </>
                   )}
                 </div>
+
+                <h3 className="text-base font-bold text-text-primary mb-2">
+                  {getOpportunityTitle(application.opportunityId)}
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-text-tertiary mb-4">
+                  <div className="flex items-center">
+                    <ClockIcon className="h-4 w-4 mr-2" />
+                    <span>
+                      Submitted {formatDistanceToNow(application.submittedAt, { addSuffix: true })}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center">
+                    <UserGroupIcon className="h-4 w-4 mr-2" />
+                    <span>Team ID: {application.teamId.slice(-6)}</span>
+                  </div>
+
+                  {application.compensationExpectations && (
+                    <div className="flex items-center">
+                      <CurrencyDollarIcon className="h-4 w-4 mr-2" />
+                      <span>
+                        {application.compensationExpectations.currency} {application.compensationExpectations.min.toLocaleString()} - {application.compensationExpectations.max.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {application.viewedAt && (
+                    <div className="flex items-center">
+                      <EyeIcon className="h-4 w-4 mr-2" />
+                      <span>
+                        Viewed {formatDistanceToNow(application.viewedAt, { addSuffix: true })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-sm text-text-secondary leading-relaxed">
+                  <p className="line-clamp-3 mb-2">
+                    <strong className="font-bold text-text-primary">Cover letter:</strong> {application.coverLetter}
+                  </p>
+                  <p className="line-clamp-2">
+                    <strong className="font-bold text-text-primary">Availability:</strong> {application.availabilityTimeline}
+                  </p>
+                </div>
+              </div>
+
+              <div className="ml-6 flex flex-col space-y-2">
+                {isCompanyUser ? (
+                  <>
+                    {!application.viewedByCompany && (
+                      <button
+                        onClick={() => handleMarkAsViewed(application.id)}
+                        className="btn-outline min-h-12"
+                      >
+                        Mark as viewed
+                      </button>
+                    )}
+
+                    {application.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'under_review')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-primary min-h-12"
+                        >
+                          Review
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'rejected')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-danger min-h-12"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+
+                    {application.status === 'under_review' && (
+                      <>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'interview_scheduled')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-primary min-h-12"
+                        >
+                          Schedule interview
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'accepted')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-success min-h-12"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'rejected')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-danger min-h-12"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+
+                    {application.status === 'interview_scheduled' && (
+                      <>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'accepted')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-success min-h-12"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(application.id, 'rejected')}
+                          disabled={updatingStatus === application.id}
+                          className="btn-danger min-h-12"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+
+                    <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
+                      <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                      Message
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    {application.status === 'pending' && (
+                      <button
+                        onClick={() => handleWithdraw(application.id)}
+                        className="btn-danger min-h-12"
+                      >
+                        Withdraw
+                      </button>
+                    )}
+
+                    <Link href="/app/messages" className="btn-outline min-h-12 flex items-center justify-center">
+                      <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                      Message company
+                    </Link>
+
+                    <Link
+                      href={`/app/opportunities/${application.opportunityId}`}
+                      className="btn-outline min-h-12 text-center flex items-center justify-center"
+                    >
+                      View opportunity
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

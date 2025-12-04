@@ -142,14 +142,14 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {displayStats.map((stat) => (
-        <div key={stat.name} className="bg-bg-surface rounded-xl border border-border p-6 hover:shadow-sm transition-shadow">
+        <div key={stat.name} className="card hover:shadow-soft transition-all duration-base">
           {/* Icon - matches Figma design */}
           <div className="mb-4">
             <stat.icon className="h-6 w-6 text-text-tertiary" aria-hidden="true" />
           </div>
           {/* Label first, then value - matches Figma */}
           <dl>
-            <dt className="text-base font-normal text-text-secondary leading-snug">
+            <dt className="text-sm font-normal text-text-tertiary leading-snug">
               {stat.name}
             </dt>
             <dd className="text-3xl font-bold text-text-primary font-heading leading-tight mt-1">
