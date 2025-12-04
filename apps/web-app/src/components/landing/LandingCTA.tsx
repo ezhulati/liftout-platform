@@ -19,11 +19,11 @@ export function LandingCTA() {
           id="cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
         >
-          Ready to hire a team that works from day one?
+          Ready to try something that didn&apos;t exist until now?
         </h2>
 
         <p className="text-white/90 text-lg lg:text-xl leading-relaxed mb-8 max-w-2xl text-center lg:text-left">
-          Skip the team-building phase. Get proven chemistry, established workflows, and documented results.
+          This is the first platform for team-based hiring. Teams can post confidential profiles. Companies can find them. Everyone skips the team-building phase.
         </p>
 
         {/* Practical UI: Primary (solid) + Tertiary (underlined), left-aligned on desktop */}
@@ -34,7 +34,7 @@ export function LandingCTA() {
             className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
-            <span className="relative">Browse verified teams</span>
+            <span className="relative">Find teams</span>
             <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
           {/* Tertiary button - underlined text */}
@@ -48,7 +48,7 @@ export function LandingCTA() {
 
         {/* Simple trust line - Practical UI: 16px minimum for small text */}
         <p className="text-white/60 text-base text-center lg:text-left">
-          Free to explore · No credit card required · NDA-protected
+          We&apos;re just getting started. Join us.
         </p>
       </div>
     </section>

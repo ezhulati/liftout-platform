@@ -173,33 +173,40 @@ export default function WhatIsALiftoutPage() {
         >
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
-              <p
-                className={`text-sm font-semibold text-purple-700 uppercase tracking-wider mb-4 transition-all duration-500 ${
-                  heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-              >
-                The Research Behind Team Hiring
-              </p>
               <h1
-                className={`text-4xl sm:text-5xl font-bold text-text-primary leading-tight mb-6 transition-all duration-500 delay-100 ${
+                className={`text-4xl sm:text-5xl font-bold text-text-primary leading-tight mb-6 transition-all duration-500 ${
                   heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 What Is a Liftout?
               </h1>
               <p
+                className={`text-xl text-text-secondary leading-relaxed mb-6 transition-all duration-500 delay-100 ${
+                  heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                You probably haven&apos;t heard of a liftout. Most people haven&apos;t.
+              </p>
+              <p
                 className={`text-xl text-text-secondary leading-relaxed mb-8 transition-all duration-500 delay-150 ${
                   heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                A <strong>lift out</strong> is the practice of hiring a high-functioning group of people from the same company who have worked well together and can quickly come up to speed in a new environment.
+                But if you&apos;ve ever wished you could move to a new company <em>with your team intact</em>—or hire an entire high-performing team instead of crossing your fingers that individuals will gel—you&apos;ve been thinking about liftouts.
               </p>
-              <blockquote
-                className={`border-l-4 border-purple-700 pl-6 py-2 text-lg text-text-secondary italic transition-all duration-500 delay-200 ${
+              <p
+                className={`text-lg text-text-secondary leading-relaxed mb-8 transition-all duration-500 delay-200 ${
                   heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                &ldquo;By hiring away whole teams from a competitor, companies can quickly gain capacity without all the headaches of a merger or acquisition. It&apos;s a high-risk, high-reward move.&rdquo;
+                A <strong>liftout</strong> is hiring an intact, high-functioning team from another company. Not just a few individuals who used to work together—but the whole team, with their relationships, trust, and chemistry preserved.
+              </p>
+              <blockquote
+                className={`border-l-4 border-purple-700 pl-6 py-2 text-lg text-text-secondary italic transition-all duration-500 delay-300 ${
+                  heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                &ldquo;By hiring away whole teams from a competitor, companies can quickly gain capacity without all the headaches of a merger or acquisition.&rdquo;
                 <footer className="mt-2 text-sm text-text-tertiary not-italic">
                   — Harvard Business Review, December 2006
                 </footer>
@@ -224,9 +231,9 @@ export default function WhatIsALiftoutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { year: '1946', title: 'The First Liftout', description: 'The "Whiz Kids" move from the Air Force to Ford Motor Company, considered the first high-profile team move in corporate America.' },
-                { year: '2006', title: 'HBR Landmark Research', description: 'Harvard Business School professors Boris Groysberg and Robin Abrahams publish definitive research on how to execute successful lift outs.' },
-                { year: 'Today', title: 'Liftout Platform', description: 'We make team hiring accessible to every company, connecting verified teams with opportunities that match their expertise.' },
+                { year: '1946', title: 'The First Liftout', description: 'The "Whiz Kids" move from the Air Force to Ford Motor Company—considered the first high-profile team move in corporate America.' },
+                { year: '2006', title: 'HBR Publishes Research', description: 'Harvard Business School professors document how liftouts work and why teams that move together outperform those who move alone.' },
+                { year: 'Now', title: 'We Built a Platform', description: 'Until now, liftouts happened through backchannels and recruiters. We created the first platform to make team hiring accessible.' },
               ].map((item, index) => (
                 <div
                   key={item.year}
@@ -263,7 +270,7 @@ export default function WhatIsALiftoutPage() {
                   stagesRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                According to HBR research, a successful lift out unfolds over four consecutive, interdependent stages that must be meticulously managed.
+                According to HBR research, a successful liftout unfolds over four stages. Each one matters.
               </p>
             </div>
 
@@ -399,14 +406,14 @@ export default function WhatIsALiftoutPage() {
                 storiesRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              Documented Success Stories
+              When Teams Moved, Markets Shifted
             </h2>
             <p
               className={`text-lg text-text-secondary mb-12 max-w-2xl transition-all duration-500 delay-100 ${
                 storiesRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              From the Harvard Business Review research, these are some of the most notable lift outs in corporate history.
+              These liftouts changed industries. They&apos;re documented in Harvard Business Review—and they show what&apos;s possible when the right team moves together.
             </p>
 
             <div className="space-y-8">
@@ -439,29 +446,35 @@ export default function WhatIsALiftoutPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Now there's a platform */}
         <section className="py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
+              <p className="text-sm font-semibold text-purple-700 uppercase tracking-wider mb-4">
+                Now there&apos;s a platform for this
+              </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
-                Ready to hire a team that works from day one?
+                Liftout is the first platform built for team-based hiring
               </h2>
-              <p className="text-lg text-text-secondary mb-8">
-                Join companies who&apos;ve discovered a smarter alternative to individual hiring.
+              <p className="text-lg text-text-secondary mb-4">
+                Until now, liftouts happened through recruiters, backchannels, and luck. We built a platform where teams can signal they&apos;re open to opportunities—confidentially—and companies can find them.
+              </p>
+              <p className="text-base text-text-tertiary mb-8">
+                We&apos;re just getting started. Join us.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/auth/signup"
                   className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2"
                 >
-                  Browse verified teams
+                  I&apos;m a company looking for teams
                   <ArrowRightIcon className="w-5 h-5" />
                 </Link>
                 <Link
                   href="/auth/signup"
                   className="btn-outline min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center"
                 >
-                  List your team
+                  I&apos;m on a team ready to move
                 </Link>
               </div>
             </div>

@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Move together as a unit',
-  'Keep your team chemistry intact',
-  'Confidential exploration',
-  'Companies actively seeking teams',
+  'Post your team profile confidentially',
+  'Your current employer never sees you',
+  'Companies looking for teams find you',
+  'Move together when the fit is right',
 ];
 
 export function TeamHero() {
@@ -30,18 +30,17 @@ export function TeamHero() {
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Eyebrow - Practical UI: simple, no decorative icons */}
             <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-[#4C1D95]">
-              For Teams
+              A team board, not a job board
             </p>
 
             {/* Headline - Practical UI: clear, no colored text breaks */}
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-              Move to your next opportunity together
+              Post a smoke signal. Let companies find you.
             </h1>
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              High-performing teams deserve opportunities that keep them intact.
-              Find companies actively seeking proven teams like yours.
+              Liftout is the first platform where entire teams can discreetly signal they&apos;re open to new opportunities. Companies looking for proven teams—not just individuals—will find you.
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}
@@ -77,7 +76,7 @@ export function TeamHero() {
 
             {/* Social proof - Practical UI: minimal, text-only */}
             <p className="mt-8 text-text-tertiary text-base">
-              Free to explore · No credit card required · NDA-protected
+              This didn&apos;t exist before. Now it does.
             </p>
           </div>
 

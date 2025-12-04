@@ -62,10 +62,10 @@ export function LandingFeatures() {
             id="features-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            Why hire teams over individuals
+            What we built
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            Intact teams skip the team-formation phase entirely and can hit the ground running from day one.
+            The first platform where teams can confidentially signal they&apos;re open to opportunities—and companies can find them.
           </p>
         </div>
 

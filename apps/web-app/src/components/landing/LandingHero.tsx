@@ -37,20 +37,19 @@ export function LandingHero() {
             {/* Left - Text content */}
             <div>
               {/* Eyebrow */}
-              <p className="text-text-secondary text-lg mb-4">
-                Tired of hiring individuals who take months to gel?
+              <p className="text-[#4C1D95] text-sm font-semibold uppercase tracking-wider mb-4">
+                The first platform for team-based hiring
               </p>
 
               {/* H1 - Large, bold hero headline */}
               <h1 className="font-heading text-5xl sm:text-6xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-                Acquire Teams That Deliver From Day One
+                Hire Teams, Not Individuals
               </h1>
 
               {/* Subhead - 18px body */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Skip the 6-month team-building phase. Connect with intact,
-                high-performing teams who already trust each other and have
-                a proven track record together.
+                Stop hoping new hires will gel. Connect with intact teams who already
+                trust each other, have proven chemistry, and can hit the ground running.
               </p>
 
               {/* CTAs - Practical UI: Primary (solid) + Tertiary (underlined text) */}
@@ -62,7 +61,7 @@ export function LandingHero() {
                   className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-[#4C1D95] text-white font-bold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                 >
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="relative">Browse verified teams</span>
+                  <span className="relative">Find teams</span>
                   <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
                 {/* Tertiary button - underlined text, for secondary action */}
@@ -76,7 +75,7 @@ export function LandingHero() {
 
               {/* Trust signals - Practical UI: 16px minimum for small text */}
               <p className="text-text-tertiary text-base">
-                Free to explore. No credit card required.
+                Free to explore. We&apos;re just getting started.
               </p>
             </div>
 

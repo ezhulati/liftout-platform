@@ -47,7 +47,7 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Harvard Business Review Research
+          HBR proved it. We built the platform.
         </p>
 
         {/* Headline - Quote style */}
@@ -66,9 +66,8 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          In their landmark research, Harvard Business School professors found that star performers
-          who moved with their teams maintained their success rates—while solo movers often
-          struggled to replicate past performance in new environments.
+          Harvard Business Review documented how liftouts work—and why teams that move together maintain their success.
+          We read the research and built the first platform to make team hiring accessible to everyone.
         </p>
 
         {/* Success Stories Grid */}

@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Skip the team-building phase entirely',
-  'Verified track records and references',
+  'Browse teams with proven chemistry',
+  'Skip the team-building phase',
   'Lower risk than M&A alternatives',
-  'Teams that hit the ground running',
+  'Teams ready to hit the ground running',
 ];
 
 export function CompanyHero() {
@@ -30,18 +30,17 @@ export function CompanyHero() {
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Eyebrow - Practical UI: simple, no decorative icons */}
             <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-[#4C1D95]">
-              For Companies
+              The first marketplace for team hiring
             </p>
 
             {/* Headline - Practical UI: clear, no colored text breaks */}
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-              Acquire proven teams that deliver from day one
+              Stop hoping new hires will gel
             </h1>
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              Stop building teams from scratch. Access verified, intact teams
-              with established chemistry and documented track records.
+              For the first time, intact teams can signal they&apos;re open to new opportunities—and you can hire them. Proven chemistry. Established trust. Ready to work.
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}
@@ -77,7 +76,7 @@ export function CompanyHero() {
 
             {/* Social proof - Practical UI: minimal, text-only */}
             <p className="mt-8 text-text-tertiary text-base">
-              Free to explore · No credit card required · NDA-protected
+              It&apos;s early. Be among the first to hire this way.
             </p>
           </div>
 

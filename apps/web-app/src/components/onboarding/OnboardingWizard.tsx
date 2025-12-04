@@ -208,8 +208,8 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
             </h1>
             <p className="text-lg text-text-secondary leading-relaxed mb-8">
               {isCompany
-                ? "Let's set up your company profile so you can start discovering high-performing teams ready for their next chapter."
-                : "Let's get you set up so you can discover amazing opportunities and connect with companies looking for talented teams like yours."
+                ? "You're joining the first platform built for team-based hiring. Let's set up your profile so you can start connecting with intact teams."
+                : "You're among the first on the only platform built for teams. Let's set up your profile so companies looking for proven teams can find you."
               }
             </p>
 
