@@ -141,7 +141,7 @@ export async function sendApplicationStatusEmail(params: {
       subject: `Congratulations! Your application was accepted`,
       heading: 'Application Accepted!',
       color: '#10b981',
-      body: `Amazing news! ${companyName} has accepted "${teamName}'s" application for the ${opportunityTitle} position. This is a major milestone in your liftout journey.`
+      body: `Great news! ${companyName} has accepted "${teamName}'s" application for the ${opportunityTitle} position. This is a major milestone in your liftout journey.`
     },
     rejected: {
       subject: `Update on your application to ${companyName}`,

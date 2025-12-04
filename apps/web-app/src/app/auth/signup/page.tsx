@@ -190,10 +190,10 @@ export default function SignUpPage() {
             </ul>
           </div>
 
-          {/* Social proof */}
+          {/* Pioneer message */}
           <div>
             <p className="text-white/70 text-sm">
-              Trusted by teams and companies across Finance, Healthcare, and Technology
+              The first platform for team-based hiring. We&apos;re just getting started.
             </p>
           </div>
         </div>

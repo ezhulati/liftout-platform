@@ -195,7 +195,7 @@ export function TeamMemberManagement({ teamId }: TeamMemberManagementProps) {
           sentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           expiresAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
           invitedBy: user?.id || '',
-          personalMessage: 'Excited to have you join our amazing team!',
+          personalMessage: 'Looking forward to having you on the team!',
           permissions: {
             canEditTeam: false,
             canInviteMembers: false,

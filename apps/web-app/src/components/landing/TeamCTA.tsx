@@ -10,20 +10,6 @@ const trustReassurances = [
   { icon: CreditCardIcon, text: 'No credit card required' },
 ];
 
-const teamTestimonials = [
-  {
-    quote: 'After 5 years together, we were not willing to split up. Found a company that valued our unit.',
-    team: 'Engineering team, 6 members',
-  },
-  {
-    quote: 'The confidential process meant we could explore without risking our current positions.',
-    team: 'Analytics team, 4 members',
-  },
-  {
-    quote: 'Our collective negotiation secured better terms than any of us could individually.',
-    team: 'Design team, 5 members',
-  },
-];
 
 export function TeamCTA() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
@@ -97,25 +83,11 @@ export function TeamCTA() {
           </Link>
         </p>
 
-        {/* What teams are saying - Practical UI: left-aligned testimonials */}
+        {/* Pioneer message */}
         <div className={`mt-16 pt-8 border-t border-white/20 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-white/60 text-base mb-6 uppercase tracking-wider font-semibold text-center lg:text-left">
-            Teams that moved together
+          <p className="text-white/70 text-base text-center lg:text-left">
+            This is the first platform built for teams. We&apos;re just getting started—join us.
           </p>
-          <div className="grid sm:grid-cols-3 gap-8 text-left">
-            {teamTestimonials.map((item, index) => (
-              <div
-                key={item.team}
-                className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-                style={{ transitionDelay: isVisible ? `${(index + 4) * 100}ms` : '0ms' }}
-              >
-                <blockquote className="font-body text-white/80 text-lg leading-relaxed mb-3 italic">
-                  "{item.quote}"
-                </blockquote>
-                <p className="text-white/60 text-base font-medium">{item.team}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

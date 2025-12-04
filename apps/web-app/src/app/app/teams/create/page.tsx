@@ -24,7 +24,7 @@ export default async function CreateTeamPage() {
         </Link>
         <h1 className="page-title">Create new team</h1>
         <p className="page-subtitle">
-          Build your dream team and start collaborating on amazing projects
+          Create a team profile and start exploring opportunities together
         </p>
       </div>
 

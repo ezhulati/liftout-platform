@@ -72,8 +72,8 @@ const stepPrompts: Record<string, { greeting: string; subtext: string }> = {
     subtext: "Describe the team you're looking for and what makes this role compelling.",
   },
   'TeamDiscoveryTutorial': {
-    greeting: "Discover amazing teams",
-    subtext: "Learn how to find, evaluate, and connect with high-performing teams.",
+    greeting: "Discover available teams",
+    subtext: "Learn how to find, evaluate, and connect with teams open to opportunities.",
   },
   'CompanyPlatformTour': {
     greeting: "You're all set!",

@@ -467,8 +467,7 @@ export default function PricingPage() {
             Ready to find your next great team?
           </h2>
           <p className="text-navy-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of companies and teams using Liftout to make strategic hires.
-            Start your free trial today.
+            Be among the first to hire intact teams. This is a new way to build—join us.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
