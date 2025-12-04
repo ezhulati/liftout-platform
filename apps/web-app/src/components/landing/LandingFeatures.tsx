@@ -14,34 +14,40 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
-    name: 'Skip the Enneagram tests',
-    description: 'You can\'t manufacture chemistry. But you can hire it. These teams already have it.',
+    name: 'A known in an unknown',
+    description: 'Career changes are daunting alone. Face the unknown with people you trust.',
+    icon: ChatBubbleLeftRightIcon,
+    audience: 'teams',
+  },
+  {
+    name: 'Chemistry you can\'t manufacture',
+    description: 'No personality test or team-building retreat creates what years of collaboration does.',
     icon: UserGroupIcon,
+    audience: 'companies',
   },
   {
     name: 'Day-one productivity',
-    description: 'New hires take 12 months to reach peak performance. Teams that move together skip this entirely.',
+    description: 'Skip the 12-month ramp-up. Teams that move together hit the ground running.',
     icon: RocketLaunchIcon,
+    audience: 'companies',
   },
   {
-    name: 'Proven track records',
-    description: 'Every team has documented achievements, verified tenure, and real chemistry—not interview personas.',
+    name: 'Strength in numbers',
+    description: 'Negotiate together. Your collective value is greater than the sum of individuals.',
     icon: ShieldCheckIcon,
-  },
-  {
-    name: 'A known in an unknown',
-    description: 'For teams: navigate change with people you trust. No more lonely desert of job searching alone.',
-    icon: ChatBubbleLeftRightIcon,
+    audience: 'teams',
   },
   {
     name: 'Lower risk than M&A',
-    description: 'Enter new markets or add capabilities faster than acquisitions, with less integration risk.',
+    description: 'Acquire capability faster than acquisitions, with less integration headache.',
     icon: BriefcaseIcon,
+    audience: 'companies',
   },
   {
     name: 'Complete confidentiality',
-    description: 'Current employers are automatically blocked. Explore opportunities without anyone knowing.',
+    description: 'Current employers are automatically blocked. Explore without anyone knowing.',
     icon: ChartBarIcon,
+    audience: 'both',
   },
 ];
 
@@ -58,14 +64,17 @@ export function LandingFeatures() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <p className="text-[#4C1D95] text-sm font-semibold uppercase tracking-wider mb-3">
+            Why it works
+          </p>
           <h2
             id="features-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
           >
-            What we built
+            A team board, not a job board
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            A team board, not a job board. Where intact teams can signal they&apos;re open to opportunities—and companies can find proven chemistry instead of hoping for the best.
+            Job boards are for individuals. We built the first platform for teams—and the companies who want to hire them intact.
           </p>
         </div>
 
@@ -99,15 +108,22 @@ export function LandingFeatures() {
           ))}
         </div>
 
-        {/* Bottom CTA - Practical UI: Primary button with shimmer, 48pt target */}
-        <div className={`mt-16 transition-all duration-500 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {/* Bottom CTAs - Equal weight for both audiences */}
+        <div className={`mt-16 flex flex-col sm:flex-row gap-4 transition-all duration-500 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <Link
-            href="/auth/signup"
+            href="/auth/signup?type=team"
             className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center gap-2 bg-[#4C1D95] text-white font-semibold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            <span className="relative">Browse verified teams</span>
+            <span className="relative">Register your team</span>
             <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </Link>
+          <Link
+            href="/auth/signup?type=company"
+            className="min-h-12 px-8 py-3 text-lg inline-flex items-center gap-2 border-2 border-[#4C1D95] text-[#4C1D95] font-semibold rounded-lg hover:bg-[#4C1D95]/5 transition-colors"
+          >
+            Browse teams
+            <ArrowRightIcon className="w-5 h-5" aria-hidden="true" />
           </Link>
         </div>
       </div>

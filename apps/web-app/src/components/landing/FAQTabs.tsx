@@ -19,6 +19,10 @@ const teamFaqs = [
     answer: 'Job boards are for individuals. Liftout is the first platform built for teams. Think of it as a team board—you post a profile together, and companies who want to hire intact teams find you. This didn\'t exist before.',
   },
   {
+    question: 'What if only some of us want to move?',
+    answer: 'That\'s okay. Teams can be as small as two people. Moving with even one trusted colleague transforms a lonely process into a shared adventure. Start with whoever\'s ready.',
+  },
+  {
     question: 'Who is Liftout for?',
     answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. Partners at law firms, specialized engineering squads, research units, creative teams—any group that performs better together than apart.',
   },
@@ -40,6 +44,10 @@ const companyFaqs = [
   {
     question: 'How are teams verified?',
     answer: 'Every team goes through background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements before they can connect with companies.',
+  },
+  {
+    question: 'What if we only need some of the team?',
+    answer: 'Teams understand that not every member may fit every opportunity. What matters is preserving the core chemistry. Discuss openly during conversations—most teams are flexible about composition.',
   },
   {
     question: 'What does the process look like?',

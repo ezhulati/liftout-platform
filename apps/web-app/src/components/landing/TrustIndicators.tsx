@@ -6,23 +6,23 @@ import { ShieldCheckIcon, ClockIcon, UserGroupIcon, LockClosedIcon } from '@hero
 const features = [
   {
     icon: UserGroupIcon,
-    title: 'Intact Teams',
-    description: 'The first place teams can post profiles together',
+    title: 'Teams who\'ve built something rare',
+    description: 'Years of trust. Proven chemistry. The kind of partnership you can\'t recreate.',
   },
   {
     icon: ClockIcon,
-    title: 'Day One Ready',
-    description: 'Skip the team-building phase entirely',
+    title: 'No team-building phase',
+    description: 'Skip the awkward \'getting to know you\' months. These teams already know each other.',
   },
   {
     icon: ShieldCheckIcon,
-    title: 'Verified History',
-    description: 'Teams document their track records',
+    title: 'Real track records',
+    description: 'Documented achievements, not interview personas. See what they\'ve actually done together.',
   },
   {
     icon: LockClosedIcon,
-    title: 'Confidential',
-    description: 'Explore discreetly. Your employer never knows.',
+    title: 'Complete discretion',
+    description: 'Your current employer never sees you. Explore safely.',
   },
 ];
 
@@ -36,6 +36,10 @@ export function TrustIndicators() {
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Section label */}
+        <p className="text-white/60 text-sm font-semibold uppercase tracking-wider mb-10 text-center">
+          What makes Liftout different
+        </p>
         <h2 id="trust-heading" className="sr-only">Why choose Liftout</h2>
 
         {/* Practical UI: Left-align text, 18px body, proper icon sizing */}

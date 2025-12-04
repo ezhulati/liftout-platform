@@ -38,43 +38,42 @@ export function LandingHero() {
             <div>
               {/* Eyebrow */}
               <p className="text-[#4C1D95] text-sm font-semibold uppercase tracking-wider mb-4">
-                The first platform for team-based hiring
+                Where proven teams meet bold companies
               </p>
 
-              {/* H1 - Large, bold hero headline */}
-              <h1 className="font-heading text-5xl sm:text-6xl font-bold text-text-primary tracking-tight leading-tight mb-6">
-                Hire Teams, Not Individuals
+              {/* H1 - Clean, impactful headline */}
+              <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
+                Hire teams that already work.
               </h1>
 
-              {/* Subhead - 18px body with referral bonus insight */}
+              {/* Subhead - balanced messaging for both audiences */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                You already pay referral bonuses to recruit former colleagues one at a time. Why not get both people now, together, with chemistry already proven?
+                Liftout is where intact teams signal they&apos;re ready to move together—and companies find proven chemistry instead of hoping for the best.
               </p>
 
-              {/* CTAs - Practical UI: Primary (solid) + Tertiary (underlined text) */}
-              {/* Left-aligned, Primary first, 16pt gap, 48pt touch targets */}
+              {/* CTAs - Equal weight for both audiences */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {/* Primary button - ONE per screen, solid fill, Verb+Noun */}
+                {/* Primary button for teams */}
                 <Link
-                  href="/auth/signup"
+                  href="/auth/signup?type=team"
                   className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-[#4C1D95] text-white font-bold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                 >
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="relative">Find teams</span>
+                  <span className="relative">Explore as a team</span>
                   <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
-                {/* Tertiary button - underlined text, for secondary action */}
+                {/* Secondary button for companies */}
                 <Link
-                  href="/for-teams"
-                  className="min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center text-[#4C1D95] font-medium underline underline-offset-4 decoration-purple-900/30 hover:decoration-purple-900 transition-colors"
+                  href="/auth/signup?type=company"
+                  className="min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 border-2 border-[#4C1D95] text-[#4C1D95] font-bold rounded-lg hover:bg-[#4C1D95]/5 transition-colors"
                 >
-                  List your team
+                  Explore as a company
                 </Link>
               </div>
 
-              {/* Trust signals - Practical UI: 16px minimum for small text */}
+              {/* Trust signals - confident but confidential */}
               <p className="text-text-tertiary text-base">
-                This didn&apos;t exist before. Now it does.
+                Free to explore. Completely confidential.
               </p>
             </div>
 

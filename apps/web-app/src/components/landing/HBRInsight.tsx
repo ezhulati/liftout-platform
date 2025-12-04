@@ -47,7 +47,7 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          HBR proved it. We built the platform.
+          The research is clear
         </p>
 
         {/* Headline - Quote style */}
@@ -67,7 +67,7 @@ export function HBRInsight() {
           }`}
         >
           Harvard Business Review documented how liftouts work—and why teams that move together maintain their success.
-          We read the research and built the first platform to make team hiring accessible to everyone.
+          For companies, it&apos;s a strategic advantage. For teams, it&apos;s a chance to preserve what you&apos;ve built while reaching for something greater.
         </p>
 
         {/* Success Stories Grid */}

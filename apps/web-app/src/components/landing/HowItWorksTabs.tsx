@@ -7,20 +7,20 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const companySteps = [
   {
     number: '1',
-    title: 'Define your need',
-    description: 'Specify the team capabilities, size, and expertise you\'re seeking. Set your strategic goals and timeline.',
+    title: 'Describe your ambition',
+    description: 'What could a proven team help you achieve? Market expansion? New capability? Tell us the outcome, not just the job description.',
     icon: ClipboardDocumentListIcon,
   },
   {
     number: '2',
-    title: 'Discover verified teams',
-    description: 'Browse pre-vetted teams with documented track records. Filter by industry, skills, and culture alignment.',
+    title: 'Browse proven chemistry',
+    description: 'Every team has documented tenure together, verified achievements, and real references—not interview personas.',
     icon: MagnifyingGlassIcon,
   },
   {
     number: '3',
-    title: 'Acquire with confidence',
-    description: 'Complete due diligence, negotiate terms, and integrate your new team with our structured support.',
+    title: 'Skip the storming phase',
+    description: 'Integrate a team that\'s already past the forming-storming-norming stages. Due diligence and onboarding support included.',
     icon: RocketLaunchIcon,
   },
 ];
@@ -28,20 +28,20 @@ const companySteps = [
 const teamSteps = [
   {
     number: '1',
-    title: 'Build your profile',
-    description: 'Showcase your team\'s expertise, achievements, and chemistry. Highlight what makes you work well together.',
+    title: 'Signal together',
+    description: 'Showcase what makes your team exceptional—your chemistry, track record, and readiness for something new.',
     icon: UserGroupIcon,
   },
   {
     number: '2',
-    title: 'Explore confidentially',
-    description: 'Browse opportunities from companies seeking proven teams. Your current employer never knows.',
+    title: 'Explore in safety',
+    description: 'Browse opportunities confidentially. Your current employer is automatically blocked. No one knows you\'re looking.',
     icon: EyeSlashIcon,
   },
   {
     number: '3',
-    title: 'Move together',
-    description: 'Negotiate as a collective, transition with support, and start your next chapter intact.',
+    title: 'Take the leap together',
+    description: 'When you find the right fit, negotiate as a collective and transition with support. No one gets left behind.',
     icon: ArrowTrendingUpIcon,
   },
 ];
@@ -79,7 +79,7 @@ export function HowItWorksTabs() {
             A new way to hire. A new way to move.
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            We built the first platform for team-based hiring. Here&apos;s how it works.
+            Built for confidentiality from day one.
           </p>
         </div>
 

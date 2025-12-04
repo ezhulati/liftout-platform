@@ -13,42 +13,57 @@ export function LandingCTA() {
       className="py-24 lg:py-32 dark-section"
       aria-labelledby="cta-heading"
     >
-      {/* Practical UI: Left-align body text on desktop */}
-      <div className={`max-w-4xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      <div className={`max-w-6xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+        {/* Section header */}
         <h2
           id="cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-12 text-center"
         >
-          A team board, not a job board
+          Ready to make your move?
         </h2>
 
-        <p className="text-white/90 text-lg lg:text-xl leading-relaxed mb-8 max-w-2xl text-center lg:text-left">
-          Job searching alone is daunting. There&apos;s a better way. Teams can take that journey together with people who&apos;ve helped them succeed. Companies get proven chemistry instead of hoping for the best.
-        </p>
+        {/* Split CTA - Two columns for each audience */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+          {/* Left - Teams */}
+          <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
+            <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
+              Take the leap together
+            </h3>
+            <p className="text-white/80 text-lg leading-relaxed mb-8">
+              Your next chapter doesn&apos;t have to mean leaving behind the people who made this chapter great.
+            </p>
+            <Link
+              href="/auth/signup?type=team"
+              className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+            >
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
+              <span className="relative">Register your team</span>
+              <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </Link>
+          </div>
 
-        {/* Practical UI: Primary (solid) + Tertiary (underlined), left-aligned on desktop */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-          {/* Primary button - solid fill on dark, Verb+Noun label */}
-          <Link
-            href="/auth/signup"
-            className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
-          >
-            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
-            <span className="relative">Find teams</span>
-            <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
-          </Link>
-          {/* Tertiary button - underlined text */}
-          <Link
-            href="/for-teams"
-            className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 decoration-white/30 hover:text-white hover:decoration-white/60 transition-colors min-h-12"
-          >
-            List your team
-          </Link>
+          {/* Right - Companies */}
+          <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
+            <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
+              Hire chemistry, not hope
+            </h3>
+            <p className="text-white/80 text-lg leading-relaxed mb-8">
+              Stop crossing your fingers that new hires will gel. Find teams that already have.
+            </p>
+            <Link
+              href="/auth/signup?type=company"
+              className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+            >
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
+              <span className="relative">Browse verified teams</span>
+              <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
 
-        {/* Simple trust line - Practical UI: 16px minimum for small text */}
-        <p className="text-white/60 text-base text-center lg:text-left">
-          This didn&apos;t exist before. Now it does.
+        {/* Evolved pioneer message */}
+        <p className="text-white/60 text-base text-center">
+          We&apos;re building the first marketplace for team-based hiring. Early movers are shaping how it works.
         </p>
       </div>
     </section>

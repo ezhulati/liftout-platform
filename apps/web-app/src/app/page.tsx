@@ -1,6 +1,8 @@
 import { LandingHero } from '@/components/landing/LandingHero';
+import { LandingProblem } from '@/components/landing/LandingProblem';
 import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
+import { LandingQuote } from '@/components/landing/LandingQuote';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { HBRInsight } from '@/components/landing/HBRInsight';
 import { FAQTabs } from '@/components/landing/FAQTabs';
@@ -74,8 +76,10 @@ export default function HomePage() {
       <LandingHeader />
       <main id="main-content" tabIndex={-1} className="bg-bg outline-none">
         <LandingHero />
+        <LandingProblem />
         <HowItWorksTabs />
         <LandingFeatures />
+        <LandingQuote />
         <TrustIndicators />
         <HBRInsight />
         <FAQTabs />
