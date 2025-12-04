@@ -99,7 +99,7 @@ export default function SignUpPage() {
         location: formData.location,
       });
 
-      toast.success('Account created! Signing you in...');
+      toast.success('Account created. Signing you in...');
 
       // Then sign in with the new credentials
       const result = await signIn('credentials', {

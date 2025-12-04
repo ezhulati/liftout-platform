@@ -51,7 +51,7 @@ export function InvitationNotifications({ onInvitationUpdate }: InvitationNotifi
     try {
       setActionLoading(invitationId);
       await emailInvitationService.acceptInvitation(invitationId, user.email);
-      toast.success('Invitation accepted! Welcome to the team!');
+      toast.success('Invitation accepted. You\'re now part of the team.');
       await loadInvitations();
       if (onInvitationUpdate) onInvitationUpdate();
     } catch (error) {

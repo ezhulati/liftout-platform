@@ -108,13 +108,13 @@ export function CreateTeamForm() {
         };
         existingTeams.push(newTeam);
         localStorage.setItem(`${DEMO_TEAMS_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingTeams));
-        toast.success('Team created (demo mode)');
+        toast.success('Team profile created (demo mode)');
         router.push('/app/teams');
         return;
       }
 
       await createTeamMutation.mutateAsync(data);
-      toast.success('Team created');
+      toast.success('Team profile created. Companies can now find you.');
       router.push('/app/teams');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create team';

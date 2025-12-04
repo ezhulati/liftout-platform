@@ -27,7 +27,7 @@ export function DashboardOnboarding() {
 
   const handleOnboardingComplete = () => {
     setShowWizard(false);
-    toast.success('Welcome to Liftout! Your profile is now set up.');
+    toast.success('You\'re all set. Welcome to the first platform for team-based hiring.');
   };
 
   const handleOnboardingSkip = () => {

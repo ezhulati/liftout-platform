@@ -134,13 +134,13 @@ export function CreateOpportunityForm() {
         };
         existingOpportunities.push(newOpportunity);
         localStorage.setItem(`${DEMO_OPPORTUNITIES_STORAGE_KEY}_${userEmail}`, JSON.stringify(existingOpportunities));
-        toast.success('Opportunity created (demo mode)');
+        toast.success('Opportunity posted (demo mode)');
         router.push('/app/opportunities');
         return;
       }
 
       await createOpportunityMutation.mutateAsync(data);
-      toast.success('Opportunity created');
+      toast.success('Opportunity posted. Teams can now find you.');
       router.push('/app/opportunities');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create opportunity';
