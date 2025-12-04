@@ -467,7 +467,7 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
             <ChatBubbleLeftRightIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
             <p className="text-text-secondary mb-2">No conversations yet</p>
             <p className="text-sm text-text-tertiary">
-              Start exploring opportunities to connect with teams and companies.
+              When you connect with teams or companies, your conversations will appear here.
             </p>
           </div>
         ) : (

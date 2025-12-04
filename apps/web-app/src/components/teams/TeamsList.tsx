@@ -58,12 +58,12 @@ export function TeamsList({ userType }: TeamsListProps) {
           <UserGroupIcon className="h-7 w-7 text-text-tertiary" />
         </div>
         <h3 className="text-lg font-bold text-text-primary mb-2">
-          {isCompanyUser ? 'No teams available' : 'No team profile yet'}
+          {isCompanyUser ? 'No teams yet' : 'No team profile yet'}
         </h3>
         <p className="text-base text-text-secondary leading-relaxed max-w-md mx-auto">
           {isCompanyUser
-            ? 'Check back later for new teams available for liftout opportunities.'
-            : 'Create your team profile to explore liftout opportunities.'
+            ? 'Teams are starting to post profiles here. Be among the first to connect with intact teams.'
+            : 'Post a team profile together. This is how companies find you on Liftout.'
           }
         </p>
         {!isCompanyUser && (

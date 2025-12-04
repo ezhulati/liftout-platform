@@ -128,12 +128,12 @@ function MatchingContent() {
               ) : myTeams.length === 0 ? (
                 <EmptyState
                   icon={<UserGroupIcon className="w-12 h-12" />}
-                  title="No teams yet"
-                  description="Create a team profile to start matching with opportunities."
+                  title="No team profile yet"
+                  description="Post a team profile to get discovered by companies looking for intact teams."
                   action={
                     <Link href="/app/teams/create" className="btn-primary">
                       <PlusIcon className="h-5 w-5 mr-2" />
-                      Create Team
+                      Create team profile
                     </Link>
                   }
                 />
@@ -237,12 +237,12 @@ function MatchingContent() {
             ) : myOpportunities.length === 0 ? (
               <EmptyState
                 icon={<BriefcaseIcon className="w-12 h-12" />}
-                title="No opportunities yet"
-                description="Post an opportunity to start matching with teams."
+                title="No opportunities posted yet"
+                description="Post an opportunity to start finding intact teams ready to move together."
                 action={
                   <Link href="/app/opportunities/create" className="btn-primary">
                     <PlusIcon className="h-5 w-5 mr-2" />
-                    Post Opportunity
+                    Post opportunity
                   </Link>
                 }
               />

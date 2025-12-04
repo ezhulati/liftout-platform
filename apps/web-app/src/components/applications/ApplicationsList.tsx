@@ -105,12 +105,12 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
         <div className="text-center py-12">
           <DocumentTextIcon className="mx-auto h-12 w-12 text-text-tertiary" />
           <h3 className="mt-4 text-lg font-medium text-text-primary">
-            {isCompanyUser ? 'No applications yet' : 'No applications submitted'}
+            {isCompanyUser ? 'No applications yet' : 'No applications yet'}
           </h3>
           <p className="mt-2 text-base text-text-secondary">
             {isCompanyUser
-              ? 'When teams express interest in your opportunities, they will appear here.'
-              : 'Applications you submit to liftout opportunities will be tracked here.'
+              ? 'When teams express interest in your opportunities, they\'ll appear here. We\'re just getting started.'
+              : 'When you apply to opportunities, they\'ll be tracked here. Browse what\'s available and make the first move.'
             }
           </p>
           <div className="mt-6">

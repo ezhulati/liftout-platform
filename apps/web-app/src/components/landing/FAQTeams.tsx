@@ -6,6 +6,7 @@ import { ChevronDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // FAQs specifically for teams - ordered by what matters most to them
+// Enhanced with research-backed data points
 const faqs = [
   {
     question: 'Is my exploration completely confidential?',
@@ -16,12 +17,16 @@ const faqs = [
     answer: 'Completely free. No sign-up fee, no charges to create a profile, no cost to connect with companies. You pay nothing—ever. The only investment is your talent and time.',
   },
   {
+    question: 'Why would a company want to hire our entire team?',
+    answer: 'The research is compelling: Google\'s Project Aristotle found that psychological safety accounts for 43% of team performance—and it takes years to build. New hires take 12 months to reach peak performance (Gallup). When companies hire your intact team, they get immediate productivity, skip the team-formation phase, and avoid the $240K average cost of bad hires (SHRM). Your chemistry is genuinely valuable.',
+  },
+  {
     question: 'How is this different from traditional job sites?',
-    answer: 'Traditional job sites focus on individuals posting resumes and applying one-by-one. Liftout flips this: entire teams showcase their collective strengths and let opportunities come to them. Companies here are specifically seeking proven teams that can hit the ground running—not just individuals.',
+    answer: 'Traditional job sites focus on individuals posting resumes and competing for the same roles. Liftout flips this: entire teams showcase their collective strengths and let opportunities come to them. Companies here are specifically seeking proven teams that can hit the ground running—not just individuals who might work well together.',
   },
   {
     question: 'Who is Liftout for?',
-    answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. This includes partners at law firms, specialized engineering squads, research units, creative teams, analysts within rigid hierarchies, and any group that performs better together than apart. If your team\'s talents add up to more than the sum of your parts, Liftout is for you.',
+    answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. This includes AI/ML engineering squads, partners at law firms, consulting units, research teams, creative groups, and any team that performs better together than apart. In 2024, Paul Hastings hired an 8-partner, 25-lawyer finance team from Vinson & Elkins—the largest practice group move in Texas history. If your team has that kind of cohesion, Liftout is for you.',
   },
   {
     question: 'How do I get started?',
@@ -29,15 +34,15 @@ const faqs = [
   },
   {
     question: 'Are companies actually looking for teams?',
-    answer: 'Yes. Liftouts are common practice in law, investment banking, consulting, advertising, and technology. Companies value the immediate productivity and proven chemistry that only an established team can provide—it\'s faster than M&A and lower risk than building from scratch.',
+    answer: 'Yes—and at massive scale. In 2024: Microsoft paid $650M to hire Inflection AI\'s team. Google paid $2.7B for Character.AI\'s founders. Top 50 law firms hired 900+ partners laterally. Polsinelli hired 47 lawyers from Holland & Knight in a single move. Liftouts happen across tech, law, finance, consulting, and healthcare wherever team expertise and relationships drive value.',
   },
   {
     question: 'What opportunities can I expect?',
-    answer: 'Companies post strategic opportunities where team chemistry matters: market expansion, new practice areas, capability building, and transformation initiatives. Rather than the traditional apply-and-hope approach, your team profile puts you in front of companies specifically seeking what you offer.',
+    answer: 'Companies post strategic opportunities where team chemistry matters: AI/ML buildouts, market expansion, new practice areas, capability building, and transformation initiatives. Rather than the traditional apply-and-hope approach, your team profile puts you in front of companies specifically seeking what you offer.',
   },
   {
     question: 'How are teams verified?',
-    answer: 'To protect companies and maintain platform quality, we verify team composition, tenure working together, and documented achievements. This verification process actually helps your team stand out—companies trust that profiles on Liftout are accurate and vetted.',
+    answer: 'To protect companies and maintain platform quality, we verify team composition, tenure working together, and documented achievements. This verification process actually helps your team stand out—89% of hiring failures are due to poor culture fit (LinkedIn), and team chemistry is something we can actually verify.',
   },
 ];
 
@@ -139,8 +144,8 @@ export function FAQTeams() {
             {/* Additional help text */}
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
-                <span className="font-semibold text-text-primary">Ready to explore?</span>
-                {' '}Creating your team profile is free and takes just a few minutes. Your current employer will never know.
+                <span className="font-semibold text-text-primary">Your team chemistry is an asset.</span>
+                {' '}Stanford found collaborative workers focus 64% longer on tasks. Companies promoting collaboration are 5x more likely to be high-performing (i4cp). Creating your team profile is free and confidential—your current employer will never know.
               </p>
             </div>
           </div>

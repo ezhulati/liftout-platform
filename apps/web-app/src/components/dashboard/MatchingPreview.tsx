@@ -130,14 +130,14 @@ export function MatchingPreview() {
             icon={isCompanyUser ? <UserGroupIcon className="w-12 h-12" /> : <BriefcaseIcon className="w-12 h-12" />}
             title={!entityId
               ? (isCompanyUser ? "No opportunities posted yet" : "No team profile yet")
-              : "No matches found"
+              : "No matches yet"
             }
             description={!entityId
               ? (isCompanyUser
-                  ? "Post an opportunity to start matching with teams"
-                  : "Create a team profile to discover matching opportunities"
+                  ? "Post an opportunity to start finding teams"
+                  : "Create a team profile to get discovered by companies"
                 )
-              : "Try updating your profile to improve match quality"
+              : "As more teams and opportunities join, you'll see matches here"
             }
             action={
               !entityId && (

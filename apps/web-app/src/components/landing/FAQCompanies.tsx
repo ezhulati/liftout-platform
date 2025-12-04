@@ -6,38 +6,39 @@ import { ChevronDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // FAQs specifically for companies - ordered by what matters most to them
+// Enhanced with research-backed data points
 const faqs = [
   {
+    question: 'Why hire a team instead of individuals?',
+    answer: 'The data is clear: 75% of employers admit to hiring the wrong person (SHRM), and 46% of new hires fail within 18 months (Leadership IQ). Teams that move together skip the 12-month ramp-up period new hires need to reach peak performance (Gallup). Google\'s Project Aristotle found that psychological safety—which takes years to build—accounts for 43% of team performance. When you hire a team, you get that trust intact.',
+  },
+  {
     question: 'How much does it cost?',
-    answer: 'Browsing teams and initial exploration is completely free. We charge a success fee only when an acquisition is completed—you pay nothing until you find the right fit. No credit card required to get started.',
+    answer: 'Browsing teams and initial exploration is completely free. We charge a success fee only when an acquisition is completed—you pay nothing until you find the right fit. Compare this to the average cost of a bad hire: $240,000 (SHRM). No credit card required to get started.',
   },
   {
     question: 'How are teams verified?',
-    answer: 'Every team on our platform goes through a comprehensive verification process: background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements before they can connect with companies.',
+    answer: 'Every team goes through comprehensive verification: background checks, reference validation, track record documentation, and performance history review. We verify team composition, years working together, and documented achievements. This matters because 89% of hiring failures are due to poor culture fit, not skills (LinkedIn)—and team chemistry is something you can actually verify.',
   },
   {
     question: 'What does the acquisition process look like?',
-    answer: 'Three stages: (1) Discovery & matching—define your needs and browse verified teams (1-2 weeks). (2) Confidential conversations & due diligence—evaluate fit, check references, assess culture alignment (2-4 weeks). (3) Negotiation & integration planning—finalize terms and prepare for onboarding (2-4 weeks). We provide dedicated support throughout.',
+    answer: 'Three stages: (1) Discovery & matching—define your needs and browse verified teams (1-2 weeks). (2) Confidential conversations & due diligence—evaluate fit, check references, assess culture alignment (2-4 weeks). (3) Negotiation & integration planning—finalize terms and prepare for onboarding (2-4 weeks). This follows the four-stage framework documented in Harvard Business Review research.',
   },
   {
     question: 'What industries do you cover?',
-    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records—the same industries where liftouts have been common practice for decades.',
+    answer: 'Technology & AI, Financial Services, Law, Consulting, Healthcare, and Private Equity. In 2024 alone: Microsoft paid $650M to hire Inflection AI\'s team, top 50 law firms hired 900+ partners laterally, and Polsinelli executed the largest law firm group move of the year (47 lawyers). Liftouts happen wherever team expertise and relationships drive value.',
   },
   {
     question: 'What if an acquisition doesn\'t work out?',
-    answer: 'We track integration success for 12 months post-acquisition. Research shows intact teams integrate faster because they skip the team-formation phase entirely. If issues arise within the first 90 days, we work with both parties to find solutions and provide integration support.',
+    answer: 'Research shows intact teams integrate faster because they skip the forming-storming-norming phases (Tuckman\'s model) and start immediately at the performing stage. We track integration success for 12 months. If issues arise within the first 90 days, we work with both parties to find solutions and provide integration support.',
   },
   {
     question: 'Is the process confidential?',
     answer: 'Absolutely. Companies can explore teams discreetly without competitors knowing. Information is never shared without explicit consent, and all conversations are NDA-protected from the first interaction.',
   },
   {
-    question: 'Why acquire a team instead of hiring individuals?',
-    answer: 'Intact teams offer immediate productivity—no team-building phase, no ramp-up time. You get proven chemistry, established workflows, and documented results. It\'s lower risk than M&A with faster time-to-value than building a team from scratch.',
-  },
-  {
     question: 'What types of teams are available?',
-    answer: 'Teams range from 2-person partnerships to 20+ person departments. Common profiles include: investment banking groups, law firm practice teams, consulting units, engineering squads, research teams, and creative groups. All have documented track records and verified tenure working together.',
+    answer: 'Teams range from 2-person partnerships to 20+ person departments. Common profiles include: AI/ML engineering teams, investment banking groups, law firm practice teams, consulting units, research teams, and creative groups. All have documented track records and verified tenure working together.',
   },
 ];
 
@@ -139,9 +140,8 @@ export function FAQCompanies() {
             {/* Additional help text */}
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
-                <span className="font-semibold text-text-primary">Ready to explore?</span>
-                {' '}Companies like Ford, Goldman Sachs, and countless law firms have used liftouts to build capability faster than M&A or individual hiring allows.
-                We're happy to walk you through the process.
+                <span className="font-semibold text-text-primary">The research is clear.</span>
+                {' '}Companies that promote collaboration are 5x more likely to be high-performing (i4cp). Stanford found collaborative workers focus 64% longer on tasks. From Ford&apos;s &quot;Whiz Kids&quot; in 1946 to Microsoft&apos;s Inflection deal in 2024, liftouts have been how smart companies build capability fast.
               </p>
             </div>
           </div>

@@ -261,12 +261,12 @@ export default function AIMatchingPage() {
                     {selectedEntityType === 'team' ? (
                       <>
                         <UserGroupIcon className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">No teams found. Create a team profile first.</p>
+                        <p className="text-sm">No team profile yet. Create one to start matching.</p>
                       </>
                     ) : (
                       <>
                         <BriefcaseIcon className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">No opportunities found. Post an opportunity first.</p>
+                        <p className="text-sm">No opportunities posted yet. Create one to find teams.</p>
                       </>
                     )}
                   </div>

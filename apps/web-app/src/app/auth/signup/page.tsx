@@ -163,20 +163,20 @@ export default function SignUpPage() {
           {/* Content */}
           <div>
             <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
-              Join the Future of
-              <span className="block text-purple-300">Team Acquisition</span>
+              Join the first platform
+              <span className="block text-purple-300">for team-based hiring</span>
             </h1>
             <p className="text-white/90 text-lg leading-relaxed max-w-md mb-8">
-              Whether you&apos;re a high-performing team seeking opportunities or a company looking
-              to acquire proven talent, Liftout is your platform for strategic growth.
+              Teams can now post profiles together. Companies can find them.
+              This didn&apos;t exist before—be among the first.
             </p>
 
             {/* Benefits list */}
             <ul className="space-y-4">
               {[
-                'Connect with verified, high-performing teams',
-                'Confidential exploration and matching',
-                'Streamlined acquisition process',
+                'Post a team profile, not just a resume',
+                'Explore confidentially—your employer never knows',
+                'Move together, skip the team-building phase',
               ].map((benefit, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-purple-700/20 flex items-center justify-center flex-shrink-0">
@@ -220,7 +220,7 @@ export default function SignUpPage() {
               Create your account
             </h2>
             <p className="text-text-secondary">
-              Start connecting teams with opportunities today
+              Join the first platform for team-based hiring
             </p>
           </div>
 
@@ -299,10 +299,10 @@ export default function SignUpPage() {
                   }`} />
                   <div className={`font-bold text-sm ${
                     formData.userType === 'individual' ? 'text-white' : 'text-text-primary'
-                  }`}>Individual / Team</div>
+                  }`}>Team Member</div>
                   <div className={`text-sm mt-1 ${
                     formData.userType === 'individual' ? 'text-white/80' : 'text-text-tertiary'
-                  }`}>Looking for opportunities</div>
+                  }`}>Post a team profile together</div>
                 </button>
                 <button
                   type="button"
@@ -324,7 +324,7 @@ export default function SignUpPage() {
                   }`}>Company</div>
                   <div className={`text-sm mt-1 ${
                     formData.userType === 'company' ? 'text-white/80' : 'text-text-tertiary'
-                  }`}>Hiring teams</div>
+                  }`}>Hire intact teams</div>
                 </button>
               </div>
             </div>
