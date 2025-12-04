@@ -79,10 +79,10 @@ export function AppHeader({ user }: AppHeaderProps) {
     setIsMounted(true);
   }, []);
 
-  // Get the portal root element - always use document.body for proper z-index
+  // Get the portal root element - use the dedicated dropdown-portal div for proper z-index
   const getPortalRoot = useCallback(() => {
     if (typeof document === 'undefined') return null;
-    return document.body;
+    return document.getElementById('dropdown-portal') || document.body;
   }, []);
 
   const updateDropdownPosition = useCallback(() => {
@@ -224,55 +224,56 @@ export function AppHeader({ user }: AppHeaderProps) {
                     </span>
                   </Menu.Button>
                   {isMounted && getPortalRoot() && createPortal(
-                    <div className="fixed inset-0 z-[99999] pointer-events-none" style={{ isolation: 'isolate' }}>
-                      <Transition
-                        show={open}
-                        as={Fragment}
-                        enter="transition ease-out-expo duration-base"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-instant"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
+                    <Transition
+                      show={open}
+                      as={Fragment}
+                      enter="transition ease-out-expo duration-base"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-instant"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items
+                        static
+                        className="fixed w-52 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-border focus:outline-none pointer-events-auto"
+                        style={{
+                          top: dropdownPosition.top,
+                          right: dropdownPosition.right,
+                          transform: 'translate3d(0,0,0)', // Force GPU layer
+                          backfaceVisibility: 'hidden',
+                          WebkitBackfaceVisibility: 'hidden',
+                        }}
                       >
-                        <Menu.Items
-                          static
-                          className="fixed w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none pointer-events-auto"
-                          style={{
-                            top: dropdownPosition.top,
-                            right: dropdownPosition.right,
-                          }}
-                        >
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <Link
-                                href={item.href}
-                                className={`flex items-center px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
-                                  active ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary'
-                                }`}
-                              >
-                                {item.name}
-                              </Link>
-                            )}
-                          </Menu.Item>
-                        ))}
-                        <div className="my-1 border-t border-border" />
-                        <Menu.Item>
+                      {userNavigation.map((item) => (
+                        <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <button
-                              onClick={handleSignOut}
-                              className={`flex items-center w-full text-left px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
-                                active ? 'bg-bg-elevated text-error' : 'text-text-secondary'
+                            <Link
+                              href={item.href}
+                              className={`flex items-center px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
+                                active ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary'
                               }`}
                             >
-                              Sign out
-                            </button>
+                              {item.name}
+                            </Link>
                           )}
                         </Menu.Item>
-                        </Menu.Items>
-                      </Transition>
-                    </div>,
+                      ))}
+                      <div className="my-1 border-t border-border" />
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={handleSignOut}
+                            className={`flex items-center w-full text-left px-4 py-3 min-h-12 text-base transition-colors duration-fast ${
+                              active ? 'bg-bg-elevated text-error' : 'text-text-secondary'
+                            }`}
+                          >
+                            Sign out
+                          </button>
+                        )}
+                      </Menu.Item>
+                      </Menu.Items>
+                    </Transition>,
                     getPortalRoot()!
                   )}
                 </>

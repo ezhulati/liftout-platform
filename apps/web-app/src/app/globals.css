@@ -294,7 +294,7 @@
   /* Primary Button - Navy gradient fill, white text
      Use for the MOST IMPORTANT action (ONE per screen) */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl relative overflow-hidden;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 1rem;
