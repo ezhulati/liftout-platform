@@ -25,6 +25,52 @@ export async function POST(request: NextRequest) {
     // Hash password for demo users
     const demoPassword = await bcrypt.hash('password', 12);
 
+    // Create admin users first
+    const adminPassword = await bcrypt.hash('admin123!', 12);
+    const superAdminPassword = await bcrypt.hash('liftoutadmin2025', 12);
+
+    // Create admin@liftout.com
+    await prisma.user.upsert({
+      where: { email: 'admin@liftout.com' },
+      update: {
+        passwordHash: adminPassword,
+        userType: 'admin',
+        emailVerified: true,
+        profileCompleted: true,
+      },
+      create: {
+        email: 'admin@liftout.com',
+        passwordHash: adminPassword,
+        firstName: 'Admin',
+        lastName: 'User',
+        userType: 'admin',
+        emailVerified: true,
+        profileCompleted: true,
+      }
+    });
+    results.push('Created/updated admin user: admin@liftout.com');
+
+    // Create super admin (enrizhulati@gmail.com)
+    await prisma.user.upsert({
+      where: { email: 'enrizhulati@gmail.com' },
+      update: {
+        passwordHash: superAdminPassword,
+        userType: 'admin',
+        emailVerified: true,
+        profileCompleted: true,
+      },
+      create: {
+        email: 'enrizhulati@gmail.com',
+        passwordHash: superAdminPassword,
+        firstName: 'Enriz',
+        lastName: 'Hulati',
+        userType: 'admin',
+        emailVerified: true,
+        profileCompleted: true,
+      }
+    });
+    results.push('Created/updated super admin: enrizhulati@gmail.com');
+
     // Demo team member data with full profiles and headshots
     const demoTeamMembers = [
       {

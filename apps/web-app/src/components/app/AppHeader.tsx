@@ -79,10 +79,10 @@ export function AppHeader({ user }: AppHeaderProps) {
     setIsMounted(true);
   }, []);
 
-  // Get the portal root element
+  // Get the portal root element - always use document.body for proper z-index
   const getPortalRoot = useCallback(() => {
     if (typeof document === 'undefined') return null;
-    return document.getElementById('dropdown-portal') || document.body;
+    return document.body;
   }, []);
 
   const updateDropdownPosition = useCallback(() => {
@@ -224,24 +224,25 @@ export function AppHeader({ user }: AppHeaderProps) {
                     </span>
                   </Menu.Button>
                   {isMounted && getPortalRoot() && createPortal(
-                    <Transition
-                      show={open}
-                      as={Fragment}
-                      enter="transition ease-out-expo duration-base"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-instant"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items
-                        static
-                        className="fixed w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none pointer-events-auto"
-                        style={{
-                          top: dropdownPosition.top,
-                          right: dropdownPosition.right,
-                        }}
+                    <div className="fixed inset-0 z-[99999] pointer-events-none" style={{ isolation: 'isolate' }}>
+                      <Transition
+                        show={open}
+                        as={Fragment}
+                        enter="transition ease-out-expo duration-base"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-instant"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
                       >
+                        <Menu.Items
+                          static
+                          className="fixed w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none pointer-events-auto"
+                          style={{
+                            top: dropdownPosition.top,
+                            right: dropdownPosition.right,
+                          }}
+                        >
                         {userNavigation.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
@@ -269,8 +270,9 @@ export function AppHeader({ user }: AppHeaderProps) {
                             </button>
                           )}
                         </Menu.Item>
-                      </Menu.Items>
-                    </Transition>,
+                        </Menu.Items>
+                      </Transition>
+                    </div>,
                     getPortalRoot()!
                   )}
                 </>
