@@ -66,10 +66,12 @@ export default function SettingsPage() {
   if (!session) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="text-center py-12">
-          <Cog6ToothIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+        <div className="card text-center py-12">
+          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+            <Cog6ToothIcon className="h-7 w-7 text-text-tertiary" />
+          </div>
           <h2 className="text-lg font-bold text-text-primary mb-2">Sign in required</h2>
-          <p className="text-text-secondary">Please sign in to access your settings.</p>
+          <p className="text-base text-text-secondary leading-relaxed">Please sign in to access your settings.</p>
         </div>
       </div>
     );

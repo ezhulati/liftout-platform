@@ -230,30 +230,30 @@ export default function EOIPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="card p-5 animate-pulse">
-              <div className="h-5 w-1/3 bg-bg-alt rounded mb-2" />
-              <div className="h-4 w-1/4 bg-bg-alt rounded mb-4" />
-              <div className="h-16 bg-bg-alt rounded mb-4" />
+            <div key={i} className="card animate-pulse">
+              <div className="h-5 w-1/3 skeleton rounded mb-2" />
+              <div className="h-4 w-1/4 skeleton rounded mb-4" />
+              <div className="h-16 skeleton rounded mb-4" />
               <div className="flex gap-4">
-                <div className="h-4 w-20 bg-bg-alt rounded" />
-                <div className="h-4 w-24 bg-bg-alt rounded" />
+                <div className="h-4 w-20 skeleton rounded" />
+                <div className="h-4 w-24 skeleton rounded" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredEOIs?.length === 0 ? (
-        <div className="card p-12 text-center">
-          <div className="mx-auto h-12 w-12 rounded-full bg-bg-alt flex items-center justify-center mb-4">
+        <div className="card text-center py-12">
+          <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
             {direction === 'sent' ? (
-              <PaperAirplaneIcon className="h-6 w-6 text-text-tertiary" />
+              <PaperAirplaneIcon className="h-7 w-7 text-text-tertiary" />
             ) : (
-              <InboxIcon className="h-6 w-6 text-text-tertiary" />
+              <InboxIcon className="h-7 w-7 text-text-tertiary" />
             )}
           </div>
-          <h3 className="text-lg font-medium text-text-primary mb-1">
+          <h3 className="text-lg font-bold text-text-primary mb-2">
             No {direction} EOIs yet
           </h3>
-          <p className="text-text-secondary max-w-md mx-auto">
+          <p className="text-base text-text-secondary leading-relaxed max-w-md mx-auto">
             {direction === 'sent'
               ? 'Browse teams and express interest to start the conversation'
               : 'When companies express interest in your team, they will appear here'}
@@ -261,7 +261,7 @@ export default function EOIPage() {
           {direction === 'sent' && (
             <button
               onClick={() => router.push('/app/teams')}
-              className="btn-primary mt-4"
+              className="btn-primary mt-6 min-h-12"
             >
               Browse Teams
             </button>

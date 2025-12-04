@@ -120,27 +120,27 @@ function LoadingSkeleton() {
   return (
     <div className="space-y-4">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-bg-surface rounded-lg border border-border p-6 animate-pulse">
+        <div key={i} className="card animate-pulse">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <div className="h-6 bg-bg-alt rounded w-1/3 mb-2"></div>
-              <div className="h-4 bg-bg-alt rounded w-1/4"></div>
+              <div className="h-6 skeleton rounded w-1/3 mb-2"></div>
+              <div className="h-4 skeleton rounded w-1/4"></div>
             </div>
-            <div className="h-6 bg-bg-alt rounded w-16"></div>
+            <div className="h-6 skeleton rounded w-16"></div>
           </div>
           <div className="grid grid-cols-4 gap-4 mb-4">
             {[1, 2, 3, 4].map((j) => (
-              <div key={j} className="h-4 bg-bg-alt rounded"></div>
+              <div key={j} className="h-4 skeleton rounded"></div>
             ))}
           </div>
           <div className="flex gap-2 mb-4">
             {[1, 2, 3].map((j) => (
-              <div key={j} className="h-6 bg-bg-alt rounded-full w-24"></div>
+              <div key={j} className="h-6 skeleton rounded-full w-24"></div>
             ))}
           </div>
           <div className="flex justify-between items-center">
-            <div className="h-6 bg-bg-alt rounded-full w-32"></div>
-            <div className="h-10 bg-bg-alt rounded w-28"></div>
+            <div className="h-6 skeleton rounded-full w-32"></div>
+            <div className="h-10 skeleton rounded w-28"></div>
           </div>
         </div>
       ))}
@@ -150,12 +150,14 @@ function LoadingSkeleton() {
 
 function EmptyState({ type }: { type: 'teams' | 'opportunities' }) {
   return (
-    <div className="text-center py-12 bg-bg-surface rounded-lg border border-border">
-      <ExclamationCircleIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-      <h3 className="text-lg font-medium text-text-primary mb-2">
+    <div className="card text-center py-12">
+      <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+        <ExclamationCircleIcon className="h-7 w-7 text-text-tertiary" />
+      </div>
+      <h3 className="text-lg font-bold text-text-primary mb-2">
         No {type === 'teams' ? 'teams' : 'opportunities'} found
       </h3>
-      <p className="text-text-secondary mb-4">
+      <p className="text-base text-text-secondary leading-relaxed max-w-md mx-auto">
         {type === 'teams'
           ? 'Try adjusting your filters or search criteria'
           : 'No opportunities match your current filters'}
@@ -430,7 +432,7 @@ export default function SearchPage() {
         {/* Teams Section */}
         {(filters.type === 'teams' || filters.type === 'both') && (
           <div>
-            <h2 className="text-lg font-semibold text-text-primary mb-4">
+            <h2 className="text-lg font-bold text-text-primary mb-4">
               Teams ({filteredTeams.length})
               {teamsError && <span className="text-sm font-normal text-text-tertiary ml-2">(showing cached data)</span>}
             </h2>
@@ -452,7 +454,7 @@ export default function SearchPage() {
         {/* Opportunities Section */}
         {(filters.type === 'opportunities' || filters.type === 'both') && !isCompanyUser && (
           <div>
-            <h2 className="text-lg font-semibold text-text-primary mb-4">
+            <h2 className="text-lg font-bold text-text-primary mb-4">
               Opportunities ({filteredOpportunities.length})
               {opportunitiesError && <span className="text-sm font-normal text-text-tertiary ml-2">(showing cached data)</span>}
             </h2>
@@ -481,32 +483,32 @@ export default function SearchPage() {
 
 function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }) {
   return (
-    <div className="bg-bg-surface rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+    <div className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-text-primary">{team.name}</h3>
-          <p className="text-text-secondary">{team.company}</p>
+          <h3 className="text-base font-bold text-text-primary">{team.name}</h3>
+          <p className="text-sm text-text-secondary">{team.company}</p>
         </div>
         <div className="flex items-center space-x-1">
           <StarIcon className="h-4 w-4 text-gold fill-current" />
-          <span className="text-sm font-medium text-text-secondary">{team.cohesionScore?.toFixed(1) || 'N/A'}</span>
+          <span className="text-sm font-medium text-text-tertiary">{team.cohesionScore?.toFixed(1) || 'N/A'}</span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <UserGroupIcon className="h-4 w-4 mr-2" />
           {team.size} members
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <MapPinIcon className="h-4 w-4 mr-2" />
           {team.location}
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <ClockIcon className="h-4 w-4 mr-2" />
           {team.yearsWorking}y together
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <BriefcaseIcon className="h-4 w-4 mr-2" />
           {team.industry}
         </div>
@@ -514,12 +516,12 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
 
       {team.specialties && team.specialties.length > 0 && (
         <div className="mb-4">
-          <p className="text-sm font-medium text-text-secondary mb-2">Specialties:</p>
+          <p className="text-sm font-bold text-text-primary mb-2">Specialties:</p>
           <div className="flex flex-wrap gap-2">
             {team.specialties.slice(0, 5).map((specialty: string, index: number) => (
               <span
                 key={index}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-navy-50 text-navy"
+                className="badge badge-primary text-xs"
               >
                 {specialty}
               </span>
@@ -530,12 +532,12 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
 
       <div className="flex items-center justify-between">
         <div>
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          <span className={`badge text-xs ${
             team.availability === 'Open to Opportunities'
-              ? 'bg-success-light text-success-dark'
+              ? 'badge-success'
               : team.availability === 'Selective'
-                ? 'bg-gold-100 text-gold-700'
-                : 'bg-bg-alt text-text-primary'
+                ? 'badge-warning'
+                : 'badge-secondary'
           }`}>
             {team.availability}
           </span>
@@ -556,37 +558,37 @@ function TeamCard({ team, isCompanyUser }: { team: any; isCompanyUser: boolean }
 
 function OpportunityCard({ opportunity, getTimeAgo }: { opportunity: any; getTimeAgo: (date: string) => string }) {
   return (
-    <div className="bg-bg-surface rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+    <div className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-text-primary">{opportunity.title}</h3>
-          <p className="text-text-secondary">{opportunity.company}</p>
+          <h3 className="text-base font-bold text-text-primary">{opportunity.title}</h3>
+          <p className="text-sm text-text-secondary">{opportunity.company}</p>
         </div>
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+        <span className={`badge text-xs ${
           opportunity.urgent
-            ? 'bg-error-light text-error'
-            : 'bg-success-light text-success'
+            ? 'badge-error'
+            : 'badge-success'
         }`}>
           {opportunity.urgent ? 'High Priority' : 'Normal'}
         </span>
       </div>
 
-      <p className="text-text-secondary mb-4">{opportunity.description}</p>
+      <p className="text-sm text-text-secondary leading-relaxed mb-4">{opportunity.description}</p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <CurrencyDollarIcon className="h-4 w-4 mr-2" />
           {opportunity.compensation}
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <MapPinIcon className="h-4 w-4 mr-2" />
           {opportunity.location}
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <UserGroupIcon className="h-4 w-4 mr-2" />
           {opportunity.teamSize}
         </div>
-        <div className="flex items-center text-sm text-text-secondary">
+        <div className="flex items-center text-sm text-text-tertiary">
           <ClockIcon className="h-4 w-4 mr-2" />
           {getTimeAgo(opportunity.createdAt)}
         </div>
@@ -594,7 +596,7 @@ function OpportunityCard({ opportunity, getTimeAgo }: { opportunity: any; getTim
 
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-sm text-text-secondary">
+          <span className="text-sm text-text-tertiary">
             {opportunity.applications?.length || 0} teams applied
           </span>
         </div>

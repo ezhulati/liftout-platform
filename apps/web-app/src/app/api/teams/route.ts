@@ -11,7 +11,7 @@ const isDemoUser = (email: string | null | undefined): boolean => {
 
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -27,8 +27,71 @@ export async function GET(request: NextRequest) {
   const minExperience = searchParams.get('minExperience');
   const skills = searchParams.get('skills')?.split(',').filter(Boolean) || [];
   const minCohesion = searchParams.get('minCohesion');
-  
-  let filteredTeams = [...teams];
+
+  // Fetch real teams from database
+  let dbTeams: Team[] = [];
+  try {
+    const realTeams = await prisma.team.findMany({
+      where: {
+        visibility: 'public',
+        availabilityStatus: 'available',
+      },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                profile: {
+                  select: {
+                    title: true,
+                    yearsExperience: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      take: 50,
+    });
+
+    dbTeams = realTeams.map(team => ({
+      id: team.id,
+      name: team.name,
+      description: team.description || '',
+      size: team.size || team.members.length,
+      yearsWorking: Number(team.yearsWorkingTogether) || 0,
+      cohesionScore: 85, // Default score
+      successfulProjects: 0,
+      clientSatisfaction: 90,
+      openToLiftout: team.availabilityStatus === 'available',
+      createdBy: team.createdById,
+      createdAt: team.createdAt.toISOString(),
+      updatedAt: team.updatedAt.toISOString(),
+      members: team.members.map(m => ({
+        id: m.id,
+        userId: m.userId,
+        name: `${m.user.firstName} ${m.user.lastName}`.trim() || 'Team Member',
+        role: m.role || 'Member',
+        experience: m.user.profile?.yearsExperience || 0,
+        skills: [],
+        title: m.user.profile?.title || undefined,
+      })),
+      achievements: [],
+      industry: team.industry || '',
+      location: team.location || '',
+      availability: 'Open to strategic opportunities',
+      compensation: { range: '', equity: false, benefits: '' },
+    }));
+  } catch (error) {
+    console.error('Error fetching teams from database:', error);
+  }
+
+  // Merge database teams with demo teams (demo teams first for discovery)
+  let filteredTeams = [...teams, ...dbTeams.filter(dt => !teams.find(t => t.id === dt.id))];
   
   // Filter for teams open to liftout opportunities (companies should only see available teams)
   if (session.user.userType === 'company') {

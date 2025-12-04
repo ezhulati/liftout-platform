@@ -71,28 +71,28 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
     switch (eoi.status) {
       case 'pending':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
+          <span className="badge badge-warning text-xs inline-flex items-center">
             <ClockIcon className="h-3 w-3 mr-1" />
             Pending
           </span>
         );
       case 'accepted':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">
+          <span className="badge badge-success text-xs inline-flex items-center">
             <CheckIcon className="h-3 w-3 mr-1" />
             Accepted
           </span>
         );
       case 'declined':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+          <span className="badge badge-error text-xs inline-flex items-center">
             <XMarkIcon className="h-3 w-3 mr-1" />
             Declined
           </span>
         );
       case 'expired':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+          <span className="badge badge-secondary text-xs">
             Expired
           </span>
         );
@@ -125,26 +125,26 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
 
   return (
     <>
-      <div className="card p-5 hover:shadow-md transition-shadow">
+      <div className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div>
             {direction === 'received' && eoi.fromType === 'company' ? (
               <Link
                 href={`/app/company/${eoi.fromId}`}
-                className="font-semibold text-text-primary hover:text-navy transition-colors"
+                className="text-base font-bold text-text-primary hover:text-navy transition-colors"
               >
                 {eoi.metadata?.fromCompanyName || 'Company'}
               </Link>
             ) : direction === 'sent' && eoi.toType === 'team' ? (
               <Link
                 href={`/app/teams/${eoi.toId}`}
-                className="font-semibold text-text-primary hover:text-navy transition-colors"
+                className="text-base font-bold text-text-primary hover:text-navy transition-colors"
               >
                 {eoi.metadata?.toTeamName || 'Team'}
               </Link>
             ) : (
-              <h3 className="font-semibold text-text-primary">
+              <h3 className="text-base font-bold text-text-primary">
                 {direction === 'sent'
                   ? eoi.metadata?.toTeamName || 'Team'
                   : eoi.metadata?.fromCompanyName || 'Company'}
@@ -201,7 +201,7 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
               <button
                 onClick={() => respondToEOI.mutate({ status: 'accepted', message: '' })}
                 disabled={respondToEOI.isPending}
-                className="flex-1 btn-primary inline-flex items-center justify-center text-sm py-2"
+                className="flex-1 btn-primary min-h-12 inline-flex items-center justify-center"
               >
                 <CheckIcon className="h-4 w-4 mr-1.5" />
                 Accept
@@ -209,7 +209,7 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
               <button
                 onClick={() => setShowResponseModal(true)}
                 disabled={respondToEOI.isPending}
-                className="flex-1 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm inline-flex items-center justify-center"
+                className="flex-1 min-h-12 border border-error text-error rounded-lg hover:bg-error-light transition-colors inline-flex items-center justify-center"
               >
                 <XMarkIcon className="h-4 w-4 mr-1.5" />
                 Decline
@@ -221,7 +221,7 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
           {eoi.status === 'accepted' && onViewConversation && (
             <button
               onClick={() => onViewConversation(eoi.id)}
-              className="flex-1 btn-primary inline-flex items-center justify-center text-sm py-2"
+              className="flex-1 btn-primary min-h-12 inline-flex items-center justify-center"
             >
               <ChatBubbleLeftRightIcon className="h-4 w-4 mr-1.5" />
               View Conversation
@@ -230,7 +230,7 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
 
           {/* For pending sent EOIs */}
           {direction === 'sent' && eoi.status === 'pending' && (
-            <div className="flex-1 text-center text-sm text-text-tertiary py-2">
+            <div className="flex-1 text-center text-sm text-text-tertiary py-3">
               Awaiting response...
             </div>
           )}
@@ -242,10 +242,10 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-bg-surface rounded-xl shadow-xl max-w-md w-full">
             <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-semibold text-text-primary">Decline EOI</h3>
+              <h3 className="text-lg font-bold text-text-primary">Decline EOI</h3>
             </div>
             <div className="p-6">
-              <p className="text-sm text-text-secondary mb-4">
+              <p className="text-sm text-text-secondary leading-relaxed mb-4">
                 Optionally provide a message explaining why you&apos;re declining this expression of interest.
               </p>
               <textarea
@@ -253,19 +253,19 @@ export function EOICard({ eoi, direction, onViewConversation }: EOICardProps) {
                 onChange={(e) => setResponseMessage(e.target.value)}
                 placeholder="e.g., We're not looking for new opportunities at this time..."
                 rows={3}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy"
+                className="input-field min-h-[100px]"
               />
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => setShowResponseModal(false)}
-                  className="flex-1 px-4 py-2 border border-border rounded-lg text-text-primary hover:bg-bg-alt transition-colors"
+                  className="flex-1 btn-outline min-h-12"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => respondToEOI.mutate({ status: 'declined', message: responseMessage })}
                   disabled={respondToEOI.isPending}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                  className="flex-1 min-h-12 bg-error text-white rounded-lg hover:bg-error-dark transition-colors disabled:opacity-50"
                 >
                   {respondToEOI.isPending ? 'Declining...' : 'Decline EOI'}
                 </button>

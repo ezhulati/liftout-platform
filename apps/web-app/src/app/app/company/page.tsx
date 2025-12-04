@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 import { 
   BuildingOfficeIcon,
   GlobeAltIcon,
@@ -290,12 +291,53 @@ function CompanyOverview({ isEditing }: { isEditing: boolean }) {
 }
 
 function CultureValues({ isEditing }: { isEditing: boolean }) {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [cultureData, setCultureData] = useState({
     values: ['Innovation', 'Collaboration', 'Integrity', 'Excellence'],
     workStyle: 'Hybrid',
     benefits: ['Equity Participation', 'Unlimited PTO', 'Remote Work', 'Professional Development'],
     cultureDescription: 'We foster an environment of innovation and collaboration where the best ideas win.'
   });
+
+  // Fetch culture data from API
+  useEffect(() => {
+    async function fetchCulture() {
+      const companyId = (session?.user as any)?.companyId;
+      if (!companyId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/companies/${companyId}/culture`);
+        if (response.ok) {
+          const data = await response.json();
+          setCultureData({
+            values: data.values || [],
+            workStyle: data.workStyle || 'Flexible',
+            benefits: data.benefits || [],
+            cultureDescription: data.cultureDescription || '',
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching culture:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCulture();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="loading-spinner w-8 h-8"></div>
+      </div>
+    );
+  }
 
   if (!isEditing) {
     return (
@@ -370,8 +412,32 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
   };
 
   const handleSave = async () => {
-    // TODO: Save to API when endpoint is ready
-    console.log('Saving culture data:', cultureData);
+    const companyId = (session?.user as any)?.companyId;
+    if (!companyId) {
+      toast.error('No company ID found');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/companies/${companyId}/culture`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cultureData),
+      });
+
+      if (response.ok) {
+        toast.success('Culture saved successfully');
+      } else {
+        const data = await response.json();
+        toast.error(data.error || 'Failed to save culture');
+      }
+    } catch (error) {
+      console.error('Error saving culture:', error);
+      toast.error('Error saving culture');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -475,8 +541,8 @@ function CultureValues({ isEditing }: { isEditing: boolean }) {
 
         {/* Save Button */}
         <div className="pt-6 border-t border-border flex items-center gap-4">
-          <button type="submit" className="btn-primary min-h-12">
-            Save changes
+          <button type="submit" className="btn-primary min-h-12" disabled={saving}>
+            {saving ? 'Saving...' : 'Save changes'}
           </button>
         </div>
       </div>

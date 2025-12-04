@@ -206,32 +206,32 @@ export default function CompanyProfilePage() {
           <div className="lg:col-span-2 space-y-6">
             {/* About */}
             {company.description && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <h2 className="text-lg font-bold text-text-primary mb-4">About {company.name}</h2>
-                <p className="text-text-secondary whitespace-pre-wrap">{company.description}</p>
+                <p className="text-sm text-text-secondary whitespace-pre-wrap leading-relaxed">{company.description}</p>
               </div>
             )}
 
             {/* Culture */}
             {company.companyCulture && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <div className="flex items-center gap-2 mb-4">
                   <SparklesIcon className="w-5 h-5 text-gold" />
                   <h2 className="text-lg font-bold text-text-primary">Culture</h2>
                 </div>
-                <p className="text-text-secondary">{company.companyCulture}</p>
+                <p className="text-sm text-text-secondary leading-relaxed">{company.companyCulture}</p>
               </div>
             )}
 
             {/* Values */}
             {company.values && company.values.length > 0 && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <h2 className="text-lg font-bold text-text-primary mb-4">Our Values</h2>
                 <div className="flex flex-wrap gap-2">
                   {company.values.map((value, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1.5 bg-navy-50 text-navy rounded-full text-sm font-medium"
+                      className="badge badge-primary text-xs"
                     >
                       {value}
                     </span>
@@ -242,7 +242,7 @@ export default function CompanyProfilePage() {
 
             {/* Active Opportunities */}
             {company.opportunities && company.opportunities.length > 0 && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <div className="flex items-center gap-2 mb-4">
                   <BriefcaseIcon className="w-5 h-5 text-navy" />
                   <h2 className="text-lg font-bold text-text-primary">Active Opportunities</h2>
@@ -252,17 +252,17 @@ export default function CompanyProfilePage() {
                     <Link
                       key={opp.id}
                       href={`/app/opportunities/${opp.id}`}
-                      className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-navy hover:bg-bg-alt transition-all group min-h-[72px]"
+                      className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-purple-300 hover:shadow-soft transition-all duration-base group min-h-[72px]"
                     >
                       <div>
-                        <h3 className="font-bold text-text-primary group-hover:text-navy transition-colors">
+                        <h3 className="text-base font-bold text-text-primary group-hover:text-navy transition-colors">
                           {opp.title}
                         </h3>
                         {opp.location && (
-                          <p className="text-sm text-text-secondary">{opp.location}</p>
+                          <p className="text-sm text-text-tertiary">{opp.location}</p>
                         )}
                       </div>
-                      <span className="px-3 py-1 bg-success-light text-success rounded-full text-sm font-medium">
+                      <span className="badge badge-success text-xs">
                         Active
                       </span>
                     </Link>
@@ -276,7 +276,7 @@ export default function CompanyProfilePage() {
           <div className="space-y-6">
             {/* Benefits */}
             {company.benefits && company.benefits.length > 0 && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <h3 className="text-base font-bold text-text-primary mb-4">Benefits</h3>
                 <ul className="space-y-2">
                   {company.benefits.map((benefit, index) => (
@@ -291,13 +291,13 @@ export default function CompanyProfilePage() {
 
             {/* Tech Stack */}
             {company.techStack && company.techStack.length > 0 && (
-              <div className="bg-bg-elevated rounded-xl border border-border p-6">
+              <div className="card">
                 <h3 className="text-base font-bold text-text-primary mb-4">Tech Stack</h3>
                 <div className="flex flex-wrap gap-2">
                   {company.techStack.map((tech, index) => (
                     <span
                       key={index}
-                      className="px-2.5 py-1 bg-bg-alt text-text-secondary rounded-lg text-sm"
+                      className="badge badge-secondary text-xs"
                     >
                       {tech}
                     </span>
@@ -307,9 +307,9 @@ export default function CompanyProfilePage() {
             )}
 
             {/* Contact CTA */}
-            <div className="bg-bg-elevated rounded-xl border border-border p-6">
+            <div className="card">
               <h3 className="text-base font-bold text-text-primary mb-2">Interested?</h3>
-              <p className="text-sm text-text-secondary mb-4">
+              <p className="text-sm text-text-secondary mb-4 leading-relaxed">
                 If you&apos;re interested in opportunities at {company.name}, accept their expression of interest to start a conversation.
               </p>
               <Link href="/app/eoi" className="btn-primary w-full min-h-12 flex items-center justify-center">

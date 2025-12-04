@@ -267,9 +267,8 @@ export default function TeamsPage() {
 
         {/* Invite Section */}
         <div className="card">
-          <div className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary mb-2">Invite people to join your team</h2>
-            <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
+          <h2 className="text-lg font-bold text-text-primary mb-2">Invite people to join your team</h2>
+          <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
             <div className="flex gap-3">
               <div className="flex-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -283,56 +282,53 @@ export default function TeamsPage() {
                   className="input-field pl-12"
                 />
               </div>
-              <button className="btn-outline min-h-12 flex items-center gap-2 text-[#5B21B6] border-[#5B21B6] hover:bg-[#5B21B6]/5">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Send Invite
-              </button>
-            </div>
+            <button className="btn-primary min-h-12 flex items-center gap-2">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Send Invite
+            </button>
           </div>
         </div>
 
-        {/* Team Post Card - Figma style */}
+        {/* Team Post Card */}
         <div className="card">
-          <div className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <span className="text-[#5B21B6] text-sm font-medium">Data Science</span>
-                <h3 className="text-xl font-bold text-text-primary mt-1 flex items-center gap-3">
-                  TechFlow Data Science Team
-                  <span className="text-[#5B21B6] text-sm font-normal">Team of 4</span>
-                </h3>
-              </div>
-              <button className="p-2 hover:bg-bg-alt rounded-lg transition-colors">
-                <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="6" r="2" />
-                  <circle cx="12" cy="12" r="2" />
-                  <circle cx="12" cy="18" r="2" />
-                </svg>
-              </button>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <span className="badge badge-primary text-xs mb-2">Data Science</span>
+              <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-3">
+                TechFlow Data Science Team
+                <span className="text-sm font-normal text-text-tertiary">Team of 4</span>
+              </h3>
             </div>
+            <button className="min-h-12 min-w-12 flex items-center justify-center hover:bg-bg-alt rounded-lg transition-colors">
+              <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="6" r="2" />
+                <circle cx="12" cy="12" r="2" />
+                <circle cx="12" cy="18" r="2" />
+              </svg>
+            </button>
+          </div>
 
-            <div className="flex items-center gap-4 text-sm text-text-secondary mb-4">
-              <span className="flex items-center gap-2">
-                <MapPinIcon className="h-4 w-4" />
-                San Francisco, CA
-              </span>
-              <span className="flex items-center gap-2">
-                <ClockIcon className="h-4 w-4" />
-                Full-time
-              </span>
-            </div>
-
-            <p className="text-text-secondary mb-4 leading-relaxed">
-              Elite data science team with proven track record in fintech analytics and machine learning solutions.
-              We specialize in predictive modeling, risk assessment, and building scalable ML pipelines.
-            </p>
-
-            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-[#5B21B6]/10 text-[#5B21B6]">
-              15 years combined experience
+          <div className="flex items-center gap-4 text-sm text-text-tertiary mb-4">
+            <span className="flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4" />
+              San Francisco, CA
+            </span>
+            <span className="flex items-center gap-2">
+              <ClockIcon className="h-4 w-4" />
+              Full-time
             </span>
           </div>
+
+          <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+            Elite data science team with proven track record in fintech analytics and machine learning solutions.
+            We specialize in predictive modeling, risk assessment, and building scalable ML pipelines.
+          </p>
+
+          <span className="badge badge-primary text-xs">
+            15 years combined experience
+          </span>
         </div>
 
         {/* Team Members Table - Figma style */}
@@ -464,7 +460,7 @@ interface TeamCardProps {
 function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
   return (
     <div className={classNames(
-      "card hover:shadow-md hover:border-purple-300 transition-all duration-fast",
+      "card hover:shadow-md hover:border-purple-300 transition-all duration-base",
       featured ? 'ring-2 ring-purple-200' : ''
     )}>
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">

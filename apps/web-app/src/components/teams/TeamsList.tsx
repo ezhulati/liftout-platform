@@ -53,12 +53,14 @@ export function TeamsList({ userType }: TeamsListProps) {
 
   if (!teams || teams.length === 0) {
     return (
-      <div className="text-center py-12">
-        <UserGroupIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-        <h3 className="mt-2 text-base font-medium text-text-primary">
+      <div className="card text-center py-12">
+        <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+          <UserGroupIcon className="h-7 w-7 text-text-tertiary" />
+        </div>
+        <h3 className="text-lg font-bold text-text-primary mb-2">
           {isCompanyUser ? 'No teams available' : 'No team profile yet'}
         </h3>
-        <p className="mt-1 text-base text-text-secondary">
+        <p className="text-base text-text-secondary leading-relaxed max-w-md mx-auto">
           {isCompanyUser
             ? 'Check back later for new teams available for liftout opportunities.'
             : 'Create your team profile to explore liftout opportunities.'
@@ -86,33 +88,36 @@ export function TeamsList({ userType }: TeamsListProps) {
   return (
     <div className="space-y-4">
       {teams.map((team) => (
-        <div key={team.id} className="card hover:shadow-md transition-shadow duration-fast">
+        <div key={team.id} className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1">
               <div className="flex-shrink-0">
-                <div className="h-16 w-16 rounded-lg bg-navy-50 flex items-center justify-center">
-                  <UserGroupIcon className="h-8 w-8 text-navy" />
+                <div className="h-14 w-14 rounded-lg bg-navy-50 flex items-center justify-center">
+                  <UserGroupIcon className="h-7 w-7 text-navy" />
                 </div>
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center space-x-3">
-                  <h3 className="text-lg font-medium text-text-primary truncate">
+                <div className="flex items-center flex-wrap gap-2 mb-1">
+                  <h3 className="text-base font-bold text-text-primary truncate">
                     {team.name}
                   </h3>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-success-light text-success-dark">
+                  <span className={classNames(
+                    'badge text-xs',
+                    team.openToLiftout ? 'badge-success' : 'badge-secondary'
+                  )}>
                     {team.openToLiftout ? 'Open to liftout' : 'Not available'}
                   </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-navy-50 text-navy-800">
+                  <span className="badge badge-primary text-xs">
                     {team.industry}
                   </span>
                 </div>
 
-                <p className="text-base text-text-secondary mt-1 line-clamp-2">
+                <p className="text-sm text-text-secondary mt-1 line-clamp-2 leading-relaxed">
                   {team.description}
                 </p>
 
-                <div className="flex items-center mt-3 space-x-6 text-base text-text-tertiary">
+                <div className="flex flex-wrap items-center mt-3 gap-x-4 gap-y-1 text-sm text-text-tertiary">
                   <div className="flex items-center">
                     <UserGroupIcon className="h-4 w-4 mr-1" />
                     {team.size} members
@@ -129,7 +134,7 @@ export function TeamsList({ userType }: TeamsListProps) {
                     {team.yearsWorking}y together
                   </div>
                   {isCompanyUser && (
-                    <div className="font-medium">
+                    <div className="font-bold">
                       {team.successfulProjects || 0} projects
                     </div>
                   )}
@@ -139,13 +144,13 @@ export function TeamsList({ userType }: TeamsListProps) {
                   {(team.members?.flatMap(m => m.skills) || []).slice(0, 4).map((skill, index) => (
                     <span
                       key={`${skill}-${index}`}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-bg-alt text-text-secondary"
+                      className="badge badge-secondary text-xs"
                     >
                       {skill}
                     </span>
                   ))}
                   {(team.members?.flatMap(m => m.skills) || []).length > 4 && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bg-alt text-text-secondary">
+                    <span className="badge badge-secondary text-xs">
                       +{(team.members?.flatMap(m => m.skills) || []).length - 4} more
                     </span>
                   )}

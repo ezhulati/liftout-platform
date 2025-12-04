@@ -105,10 +105,12 @@ export default function FindCompaniesPage() {
 
   if (!session?.user) {
     return (
-      <div className="text-center py-12">
-        <BuildingOfficeIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+      <div className="card text-center py-12">
+        <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
+          <BuildingOfficeIcon className="h-7 w-7 text-text-tertiary" />
+        </div>
         <h2 className="text-lg font-bold text-text-primary mb-2">Sign in required</h2>
-        <p className="text-text-secondary">Please sign in to browse companies.</p>
+        <p className="text-base text-text-secondary leading-relaxed">Please sign in to browse companies.</p>
       </div>
     );
   }

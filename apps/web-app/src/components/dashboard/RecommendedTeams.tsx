@@ -70,7 +70,30 @@ export function RecommendedTeams() {
   const { data: teams, isLoading } = useQuery({
     queryKey: ['recommended-teams'],
     queryFn: async () => {
-      // This would normally fetch from your API
+      try {
+        const response = await fetch('/api/teams?availability=available');
+        if (response.ok) {
+          const data = await response.json();
+          // Transform API response to match our interface
+          return (data.teams || []).slice(0, 3).map((team: any) => ({
+            id: team.id,
+            name: team.name,
+            description: team.description,
+            industry: team.industry || 'Technology',
+            location: team.location || 'Remote',
+            size: team.size || team.members?.length || 2,
+            rating: (team.cohesionScore || 90) / 20, // Convert 0-100 to 0-5 scale
+            skills: team.members?.flatMap((m: any) => m.skills || []).slice(0, 4) || [],
+            profileImageUrl: team.profileImageUrl,
+            yearsWorkingTogether: team.yearsWorking || team.yearsWorkingTogether || 2,
+            successfulLiftouts: team.successfulProjects ? Math.floor(team.successfulProjects / 5) : 1,
+            currentCompany: team.members?.[0]?.company || 'Confidential',
+          })) as Team[];
+        }
+      } catch (error) {
+        console.error('Error fetching recommended teams:', error);
+      }
+      // Fallback to mock data if API fails
       return mockTeams;
     },
   });

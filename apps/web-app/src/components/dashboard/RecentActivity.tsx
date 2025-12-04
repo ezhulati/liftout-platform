@@ -137,7 +137,7 @@ export function RecentActivity() {
   if (isLoading) {
     return (
       <div className="card">
-        <h3 className="text-lg font-semibold text-text-primary mb-5 font-heading">Recent Activity</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-5 font-heading">Recent Activity</h3>
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex animate-pulse">
@@ -228,8 +228,8 @@ export function RecentActivity() {
 
       {(!activities || activities.length === 0) && (
         <div className="py-4">
-          <p className="font-semibold text-text-primary mb-1">No recent activity</p>
-          <p className="text-text-secondary">
+          <p className="text-base font-bold text-text-primary mb-1">No recent activity</p>
+          <p className="text-sm text-text-secondary leading-relaxed">
             Company requests to apply will appear here.
           </p>
         </div>

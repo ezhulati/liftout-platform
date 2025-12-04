@@ -90,7 +90,39 @@ export function UpcomingDeadlines() {
   const { data: deadlines, isLoading } = useQuery({
     queryKey: ['upcoming-deadlines'],
     queryFn: async () => {
-      // This would normally fetch from your API
+      try {
+        // Fetch applications that have upcoming deadlines
+        const response = await fetch('/api/applications');
+        if (response.ok) {
+          const data = await response.json();
+          const applications = data.applications || [];
+
+          // Transform applications to deadlines
+          const appDeadlines: Deadline[] = applications
+            .filter((app: any) => app.status === 'interview_scheduled' || app.status === 'under_review')
+            .map((app: any) => ({
+              id: `deadline-${app.id}`,
+              type: app.status === 'interview_scheduled' ? 'interview_scheduled' as const : 'due_diligence' as const,
+              title: app.status === 'interview_scheduled'
+                ? `Interview scheduled for ${app.opportunityTitle || 'Liftout opportunity'}`
+                : `Application under review - ${app.opportunityTitle || 'Liftout opportunity'}`,
+              description: app.status === 'interview_scheduled'
+                ? 'Prepare for your team assessment interview'
+                : 'Your application is being reviewed by the company',
+              dueDate: app.interviewDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+              priority: app.status === 'interview_scheduled' ? 'high' as const : 'medium' as const,
+              status: 'upcoming' as const,
+              href: '/app/applications',
+            }));
+
+          if (appDeadlines.length > 0) {
+            return appDeadlines.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching deadlines:', error);
+      }
+      // Fallback to mock data if API fails or returns no data
       return generateMockDeadlines().sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
     },
   });

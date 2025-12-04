@@ -678,11 +678,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium text-text-secondary">Profile completeness</span>
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  completionBadge.color === 'green' ? 'bg-success-light text-success-dark' :
-                  completionBadge.color === 'blue' ? 'bg-navy-50 text-navy-800' :
-                  completionBadge.color === 'yellow' ? 'bg-gold-100 text-gold-800' :
-                  'bg-error-light text-error-dark'
+                <span className={`badge text-xs ${
+                  completionBadge.color === 'green' ? 'badge-success' :
+                  completionBadge.color === 'blue' ? 'badge-primary' :
+                  completionBadge.color === 'yellow' ? 'badge-warning' :
+                  'badge-error'
                 }`}>
                   {completionBadge.icon} {completionBadge.text}
                 </span>
@@ -1129,11 +1129,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                               <option value="Expert">Expert</option>
                             </select>
                           ) : (
-                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                              skill.level === 'Expert' ? 'bg-gold-100 text-gold-800' :
-                              skill.level === 'Advanced' ? 'bg-navy-50 text-navy-800' :
-                              skill.level === 'Intermediate' ? 'bg-success-light text-success-dark' :
-                              'bg-bg-alt text-text-secondary'
+                            <span className={`badge text-xs ${
+                              skill.level === 'Expert' ? 'badge-warning' :
+                              skill.level === 'Advanced' ? 'badge-primary' :
+                              skill.level === 'Intermediate' ? 'badge-success' :
+                              'badge-secondary'
                             }`}>
                               {skill.level}
                             </span>
@@ -1246,8 +1246,8 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                           </div>
                         ) : (
                           <>
-                            <h4 className="text-lg font-semibold text-text-primary">{exp.position || 'Position not set'}</h4>
-                            <p className="text-text-secondary">{exp.company || 'Company not set'}</p>
+                            <h4 className="text-base font-bold text-text-primary">{exp.position || 'Position not set'}</h4>
+                            <p className="text-sm text-text-secondary">{exp.company || 'Company not set'}</p>
                           </>
                         )}
                       </div>
@@ -1418,12 +1418,12 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                           </div>
                         ) : (
                           <>
-                            <h4 className="text-lg font-semibold text-text-primary">{item.title || 'Untitled project'}</h4>
-                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full mt-1 ${
-                              item.type === 'project' ? 'bg-navy-50 text-navy-800' :
-                              item.type === 'publication' ? 'bg-gold-100 text-gold-800' :
-                              item.type === 'presentation' ? 'bg-success-light text-success-dark' :
-                              'bg-bg-alt text-text-secondary'
+                            <h4 className="text-base font-bold text-text-primary">{item.title || 'Untitled project'}</h4>
+                            <span className={`badge text-xs mt-1 ${
+                              item.type === 'project' ? 'badge-primary' :
+                              item.type === 'publication' ? 'badge-warning' :
+                              item.type === 'presentation' ? 'badge-success' :
+                              'badge-secondary'
                             }`}>
                               {item.type}
                             </span>
@@ -1665,7 +1665,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                   <div className="flex flex-wrap gap-2">
                     {profileData.preferredRoles.length > 0 ? (
                       profileData.preferredRoles.map((role, i) => (
-                        <span key={i} className="inline-flex px-3 py-1 text-sm bg-navy-50 text-navy-800 rounded-full">
+                        <span key={i} className="badge badge-primary text-xs">
                           {role}
                         </span>
                       ))

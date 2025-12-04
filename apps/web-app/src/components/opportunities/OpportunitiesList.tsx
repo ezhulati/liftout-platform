@@ -127,12 +127,12 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="h-6 bg-bg-alt rounded w-64 mb-2"></div>
-                  <div className="h-4 bg-bg-alt rounded w-32 mb-4"></div>
-                  <div className="h-4 bg-bg-alt rounded w-full mb-2"></div>
-                  <div className="h-4 bg-bg-alt rounded w-3/4"></div>
+                  <div className="h-6 skeleton rounded w-64 mb-2"></div>
+                  <div className="h-4 skeleton rounded w-32 mb-4"></div>
+                  <div className="h-4 skeleton rounded w-full mb-2"></div>
+                  <div className="h-4 skeleton rounded w-3/4"></div>
                 </div>
-                <div className="h-8 w-24 bg-bg-alt rounded"></div>
+                <div className="h-8 w-24 skeleton rounded"></div>
               </div>
             </div>
           </div>

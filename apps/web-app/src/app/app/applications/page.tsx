@@ -25,19 +25,19 @@ function classNames(...classes: string[]) {
 function getStatusColor(status: string) {
   switch (status) {
     case 'submitted':
-      return 'bg-navy-50 text-navy-800';
+      return 'badge-primary';
     case 'under_review':
-      return 'bg-gold-100 text-gold-700';
+      return 'badge-warning';
     case 'interview_scheduled':
-      return 'bg-navy-100 text-navy-700';
+      return 'badge-primary';
     case 'offer_made':
-      return 'bg-success-light text-success';
+      return 'badge-success';
     case 'accepted':
-      return 'bg-success-light text-success';
+      return 'badge-success';
     case 'rejected':
-      return 'bg-error-light text-error';
+      return 'badge-error';
     default:
-      return 'bg-bg-alt text-text-primary';
+      return 'badge-secondary';
   }
 }
 
@@ -100,11 +100,11 @@ export default function ApplicationsPage() {
         {[1, 2, 3].map((i) => (
           <div key={i} className="card animate-pulse">
             <div className="flex items-center space-x-4">
-              <div className="h-16 w-16 bg-bg-elevated rounded-lg"></div>
+              <div className="h-16 w-16 skeleton rounded-lg"></div>
               <div className="flex-1">
-                <div className="h-4 bg-bg-elevated rounded w-48 mb-2"></div>
-                <div className="h-3 bg-bg-elevated rounded w-64 mb-2"></div>
-                <div className="h-3 bg-bg-elevated rounded w-32"></div>
+                <div className="h-4 skeleton rounded w-48 mb-2"></div>
+                <div className="h-3 skeleton rounded w-64 mb-2"></div>
+                <div className="h-3 skeleton rounded w-32"></div>
               </div>
             </div>
           </div>

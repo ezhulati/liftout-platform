@@ -322,9 +322,9 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
   const getSecurityBadge = (level: string) => {
     const colors = {
-      maximum: 'bg-error-light text-error-dark',
-      high: 'bg-purple-100 text-purple-800',
-      standard: 'bg-purple-50 text-purple-800',
+      maximum: 'badge-error',
+      high: 'badge-primary',
+      standard: 'badge-secondary',
     };
     return colors[level as keyof typeof colors] || colors.standard;
   };
@@ -525,11 +525,11 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
                     {/* Tags */}
                     <div className="flex items-center gap-2 mt-2">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getSecurityBadge(conversation.securityLevel)}`}>
+                      <span className={`badge text-xs ${getSecurityBadge(conversation.securityLevel)}`}>
                         {conversation.securityLevel}
                       </span>
                       {conversation.isConfidential && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-error-light text-error-dark">
+                        <span className="badge badge-error text-xs">
                           confidential
                         </span>
                       )}
@@ -602,17 +602,17 @@ export function RealtimeMessageCenter({ userId }: RealtimeMessageCenterProps) {
 
           {/* Security badges */}
           <div className="flex items-center gap-2 mt-3">
-            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${getSecurityBadge(selectedConversation.securityLevel)}`}>
+            <span className={`badge text-xs ${getSecurityBadge(selectedConversation.securityLevel)}`}>
               {selectedConversation.securityLevel} security
             </span>
             {selectedConversation.encryptionEnabled && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold bg-success-light text-success-dark">
+              <span className="badge badge-success text-xs inline-flex items-center gap-1">
                 <LockClosedIcon className="h-3 w-3" />
                 encrypted
               </span>
             )}
             {selectedConversation.isConfidential && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-error-light text-error-dark">
+              <span className="badge badge-error text-xs">
                 confidential
               </span>
             )}

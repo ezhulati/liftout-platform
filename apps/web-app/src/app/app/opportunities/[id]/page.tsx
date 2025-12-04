@@ -219,33 +219,33 @@ export default function OpportunityDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header Card */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
+            <div className="card">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 bg-navy-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <BuildingOffice2Icon className="w-8 h-8 text-navy" />
+                  <div className="w-14 h-14 bg-navy-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <BuildingOffice2Icon className="w-7 h-7 text-navy" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[opportunity.type]}`}>
+                    <div className="flex items-center flex-wrap gap-2 mb-1">
+                      <span className={`badge text-xs ${typeColors[opportunity.type]}`}>
                         {typeLabels[opportunity.type]}
                       </span>
                       {opportunity.isConfidential && (
-                        <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-text-tertiary/20 text-text-secondary">
+                        <span className="badge badge-secondary text-xs">
                           Confidential
                         </span>
                       )}
                     </div>
-                    <h1 className="text-2xl font-bold text-text-primary">{opportunity.title}</h1>
-                    <p className="text-text-secondary text-lg">{opportunity.company}</p>
+                    <h1 className="text-xl font-bold text-text-primary">{opportunity.title}</h1>
+                    <p className="text-text-secondary">{opportunity.company}</p>
                   </div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                <span className={`badge text-xs ${
                   opportunity.status === 'open'
-                    ? 'bg-success-light text-success'
+                    ? 'badge-success'
                     : opportunity.status === 'in_review'
-                    ? 'bg-gold-light text-gold-dark'
-                    : 'bg-text-tertiary/20 text-text-secondary'
+                    ? 'badge-warning'
+                    : 'badge-secondary'
                 }`}>
                   {opportunity.status === 'open' ? 'Open' : opportunity.status === 'in_review' ? 'In Review' : 'Closed'}
                 </span>
@@ -304,73 +304,73 @@ export default function OpportunityDetailPage() {
             </div>
 
             {/* Description */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
-              <h2 className="text-lg font-semibold text-text-primary mb-4">About This Opportunity</h2>
-              <p className="text-text-secondary whitespace-pre-wrap">{opportunity.description}</p>
+            <div className="card">
+              <h2 className="text-lg font-bold text-text-primary mb-4">About This Opportunity</h2>
+              <p className="text-sm text-text-secondary whitespace-pre-wrap leading-relaxed">{opportunity.description}</p>
             </div>
 
             {/* Strategic Rationale */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
+            <div className="card">
               <div className="flex items-center gap-2 mb-4">
                 <SparklesIcon className="w-5 h-5 text-gold" />
-                <h2 className="text-lg font-semibold text-text-primary">Strategic Rationale</h2>
+                <h2 className="text-lg font-bold text-text-primary">Strategic Rationale</h2>
               </div>
-              <p className="text-text-secondary">{opportunity.strategicRationale}</p>
+              <p className="text-sm text-text-secondary leading-relaxed">{opportunity.strategicRationale}</p>
             </div>
 
             {/* Requirements */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
+            <div className="card">
               <div className="flex items-center gap-2 mb-4">
                 <CheckCircleIcon className="w-5 h-5 text-success" />
-                <h2 className="text-lg font-semibold text-text-primary">Requirements</h2>
+                <h2 className="text-lg font-bold text-text-primary">Requirements</h2>
               </div>
               <ul className="space-y-3">
                 {opportunity.requirements.map((req, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-success-light text-success text-xs font-medium flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="w-6 h-6 rounded-full bg-success-light text-success text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                       {index + 1}
                     </span>
-                    <span className="text-text-secondary">{req}</span>
+                    <span className="text-sm text-text-secondary">{req}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Responsibilities */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
+            <div className="card">
               <div className="flex items-center gap-2 mb-4">
                 <ArrowTrendingUpIcon className="w-5 h-5 text-navy" />
-                <h2 className="text-lg font-semibold text-text-primary">Responsibilities</h2>
+                <h2 className="text-lg font-bold text-text-primary">Responsibilities</h2>
               </div>
               <ul className="space-y-3">
                 {opportunity.responsibilities.map((resp, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-navy-50 text-navy text-xs font-medium flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="w-6 h-6 rounded-full bg-navy-50 text-navy text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                       {index + 1}
                     </span>
-                    <span className="text-text-secondary">{resp}</span>
+                    <span className="text-sm text-text-secondary">{resp}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Integration Plan */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6">
+            <div className="card">
               <div className="flex items-center gap-2 mb-4">
                 <ShieldCheckIcon className="w-5 h-5 text-navy" />
-                <h2 className="text-lg font-semibold text-text-primary">Integration Plan</h2>
+                <h2 className="text-lg font-bold text-text-primary">Integration Plan</h2>
               </div>
-              <p className="text-text-secondary">{opportunity.integrationPlan}</p>
+              <p className="text-sm text-text-secondary leading-relaxed">{opportunity.integrationPlan}</p>
             </div>
 
             {/* AI Matching Section - Only for company owners */}
             {isCompanyUser && isOwner && (
-              <div className="bg-bg-elevated rounded-lg border border-border p-6">
+              <div className="card">
                 <div className="flex items-center gap-2 mb-4">
                   <LightBulbIcon className="w-5 h-5 text-gold" />
-                  <h2 className="text-lg font-semibold text-text-primary">AI-Matched Teams</h2>
+                  <h2 className="text-lg font-bold text-text-primary">AI-Matched Teams</h2>
                 </div>
-                <p className="text-sm text-text-secondary mb-6">
+                <p className="text-sm text-text-secondary mb-6 leading-relaxed">
                   Discover teams that match the requirements for this opportunity based on their skills, experience, and availability.
                 </p>
                 <MatchingDashboard
@@ -385,11 +385,11 @@ export default function OpportunityDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Action Card */}
-            <div className="bg-bg-elevated rounded-lg border border-border p-6 sticky top-6">
+            <div className="card sticky top-6">
               {/* Actions for Team Users (individuals who want to apply) */}
               {isTeamUser && (
                 <>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4">Interested?</h3>
+                  <h3 className="text-lg font-bold text-text-primary mb-4">Interested?</h3>
 
                   {/* Deadline Warning */}
                   {daysUntilDeadline <= 14 && daysUntilDeadline > 0 && (
@@ -442,7 +442,7 @@ export default function OpportunityDetailPage() {
               {/* Actions for Company Users who own this opportunity */}
               {isCompanyUser && isOwner && (
                 <>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4">Manage Opportunity</h3>
+                  <h3 className="text-lg font-bold text-text-primary mb-4">Manage Opportunity</h3>
 
                   <div className="space-y-3">
                     <Link
@@ -516,15 +516,15 @@ export default function OpportunityDetailPage() {
               {/* Info card for Company Users viewing other companies' opportunities */}
               {isCompanyUser && !isOwner && (
                 <>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4">Opportunity Details</h3>
-                  <p className="text-sm text-text-secondary mb-4">
+                  <h3 className="text-lg font-bold text-text-primary mb-4">Opportunity Details</h3>
+                  <p className="text-sm text-text-secondary mb-4 leading-relaxed">
                     This opportunity was posted by {opportunity.company}. As a company user, you can browse opportunities to understand the competitive landscape.
                   </p>
                 </>
               )}
 
               <div className="mt-6 pt-6 border-t border-border">
-                <h4 className="text-sm font-medium text-text-primary mb-3">Compensation Details</h4>
+                <h4 className="text-sm font-bold text-text-primary mb-3">Compensation Details</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-text-tertiary">Type</span>
@@ -556,7 +556,7 @@ export default function OpportunityDetailPage() {
               </div>
 
               <div className="mt-6 pt-6 border-t border-border">
-                <h4 className="text-sm font-medium text-text-primary mb-3">Important Dates</h4>
+                <h4 className="text-sm font-bold text-text-primary mb-3">Important Dates</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-text-tertiary">Posted</span>
