@@ -236,23 +236,13 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
               </button>
             </div>
 
-            {/* Trust indicators */}
+            {/* HBR Insight */}
             <div className="mt-12 pt-8 border-t border-border">
-              <p className="text-sm text-text-tertiary mb-4">Why complete your profile?</p>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-navy mb-1">3x</div>
-                  <div className="text-xs text-text-tertiary">more profile views</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-navy mb-1">85%</div>
-                  <div className="text-xs text-text-tertiary">better matches</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-navy mb-1">2x</div>
-                  <div className="text-xs text-text-tertiary">faster connections</div>
-                </div>
-              </div>
+              <p className="text-sm text-text-tertiary mb-3">From Harvard Business Review</p>
+              <blockquote className="text-sm text-text-secondary italic leading-relaxed">
+                "The advantages of long-standing relationships and trust help an experienced team make an impact much faster than could a group of people brought together for the first time."
+              </blockquote>
+              <p className="text-xs text-text-tertiary mt-2">— Boris Groysberg & Robin Abrahams, HBR</p>
             </div>
           </div>
         </div>

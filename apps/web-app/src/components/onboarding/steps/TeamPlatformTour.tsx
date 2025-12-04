@@ -13,8 +13,6 @@ import {
   ArrowRightIcon,
   SparklesIcon,
   BriefcaseIcon,
-  ShieldCheckIcon,
-  BellIcon,
 } from '@heroicons/react/24/outline';
 import { ButtonGroup } from '@/components/ui';
 
@@ -60,7 +58,7 @@ const tourSteps = [
       'Feature key achievements',
       'Control profile visibility',
     ],
-    tip: 'Complete teams with strong profiles get 3x more company interest.',
+    tip: 'Star performers don\'t operate in a vacuum—they succeed as part of a team. Show companies what makes yours work.',
   },
   {
     id: 'messaging',
@@ -254,23 +252,13 @@ export function TeamPlatformTour({ onComplete }: TeamPlatformTourProps) {
         </div>
       </div>
 
-      {/* Quick Stats for Encouragement */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <BriefcaseIcon className="h-6 w-6 text-navy mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">200+</p>
-          <p className="text-sm text-text-tertiary">Active opportunities</p>
-        </div>
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <ShieldCheckIcon className="h-6 w-6 text-success mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">100%</p>
-          <p className="text-sm text-text-tertiary">Confidential</p>
-        </div>
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <BellIcon className="h-6 w-6 text-gold mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">Instant</p>
-          <p className="text-sm text-text-tertiary">Match alerts</p>
-        </div>
+      {/* HBR Insight */}
+      <div className="p-4 bg-bg-alt rounded-xl border-l-4 border-navy">
+        <p className="text-xs text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          "There's no need for team members to get acquainted with one another or establish shared values, mutual accountability, or group norms. Instead, the team can hit the ground running."
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
       </div>
 
       {/* Navigation */}

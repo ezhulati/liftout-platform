@@ -12,9 +12,6 @@ import {
   CheckCircleIcon,
   ArrowRightIcon,
   SparklesIcon,
-  UserGroupIcon,
-  ShieldCheckIcon,
-  BellIcon,
 } from '@heroicons/react/24/outline';
 import { ButtonGroup } from '@/components/ui';
 
@@ -254,23 +251,13 @@ export function CompanyPlatformTour({ onComplete }: CompanyPlatformTourProps) {
         </div>
       </div>
 
-      {/* Quick Stats for Encouragement */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <UserGroupIcon className="h-6 w-6 text-navy mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">500+</p>
-          <p className="text-sm text-text-tertiary">Teams available</p>
-        </div>
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <ShieldCheckIcon className="h-6 w-6 text-success mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">85%</p>
-          <p className="text-sm text-text-tertiary">Verified profiles</p>
-        </div>
-        <div className="text-center p-4 bg-bg-alt rounded-xl">
-          <BellIcon className="h-6 w-6 text-gold mx-auto mb-2" />
-          <p className="text-lg font-bold text-text-primary">24hr</p>
-          <p className="text-sm text-text-tertiary">Avg response time</p>
-        </div>
+      {/* HBR Insight */}
+      <div className="p-4 bg-bg-alt rounded-xl border-l-4 border-navy">
+        <p className="text-xs text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          "Companies can quickly gain capacity without all the headaches of a merger or acquisition. Teams can hit the ground running—no need for members to get acquainted or establish shared values and group norms."
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
       </div>
 
       {/* Navigation */}

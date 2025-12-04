@@ -423,10 +423,11 @@ function generateTimelineEstimate(team: Team, opportunity: Opportunity): MatchIn
 }
 
 function generateMarketIntelligence(team: Team, opportunity: Opportunity): MatchInsight {
+  // HBR-sourced insights about liftouts (Groysberg & Abrahams)
   const insights = [
-    `Teams with ${team.yearsWorkingTogether}+ years together have 85% higher retention rates post-liftout`,
-    `${opportunity.industry} liftouts typically command 15-25% premium over individual hires`,
-    `${team.industry} to ${opportunity.industry} transitions show 23% faster time-to-productivity when teams stay intact`,
+    `Teams that have worked together for ${team.yearsWorkingTogether}+ years can hit the ground running—no team formation phase needed`,
+    `Liftouts in ${opportunity.industry} let companies build capability faster than individual hiring, with lower risk than M&A`,
+    `Intact teams preserve the trust and relationships that made them successful—star performers succeed as part of their team`,
   ];
   
   const randomInsight = insights[Math.floor(Math.random() * insights.length)];
