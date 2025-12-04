@@ -79,6 +79,12 @@ export function AppHeader({ user }: AppHeaderProps) {
     setIsMounted(true);
   }, []);
 
+  // Get the portal root element
+  const getPortalRoot = useCallback(() => {
+    if (typeof document === 'undefined') return null;
+    return document.getElementById('dropdown-portal') || document.body;
+  }, []);
+
   const updateDropdownPosition = useCallback(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -217,7 +223,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                       />
                     </span>
                   </Menu.Button>
-                  {isMounted && createPortal(
+                  {isMounted && getPortalRoot() && createPortal(
                     <Transition
                       show={open}
                       as={Fragment}
@@ -230,7 +236,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                     >
                       <Menu.Items
                         static
-                        className="fixed w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none z-[9999]"
+                        className="fixed w-52 origin-top-right rounded-xl bg-bg-surface py-2 shadow-lg ring-1 ring-border focus:outline-none pointer-events-auto"
                         style={{
                           top: dropdownPosition.top,
                           right: dropdownPosition.right,
@@ -265,7 +271,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                         </Menu.Item>
                       </Menu.Items>
                     </Transition>,
-                    document.body
+                    getPortalRoot()!
                   )}
                 </>
               )}

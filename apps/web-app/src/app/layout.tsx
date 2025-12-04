@@ -138,6 +138,8 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        {/* Portal root for dropdowns - must be last child and highest z-index */}
+        <div id="dropdown-portal" className="fixed inset-0 pointer-events-none z-[99999]" style={{ isolation: 'isolate' }} />
       </body>
     </html>
   );
