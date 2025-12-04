@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Post your team profile confidentially',
+  'Strength in numbers—stand out together',
   'Your current employer never sees you',
-  'Companies looking for teams find you',
+  'A known in an unknown process',
   'Move together when the fit is right',
 ];
 
@@ -35,12 +35,12 @@ export function TeamHero() {
 
             {/* Headline - Practical UI: clear, no colored text breaks */}
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-              Post a smoke signal. Let companies find you.
+              Ready for the next step? Take it together.
             </h1>
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              Liftout is the first platform where entire teams can discreetly signal they&apos;re open to new opportunities. Companies looking for proven teams—not just individuals—will find you.
+              Job searching alone is daunting. There&apos;s a better way. You can now take that journey with the people who&apos;ve helped you succeed. Liftout makes sure you get where you want to go—together.
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}

@@ -14,19 +14,24 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
+    name: 'Skip the Enneagram tests',
+    description: 'You can\'t manufacture chemistry. But you can hire it. These teams already have it.',
+    icon: UserGroupIcon,
+  },
+  {
     name: 'Day-one productivity',
-    description: 'Skip the 6-month team-building phase. Teams arrive ready to deliver from their first week.',
+    description: 'New hires take 12 months to reach peak performance. Teams that move together skip this entirely.',
     icon: RocketLaunchIcon,
   },
   {
     name: 'Proven track records',
-    description: 'Every team includes documented achievements, client references, and quantifiable outcomes.',
+    description: 'Every team has documented achievements, verified tenure, and real chemistry—not interview personas.',
     icon: ShieldCheckIcon,
   },
   {
-    name: 'Teams that work',
-    description: 'Hire teams with 3+ years working together. Established trust, tested processes, real chemistry.',
-    icon: UserGroupIcon,
+    name: 'A known in an unknown',
+    description: 'For teams: navigate change with people you trust. No more lonely desert of job searching alone.',
+    icon: ChatBubbleLeftRightIcon,
   },
   {
     name: 'Lower risk than M&A',
@@ -34,13 +39,8 @@ const features = [
     icon: BriefcaseIcon,
   },
   {
-    name: 'Confidential process',
-    description: 'Explore opportunities discreetly. Current employers and sensitive data stay protected.',
-    icon: ChatBubbleLeftRightIcon,
-  },
-  {
-    name: 'Integration support',
-    description: 'Track onboarding progress, measure team performance, and ensure successful transitions.',
+    name: 'Complete confidentiality',
+    description: 'Current employers are automatically blocked. Explore opportunities without anyone knowing.',
     icon: ChartBarIcon,
   },
 ];
@@ -65,7 +65,7 @@ export function LandingFeatures() {
             What we built
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            The first platform where teams can confidentially signal they&apos;re open to opportunities—and companies can find them.
+            A team board, not a job board. Where intact teams can signal they&apos;re open to opportunities—and companies can find proven chemistry instead of hoping for the best.
           </p>
         </div>
 

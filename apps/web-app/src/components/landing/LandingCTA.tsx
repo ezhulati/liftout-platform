@@ -19,11 +19,11 @@ export function LandingCTA() {
           id="cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
         >
-          Ready to try something that didn&apos;t exist until now?
+          A team board, not a job board
         </h2>
 
         <p className="text-white/90 text-lg lg:text-xl leading-relaxed mb-8 max-w-2xl text-center lg:text-left">
-          This is the first platform for team-based hiring. Teams can post confidential profiles. Companies can find them. Everyone skips the team-building phase.
+          Job searching alone is daunting. There&apos;s a better way. Teams can take that journey together with people who&apos;ve helped them succeed. Companies get proven chemistry instead of hoping for the best.
         </p>
 
         {/* Practical UI: Primary (solid) + Tertiary (underlined), left-aligned on desktop */}
@@ -48,7 +48,7 @@ export function LandingCTA() {
 
         {/* Simple trust line - Practical UI: 16px minimum for small text */}
         <p className="text-white/60 text-base text-center lg:text-left">
-          We&apos;re just getting started. Join us.
+          This didn&apos;t exist before. Now it does.
         </p>
       </div>
     </section>

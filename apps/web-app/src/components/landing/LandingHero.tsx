@@ -46,10 +46,9 @@ export function LandingHero() {
                 Hire Teams, Not Individuals
               </h1>
 
-              {/* Subhead - 18px body */}
+              {/* Subhead - 18px body with referral bonus insight */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Stop hoping new hires will gel. Connect with intact teams who already
-                trust each other, have proven chemistry, and can hit the ground running.
+                You already pay referral bonuses to recruit former colleagues one at a time. Why not get both people now, together, with chemistry already proven?
               </p>
 
               {/* CTAs - Practical UI: Primary (solid) + Tertiary (underlined text) */}
@@ -75,7 +74,7 @@ export function LandingHero() {
 
               {/* Trust signals - Practical UI: 16px minimum for small text */}
               <p className="text-text-tertiary text-base">
-                Free to explore. We&apos;re just getting started.
+                This didn&apos;t exist before. Now it does.
               </p>
             </div>
 

@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Browse teams with proven chemistry',
-  'Skip the team-building phase',
-  'Lower risk than M&A alternatives',
+  'Skip the Enneagram tests and trust falls',
+  'Get chemistry you can\'t manufacture',
+  'Kill two birds with one stone',
   'Teams ready to hit the ground running',
 ];
 
@@ -40,7 +40,7 @@ export function CompanyHero() {
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              For the first time, intact teams can signal they&apos;re open to new opportunities—and you can hire them. Proven chemistry. Established trust. Ready to work.
+              You already pay referral bonuses to recruit former colleagues one at a time. Why not get both people now, together, with chemistry already proven?
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}

@@ -6,19 +6,23 @@ import { ChevronDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // FAQs specifically for companies - ordered by what matters most to them
-// Enhanced with research-backed data points
+// Enhanced with research-backed data points + emotional insights from founder brainstorms
 const faqs = [
   {
     question: 'Why hire a team instead of individuals?',
-    answer: 'The data is clear: 75% of employers admit to hiring the wrong person (SHRM), and 46% of new hires fail within 18 months (Leadership IQ). Teams that move together skip the 12-month ramp-up period new hires need to reach peak performance (Gallup). Google\'s Project Aristotle found that psychological safety—which takes years to build—accounts for 43% of team performance. When you hire a team, you get that trust intact.',
+    answer: 'Think about it: you already pay referral bonuses to get employees to recruit former colleagues—one at a time. Why not get both people now, together, with chemistry already proven? The data backs this up: 75% of employers admit to hiring the wrong person (SHRM), 46% of new hires fail within 18 months (Leadership IQ), and Google\'s Project Aristotle found psychological safety accounts for 43% of team performance. When you hire a team, you skip the Enneagram tests and trust falls—you get real chemistry, already built.',
+  },
+  {
+    question: 'Won\'t they just leave together too?',
+    answer: 'This is the elephant in the room, so let\'s address it directly. Teams leave because of mutual dissatisfaction—bad leadership, lack of growth, cultural problems. Only about 20% of job changers are "mercenary hoppers." Most people just want a better situation and will stay when they find it. Teams that choose to move together are making a deliberate choice—they\'re not running from something, they\'re running toward something. Give them what they came for, and they\'ll stay.',
   },
   {
     question: 'How much does it cost?',
-    answer: 'Browsing teams and initial exploration is completely free. We charge a success fee only when an acquisition is completed—you pay nothing until you find the right fit. Compare this to the average cost of a bad hire: $240,000 (SHRM). No credit card required to get started.',
+    answer: 'Browsing teams and initial exploration is completely free. We charge a success fee only when an acquisition is completed—you pay nothing until you find the right fit. Compare this to the average cost of a bad hire: $240,000 (SHRM), plus all the money you spend on personality tests trying to manufacture the chemistry these teams already have. No credit card required to get started.',
   },
   {
     question: 'How are teams verified?',
-    answer: 'Every team goes through comprehensive verification: background checks, reference validation, track record documentation, and performance history review. We verify team composition, years working together, and documented achievements. This matters because 89% of hiring failures are due to poor culture fit, not skills (LinkedIn)—and team chemistry is something you can actually verify.',
+    answer: 'Every team goes through comprehensive verification: background checks, reference validation, track record documentation, and performance history review. We verify team composition, years working together, and documented achievements. This matters because 89% of hiring failures are due to poor culture fit, not skills (LinkedIn)—and team chemistry is something you can actually verify, unlike individual "culture fit" guesswork.',
   },
   {
     question: 'What does the acquisition process look like?',
