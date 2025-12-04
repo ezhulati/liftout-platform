@@ -71,9 +71,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Check for 2FA setup routes - render without 2FA check
-  const is2FARoute = pathname?.includes('/admin/setup-2fa') || pathname?.includes('/admin/verify-2fa');
-
   return (
     <div className="min-h-screen bg-gray-950">
       <AdminSidebar />

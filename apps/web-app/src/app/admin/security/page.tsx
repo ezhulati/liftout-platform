@@ -16,12 +16,6 @@ const securityLinks = [
     href: '/admin/security/audit',
     icon: DocumentMagnifyingGlassIcon,
   },
-  {
-    name: 'Two-Factor Authentication',
-    description: 'Manage 2FA settings and recovery options',
-    href: '/admin/setup-2fa',
-    icon: KeyIcon,
-  },
 ];
 
 export default function SecurityPage() {
@@ -50,8 +44,8 @@ export default function SecurityPage() {
           <div className="flex items-center gap-3">
             <LockClosedIcon className="h-8 w-8 text-gray-400" />
             <div>
-              <p className="text-lg font-semibold text-white">2FA Enabled</p>
-              <p className="text-sm text-gray-400">Your account is protected</p>
+              <p className="text-lg font-semibold text-white">Admin Access</p>
+              <p className="text-sm text-gray-400">You have full admin privileges</p>
             </div>
           </div>
         </div>

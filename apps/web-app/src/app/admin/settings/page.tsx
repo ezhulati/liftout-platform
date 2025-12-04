@@ -241,10 +241,10 @@ export default function AdminSettingsPage() {
             <p className="text-white">Super Admin</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1">2FA Status</label>
+            <label className="block text-sm font-medium text-gray-400 mb-1">Status</label>
             <p className="text-green-400 flex items-center gap-1">
               <CheckCircleIcon className="h-4 w-4" />
-              Enabled
+              Active
             </p>
           </div>
         </div>
