@@ -6,8 +6,28 @@ import { useQuery } from '@tanstack/react-query';
 import { TeamComparison } from '@/components/teams/TeamComparison';
 import { PlusIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-// Demo teams for comparison
-const DEMO_TEAMS = [
+// Team interface for comparison
+interface CompareTeam {
+  id: string;
+  name: string;
+  matchScore: number;
+  size: number;
+  yearsWorking: number;
+  industry: string;
+  location: string;
+  skills: string[];
+  achievements: string[];
+  compensation: { min: number; max: number };
+  availability: string;
+  members: Array<{ id: string; name: string; role: string; yearsExperience: number }>;
+  strengths: string[];
+  considerations: string[];
+  verificationStatus: 'verified' | 'pending' | 'unverified';
+  previousLiftouts: number;
+}
+
+// Fallback demo teams for comparison
+const DEMO_TEAMS: CompareTeam[] = [
   {
     id: 'techflow-data-science',
     name: 'TechFlow Data Science Team',
@@ -86,6 +106,47 @@ export default function ComparePage() {
   const [showTeamPicker, setShowTeamPicker] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Fetch teams from API
+  const { data: allTeams = DEMO_TEAMS } = useQuery<CompareTeam[]>({
+    queryKey: ['compare-teams'],
+    queryFn: async () => {
+      try {
+        const response = await fetch('/api/teams?availability=available');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.teams && data.teams.length > 0) {
+            return data.teams.map((team: any) => ({
+              id: team.id,
+              name: team.name,
+              matchScore: team.cohesionScore || 85,
+              size: team.size || team.members?.length || 2,
+              yearsWorking: team.yearsWorking || team.yearsWorkingTogether || 2,
+              industry: team.industry || 'Technology',
+              location: team.location || 'Remote',
+              skills: team.members?.flatMap((m: any) => m.skills || []).slice(0, 6) || [],
+              achievements: team.achievements || [],
+              compensation: team.compensation || { min: 150000, max: 250000 },
+              availability: team.availability || 'Open to opportunities',
+              members: (team.members || []).map((m: any) => ({
+                id: m.id,
+                name: m.name,
+                role: m.role || 'Member',
+                yearsExperience: m.experience || 5,
+              })),
+              strengths: ['Strong team cohesion', 'Proven track record'],
+              considerations: ['Compensation expectations'],
+              verificationStatus: 'verified' as const,
+              previousLiftouts: team.successfulProjects ? Math.floor(team.successfulProjects / 5) : 0,
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching teams for comparison:', error);
+      }
+      return DEMO_TEAMS;
+    },
+  });
+
   // Initialize from URL params
   useEffect(() => {
     const teamsParam = searchParams.get('teams');
@@ -101,8 +162,8 @@ export default function ComparePage() {
     }
   }, [selectedTeamIds, router]);
 
-  const selectedTeams = DEMO_TEAMS.filter(t => selectedTeamIds.includes(t.id));
-  const availableTeams = DEMO_TEAMS.filter(
+  const selectedTeams = allTeams.filter(t => selectedTeamIds.includes(t.id));
+  const availableTeams = allTeams.filter(
     t => !selectedTeamIds.includes(t.id) &&
     (searchQuery === '' || t.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
