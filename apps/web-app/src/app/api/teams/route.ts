@@ -36,7 +36,18 @@ export async function GET(request: NextRequest) {
         visibility: 'public',
         availabilityStatus: 'available',
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        size: true,
+        yearsWorkingTogether: true,
+        availabilityStatus: true,
+        industry: true,
+        location: true,
+        createdBy: true,
+        createdAt: true,
+        updatedAt: true,
         members: {
           include: {
             user: {
@@ -68,7 +79,7 @@ export async function GET(request: NextRequest) {
       successfulProjects: 0,
       clientSatisfaction: 90,
       openToLiftout: team.availabilityStatus === 'available',
-      createdBy: team.createdById,
+      createdBy: team.createdBy,
       createdAt: team.createdAt.toISOString(),
       updatedAt: team.updatedAt.toISOString(),
       members: team.members.map(m => ({
