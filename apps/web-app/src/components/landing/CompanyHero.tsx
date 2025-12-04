@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Skip the 6-month team-building phase',
+  'Skip the team-building phase entirely',
   'Verified track records and references',
   'Lower risk than M&A alternatives',
-  '92% retention rate after 2 years',
+  'Teams that hit the ground running',
 ];
 
 export function CompanyHero() {
@@ -77,7 +77,7 @@ export function CompanyHero() {
 
             {/* Social proof - Practical UI: minimal, text-only */}
             <p className="mt-8 text-text-tertiary text-base">
-              Trusted by 50+ companies across 12 industries
+              Free to explore · No credit card required · NDA-protected
             </p>
           </div>
 

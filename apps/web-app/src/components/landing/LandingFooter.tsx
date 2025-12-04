@@ -192,11 +192,15 @@ export function LandingFooter() {
 
             {/* Trust badges */}
             <div className="mt-8 pt-6 border-t border-white/10">
-              <p className="text-white/50 text-sm uppercase tracking-wider mb-3">Trusted by</p>
+              <p className="text-white/50 text-sm uppercase tracking-wider mb-3">Industries served</p>
               <div className="flex items-center gap-2 text-white/60 text-base">
-                <span>150+ teams</span>
+                <span>Finance</span>
                 <span className="text-white/30">|</span>
-                <span>12 industries</span>
+                <span>Consulting</span>
+                <span className="text-white/30">|</span>
+                <span>Legal</span>
+                <span className="text-white/30">|</span>
+                <span>Technology</span>
               </div>
             </div>
           </nav>

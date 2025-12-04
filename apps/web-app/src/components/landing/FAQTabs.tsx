@@ -8,7 +8,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const teamFaqs = [
   {
     question: 'Is Liftout confidential?',
-    answer: 'Yes. Your current employer is automatically blocked from seeing your profile. You control which companies can view you, and all conversations are NDA-protected. We\'ve had zero confidentiality breaches since founding.',
+    answer: 'Yes. Your current employer is automatically blocked from seeing your profile. You control which companies can view you, and all conversations are NDA-protected from the first interaction.',
   },
   {
     question: 'Is Liftout free for teams?',
@@ -28,7 +28,7 @@ const teamFaqs = [
   },
   {
     question: 'Are companies actually looking for teams?',
-    answer: 'Yes. 500+ registered firms across law, banking, consulting, advertising, and technology—from startups to Fortune 500—are actively seeking intact teams that can make an immediate impact.',
+    answer: 'Yes. Liftouts are common practice in law, investment banking, consulting, advertising, and technology. Companies value the immediate productivity that only an established team can provide.',
   },
 ];
 
@@ -39,7 +39,7 @@ const companyFaqs = [
   },
   {
     question: 'How are teams verified?',
-    answer: 'Every team goes through background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements. 100% of teams on our platform are verified.',
+    answer: 'Every team goes through background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements before they can connect with companies.',
   },
   {
     question: 'What does the process look like?',
@@ -47,11 +47,11 @@ const companyFaqs = [
   },
   {
     question: 'What industries do you cover?',
-    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records across 12 industries.',
+    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records—the same industries where liftouts have been common practice for decades.',
   },
   {
     question: 'What if an acquisition doesn\'t work out?',
-    answer: 'We track integration success for 12 months. With a 92% retention rate after 2 years, issues are rare. If significant problems arise within 90 days, we work with both parties to find solutions.',
+    answer: 'We track integration success for 12 months post-acquisition. Research shows intact teams integrate faster because they skip the team-formation phase. If issues arise within the first 90 days, we work with both parties to find solutions.',
   },
   {
     question: 'Is the process confidential?',
@@ -208,8 +208,7 @@ export function FAQTabs() {
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
                 <span className="font-semibold text-text-primary">Need help with something specific?</span>
-                {' '}Our team has helped 150+ companies and teams navigate the process.
-                We're happy to answer any questions before you commit.
+                {' '}We're happy to answer any questions and walk you through the process before you commit.
               </p>
             </div>
           </div>

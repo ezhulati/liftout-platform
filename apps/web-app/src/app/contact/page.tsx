@@ -137,11 +137,10 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Trust signal - social proof (#52) */}
+                {/* Trust signal - HBR insight */}
                 <div className="mt-8 p-5 bg-navy/5 rounded-xl">
                   <p className="text-text-secondary text-sm leading-relaxed">
-                    <span className="font-semibold text-text-primary">150+ teams</span> and companies have connected through Liftout.
-                    Our team has helped facilitate liftouts across 12 industries.
+                    Liftouts are common practice in <span className="font-semibold text-text-primary">law, investment banking, consulting, and technology</span>—industries where team chemistry drives results.
                   </p>
                 </div>
               </div>

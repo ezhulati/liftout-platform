@@ -123,16 +123,12 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Stats */}
-          <div className="flex gap-8">
-            <div>
-              <p className="text-purple-300 font-heading text-3xl font-bold">85%</p>
-              <p className="text-white/70 text-sm">Faster Integration</p>
-            </div>
-            <div>
-              <p className="text-purple-300 font-heading text-3xl font-bold">3x</p>
-              <p className="text-white/70 text-sm">Productivity Gain</p>
-            </div>
+          {/* HBR insight instead of fake stats */}
+          <div className="max-w-sm">
+            <p className="text-white/80 text-sm italic leading-relaxed">
+              "The advantages of long-standing relationships help an experienced team make an impact much faster than a group brought together for the first time."
+            </p>
+            <p className="text-white/50 text-xs mt-2">— Harvard Business Review</p>
           </div>
         </div>
       </div>

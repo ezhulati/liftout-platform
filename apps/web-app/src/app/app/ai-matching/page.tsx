@@ -389,10 +389,10 @@ export default function AIMatchingPage() {
               <div className="mt-6 p-4 bg-gradient-to-r from-navy-50 to-gold-50 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <ChartBarIcon className="h-5 w-5 text-navy" aria-hidden="true" />
-                  <span className="text-base font-bold text-navy-900">Success Rate</span>
+                  <span className="text-base font-bold text-navy-900">Why Match Scores Matter</span>
                 </div>
                 <p className="text-sm font-normal text-navy-700 leading-relaxed">
-                  Teams with 85%+ match scores have a 3x higher success rate in liftout negotiations.
+                  Higher match scores indicate stronger alignment in skills, culture, and goals—key factors for successful liftout integration.
                 </p>
               </div>
             </div>

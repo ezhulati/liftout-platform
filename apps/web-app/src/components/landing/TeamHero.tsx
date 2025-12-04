@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const benefits = [
   'Move together as a unit',
   'Keep your team chemistry intact',
-  '100% confidential exploration',
+  'Confidential exploration',
   'Companies actively seeking teams',
 ];
 
@@ -77,7 +77,7 @@ export function TeamHero() {
 
             {/* Social proof - Practical UI: minimal, text-only */}
             <p className="mt-8 text-text-tertiary text-base">
-              Join 150+ teams who found their next chapter together
+              Free to explore · No credit card required · NDA-protected
             </p>
           </div>
 
