@@ -99,7 +99,7 @@ export default function AppLayout({
       <AppSidebar />
       <div className="lg:pl-64">
         <AppHeader user={userData} />
-        <main id="main-content" tabIndex={-1} className="py-6 outline-none">
+        <main id="main-content" tabIndex={-1} className="py-6 outline-none relative z-0">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ErrorBoundary>
               {children}
