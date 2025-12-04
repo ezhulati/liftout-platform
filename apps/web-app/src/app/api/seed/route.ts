@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { SeniorityLevel, UrgencyLevel, RemotePreference, OpportunityStatus, ApplicationStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-// Secret key to protect this endpoint
+// Secret key to protect this endpoint - Updated Dec 4
 const SEED_SECRET = process.env.SEED_SECRET || 'liftout-seed-2024';
 
 export async function POST(request: NextRequest) {
