@@ -48,18 +48,31 @@ export async function POST(request: NextRequest) {
 
     results.push(`Before cleanup: ${userCountBefore} users, ${companyCountBefore} companies, ${teamCountBefore} teams`);
 
-    // Delete conversations first (depends on teams/companies)
+    // Get IDs of teams and companies to delete (for models without relations)
+    const teamsToDelete = await prisma.team.findMany({
+      where: { slug: { notIn: KEEP_TEAM_SLUGS } },
+      select: { id: true }
+    });
+    const teamIdsToDelete = teamsToDelete.map(t => t.id);
+
+    const companiesToDelete = await prisma.company.findMany({
+      where: { slug: { notIn: KEEP_COMPANY_SLUGS } },
+      select: { id: true }
+    });
+    const companyIdsToDelete = companiesToDelete.map(c => c.id);
+
+    // Delete conversations first (uses scalar teamId/companyId, not relations)
     const deletedConversations = await prisma.conversation.deleteMany({
       where: {
         OR: [
-          { team: { slug: { notIn: KEEP_TEAM_SLUGS } } },
-          { company: { slug: { notIn: KEEP_COMPANY_SLUGS } } },
+          { teamId: { in: teamIdsToDelete } },
+          { companyId: { in: companyIdsToDelete } },
         ]
       }
     });
     results.push(`Deleted ${deletedConversations.count} conversations`);
 
-    // Delete applications (depends on teams)
+    // Delete applications (has relation to team)
     const deletedApplications = await prisma.teamApplication.deleteMany({
       where: {
         team: { slug: { notIn: KEEP_TEAM_SLUGS } }
@@ -67,7 +80,7 @@ export async function POST(request: NextRequest) {
     });
     results.push(`Deleted ${deletedApplications.count} applications`);
 
-    // Delete opportunities from non-essential companies
+    // Delete opportunities from non-essential companies (has relation)
     const deletedOpportunities = await prisma.opportunity.deleteMany({
       where: {
         company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
@@ -75,7 +88,7 @@ export async function POST(request: NextRequest) {
     });
     results.push(`Deleted ${deletedOpportunities.count} opportunities`);
 
-    // Delete team members from non-essential teams
+    // Delete team members from non-essential teams (has relation)
     const deletedTeamMembers = await prisma.teamMember.deleteMany({
       where: {
         team: { slug: { notIn: KEEP_TEAM_SLUGS } }
@@ -91,7 +104,7 @@ export async function POST(request: NextRequest) {
     });
     results.push(`Deleted ${deletedTeams.count} teams`);
 
-    // Delete company users from non-essential companies
+    // Delete company users from non-essential companies (has relation)
     const deletedCompanyUsers = await prisma.companyUser.deleteMany({
       where: {
         company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
@@ -107,7 +120,14 @@ export async function POST(request: NextRequest) {
     });
     results.push(`Deleted ${deletedCompanies.count} companies`);
 
-    // Delete individual profiles for non-essential users
+    // Get user IDs to delete for models without relations
+    const usersToDelete = await prisma.user.findMany({
+      where: { email: { notIn: KEEP_EMAILS } },
+      select: { id: true }
+    });
+    const userIdsToDelete = usersToDelete.map(u => u.id);
+
+    // Delete individual profiles for non-essential users (has relation)
     const deletedProfiles = await prisma.individualProfile.deleteMany({
       where: {
         user: { email: { notIn: KEEP_EMAILS } }
@@ -115,7 +135,7 @@ export async function POST(request: NextRequest) {
     });
     results.push(`Deleted ${deletedProfiles.count} individual profiles`);
 
-    // Delete user skills for non-essential users
+    // Delete user skills for non-essential users (has relation)
     const deletedUserSkills = await prisma.userSkill.deleteMany({
       where: {
         user: { email: { notIn: KEEP_EMAILS } }
