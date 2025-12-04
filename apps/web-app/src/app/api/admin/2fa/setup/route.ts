@@ -6,6 +6,45 @@ import { generate2FASecret } from '@/lib/services/adminService';
 
 export const dynamic = 'force-dynamic';
 
+// GET - Check if 2FA is enabled
+export async function GET(req: NextRequest) {
+  try {
+    const token = await getToken({ req });
+
+    if (!token || !token.sub) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user is admin
+    if (token.userType !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    // Check if 2FA is already enabled
+    const user = await prisma.user.findUnique({
+      where: { id: token.sub },
+      select: { twoFactorEnabled: true },
+    });
+
+    return NextResponse.json({
+      enabled: user?.twoFactorEnabled || false,
+    });
+  } catch (error) {
+    console.error('2FA status check error:', error);
+    return NextResponse.json(
+      { error: 'Failed to check 2FA status' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Start 2FA setup
 export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req });

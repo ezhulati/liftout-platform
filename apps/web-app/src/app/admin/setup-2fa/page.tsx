@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -13,10 +13,35 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function Setup2FAPage() {
-  const { data: session, update: updateSession } = useSession();
+  const { data: session, status, update: updateSession } = useSession();
   const router = useRouter();
 
   const [step, setStep] = useState<'intro' | 'scan' | 'verify' | 'backup' | 'complete'>('intro');
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  // Check if 2FA is already enabled and redirect to admin
+  useEffect(() => {
+    async function check2FAStatus() {
+      if (status === 'loading') return;
+
+      try {
+        const response = await fetch('/api/admin/2fa/setup');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.enabled) {
+            // 2FA already enabled, redirect to admin dashboard
+            router.push('/admin');
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Error checking 2FA status:', err);
+      }
+      setCheckingStatus(false);
+    }
+
+    check2FAStatus();
+  }, [status, router]);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
@@ -91,6 +116,18 @@ export default function Setup2FAPage() {
   const handleComplete = () => {
     router.push('/admin');
   };
+
+  // Show loading while checking 2FA status
+  if (checkingStatus) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+          <p className="text-gray-400">Checking authentication status...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
