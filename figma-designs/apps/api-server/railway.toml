@@ -1,8 +1,0 @@
-# Railway deployment configuration for api-server
-# Build and start commands are set via Railway dashboard/API
-
-[deploy]
-healthcheckPath = "/health"
-healthcheckTimeout = 300
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10

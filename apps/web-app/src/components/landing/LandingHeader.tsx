@@ -19,9 +19,10 @@ import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outli
  */
 
 const navLinks = [
+  { href: '/what-is-a-liftout', label: 'What is a Liftout?' },
   {
     href: '/for-companies',
-    label: 'For companies',
+    label: 'For Companies',
     submenu: [
       { href: '/for-companies#discover', label: 'Discover teams', description: 'Find pre-vetted, high-performing teams' },
       { href: '/for-companies#process', label: 'How it works', description: 'Our streamlined liftout process' },
@@ -30,14 +31,13 @@ const navLinks = [
   },
   {
     href: '/for-teams',
-    label: 'For teams',
+    label: 'For Teams',
     submenu: [
       { href: '/for-teams#opportunities', label: 'Explore opportunities', description: 'Browse confidential liftout positions' },
       { href: '/for-teams#profile', label: 'Create team profile', description: 'Showcase your team\'s capabilities' },
       { href: '/for-teams#success', label: 'Success stories', description: 'Teams that made the move' },
     ]
   },
-  { href: '#how-it-works', label: 'How it works' },
 ];
 
 interface LandingHeaderProps {
@@ -107,7 +107,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1024) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -180,7 +180,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
           </Link>
 
           {/* Desktop navigation - Practical UI: 18px text, 48pt touch targets, 16pt gaps */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <div
                 key={link.href}
@@ -273,7 +273,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
             {/* Mobile menu button */}
             <button
               type="button"
-              className={`md:hidden w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+              className={`lg:hidden w-12 h-12 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                 useTransparentStyle
                   ? 'text-white hover:text-white hover:bg-white/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -295,7 +295,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
 
       {/* Mobile menu overlay */}
       <div
-        className={`fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-40 md:hidden transition-all duration-300 ${
+        className={`fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-40 lg:hidden transition-all duration-300 ${
           isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsMobileMenuOpen(false)}
@@ -305,7 +305,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
       {/* Mobile menu panel - Premium glass effect */}
       <div
         id="mobile-menu"
-        className={`absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/60 md:hidden transition-all duration-300 ease-out z-50 shadow-xl shadow-gray-900/10 ${
+        className={`absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/60 lg:hidden transition-all duration-300 ease-out z-50 shadow-xl shadow-gray-900/10 ${
           isMobileMenuOpen
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 -translate-y-2 pointer-events-none'

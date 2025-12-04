@@ -749,12 +749,26 @@ async function handleCleanup() {
 
   results.push(`Before cleanup: ${userCountBefore} users, ${companyCountBefore} companies, ${teamCountBefore} teams`);
 
+  // Get IDs of teams and companies to keep
+  const teamsToKeep = await prisma.team.findMany({
+    where: { slug: { in: KEEP_TEAM_SLUGS } },
+    select: { id: true }
+  });
+  const keepTeamIds = teamsToKeep.map(t => t.id);
+
+  const companiesToKeep = await prisma.company.findMany({
+    where: { slug: { in: KEEP_COMPANY_SLUGS } },
+    select: { id: true }
+  });
+  const keepCompanyIds = companiesToKeep.map(c => c.id);
+
   // Delete conversations first (depends on teams/companies)
+  // Conversation doesn't have relations, so filter by IDs
   const deletedConversations = await prisma.conversation.deleteMany({
     where: {
       OR: [
-        { team: { slug: { notIn: KEEP_TEAM_SLUGS } } },
-        { company: { slug: { notIn: KEEP_COMPANY_SLUGS } } },
+        { teamId: { notIn: keepTeamIds.length > 0 ? keepTeamIds : ['none'] } },
+        { companyId: { notIn: keepCompanyIds.length > 0 ? keepCompanyIds : ['none'] } },
       ]
     }
   });
