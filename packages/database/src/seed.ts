@@ -49,7 +49,7 @@ async function main() {
       update: {},
       create: { name: 'AWS', category: 'Cloud', industry: 'Technology' }
     }),
-    
+
     // Design Skills
     prisma.skill.upsert({
       where: { name: 'UI/UX Design' },
@@ -61,7 +61,7 @@ async function main() {
       update: {},
       create: { name: 'Figma', category: 'Design Tools', industry: 'Technology' }
     }),
-    
+
     // Business Skills
     prisma.skill.upsert({
       where: { name: 'Product Management' },
@@ -73,7 +73,7 @@ async function main() {
       update: {},
       create: { name: 'Data Analysis', category: 'Analytics', industry: 'Technology' }
     }),
-    
+
     // Financial Skills
     prisma.skill.upsert({
       where: { name: 'Financial Modeling' },
@@ -96,7 +96,7 @@ async function main() {
 
   // Create admin user
   const adminPassword = await hashPassword('admin123!');
-  const adminUser = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'admin@liftout.com' },
     update: { passwordHash: adminPassword },
     create: {
@@ -112,14 +112,14 @@ async function main() {
 
   // Create super admin user (Enriz)
   const superAdminPassword = await hashPassword('liftoutadmin2025');
-  const superAdminUser = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'enrizhulati@gmail.com' },
     update: {
       passwordHash: superAdminPassword,
       userType: 'admin',
       emailVerified: true,
       profileCompleted: true,
-      twoFactorEnabled: false, // Allow initial login without 2FA
+      twoFactorEnabled: false,
     },
     create: {
       email: 'enrizhulati@gmail.com',
@@ -129,225 +129,174 @@ async function main() {
       userType: 'admin',
       emailVerified: true,
       profileCompleted: true,
-      twoFactorEnabled: false, // Will be set up on first admin login
+      twoFactorEnabled: false,
     }
   });
 
   console.log('✅ Created admin users');
 
-  // Create sample individual users
-  const password = await hashPassword('password123!');
+  // Create demo password
   const demoPassword = await hashPassword('password');
 
-  // Create documented demo users (demo@example.com / password)
-  const demoUser = await prisma.user.upsert({
-    where: { email: 'demo@example.com' },
-    update: { passwordHash: demoPassword },
-    create: {
+  // Demo team members with photos
+  const demoTeamMembers = [
+    {
       email: 'demo@example.com',
-      passwordHash: demoPassword,
-      firstName: 'Demo',
-      lastName: 'User',
-      userType: 'individual',
-      emailVerified: true,
-      profileCompleted: true,
+      firstName: 'Alex',
+      lastName: 'Chen',
+      isLead: true,
+      role: 'Tech Lead',
+      seniorityLevel: 'lead' as const,
       profile: {
-        create: {
-          title: 'Team Lead',
-          location: 'San Francisco, CA',
-          bio: 'Demo team lead user for testing the platform.',
-          yearsExperience: 10,
-          availabilityStatus: 'open_to_opportunities',
-          salaryExpectationMin: 180000,
-          salaryExpectationMax: 250000,
-          remotePreference: 'hybrid',
-          skillsSummary: 'Leadership, Full-Stack Development, Team Management'
-        }
-      }
-    }
-  });
-
-  console.log('✅ Created demo team user (demo@example.com / password)');
-  
-  const user1 = await prisma.user.upsert({
-    where: { email: 'john.doe@example.com' },
-    update: {},
-    create: {
-      email: 'john.doe@example.com',
-      passwordHash: password,
-      firstName: 'John',
-      lastName: 'Doe',
-      userType: 'individual',
-      emailVerified: true,
-      profileCompleted: true,
-      profile: {
-        create: {
-          title: 'Senior Software Engineer',
-          location: 'San Francisco, CA',
-          bio: 'Experienced full-stack developer with 8 years in the industry.',
-          yearsExperience: 8,
-          availabilityStatus: 'open_to_opportunities',
-          salaryExpectationMin: 150000,
-          salaryExpectationMax: 200000,
-          remotePreference: 'hybrid',
-          skillsSummary: 'JavaScript, TypeScript, React, Node.js, PostgreSQL'
-        }
-      }
-    }
-  });
-
-  const user2 = await prisma.user.upsert({
-    where: { email: 'jane.smith@example.com' },
-    update: {},
-    create: {
-      email: 'jane.smith@example.com',
-      passwordHash: password,
-      firstName: 'Jane',
-      lastName: 'Smith',
-      userType: 'individual',
-      emailVerified: true,
-      profileCompleted: true,
-      profile: {
-        create: {
-          title: 'Product Designer',
-          location: 'San Francisco, CA',
-          bio: 'Creative product designer with a passion for user experience.',
-          yearsExperience: 6,
-          availabilityStatus: 'open_to_opportunities',
-          salaryExpectationMin: 120000,
-          salaryExpectationMax: 160000,
-          remotePreference: 'hybrid',
-          skillsSummary: 'UI/UX Design, Figma, User Research, Prototyping'
-        }
-      }
-    }
-  });
-
-  const user3 = await prisma.user.upsert({
-    where: { email: 'mike.johnson@example.com' },
-    update: {},
-    create: {
-      email: 'mike.johnson@example.com',
-      passwordHash: password,
-      firstName: 'Mike',
-      lastName: 'Johnson',
-      userType: 'individual',
-      emailVerified: true,
-      profileCompleted: true,
-      profile: {
-        create: {
-          title: 'DevOps Engineer',
-          location: 'San Francisco, CA',
-          bio: 'Infrastructure and deployment specialist.',
-          yearsExperience: 7,
-          availabilityStatus: 'open_to_opportunities',
-          salaryExpectationMin: 140000,
-          salaryExpectationMax: 180000,
-          remotePreference: 'remote',
-          skillsSummary: 'AWS, Docker, Kubernetes, Terraform, Python'
-        }
-      }
-    }
-  });
-
-  // Add skills to users
-  await prisma.userSkill.createMany({
-    data: [
-      { userId: user1.id, skillId: skills[0].id, proficiencyLevel: 'expert', yearsExperience: 8 }, // JavaScript
-      { userId: user1.id, skillId: skills[1].id, proficiencyLevel: 'expert', yearsExperience: 5 }, // TypeScript
-      { userId: user1.id, skillId: skills[2].id, proficiencyLevel: 'expert', yearsExperience: 6 }, // React
-      { userId: user1.id, skillId: skills[3].id, proficiencyLevel: 'advanced', yearsExperience: 7 }, // Node.js
-      
-      { userId: user2.id, skillId: skills[8].id, proficiencyLevel: 'expert', yearsExperience: 6 }, // UI/UX Design
-      { userId: user2.id, skillId: skills[9].id, proficiencyLevel: 'expert', yearsExperience: 4 }, // Figma
-      
-      { userId: user3.id, skillId: skills[7].id, proficiencyLevel: 'expert', yearsExperience: 7 }, // AWS
-      { userId: user3.id, skillId: skills[4].id, proficiencyLevel: 'advanced', yearsExperience: 5 }, // Python
-    ],
-    skipDuplicates: true
-  });
-
-  console.log('✅ Created sample individual users');
-
-  // Create or refresh a sample team (idempotent across runs)
-  const teamSlug = 'full-stack-dev-team';
-  const team = await prisma.team.upsert({
-    where: { slug: teamSlug },
-    update: {
-      description: 'Experienced full-stack development team specializing in modern web applications.',
-      industry: 'Technology',
-      specialization: 'Web Development',
-      size: 3,
-      location: 'San Francisco, CA',
-      remoteStatus: 'hybrid',
-      availabilityStatus: 'available',
-      yearsWorkingTogether: 2.5,
-      teamCulture: 'Collaborative, agile, and innovation-focused.',
-      workingStyle: 'Agile methodology with regular standups and sprint planning.',
-      notableAchievements: 'Built and launched 3 successful SaaS products.',
-      salaryExpectationMin: 450000,
-      salaryExpectationMax: 600000,
+        title: 'Senior Data Scientist & Team Lead',
+        location: 'San Francisco, CA',
+        bio: 'Passionate technologist with 10+ years leading high-performing data science and engineering teams.',
+        yearsExperience: 10,
+        profilePhotoUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
+        linkedinUrl: 'https://linkedin.com/in/alexchen',
+        currentEmployer: 'TechFlow Analytics',
+        currentTitle: 'VP of Data Science',
+        skillsSummary: 'Machine Learning, Python, SQL, Team Leadership, Financial Modeling',
+      },
+      keySkills: ['Machine Learning', 'Python', 'SQL', 'Team Leadership'],
+      contribution: 'Leads technical strategy and team development',
     },
-    create: {
-      name: 'Full-Stack Development Team',
-      slug: teamSlug,
-      description: 'Experienced full-stack development team specializing in modern web applications.',
-      industry: 'Technology',
-      specialization: 'Web Development',
-      size: 3,
-      location: 'San Francisco, CA',
-      remoteStatus: 'hybrid',
-      availabilityStatus: 'available',
-      yearsWorkingTogether: 2.5,
-      teamCulture: 'Collaborative, agile, and innovation-focused.',
-      workingStyle: 'Agile methodology with regular standups and sprint planning.',
-      notableAchievements: 'Built and launched 3 successful SaaS products.',
-      salaryExpectationMin: 450000,
-      salaryExpectationMax: 600000,
-      createdBy: user1.id
-    }
-  });
+    {
+      email: 'sarah.martinez@example.com',
+      firstName: 'Sarah',
+      lastName: 'Martinez',
+      isLead: false,
+      role: 'Senior Data Scientist',
+      seniorityLevel: 'senior' as const,
+      profile: {
+        title: 'Senior Data Scientist',
+        location: 'San Francisco, CA',
+        bio: 'Data scientist with deep expertise in NLP and predictive modeling. Stanford PhD in Statistics.',
+        yearsExperience: 7,
+        profilePhotoUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
+        linkedinUrl: 'https://linkedin.com/in/sarahmartinez',
+        currentEmployer: 'TechFlow Analytics',
+        currentTitle: 'Senior Data Scientist',
+        skillsSummary: 'NLP, Deep Learning, PyTorch, Research, Statistical Analysis',
+      },
+      keySkills: ['NLP', 'Deep Learning', 'PyTorch', 'Python'],
+      contribution: 'Leads NLP and unstructured data initiatives',
+    },
+    {
+      email: 'marcus.johnson@example.com',
+      firstName: 'Marcus',
+      lastName: 'Johnson',
+      isLead: false,
+      role: 'ML Engineer',
+      seniorityLevel: 'senior' as const,
+      profile: {
+        title: 'Machine Learning Engineer',
+        location: 'Oakland, CA',
+        bio: 'Full-stack ML engineer focused on taking models from research to production.',
+        yearsExperience: 6,
+        profilePhotoUrl: 'https://randomuser.me/api/portraits/men/75.jpg',
+        linkedinUrl: 'https://linkedin.com/in/marcusjohnson',
+        currentEmployer: 'TechFlow Analytics',
+        currentTitle: 'ML Engineer',
+        skillsSummary: 'MLOps, Kubernetes, AWS, TensorFlow, Data Engineering',
+      },
+      keySkills: ['MLOps', 'Kubernetes', 'AWS', 'TensorFlow'],
+      contribution: 'Owns ML infrastructure and deployment pipelines',
+    },
+    {
+      email: 'priya.patel@example.com',
+      firstName: 'Priya',
+      lastName: 'Patel',
+      isLead: false,
+      role: 'Data Analyst',
+      seniorityLevel: 'mid' as const,
+      profile: {
+        title: 'Senior Data Analyst',
+        location: 'San Jose, CA',
+        bio: 'Data analyst passionate about translating complex data into actionable business insights.',
+        yearsExperience: 4,
+        profilePhotoUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
+        linkedinUrl: 'https://linkedin.com/in/priyapatel',
+        currentEmployer: 'TechFlow Analytics',
+        currentTitle: 'Senior Data Analyst',
+        skillsSummary: 'SQL, Tableau, Python, Business Intelligence, Data Visualization',
+      },
+      keySkills: ['SQL', 'Tableau', 'Python', 'Business Intelligence'],
+      contribution: 'Drives analytics strategy and stakeholder reporting',
+    },
+  ];
 
-  // Ensure team memberships exist
-  await prisma.teamMember.createMany({
-    data: [
-      {
-        teamId: team.id,
-        userId: user1.id,
-        role: 'Tech Lead',
-        seniorityLevel: 'senior',
-        isAdmin: true,
-        isLead: true,
-        status: 'active',
-        joinedAt: new Date()
+  const createdMembers: { id: string; email: string; isLead: boolean; role: string; seniorityLevel: string; keySkills: string[]; contribution: string }[] = [];
+
+  // Create each team member
+  for (const member of demoTeamMembers) {
+    const user = await prisma.user.upsert({
+      where: { email: member.email },
+      update: {
+        passwordHash: demoPassword,
+        firstName: member.firstName,
+        lastName: member.lastName,
       },
-      {
-        teamId: team.id,
-        userId: user2.id,
-        role: 'Product Designer',
-        seniorityLevel: 'senior',
-        isAdmin: false,
-        isLead: false,
-        status: 'active',
-        joinedAt: new Date()
-      },
-      {
-        teamId: team.id,
-        userId: user3.id,
-        role: 'DevOps Engineer',
-        seniorityLevel: 'senior',
-        isAdmin: false,
-        isLead: false,
-        status: 'active',
-        joinedAt: new Date()
+      create: {
+        email: member.email,
+        passwordHash: demoPassword,
+        firstName: member.firstName,
+        lastName: member.lastName,
+        userType: 'individual',
+        emailVerified: true,
+        profileCompleted: true,
       }
-    ],
-    skipDuplicates: true
-  });
+    });
 
-  console.log('✅ Created sample team');
+    // Upsert the profile
+    await prisma.individualProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        title: member.profile.title,
+        location: member.profile.location,
+        bio: member.profile.bio,
+        yearsExperience: member.profile.yearsExperience,
+        profilePhotoUrl: member.profile.profilePhotoUrl,
+        linkedinUrl: member.profile.linkedinUrl,
+        currentEmployer: member.profile.currentEmployer,
+        currentTitle: member.profile.currentTitle,
+        skillsSummary: member.profile.skillsSummary,
+        availabilityStatus: 'open_to_opportunities',
+        remotePreference: 'hybrid',
+      },
+      create: {
+        userId: user.id,
+        title: member.profile.title,
+        location: member.profile.location,
+        bio: member.profile.bio,
+        yearsExperience: member.profile.yearsExperience,
+        profilePhotoUrl: member.profile.profilePhotoUrl,
+        linkedinUrl: member.profile.linkedinUrl,
+        currentEmployer: member.profile.currentEmployer,
+        currentTitle: member.profile.currentTitle,
+        skillsSummary: member.profile.skillsSummary,
+        availabilityStatus: 'open_to_opportunities',
+        remotePreference: 'hybrid',
+      }
+    });
 
-  // Create documented company demo user (company@example.com / password)
+    createdMembers.push({
+      id: user.id,
+      email: user.email,
+      isLead: member.isLead,
+      role: member.role,
+      seniorityLevel: member.seniorityLevel,
+      keySkills: member.keySkills,
+      contribution: member.contribution,
+    });
+
+    console.log(`✅ Created team member: ${user.email}`);
+  }
+
+  // Get demo user (team lead)
+  const demoUser = createdMembers.find(m => m.email === 'demo@example.com')!;
+
+  // Create demo company user
   const demoCompanyUser = await prisma.user.upsert({
     where: { email: 'company@example.com' },
     update: { passwordHash: demoPassword },
@@ -362,180 +311,113 @@ async function main() {
     }
   });
 
-  // Create demo company for the demo company user
-  const demoCompany = await prisma.company.upsert({
-    where: { slug: 'demo-company' },
-    update: {},
-    create: {
-      name: 'Demo Company',
-      slug: 'demo-company',
-      description: 'Demo company for testing the platform.',
-      industry: 'Technology',
-      companySize: 'large',
-      foundedYear: 2010,
-      websiteUrl: 'https://demo-company.com',
-      headquartersLocation: 'New York, NY',
-      companyCulture: 'Innovative and collaborative.',
-      employeeCount: 500,
-      verificationStatus: 'verified',
-      verifiedAt: new Date(),
-      users: {
-        create: {
-          userId: demoCompanyUser.id,
-          role: 'admin',
-          isPrimaryContact: true,
-          title: 'Head of Talent Acquisition'
-        }
-      }
-    }
-  });
-
   console.log('✅ Created demo company user (company@example.com / password)');
 
-  // Create company user
-  const companyUser = await prisma.user.upsert({
-    where: { email: 'recruiter@techcorp.com' },
-    update: {},
-    create: {
-      email: 'recruiter@techcorp.com',
-      passwordHash: password,
-      firstName: 'Sarah',
-      lastName: 'Wilson',
-      userType: 'company',
-      emailVerified: true,
-      profileCompleted: true
-    }
+  // Create demo company
+  const existingCompany = await prisma.company.findUnique({
+    where: { slug: 'demo-company' }
   });
 
-  // Create sample company
-  const company = await prisma.company.upsert({
-    where: { slug: 'techcorp-inc' },
-    update: {
-      description: 'Leading technology company building the future of software.',
-      industry: 'Technology',
-      companySize: 'medium',
-      foundedYear: 2015,
-      websiteUrl: 'https://techcorp.com',
-      headquartersLocation: 'San Francisco, CA',
-      companyCulture: 'Innovation-driven with work-life balance.',
-      employeeCount: 250,
-      verificationStatus: 'verified',
-      verifiedAt: new Date()
-    },
-    create: {
-      name: 'TechCorp Inc.',
-      slug: 'techcorp-inc',
-      description: 'Leading technology company building the future of software.',
-      industry: 'Technology',
-      companySize: 'medium',
-      foundedYear: 2015,
-      websiteUrl: 'https://techcorp.com',
-      headquartersLocation: 'San Francisco, CA',
-      companyCulture: 'Innovation-driven with work-life balance.',
-      employeeCount: 250,
-      verificationStatus: 'verified',
-      verifiedAt: new Date()
-    }
-  });
-
-  await prisma.companyUser.createMany({
-    data: [
-      {
-        companyId: company.id,
-        userId: companyUser.id,
-        role: 'recruiter',
-        isPrimaryContact: true,
-        title: 'Senior Technical Recruiter'
-      }
-    ],
-    skipDuplicates: true
-  });
-
-  console.log('✅ Created sample company');
-
-  // Create sample opportunity
-  let opportunity = await prisma.opportunity.findFirst({
-    where: {
-      title: 'Senior Full-Stack Development Team',
-      companyId: company.id
-    }
-  });
-
-  if (!opportunity) {
-    opportunity = await prisma.opportunity.create({
+  if (!existingCompany) {
+    await prisma.company.create({
       data: {
-        title: 'Senior Full-Stack Development Team',
-        description: 'We are looking for an experienced full-stack development team to help build our next-generation SaaS platform. The ideal team will have strong experience in React, Node.js, and cloud infrastructure.',
-        companyId: company.id,
-        teamSizeMin: 3,
-        teamSizeMax: 5,
-        requiredSkills: [
-          { skillId: skills[0].id, name: 'JavaScript', requiredLevel: 'expert' },
-          { skillId: skills[1].id, name: 'TypeScript', requiredLevel: 'advanced' },
-          { skillId: skills[2].id, name: 'React', requiredLevel: 'expert' }
-        ],
-        preferredSkills: [
-          { skillId: skills[3].id, name: 'Node.js', requiredLevel: 'advanced' },
-          { skillId: skills[7].id, name: 'AWS', requiredLevel: 'intermediate' }
-        ],
+        name: 'Demo Company',
+        slug: 'demo-company',
+        description: 'Demo company for testing the platform.',
         industry: 'Technology',
-        department: 'Engineering',
-        location: 'San Francisco, CA',
-        remotePolicy: 'hybrid',
-        compensationMin: 400000,
-        compensationMax: 600000,
-        equityOffered: true,
-        equityRange: '0.1% - 0.5%',
-        benefits: ['Health Insurance', 'Dental', '401k', 'Unlimited PTO'],
-        urgency: 'high',
-        startDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-        contractType: 'full_time',
-        createdBy: companyUser.id,
-        status: 'active'
+        companySize: 'large',
+        foundedYear: 2010,
+        websiteUrl: 'https://demo-company.com',
+        headquartersLocation: 'New York, NY',
+        companyCulture: 'Innovative and collaborative.',
+        employeeCount: 500,
+        verificationStatus: 'verified',
+        verifiedAt: new Date(),
+        users: {
+          create: {
+            userId: demoCompanyUser.id,
+            role: 'admin',
+            isPrimaryContact: true,
+            title: 'Head of Talent Acquisition'
+          }
+        }
       }
     });
+    console.log('✅ Created demo company');
+  }
+
+  // Create demo team
+  const existingTeam = await prisma.team.findFirst({
+    where: { slug: 'techflow-data-science' }
+  });
+
+  let demoTeam;
+  if (!existingTeam) {
+    demoTeam = await prisma.team.create({
+      data: {
+        name: 'TechFlow Data Science Team',
+        slug: 'techflow-data-science',
+        description: 'Elite data science team with 3.5 years working together, specializing in fintech analytics and machine learning.',
+        industry: 'Financial Services',
+        specialization: 'Data Science & Machine Learning',
+        size: 4,
+        location: 'San Francisco, CA',
+        remoteStatus: 'hybrid',
+        availabilityStatus: 'available',
+        yearsWorkingTogether: 3.5,
+        teamCulture: 'Collaborative, data-driven, and focused on continuous learning.',
+        workingStyle: 'Agile with 2-week sprints. Daily standups, weekly retrospectives.',
+        visibility: 'public',
+        salaryExpectationMin: 180000,
+        salaryExpectationMax: 280000,
+        relocationWillingness: true,
+        createdBy: demoUser.id,
+        verificationStatus: 'verified',
+        verifiedAt: new Date(),
+      }
+    });
+    console.log('✅ Created demo team');
   } else {
-    opportunity = await prisma.opportunity.update({
-      where: { id: opportunity.id },
-      data: {
-        status: 'active',
-        compensationMin: 400000,
-        compensationMax: 600000,
-        remotePolicy: 'hybrid',
-        industry: 'Technology',
-        location: 'San Francisco, CA',
-        urgency: 'high'
-      }
-    });
+    demoTeam = existingTeam;
+    console.log('✅ Demo team already exists');
   }
 
-  console.log('✅ Created sample opportunity');
+  // Link team members to the demo team
+  for (const member of createdMembers) {
+    const existingMembership = await prisma.teamMember.findFirst({
+      where: {
+        teamId: demoTeam.id,
+        userId: member.id
+      }
+    });
 
-  // Create sample application
-  const existingApplication = await prisma.teamApplication.findFirst({
-    where: {
-      teamId: team.id,
-      opportunityId: opportunity.id
+    if (!existingMembership) {
+      await prisma.teamMember.create({
+        data: {
+          teamId: demoTeam.id,
+          userId: member.id,
+          role: member.role,
+          seniorityLevel: member.seniorityLevel as 'entry' | 'mid' | 'senior' | 'lead' | 'principal',
+          isLead: member.isLead,
+          isAdmin: member.isLead,
+          keySkills: JSON.stringify(member.keySkills),
+          contribution: member.contribution,
+          status: 'active',
+          joinDate: new Date(Date.now() - 3.5 * 365 * 24 * 60 * 60 * 1000),
+        }
+      });
+      console.log(`✅ Linked ${member.email} to demo team`);
     }
-  });
-
-  if (!existingApplication) {
-    await prisma.teamApplication.create({
-      data: {
-        teamId: team.id,
-        opportunityId: opportunity.id,
-        coverLetter: 'We are excited to apply for this opportunity. Our team has extensive experience building modern web applications and we believe we would be a great fit.',
-        proposedCompensation: 550000,
-        availabilityDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
-        status: 'submitted',
-        appliedBy: user1.id
-      }
-    });
   }
 
-  console.log('✅ Created sample application');
-
+  console.log('');
   console.log('🎉 Database seeded successfully!');
+  console.log('');
+  console.log('Demo credentials:');
+  console.log('  Team User: demo@example.com / password');
+  console.log('  Company User: company@example.com / password');
+  console.log('  Admin: admin@liftout.com / admin123!');
+  console.log('  Super Admin: enrizhulati@gmail.com / liftoutadmin2025');
 }
 
 main()
