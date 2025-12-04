@@ -12,12 +12,18 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('x-seed-secret');
     const { searchParams } = new URL(request.url);
     const querySecret = searchParams.get('secret');
+    const action = searchParams.get('action');
 
     if (authHeader !== SEED_SECRET && querySecret !== SEED_SECRET) {
       return NextResponse.json(
         { error: 'Unauthorized - provide x-seed-secret header or ?secret= query param' },
         { status: 401 }
       );
+    }
+
+    // Handle cleanup action
+    if (action === 'cleanup') {
+      return handleCleanup();
     }
 
     const results: string[] = [];
@@ -733,6 +739,118 @@ const KEEP_EMAILS = [
 const KEEP_COMPANY_SLUGS = ['demo-company'];
 const KEEP_TEAM_SLUGS = ['techflow-data-science'];
 
+async function handleCleanup() {
+  const results: string[] = [];
+
+  // Get counts before cleanup
+  const userCountBefore = await prisma.user.count();
+  const companyCountBefore = await prisma.company.count();
+  const teamCountBefore = await prisma.team.count();
+
+  results.push(`Before cleanup: ${userCountBefore} users, ${companyCountBefore} companies, ${teamCountBefore} teams`);
+
+  // Delete conversations first (depends on teams/companies)
+  const deletedConversations = await prisma.conversation.deleteMany({
+    where: {
+      OR: [
+        { team: { slug: { notIn: KEEP_TEAM_SLUGS } } },
+        { company: { slug: { notIn: KEEP_COMPANY_SLUGS } } },
+      ]
+    }
+  });
+  results.push(`Deleted ${deletedConversations.count} conversations`);
+
+  // Delete applications (depends on teams)
+  const deletedApplications = await prisma.teamApplication.deleteMany({
+    where: {
+      team: { slug: { notIn: KEEP_TEAM_SLUGS } }
+    }
+  });
+  results.push(`Deleted ${deletedApplications.count} applications`);
+
+  // Delete opportunities from non-essential companies
+  const deletedOpportunities = await prisma.opportunity.deleteMany({
+    where: {
+      company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
+    }
+  });
+  results.push(`Deleted ${deletedOpportunities.count} opportunities`);
+
+  // Delete team members from non-essential teams
+  const deletedTeamMembers = await prisma.teamMember.deleteMany({
+    where: {
+      team: { slug: { notIn: KEEP_TEAM_SLUGS } }
+    }
+  });
+  results.push(`Deleted ${deletedTeamMembers.count} team members`);
+
+  // Delete non-essential teams
+  const deletedTeams = await prisma.team.deleteMany({
+    where: {
+      slug: { notIn: KEEP_TEAM_SLUGS }
+    }
+  });
+  results.push(`Deleted ${deletedTeams.count} teams`);
+
+  // Delete company users from non-essential companies
+  const deletedCompanyUsers = await prisma.companyUser.deleteMany({
+    where: {
+      company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
+    }
+  });
+  results.push(`Deleted ${deletedCompanyUsers.count} company users`);
+
+  // Delete non-essential companies
+  const deletedCompanies = await prisma.company.deleteMany({
+    where: {
+      slug: { notIn: KEEP_COMPANY_SLUGS }
+    }
+  });
+  results.push(`Deleted ${deletedCompanies.count} companies`);
+
+  // Delete individual profiles for non-essential users
+  const deletedProfiles = await prisma.individualProfile.deleteMany({
+    where: {
+      user: { email: { notIn: KEEP_EMAILS } }
+    }
+  });
+  results.push(`Deleted ${deletedProfiles.count} individual profiles`);
+
+  // Delete user skills for non-essential users
+  const deletedUserSkills = await prisma.userSkill.deleteMany({
+    where: {
+      user: { email: { notIn: KEEP_EMAILS } }
+    }
+  });
+  results.push(`Deleted ${deletedUserSkills.count} user skills`);
+
+  // Delete non-essential users
+  const deletedUsers = await prisma.user.deleteMany({
+    where: {
+      email: { notIn: KEEP_EMAILS }
+    }
+  });
+  results.push(`Deleted ${deletedUsers.count} users`);
+
+  // Get counts after cleanup
+  const userCountAfter = await prisma.user.count();
+  const companyCountAfter = await prisma.company.count();
+  const teamCountAfter = await prisma.team.count();
+
+  results.push(`After cleanup: ${userCountAfter} users, ${companyCountAfter} companies, ${teamCountAfter} teams`);
+
+  return NextResponse.json({
+    success: true,
+    message: 'Cleanup completed successfully',
+    results,
+    summary: {
+      users: { before: userCountBefore, after: userCountAfter, deleted: userCountBefore - userCountAfter },
+      companies: { before: companyCountBefore, after: companyCountAfter, deleted: companyCountBefore - companyCountAfter },
+      teams: { before: teamCountBefore, after: teamCountAfter, deleted: teamCountBefore - teamCountAfter },
+    }
+  });
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     // Check for secret key
@@ -747,115 +865,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const results: string[] = [];
-
-    // Get counts before cleanup
-    const userCountBefore = await prisma.user.count();
-    const companyCountBefore = await prisma.company.count();
-    const teamCountBefore = await prisma.team.count();
-
-    results.push(`Before cleanup: ${userCountBefore} users, ${companyCountBefore} companies, ${teamCountBefore} teams`);
-
-    // Delete conversations first (depends on teams/companies)
-    const deletedConversations = await prisma.conversation.deleteMany({
-      where: {
-        OR: [
-          { team: { slug: { notIn: KEEP_TEAM_SLUGS } } },
-          { company: { slug: { notIn: KEEP_COMPANY_SLUGS } } },
-        ]
-      }
-    });
-    results.push(`Deleted ${deletedConversations.count} conversations`);
-
-    // Delete applications (depends on teams)
-    const deletedApplications = await prisma.teamApplication.deleteMany({
-      where: {
-        team: { slug: { notIn: KEEP_TEAM_SLUGS } }
-      }
-    });
-    results.push(`Deleted ${deletedApplications.count} applications`);
-
-    // Delete opportunities from non-essential companies
-    const deletedOpportunities = await prisma.opportunity.deleteMany({
-      where: {
-        company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
-      }
-    });
-    results.push(`Deleted ${deletedOpportunities.count} opportunities`);
-
-    // Delete team members from non-essential teams
-    const deletedTeamMembers = await prisma.teamMember.deleteMany({
-      where: {
-        team: { slug: { notIn: KEEP_TEAM_SLUGS } }
-      }
-    });
-    results.push(`Deleted ${deletedTeamMembers.count} team members`);
-
-    // Delete non-essential teams
-    const deletedTeams = await prisma.team.deleteMany({
-      where: {
-        slug: { notIn: KEEP_TEAM_SLUGS }
-      }
-    });
-    results.push(`Deleted ${deletedTeams.count} teams`);
-
-    // Delete company users from non-essential companies
-    const deletedCompanyUsers = await prisma.companyUser.deleteMany({
-      where: {
-        company: { slug: { notIn: KEEP_COMPANY_SLUGS } }
-      }
-    });
-    results.push(`Deleted ${deletedCompanyUsers.count} company users`);
-
-    // Delete non-essential companies
-    const deletedCompanies = await prisma.company.deleteMany({
-      where: {
-        slug: { notIn: KEEP_COMPANY_SLUGS }
-      }
-    });
-    results.push(`Deleted ${deletedCompanies.count} companies`);
-
-    // Delete individual profiles for non-essential users
-    const deletedProfiles = await prisma.individualProfile.deleteMany({
-      where: {
-        user: { email: { notIn: KEEP_EMAILS } }
-      }
-    });
-    results.push(`Deleted ${deletedProfiles.count} individual profiles`);
-
-    // Delete user skills for non-essential users
-    const deletedUserSkills = await prisma.userSkill.deleteMany({
-      where: {
-        user: { email: { notIn: KEEP_EMAILS } }
-      }
-    });
-    results.push(`Deleted ${deletedUserSkills.count} user skills`);
-
-    // Delete non-essential users
-    const deletedUsers = await prisma.user.deleteMany({
-      where: {
-        email: { notIn: KEEP_EMAILS }
-      }
-    });
-    results.push(`Deleted ${deletedUsers.count} users`);
-
-    // Get counts after cleanup
-    const userCountAfter = await prisma.user.count();
-    const companyCountAfter = await prisma.company.count();
-    const teamCountAfter = await prisma.team.count();
-
-    results.push(`After cleanup: ${userCountAfter} users, ${companyCountAfter} companies, ${teamCountAfter} teams`);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Cleanup completed successfully',
-      results,
-      summary: {
-        users: { before: userCountBefore, after: userCountAfter, deleted: userCountBefore - userCountAfter },
-        companies: { before: companyCountBefore, after: companyCountAfter, deleted: companyCountBefore - companyCountAfter },
-        teams: { before: teamCountBefore, after: teamCountAfter, deleted: teamCountBefore - teamCountAfter },
-      }
-    });
+    return handleCleanup();
   } catch (error) {
     console.error('Cleanup error:', error);
     return NextResponse.json(
