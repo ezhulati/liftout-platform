@@ -79,18 +79,9 @@ export function withAdminAccess(handler: AdminApiHandler) {
         return errorResponse('Admin access required', 403);
       }
 
-      // For sensitive operations, verify 2FA is enabled
-      // Note: 2FA verification status should be stored in session
-      // This check ensures 2FA is at least set up
-      if (!user.twoFactorEnabled) {
-        return NextResponse.json(
-          {
-            error: '2FA required',
-            redirectTo: '/admin/setup-2fa',
-          },
-          { status: 403 }
-        );
-      }
+      // Note: 2FA is recommended but not required for basic admin access
+      // Sensitive operations should use withAdminAction which can enforce stricter requirements
+      // This allows admins to access the dashboard and set up 2FA from there
 
       // Construct admin user object
       const admin: AdminUser = {
