@@ -23,7 +23,7 @@ export function LandingCTA() {
         </h2>
 
         <p className="text-white/90 text-lg lg:text-xl leading-relaxed mb-8 max-w-2xl text-center lg:text-left">
-          Join 150+ companies who've discovered a smarter alternative to individual hiring.
+          Skip the team-building phase. Get proven chemistry, established workflows, and documented results.
         </p>
 
         {/* Practical UI: Primary (solid) + Tertiary (underlined), left-aligned on desktop */}

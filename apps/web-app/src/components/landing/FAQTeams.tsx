@@ -9,7 +9,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const faqs = [
   {
     question: 'Is my exploration completely confidential?',
-    answer: 'Yes—confidentiality is core to our platform. Your current employer is automatically blocked and will never see your profile. You control exactly which companies can view you, and all conversations are NDA-protected. We\'ve had zero confidentiality breaches since founding.',
+    answer: 'Yes—confidentiality is core to our platform. Your current employer is automatically blocked and will never see your profile. You control exactly which companies can view you, and all conversations are NDA-protected from the first interaction.',
   },
   {
     question: 'Is Liftout free for teams?',
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: 'Are companies actually looking for teams?',
-    answer: 'Yes. Over 500 registered firms across law, banking, consulting, advertising, and technology—from ambitious startups to Fortune 500 companies—are actively seeking intact teams. They value the immediate productivity and proven chemistry that only an established team can provide.',
+    answer: 'Yes. Liftouts are common practice in law, investment banking, consulting, advertising, and technology. Companies value the immediate productivity and proven chemistry that only an established team can provide—it\'s faster than M&A and lower risk than building from scratch.',
   },
   {
     question: 'What opportunities can I expect?',

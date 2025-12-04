@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     question: 'How are teams verified?',
-    answer: 'Every team on our platform goes through a comprehensive verification process: background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements. 100% of teams on Liftout are verified.',
+    answer: 'Every team on our platform goes through a comprehensive verification process: background checks, reference validation, track record documentation, and performance history review. We verify team composition, tenure working together, and documented achievements before they can connect with companies.',
   },
   {
     question: 'What does the acquisition process look like?',
@@ -21,11 +21,11 @@ const faqs = [
   },
   {
     question: 'What industries do you cover?',
-    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records. We currently support team acquisition across 12 industries.',
+    answer: 'Financial Services, Technology, Healthcare, Consulting, Legal, and Private Equity. Our strongest coverage is professional services teams with quantifiable track records—the same industries where liftouts have been common practice for decades.',
   },
   {
     question: 'What if an acquisition doesn\'t work out?',
-    answer: 'We track integration success for 12 months post-acquisition. While rare (92% retention rate after 2 years), if significant issues arise within the first 90 days, we work with both parties to find solutions and provide integration support.',
+    answer: 'We track integration success for 12 months post-acquisition. Research shows intact teams integrate faster because they skip the team-formation phase entirely. If issues arise within the first 90 days, we work with both parties to find solutions and provide integration support.',
   },
   {
     question: 'Is the process confidential?',
@@ -140,7 +140,7 @@ export function FAQCompanies() {
             <div className={`mt-8 p-6 rounded-xl transition-all duration-500 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ backgroundColor: 'hsl(270, 70%, 35%, 0.05)' }}>
               <p className="text-text-secondary text-lg leading-relaxed">
                 <span className="font-semibold text-text-primary">Ready to explore?</span>
-                {' '}Our team has helped 150+ companies find and integrate high-performing teams.
+                {' '}Companies like Ford, Goldman Sachs, and countless law firms have used liftouts to build capability faster than M&A or individual hiring allows.
                 We're happy to walk you through the process.
               </p>
             </div>

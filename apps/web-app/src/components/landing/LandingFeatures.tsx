@@ -65,7 +65,7 @@ export function LandingFeatures() {
             Why hire teams over individuals
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            Teams that already work together outperform new hires by 40% in their first year.
+            Intact teams skip the team-formation phase entirely and can hit the ground running from day one.
           </p>
         </div>
 
