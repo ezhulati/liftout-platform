@@ -1,5 +1,4 @@
 import { LandingHero } from '@/components/landing/LandingHero';
-import { LandingProblem } from '@/components/landing/LandingProblem';
 import { LandingExplainer } from '@/components/landing/LandingExplainer';
 import { HBRInsight } from '@/components/landing/HBRInsight';
 import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
@@ -97,10 +96,7 @@ export default function HomePage() {
         {/* 1. HOOK: Emotional headline + solution */}
         <LandingHero />
 
-        {/* 2. PROBLEM: The lonely desert - why the status quo is broken */}
-        <LandingProblem />
-
-        {/* 3. DEFINITION: What is a liftout? + 2024 examples */}
+        {/* 2. DEFINITION: What is a liftout? + 2024 examples */}
         <LandingExplainer />
 
         {/* 4. AUTHORITY: HBR research + historical success stories */}

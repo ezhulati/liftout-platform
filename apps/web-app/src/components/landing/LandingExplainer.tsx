@@ -2,26 +2,33 @@
 
 import Link from 'next/link';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { ArrowRightIcon, SparklesIcon, ScaleIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, ScaleIcon, BriefcaseIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 
+// 2025 examples with sources
+// Crowell: https://www.law.com/americanlawyer/2025/08/06/crowell-hires-more-than-40-health-care-lawyers-from-reed-smith/
+// Mayer Brown: https://www.edwardsgibson.com/partner-moves (Issue 89)
+// Group laterals trend: https://www.legal.io/articles/5508483/Group-Lateral-Hires-The-Goldilocks-Solution-for-Law-Firm-Growth
 const recentExamples = [
   {
-    company: 'Microsoft',
-    target: 'Inflection AI',
-    deal: '$650M',
-    Icon: ComputerDesktopIcon,
-  },
-  {
-    company: 'Google',
-    target: 'Character.AI',
-    deal: '$2.7B',
-    Icon: SparklesIcon,
-  },
-  {
-    company: 'Polsinelli',
-    target: 'Holland & Knight',
-    deal: '47 lawyers',
+    company: 'Crowell & Moring',
+    target: 'Reed Smith',
+    deal: '40+ lawyers',
+    detail: 'Healthcare team incl. 16 partners',
     Icon: ScaleIcon,
+  },
+  {
+    company: 'Mayer Brown',
+    target: 'Dechert',
+    deal: '3 partners',
+    detail: 'Private capital team, London',
+    Icon: BriefcaseIcon,
+  },
+  {
+    company: 'Various Am Law 100',
+    target: 'Competitors',
+    deal: '30+ groups',
+    detail: 'Group laterals up 14% in 2024',
+    Icon: BuildingOfficeIcon,
   },
 ];
 
@@ -39,7 +46,7 @@ export function LandingExplainer() {
           {/* Left - Definition */}
           <div className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
-              That&apos;s why liftouts exist
+              The concept
             </p>
             <h2
               id="explainer-heading"
@@ -62,30 +69,33 @@ export function LandingExplainer() {
             </Link>
           </div>
 
-          {/* Right - 2024 Examples */}
+          {/* Right - 2025 Examples */}
           <div className={`transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <p className="text-text-tertiary text-base font-semibold uppercase tracking-wider mb-6">
-              2024 Examples
+              2025 Examples
             </p>
             <div className="space-y-4">
               {recentExamples.map((example, index) => (
                 <div
                   key={example.company}
-                  className={`bg-bg-surface rounded-xl p-5 border border-border flex items-center gap-4 transition-all duration-500 ${
+                  className={`bg-bg-surface rounded-xl p-5 border border-border transition-all duration-500 ${
                     isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
                   }`}
                   style={{ transitionDelay: isVisible ? `${200 + index * 100}ms` : '0ms' }}
                 >
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
-                    <example.Icon className="w-6 h-6 text-[#4C1D95]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-text-primary text-lg">
-                      {example.company} <span className="text-text-tertiary font-normal">&larr;</span> {example.target}
-                    </p>
-                  </div>
-                  <div className="text-[#4C1D95] font-bold text-lg flex-shrink-0">
-                    {example.deal}
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <example.Icon className="w-5 h-5 text-[#4C1D95]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-text-primary">
+                        {example.company} <span className="text-text-tertiary font-normal">&larr;</span> {example.target}
+                      </p>
+                      <p className="text-text-secondary text-sm">{example.detail}</p>
+                    </div>
+                    <div className="text-[#4C1D95] font-bold text-base flex-shrink-0">
+                      {example.deal}
+                    </div>
                   </div>
                 </div>
               ))}
