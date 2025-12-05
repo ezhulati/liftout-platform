@@ -162,7 +162,7 @@ export default function SignUpPage() {
 
           {/* Content */}
           <div>
-            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
+            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight tracking-tight text-white">
               Join the first platform
               <span className="block text-purple-300">for team-based hiring</span>
             </h1>
@@ -192,7 +192,7 @@ export default function SignUpPage() {
 
           {/* Pioneer message */}
           <div>
-            <p className="text-white/70 text-sm">
+            <p className="text-white/70 text-base">
               The first platform for team-based hiring. We&apos;re just getting started.
             </p>
           </div>
@@ -267,7 +267,7 @@ export default function SignUpPage() {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border" />
                 </div>
-                <div className="relative flex justify-center text-sm">
+                <div className="relative flex justify-center text-base">
                   <span className="px-3 bg-bg text-text-tertiary">Or create account with email</span>
                 </div>
               </div>
@@ -297,10 +297,10 @@ export default function SignUpPage() {
                   <UserGroupIcon className={`w-8 h-8 mx-auto mb-2 ${
                     formData.userType === 'individual' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className={`font-bold text-sm ${
+                  <div className={`font-bold text-base ${
                     formData.userType === 'individual' ? 'text-white' : 'text-text-primary'
                   }`}>Team Member</div>
-                  <div className={`text-sm mt-1 ${
+                  <div className={`text-base mt-1 ${
                     formData.userType === 'individual' ? 'text-white/80' : 'text-text-tertiary'
                   }`}>Post a team profile together</div>
                 </button>
@@ -319,10 +319,10 @@ export default function SignUpPage() {
                   <BuildingOffice2Icon className={`w-8 h-8 mx-auto mb-2 ${
                     formData.userType === 'company' ? 'text-white' : 'text-gray-400'
                   }`} />
-                  <div className={`font-bold text-sm ${
+                  <div className={`font-bold text-base ${
                     formData.userType === 'company' ? 'text-white' : 'text-text-primary'
                   }`}>Company</div>
-                  <div className={`text-sm mt-1 ${
+                  <div className={`text-base mt-1 ${
                     formData.userType === 'company' ? 'text-white/80' : 'text-text-tertiary'
                   }`}>Hire intact teams</div>
                 </button>
@@ -469,7 +469,7 @@ export default function SignUpPage() {
             </FormField>
 
             {/* Terms */}
-            <p className="text-text-tertiary text-sm">
+            <p className="text-text-tertiary text-base">
               By creating an account, you agree to our{' '}
               <Link href="/terms" className="text-purple-700 hover:text-purple-600 underline underline-offset-2">
                 Terms of Service

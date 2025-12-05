@@ -67,11 +67,11 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
           </div>
           {/* Content - Practical UI spacing: 32px padding */}
           <div className="p-4 md:p-6 flex flex-col justify-center">
-            {/* Meta - Small text (15px) */}
+            {/* Meta - Practical UI: 16px minimum */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm font-medium text-navy">{article.category}</span>
-              <span className="text-sm text-text-tertiary">&middot;</span>
-              <span className="text-sm text-text-tertiary">{formattedDate}</span>
+              <span className="text-base font-medium text-navy">{article.category}</span>
+              <span className="text-base text-text-tertiary">&middot;</span>
+              <span className="text-base text-text-tertiary">{formattedDate}</span>
             </div>
             {/* Title - H3 (28px bold) with tight line height */}
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-2 leading-tight group-hover:text-navy transition-colors duration-200">
@@ -119,9 +119,9 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
       <div className="p-3">
         {/* Meta */}
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-navy">{article.category}</span>
-          <span className="text-sm text-text-tertiary">&middot;</span>
-          <span className="text-sm text-text-tertiary">{formattedDate}</span>
+          <span className="text-base font-medium text-navy">{article.category}</span>
+          <span className="text-base text-text-tertiary">&middot;</span>
+          <span className="text-base text-text-tertiary">{formattedDate}</span>
         </div>
         {/* Title - H4 (22px bold) */}
         <h3 className="font-heading text-lg font-bold text-text-primary mb-1 leading-snug group-hover:text-navy transition-colors duration-200 line-clamp-2">
@@ -231,8 +231,8 @@ export default function BlogPage() {
         {featuredArticle && (
           <section className="py-6 md:py-10">
             <div className="max-w-7xl mx-auto px-4 lg:px-10">
-              {/* Section label - Small caps style */}
-              <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-3">
+              {/* Section label - Practical UI: 16px minimum */}
+              <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-3">
                 Featured
               </p>
               <ArticleCard article={featuredArticle} featured />
@@ -243,7 +243,7 @@ export default function BlogPage() {
         {/* Articles Grid - XXL spacing (80px) for major section */}
         <section className="py-6 md:py-10 pb-10 md:pb-20">
           <div className="max-w-7xl mx-auto px-4 lg:px-10">
-            <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-3">
+            <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-3">
               Latest articles
             </p>
             {/* 12-column grid with 32px gutters */}

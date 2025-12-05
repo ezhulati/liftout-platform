@@ -254,11 +254,11 @@ export function TeamPlatformTour({ onComplete }: TeamPlatformTourProps) {
 
       {/* HBR Insight */}
       <div className="p-4 bg-bg-alt rounded-xl border-l-4 border-navy">
-        <p className="text-xs text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
-        <p className="text-sm text-text-secondary leading-relaxed">
+        <p className="text-base text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
+        <p className="text-base text-text-secondary leading-relaxed">
           "There's no need for team members to get acquainted with one another or establish shared values, mutual accountability, or group norms. Instead, the team can hit the ground running."
         </p>
-        <p className="text-xs text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
+        <p className="text-base text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
       </div>
 
       {/* Navigation */}

@@ -253,11 +253,11 @@ export function CompanyPlatformTour({ onComplete }: CompanyPlatformTourProps) {
 
       {/* HBR Insight */}
       <div className="p-4 bg-bg-alt rounded-xl border-l-4 border-navy">
-        <p className="text-xs text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
-        <p className="text-sm text-text-secondary leading-relaxed">
+        <p className="text-base text-text-tertiary mb-2 uppercase tracking-wide">Harvard Business Review</p>
+        <p className="text-base text-text-secondary leading-relaxed">
           "Companies can quickly gain capacity without all the headaches of a merger or acquisition. Teams can hit the ground running—no need for members to get acquainted or establish shared values and group norms."
         </p>
-        <p className="text-xs text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
+        <p className="text-base text-text-tertiary mt-2">— Groysberg & Abrahams on Liftouts</p>
       </div>
 
       {/* Navigation */}

@@ -41,8 +41,8 @@ export default function ContactPage() {
                   <ChatBubbleLeftRightIcon className="w-5 h-5 text-success" />
                 </div>
                 <div>
-                  <p className="font-semibold text-text-primary text-sm">Fast response guaranteed</p>
-                  <p className="text-success text-sm">Usually within 24 hours</p>
+                  <p className="font-semibold text-text-primary text-base">Fast response guaranteed</p>
+                  <p className="text-success text-base">Usually within 24 hours</p>
                 </div>
               </div>
             </div>
@@ -74,8 +74,8 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-text-primary">Email</p>
-                      <p className="text-text-secondary text-sm">hello@liftout.io</p>
+                      <p className="font-semibold text-text-primary text-base">Email</p>
+                      <p className="text-text-secondary text-base">hello@liftout.io</p>
                     </div>
                   </div>
 
@@ -87,9 +87,9 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-text-primary">Phone</p>
-                      <p className="text-text-secondary text-sm">+1 (888) LIFTOUT</p>
-                      <p className="text-text-tertiary text-xs mt-0.5">Mon-Fri, 9am-6pm EST</p>
+                      <p className="font-semibold text-text-primary text-base">Phone</p>
+                      <p className="text-text-secondary text-base">+1 (888) LIFTOUT</p>
+                      <p className="text-text-tertiary text-base mt-0.5">Mon-Fri, 9am-6pm EST</p>
                     </div>
                   </div>
 
@@ -99,8 +99,8 @@ export default function ContactPage() {
                       <MapPinIcon className="w-5 h-5 text-navy" />
                     </div>
                     <div>
-                      <p className="font-semibold text-text-primary">Office</p>
-                      <p className="text-text-secondary text-sm">
+                      <p className="font-semibold text-text-primary text-base">Office</p>
+                      <p className="text-text-secondary text-base">
                         123 Innovation Drive, Suite 400<br />
                         San Francisco, CA 94105
                       </p>
@@ -139,7 +139,7 @@ export default function ContactPage() {
 
                 {/* Pioneer signal */}
                 <div className="mt-8 p-5 bg-navy/5 rounded-xl">
-                  <p className="text-text-secondary text-sm leading-relaxed">
+                  <p className="text-text-secondary text-base leading-relaxed">
                     Liftouts have been common in <span className="font-semibold text-text-primary">law, banking, and consulting</span> for decades. We built the first platform to make this accessible to everyone.
                   </p>
                 </div>

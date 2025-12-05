@@ -177,7 +177,7 @@ export function ContactForm() {
       noValidate
     >
       {/* Required fields instruction (#Form: include instruction) */}
-      <p className="text-text-tertiary text-sm mb-6">
+      <p className="text-text-tertiary text-base mb-6">
         Required fields are marked with an asterisk *
       </p>
 
@@ -187,8 +187,8 @@ export function ContactForm() {
           <div className="flex items-start gap-3">
             <ExclamationCircleIcon className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-error text-sm mb-1">Please fix the following errors:</p>
-              <ul className="text-error text-sm space-y-1">
+              <p className="font-semibold text-error text-base mb-1">Please fix the following errors:</p>
+              <ul className="text-error text-base space-y-1">
                 {Object.values(errors).map((error, i) => (
                   <li key={i}>• {error}</li>
                 ))}
@@ -204,7 +204,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Full name *
           </label>
@@ -219,7 +219,7 @@ export function ContactForm() {
             className={`input-field w-full ${errors.name ? 'border-error focus:border-error focus:ring-error/20' : ''}`}
           />
           {errors.name && (
-            <p id="name-error" className="mt-1.5 text-error text-sm flex items-center gap-1.5">
+            <p id="name-error" className="mt-1.5 text-error text-base flex items-center gap-1.5">
               <ExclamationCircleIcon className="w-4 h-4" />
               {errors.name}
             </p>
@@ -230,7 +230,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Email address *
           </label>
@@ -245,7 +245,7 @@ export function ContactForm() {
             className={`input-field w-full ${errors.email ? 'border-error focus:border-error focus:ring-error/20' : ''}`}
           />
           {errors.email && (
-            <p id="email-error" className="mt-1.5 text-error text-sm flex items-center gap-1.5">
+            <p id="email-error" className="mt-1.5 text-error text-base flex items-center gap-1.5">
               <ExclamationCircleIcon className="w-4 h-4" />
               {errors.email}
             </p>
@@ -256,7 +256,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="company"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Company or team name <span className="text-text-tertiary font-normal">(optional)</span>
           </label>
@@ -274,7 +274,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="inquiryType"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Inquiry type *
           </label>
@@ -297,7 +297,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="subject"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Subject *
           </label>
@@ -312,7 +312,7 @@ export function ContactForm() {
             className={`input-field w-full ${errors.subject ? 'border-error focus:border-error focus:ring-error/20' : ''}`}
           />
           {errors.subject && (
-            <p id="subject-error" className="mt-1.5 text-error text-sm flex items-center gap-1.5">
+            <p id="subject-error" className="mt-1.5 text-error text-base flex items-center gap-1.5">
               <ExclamationCircleIcon className="w-4 h-4" />
               {errors.subject}
             </p>
@@ -323,7 +323,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-text-primary mb-1.5"
+            className="block text-base font-medium text-text-primary mb-1.5"
           >
             Message *
           </label>
@@ -338,7 +338,7 @@ export function ContactForm() {
             className={`input-field w-full resize-none ${errors.message ? 'border-error focus:border-error focus:ring-error/20' : ''}`}
           />
           {errors.message && (
-            <p id="message-error" className="mt-1.5 text-error text-sm flex items-center gap-1.5">
+            <p id="message-error" className="mt-1.5 text-error text-base flex items-center gap-1.5">
               <ExclamationCircleIcon className="w-4 h-4" />
               {errors.message}
             </p>
@@ -349,7 +349,7 @@ export function ContactForm() {
         {submitStatus === 'error' && (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-error/10 border border-error/20">
             <ExclamationCircleIcon className="w-5 h-5 text-error flex-shrink-0" />
-            <p className="text-error text-sm">
+            <p className="text-error text-base">
               Something went wrong. Please try again or email us directly at{' '}
               <a href="mailto:enrizhulati@gmail.com" className="underline">enrizhulati@gmail.com</a>
             </p>
@@ -367,7 +367,7 @@ export function ContactForm() {
           </button>
         </div>
 
-        <p className="text-text-tertiary text-sm">
+        <p className="text-text-tertiary text-base">
           By submitting, you agree to our{' '}
           <Link href="/privacy" className="text-navy underline hover:no-underline">
             privacy policy

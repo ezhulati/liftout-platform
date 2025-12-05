@@ -6,23 +6,23 @@ import { ShieldCheckIcon, ClockIcon, UserGroupIcon, LockClosedIcon } from '@hero
 const features = [
   {
     icon: UserGroupIcon,
-    title: 'Teams who\'ve built something rare',
-    description: 'Years of trust. Proven chemistry. The kind of partnership you can\'t recreate.',
+    title: 'Proven chemistry',
+    description: 'Years of trust you can\'t recreate with offsites.',
   },
   {
     icon: ClockIcon,
-    title: 'No team-building phase',
-    description: 'Skip the awkward \'getting to know you\' months. These teams already know each other.',
+    title: 'No storming phase',
+    description: 'Skip the awkward months. They already gel.',
   },
   {
     icon: ShieldCheckIcon,
     title: 'Real track records',
-    description: 'Documented achievements, not interview personas. See what they\'ve actually done together.',
+    description: 'Documented achievements, not interview personas.',
   },
   {
     icon: LockClosedIcon,
     title: 'Complete discretion',
-    description: 'Your current employer never sees you. Explore safely.',
+    description: 'Your employer never sees you. Explore safely.',
   },
 ];
 

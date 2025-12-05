@@ -113,7 +113,7 @@ export default function SignInPage() {
 
           {/* Content */}
           <div>
-            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight text-white">
+            <h1 className="font-heading text-4xl font-bold mb-4 leading-tight tracking-tight text-white">
               The first platform
               <span className="block text-purple-300">for team-based hiring</span>
             </h1>
@@ -125,10 +125,10 @@ export default function SignInPage() {
 
           {/* HBR insight instead of fake stats */}
           <div className="max-w-sm">
-            <p className="text-white/80 text-sm italic leading-relaxed">
+            <p className="text-white/80 text-base italic leading-relaxed">
               "The advantages of long-standing relationships help an experienced team make an impact much faster than a group brought together for the first time."
             </p>
-            <p className="text-white/50 text-xs mt-2">— Harvard Business Review</p>
+            <p className="text-white/50 text-base mt-2">— Harvard Business Review</p>
           </div>
         </div>
       </div>
@@ -160,27 +160,27 @@ export default function SignInPage() {
 
           {/* Demo Credentials - Practical UI: 48px touch targets, 8pt grid spacing */}
           <details className="mb-6 group">
-            <summary className="cursor-pointer text-sm text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
+            <summary className="cursor-pointer text-base text-text-tertiary hover:text-text-secondary transition-colors list-none flex items-center gap-2">
               <span className="text-purple-700 group-open:rotate-90 transition-transform">▸</span>
               <span className="group-open:hidden">Try demo credentials</span>
               <span className="hidden group-open:inline">Hide demo credentials</span>
             </summary>
             <div className="mt-4 bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <p className="text-text-secondary text-sm mb-4">
+              <p className="text-text-secondary text-base mb-4">
                 Click to auto-fill credentials:
               </p>
               <div className="flex gap-4">
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('individual')}
-                  className="flex-1 min-h-12 px-4 py-3 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                  className="flex-1 min-h-12 px-4 py-3 text-base font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Team lead
                 </button>
                 <button
                   type="button"
                   onClick={() => fillDemoCredentials('company')}
-                  className="flex-1 min-h-12 px-4 py-3 text-sm font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
+                  className="flex-1 min-h-12 px-4 py-3 text-base font-medium text-purple-700 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors"
                 >
                   Company
                 </button>
@@ -243,7 +243,7 @@ export default function SignInPage() {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border" />
                 </div>
-                <div className="relative flex justify-center text-sm">
+                <div className="relative flex justify-center text-base">
                   <span className="px-3 bg-bg text-text-tertiary">Or continue with email</span>
                 </div>
               </div>
@@ -305,7 +305,7 @@ export default function SignInPage() {
             <div className="flex items-center justify-end">
               <Link
                 href="/auth/forgot-password"
-                className="text-link text-sm"
+                className="text-link text-base"
               >
                 Forgot your password?
               </Link>

@@ -349,7 +349,7 @@ export default function NickAcimovicPage() {
           <section className="py-8 md:py-12 pb-12 md:pb-20">
             <div className="max-w-7xl mx-auto px-4 lg:px-10">
               {/* Section label */}
-              <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-3">
+              <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-3">
                 Articles by {author.name}
               </p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">

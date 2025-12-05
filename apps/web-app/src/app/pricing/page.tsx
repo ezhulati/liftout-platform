@@ -225,7 +225,7 @@ export default function PricingPage() {
 
       {/* Hero Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
           Pricing for Team-Based Hiring
         </h1>
         <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-8">
@@ -316,16 +316,16 @@ export default function PricingPage() {
                       {formatPrice(perMonthPrice)}
                     </span>
                     {price > 0 && (
-                      <span className="text-text-tertiary text-sm">/month</span>
+                      <span className="text-text-tertiary text-base">/month</span>
                     )}
                   </div>
                   {billingCycle === 'yearly' && price > 0 && (
-                    <p className="text-xs text-text-tertiary mt-1">
+                    <p className="text-base text-text-tertiary mt-1">
                       ${price} billed yearly
                     </p>
                   )}
                   {savings && (
-                    <p className="text-xs text-success font-medium mt-1">{savings}</p>
+                    <p className="text-base text-success font-medium mt-1">{savings}</p>
                   )}
                 </div>
 
@@ -338,7 +338,7 @@ export default function PricingPage() {
                     return (
                       <li
                         key={key}
-                        className={`flex items-center gap-2 text-sm ${
+                        className={`flex items-center gap-2 text-base ${
                           isPositive ? 'text-text-secondary' : 'text-text-tertiary'
                         }`}
                       >
@@ -385,9 +385,9 @@ export default function PricingPage() {
           <table className="w-full bg-bg-surface rounded-xl border border-border">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 font-medium text-text-secondary">Feature</th>
+                <th className="text-left p-4 font-medium text-text-secondary text-base">Feature</th>
                 {plans.map((plan) => (
-                  <th key={plan.id} className="p-4 text-center font-bold text-text-primary">
+                  <th key={plan.id} className="p-4 text-center font-bold text-text-primary text-base">
                     {plan.name}
                   </th>
                 ))}
@@ -396,7 +396,7 @@ export default function PricingPage() {
             <tbody className="divide-y divide-border">
               {Object.keys(featureLabels).map((featureKey) => (
                 <tr key={featureKey} className="hover:bg-bg-alt/50">
-                  <td className="p-4 text-sm text-text-secondary">
+                  <td className="p-4 text-base text-text-secondary">
                     {featureLabels[featureKey as keyof PlanFeatures]}
                   </td>
                   {plans.map((plan) => {
@@ -412,7 +412,7 @@ export default function PricingPage() {
                             <XMarkIcon className="h-5 w-5 text-text-tertiary mx-auto" />
                           )
                         ) : (
-                          <span className="text-sm font-medium text-text-primary">{value}</span>
+                          <span className="text-base font-medium text-text-primary">{value}</span>
                         )}
                       </td>
                     );
@@ -453,8 +453,8 @@ export default function PricingPage() {
             },
           ].map((faq, i) => (
             <div key={i} className="bg-bg-surface rounded-lg border border-border p-6">
-              <h3 className="font-semibold text-text-primary mb-2">{faq.q}</h3>
-              <p className="text-sm text-text-secondary">{faq.a}</p>
+              <h3 className="font-semibold text-text-primary text-lg mb-2">{faq.q}</h3>
+              <p className="text-base text-text-secondary">{faq.a}</p>
             </div>
           ))}
         </div>
@@ -489,7 +489,7 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="bg-bg-surface border-t border-border py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-text-tertiary">
+          <p className="text-base text-text-tertiary">
             &copy; {new Date().getFullYear()} Liftout. All rights reserved.
           </p>
         </div>

@@ -137,7 +137,7 @@ function TableOfContents({
       <aside className="hidden lg:block w-56 flex-shrink-0">
         <div className="sticky top-28">
           {/* Table of Contents */}
-          <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
+          <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-4">
             On this page
           </p>
           <nav className="mb-10">
@@ -164,7 +164,7 @@ function TableOfContents({
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
             <div>
-              <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
+              <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-4">
                 Related articles
               </p>
               <div>
@@ -318,7 +318,7 @@ export function ArticleWithTOC({ article, relatedArticles = [] }: ArticleWithTOC
 
               {/* Tags - XL spacing above */}
               <div className="mt-12 pt-8 border-t border-border">
-                <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-4">
+                <p className="text-base font-semibold text-text-tertiary uppercase tracking-wider mb-4">
                   Tags
                 </p>
                 <div className="flex flex-wrap gap-3">

@@ -70,16 +70,16 @@ export function ContactOptions() {
                   <h3 className="font-semibold text-text-primary text-lg mb-1">
                     {option.title}
                   </h3>
-                  <p className="text-text-secondary text-sm mb-3 leading-relaxed">
+                  <p className="text-text-secondary text-base mb-3 leading-relaxed">
                     {option.description}
                   </p>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center gap-2 text-navy font-semibold text-sm group-hover:underline">
+                    <span className="inline-flex items-center gap-2 text-navy font-semibold text-base group-hover:underline">
                       <EnvelopeIcon className="w-4 h-4" />
                       {option.cta}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-text-tertiary text-xs">
-                      <ClockIcon className="w-3.5 h-3.5" />
+                    <span className="inline-flex items-center gap-1.5 text-text-tertiary text-base">
+                      <ClockIcon className="w-4 h-4" />
                       {option.responseTime}
                     </span>
                   </div>

@@ -265,14 +265,14 @@ export default function WhatIsALiftoutPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
               <p
-                className={`text-sm font-semibold text-purple-700 uppercase tracking-wider mb-4 transition-all duration-500 ${
+                className={`text-base font-semibold text-purple-700 uppercase tracking-wider mb-4 transition-all duration-500 ${
                   heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 The definitive guide
               </p>
               <h1
-                className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6 transition-all duration-500 delay-75 ${
+                className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-tight mb-6 transition-all duration-500 delay-75 ${
                   heroRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
@@ -333,7 +333,7 @@ export default function WhatIsALiftoutPage() {
                     </svg>
                   </div>
                   <h3 className="font-bold text-text-primary mb-2">Going alone</h3>
-                  <ul className="space-y-2 text-text-secondary text-sm">
+                  <ul className="space-y-2 text-text-secondary text-base">
                     <li className="flex items-start gap-2">
                       <span className="text-gray-400 mt-1">×</span>
                       <span>Navigating interviews in isolation</span>
@@ -357,7 +357,7 @@ export default function WhatIsALiftoutPage() {
                     <UserGroupIcon className="w-5 h-5 text-purple-700" />
                   </div>
                   <h3 className="font-bold text-text-primary mb-2">Moving together</h3>
-                  <ul className="space-y-2 text-text-secondary text-sm">
+                  <ul className="space-y-2 text-text-secondary text-base">
                     <li className="flex items-start gap-2">
                       <CheckCircleIcon className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
                       <span>A known in an unknown process</span>
@@ -422,8 +422,8 @@ export default function WhatIsALiftoutPage() {
                   style={{ transitionDelay: problemRef.isVisible ? `${150 + index * 75}ms` : '0ms' }}
                 >
                   <p className="text-3xl sm:text-4xl font-bold text-red-600 mb-2">{problem.stat}</p>
-                  <p className="text-sm text-text-secondary mb-2">{problem.label}</p>
-                  <p className="text-xs text-text-tertiary">{problem.source}</p>
+                  <p className="text-base text-text-secondary mb-2">{problem.label}</p>
+                  <p className="text-base text-text-tertiary">{problem.source}</p>
                 </div>
               ))}
             </div>
@@ -461,9 +461,9 @@ export default function WhatIsALiftoutPage() {
                   style={{ transitionDelay: dataRef.isVisible ? `${150 + index * 75}ms` : '0ms' }}
                 >
                   <p className="text-3xl sm:text-4xl font-bold text-purple-700 mb-2">{point.stat}</p>
-                  <p className="text-sm font-medium text-text-primary mb-1">{point.label}</p>
-                  <p className="text-xs text-text-tertiary mb-3">{point.source}</p>
-                  <p className="text-sm text-purple-700 font-medium">{point.insight}</p>
+                  <p className="text-base font-medium text-text-primary mb-1">{point.label}</p>
+                  <p className="text-base text-text-tertiary mb-3">{point.source}</p>
+                  <p className="text-base text-purple-700 font-medium">{point.insight}</p>
                 </div>
               ))}
             </div>
@@ -479,7 +479,7 @@ export default function WhatIsALiftoutPage() {
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-12">
               <div>
                 <p
-                  className={`text-sm font-semibold text-purple-700 uppercase tracking-wider mb-2 transition-all duration-500 ${
+                  className={`text-base font-semibold text-purple-700 uppercase tracking-wider mb-2 transition-all duration-500 ${
                     examplesRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                 >
@@ -513,7 +513,7 @@ export default function WhatIsALiftoutPage() {
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
                     <div className="flex items-center gap-4 lg:w-64 flex-shrink-0">
-                      <span className="text-sm font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
+                      <span className="text-base font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
                         {example.year}
                       </span>
                       <span className="text-2xl font-bold text-text-primary">{example.deal}</span>
@@ -523,7 +523,7 @@ export default function WhatIsALiftoutPage() {
                         {example.company} <span className="text-text-tertiary font-normal">←</span> {example.target}
                       </h3>
                       <p className="text-text-secondary mb-2">{example.description}</p>
-                      <p className="text-sm font-medium text-green-700">{example.outcome}</p>
+                      <p className="text-base font-medium text-green-700">{example.outcome}</p>
                     </div>
                   </div>
                 </article>
@@ -572,19 +572,19 @@ export default function WhatIsALiftoutPage() {
                   }}
                 >
                   {stage.status === 'skip' && (
-                    <div className="absolute -top-2 -right-2 bg-gray-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    <div className="absolute -top-2 -right-2 bg-gray-500 text-white text-base font-bold px-2 py-1 rounded-full">
                       SKIP
                     </div>
                   )}
                   {stage.status === 'start' && (
-                    <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    <div className="absolute -top-2 -right-2 bg-green-600 text-white text-base font-bold px-2 py-1 rounded-full">
                       START HERE
                     </div>
                   )}
                   <h3 className={`text-lg font-bold mb-1 ${stage.status === 'skip' ? 'text-gray-500 line-through' : 'text-green-700'}`}>
                     {stage.name}
                   </h3>
-                  <p className={`text-sm ${stage.status === 'skip' ? 'text-gray-400' : 'text-green-600'}`}>
+                  <p className={`text-base ${stage.status === 'skip' ? 'text-gray-400' : 'text-green-600'}`}>
                     {stage.description}
                   </p>
                 </div>
@@ -592,7 +592,7 @@ export default function WhatIsALiftoutPage() {
             </div>
 
             <p
-              className={`mt-8 text-sm text-text-tertiary text-center transition-all duration-500 delay-500 ${
+              className={`mt-8 text-base text-text-tertiary text-center transition-all duration-500 delay-500 ${
                 tuckmanRef.isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
@@ -635,8 +635,8 @@ export default function WhatIsALiftoutPage() {
                     <benefit.Icon className="w-5 h-5 text-purple-300" />
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-                  <p className="text-white/70 text-sm mb-3">{benefit.description}</p>
-                  <p className="text-xs text-purple-300 font-medium">{benefit.data}</p>
+                  <p className="text-white/70 text-base mb-3">{benefit.description}</p>
+                  <p className="text-base text-purple-300 font-medium">{benefit.data}</p>
                 </div>
               ))}
             </div>
@@ -651,7 +651,7 @@ export default function WhatIsALiftoutPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mb-12">
               <p
-                className={`text-sm font-semibold text-purple-700 uppercase tracking-wider mb-2 transition-all duration-500 ${
+                className={`text-base font-semibold text-purple-700 uppercase tracking-wider mb-2 transition-all duration-500 ${
                   stagesRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
@@ -688,14 +688,14 @@ export default function WhatIsALiftoutPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-text-primary">{stage.title}</h3>
-                      <p className="text-sm text-purple-700 font-medium">{stage.subtitle}</p>
+                      <p className="text-base text-purple-700 font-medium">{stage.subtitle}</p>
                     </div>
                   </div>
 
                   <p className="text-text-secondary mb-4">{stage.description}</p>
 
                   <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
-                    <p className="text-sm font-medium text-purple-800">
+                    <p className="text-base font-medium text-purple-800">
                       <span className="font-bold">Key insight:</span> {stage.keyInsight}
                     </p>
                   </div>
@@ -704,7 +704,7 @@ export default function WhatIsALiftoutPage() {
             </div>
 
             <p
-              className={`mt-8 text-sm text-text-tertiary text-center transition-all duration-500 delay-500 ${
+              className={`mt-8 text-base text-text-tertiary text-center transition-all duration-500 delay-500 ${
                 stagesRef.isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
@@ -747,8 +747,8 @@ export default function WhatIsALiftoutPage() {
                     <industry.Icon className="w-6 h-6 text-purple-700" />
                   </div>
                   <h3 className="text-lg font-bold text-text-primary mb-2">{industry.name}</h3>
-                  <p className="text-sm text-text-secondary mb-3">{industry.example}</p>
-                  <p className="text-xs text-purple-700 font-medium">{industry.trend}</p>
+                  <p className="text-base text-text-secondary mb-3">{industry.example}</p>
+                  <p className="text-base text-purple-700 font-medium">{industry.trend}</p>
                 </div>
               ))}
             </div>
@@ -759,7 +759,7 @@ export default function WhatIsALiftoutPage() {
         <section className="py-16 lg:py-24">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
-              <p className="text-sm font-semibold text-purple-700 uppercase tracking-wider mb-4">
+              <p className="text-base font-semibold text-purple-700 uppercase tracking-wider mb-4">
                 The platform for team-based hiring
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
@@ -790,8 +790,8 @@ export default function WhatIsALiftoutPage() {
         {/* Sources Footer */}
         <section className="py-12 border-t border-border bg-bg-elevated">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Sources &amp; Further Reading</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-text-secondary">
+            <h3 className="text-base font-semibold text-text-primary mb-4">Sources &amp; Further Reading</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-base text-text-secondary">
               <div>
                 <p className="font-medium text-text-primary">Academic Research</p>
                 <ul className="mt-2 space-y-1">
