@@ -223,49 +223,51 @@ export default function PricingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
-          Pricing for Team-Based Hiring
-        </h1>
-        <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-8">
-          We built the first platform for liftouts. Choose the plan that fits your needs.
-          Start free—no credit card required.
-        </p>
+      {/* Hero Section - Practical UI: left-aligned */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
+            Pricing for team-based hiring
+          </h1>
+          <p className="text-lg text-text-secondary max-w-2xl mb-8">
+            We built the first platform for liftouts. Choose the plan that fits your needs.
+            Start free—no credit card required.
+          </p>
 
-        {/* Billing Toggle - Practical UI: 16px minimum text */}
-        <div className="flex items-center justify-center gap-4 mb-12">
-          <span
-            className={`text-base font-medium ${
-              billingCycle === 'monthly' ? 'text-text-primary' : 'text-text-tertiary'
-            }`}
-          >
-            Monthly
-          </span>
-          <button
-            onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              billingCycle === 'yearly' ? 'bg-navy' : 'bg-gray-200'
-            }`}
-          >
+          {/* Billing Toggle - Practical UI: left-aligned */}
+          <div className="flex items-center gap-4">
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+              className={`text-base font-medium ${
+                billingCycle === 'monthly' ? 'text-text-primary' : 'text-text-tertiary'
               }`}
-            />
-          </button>
-          <span
-            className={`text-base font-medium ${
-              billingCycle === 'yearly' ? 'text-text-primary' : 'text-text-tertiary'
-            }`}
-          >
-            Yearly
-          </span>
-          {billingCycle === 'yearly' && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-success-light px-2.5 py-1 text-base font-medium text-success">
-              Save up to 20%
+            >
+              Monthly
             </span>
-          )}
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                billingCycle === 'yearly' ? 'bg-navy' : 'bg-gray-200'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span
+              className={`text-base font-medium ${
+                billingCycle === 'yearly' ? 'text-text-primary' : 'text-text-tertiary'
+              }`}
+            >
+              Yearly
+            </span>
+            {billingCycle === 'yearly' && (
+              <span className="ml-2 inline-flex items-center rounded-full bg-success-light px-2.5 py-1 text-base font-medium text-success">
+                Save up to 20%
+              </span>
+            )}
+          </div>
         </div>
       </section>
 
@@ -378,8 +380,8 @@ export default function PricingPage() {
 
       {/* Feature Comparison */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <h2 className="text-2xl font-bold text-text-primary text-center mb-8">
-          Compare All Features
+        <h2 className="text-2xl font-bold text-text-primary mb-8">
+          Compare all features
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full bg-bg-surface rounded-xl border border-border">
@@ -426,8 +428,8 @@ export default function PricingPage() {
 
       {/* FAQ Section */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <h2 className="text-2xl font-bold text-text-primary text-center mb-8">
-          Frequently Asked Questions
+        <h2 className="text-2xl font-bold text-text-primary mb-8">
+          Frequently asked questions
         </h2>
         <div className="space-y-4">
           {[
@@ -460,16 +462,16 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Practical UI: left-aligned */}
       <section className="bg-navy py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to find your next great team?
           </h2>
-          <p className="text-navy-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-navy-100 mb-8 max-w-2xl">
             Be among the first to hire intact teams. This is a new way to build—join us.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap gap-4">
             <Link
               href="/auth/signup"
               className="px-6 py-3 bg-white text-navy font-semibold rounded-lg hover:bg-gray-100 transition-colors"
@@ -488,7 +490,7 @@ export default function PricingPage() {
 
       {/* Footer */}
       <footer className="bg-bg-surface border-t border-border py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-base text-text-tertiary">
             &copy; {new Date().getFullYear()} Liftout. All rights reserved.
           </p>

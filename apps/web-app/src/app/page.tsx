@@ -3,6 +3,7 @@ import { LandingProblem } from '@/components/landing/LandingProblem';
 import { LandingExplainer } from '@/components/landing/LandingExplainer';
 import { HBRInsight } from '@/components/landing/HBRInsight';
 import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
+import { ProductPreview } from '@/components/landing/ProductPreview';
 import { LandingFlip } from '@/components/landing/LandingFlip';
 import { LandingElephant } from '@/components/landing/LandingElephant';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
@@ -108,22 +109,25 @@ export default function HomePage() {
         {/* 5. PLAN: How it works - simple 3 steps */}
         <HowItWorksTabs />
 
-        {/* 6. TRANSFORMATION: Solo resume vs Team profile */}
+        {/* 6. PREVIEW: See the actual product */}
+        <ProductPreview />
+
+        {/* 7. TRANSFORMATION: Solo resume vs Team profile */}
         <LandingFlip />
 
-        {/* 7. OBJECTION: Address "won't they leave together?" */}
+        {/* 8. OBJECTION: Address "won't they leave together?" */}
         <LandingElephant />
 
-        {/* 8. BENEFITS: Features framed as outcomes */}
+        {/* 9. BENEFITS: Features framed as outcomes */}
         <LandingFeatures />
 
-        {/* 9. PROOF: Gallup research on team relationships */}
+        {/* 10. PROOF: Gallup research on team relationships */}
         <LandingQuote />
 
-        {/* 10. FAQ: Practical questions */}
+        {/* 11. FAQ: Practical questions */}
         <FAQTabs />
 
-        {/* 11. CTA: Final invitation */}
+        {/* 12. CTA: Final invitation */}
         <LandingCTA />
       </main>
       <LandingFooter />

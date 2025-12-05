@@ -36,10 +36,10 @@ export function HowItWorksTeams() {
       aria-labelledby="how-it-works-teams-heading"
     >
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
+        {/* Section header - Practical UI: left-aligned */}
         <h2
           id="how-it-works-teams-heading"
-          className={`font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-12 text-center transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className={`font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-12 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           How it works
         </h2>

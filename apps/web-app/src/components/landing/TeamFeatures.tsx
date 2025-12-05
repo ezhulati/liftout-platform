@@ -32,9 +32,10 @@ export function TeamFeatures() {
       aria-labelledby="team-features-heading"
     >
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
+        {/* Practical UI: left-aligned section header */}
         <h2
           id="team-features-heading"
-          className={`font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-10 text-center transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className={`font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-10 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           What you get
         </h2>

@@ -13,7 +13,8 @@ export function TeamCTA() {
       className="relative py-20 lg:py-28 overflow-hidden dark-section"
       aria-labelledby="team-cta-heading"
     >
-      <div className={`relative z-10 max-w-3xl mx-auto px-6 lg:px-8 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      {/* Practical UI: left-aligned text for readability */}
+      <div className={`relative z-10 max-w-3xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Emotional close */}
         <h2
           id="team-cta-heading"
@@ -22,16 +23,16 @@ export function TeamCTA() {
           Your next opportunity should not break up what you have built.
         </h2>
 
-        <p className="font-body text-white/90 text-xl leading-relaxed mb-4">
+        <p className="font-body text-white/90 text-xl leading-relaxed mb-4 max-w-2xl">
           You&apos;ve spent years building trust, refining processes, achieving together.
         </p>
 
-        <p className="font-body text-white text-xl leading-relaxed font-medium mb-10">
+        <p className="font-body text-white text-xl leading-relaxed font-medium mb-10 max-w-2xl">
           Companies value that. Find the right one.
         </p>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <Link
             href="/auth/signup?type=team"
             className="btn-primary-on-dark gap-3 px-8 py-3 text-lg group"

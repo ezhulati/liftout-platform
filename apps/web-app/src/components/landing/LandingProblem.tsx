@@ -34,8 +34,8 @@ export function LandingProblem() {
       aria-labelledby="problem-heading"
     >
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
-        <div className={`text-center mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {/* Section header - Practical UI: left-aligned */}
+        <div className={`mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <h2
             id="problem-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight mb-4"
@@ -83,9 +83,9 @@ export function LandingProblem() {
           ))}
         </div>
 
-        {/* Provocative closing question */}
+        {/* Provocative closing question - Practical UI: left-aligned */}
         <div
-          className={`mt-16 text-center transition-all duration-500 delay-500 ${
+          className={`mt-16 transition-all duration-500 delay-500 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
