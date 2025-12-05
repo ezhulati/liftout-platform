@@ -8,7 +8,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const teamFaqs = [
   {
     question: 'Is Liftout confidential?',
-    answer: 'Yes. Your current employer is automatically blocked from seeing your profile. You control which companies can view you, and all conversations are NDA-protected from the first interaction.',
+    answer: 'Yes. You control your visibility: go fully anonymous, selective, or public. Only verified companies can view anonymous profiles, and all conversations are NDA-protected from the first interaction.',
   },
   {
     question: 'Is Liftout free for teams?',

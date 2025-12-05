@@ -30,8 +30,8 @@ const features = [
     audience: 'teams',
   },
   {
-    name: 'Complete confidentiality',
-    description: 'Current employers are automatically blocked. Explore without anyone knowing.',
+    name: 'You control who sees you',
+    description: 'Go anonymous, selective, or public. Only verified companies can reach you.',
     icon: ChartBarIcon,
     audience: 'both',
   },

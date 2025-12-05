@@ -35,7 +35,7 @@ const teamSteps = [
   {
     number: '2',
     title: 'Explore in safety',
-    description: 'Browse opportunities confidentially. Your current employer is automatically blocked. No one knows you\'re looking.',
+    description: 'Browse opportunities confidentially. Control your visibility—go anonymous until you\'re ready to reveal.',
     icon: EyeSlashIcon,
   },
   {

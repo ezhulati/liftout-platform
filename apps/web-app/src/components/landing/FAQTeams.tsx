@@ -9,7 +9,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const faqs = [
   {
     question: 'Is it really confidential?',
-    answer: 'Yes. Your current employer is automatically blocked and will never see your profile. You control which companies can view you, and all conversations are NDA-protected.',
+    answer: 'Yes. You control your visibility—anonymous, selective, or public. Only verified companies can view anonymous profiles, and all conversations are NDA-protected.',
   },
   {
     question: 'Is it free?',
