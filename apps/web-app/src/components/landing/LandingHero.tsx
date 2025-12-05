@@ -36,11 +36,6 @@ export function LandingHero() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left - Text content */}
             <div>
-              {/* Emotional hook - the pain before the solution */}
-              <p className="text-text-secondary text-lg italic mb-4">
-                &ldquo;The job market is a lonely desert between two places that preach teamwork.&rdquo;
-              </p>
-
               {/* H1 - Clean, impactful headline */}
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
                 Hire teams that already work.

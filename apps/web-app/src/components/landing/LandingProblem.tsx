@@ -90,10 +90,10 @@ export function LandingProblem() {
           }`}
         >
           <p className="text-xl lg:text-2xl font-heading font-semibold text-text-primary mb-4">
-            Why is there a lonely desert in the middle?
+            Why does hiring break up great teams?
           </p>
           <p className="text-text-secondary text-lg">
-            It doesn&apos;t have to be this way.
+            It doesn&apos;t have to.
           </p>
         </div>
       </div>
