@@ -21,55 +21,58 @@ const tabs: { id: TabId; label: string; description: string; icon: React.Element
   },
 ];
 
-// Simplified preview data - embedded for dark theme styling
+// Preview data matching actual dashboard cards
 const previewOpportunities = [
   {
-    title: 'Strategic FinTech Analytics Team',
-    company: 'Goldman Sachs',
+    title: 'Quant Fund Expanding Data Science Ranks',
+    company: 'Volt Analytics',
     location: 'New York, NY',
-    teamSize: '3-5',
-    compensation: '$180k-$250k',
-    type: 'Expansion',
+    teamSize: '4-6 members',
+    compensation: '$400k-$800k',
+    timeline: 'Q1 2025',
+    description: 'Physics PhDs and data scientists to uncover signals within noisy equities data and engineer algorithms.',
+    requirements: ['Statistical Learning', 'HPC', 'Financial Engineering'],
+    status: 'active',
+    urgent: true,
   },
   {
-    title: 'Healthcare AI Research Team',
-    company: 'MedTech Innovations',
-    location: 'Boston, MA',
-    teamSize: '4-6',
-    compensation: '$200k-$300k',
-    type: 'Capability',
-  },
-  {
-    title: 'DevOps & Platform Team',
-    company: 'Scale Labs',
-    location: 'San Francisco, CA',
-    teamSize: '3-5',
-    compensation: '$170k-$230k',
-    type: 'Expansion',
+    title: 'Tech Law Firm Expanding IP Attorney Ranks',
+    company: 'Alpha Legal',
+    location: 'Palo Alto, CA',
+    teamSize: '4-8 members',
+    compensation: '$300k-$500k',
+    timeline: 'Immediate',
+    description: 'Patent attorneys to counsel deep tech startups facing growth-phase litigation threats.',
+    requirements: ['Prior Art', 'Patent Drafting', 'AI/ML Expertise'],
+    status: 'active',
+    urgent: false,
   },
 ];
 
 const previewTeams = [
   {
-    name: 'Apex Data Engineering',
-    specialty: 'Data Infrastructure',
-    location: 'Austin, TX',
+    name: 'TechFlow Data Science',
+    industry: 'Financial Services',
+    location: 'San Francisco, CA',
     size: '4 members',
-    status: 'Actively Looking',
+    yearsWorking: '3.5',
+    cohesionScore: 95,
+    description: 'Elite data science team specializing in fintech analytics and machine learning.',
+    skills: ['Machine Learning', 'Python', 'SQL', 'MLOps'],
+    status: 'Open to liftout',
+    verified: true,
   },
   {
-    name: 'Nexus Product Team',
-    specialty: 'B2B SaaS',
-    location: 'Seattle, WA',
+    name: 'Apex Data Engineering',
+    industry: 'Technology',
+    location: 'Austin, TX',
     size: '5 members',
-    status: 'Open to Opportunities',
-  },
-  {
-    name: 'Quantum ML Research',
-    specialty: 'Machine Learning',
-    location: 'Remote',
-    size: '3 members',
-    status: 'Actively Looking',
+    yearsWorking: '2.5',
+    cohesionScore: 92,
+    description: 'Full-stack data engineering team with expertise in real-time pipelines and cloud infrastructure.',
+    skills: ['Spark', 'Kubernetes', 'AWS', 'Kafka'],
+    status: 'Open to liftout',
+    verified: true,
   },
 ];
 
@@ -91,16 +94,16 @@ export function ProductPreview() {
         {/* Header - Practical UI: left-aligned */}
         <div className={`max-w-2xl mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-3">
-            See it in action
+            The platform
           </p>
           <h2
             id="preview-heading"
             className="font-heading text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight leading-tight mb-4"
           >
-            A glimpse inside the platform
+            Built for teams, not individuals
           </h2>
           <p className="text-gray-600 text-lg">
-            Real opportunities. Real teams. Real chemistry.
+            Browse opportunities or discover teams—all designed for groups who work well together.
           </p>
         </div>
 
@@ -143,18 +146,18 @@ export function ProductPreview() {
           {tabs.find(t => t.id === activeTab)?.description}
         </p>
 
-        {/* Browser mockup with dark UI */}
+        {/* Browser mockup with light UI - left aligned */}
         <div className={`transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="bg-[#1a1a1a] rounded-xl shadow-2xl overflow-hidden max-w-4xl mx-auto">
+          <div className="bg-white rounded-xl shadow-2xl overflow-hidden max-w-4xl border border-gray-200">
             {/* Browser chrome */}
-            <div className="bg-[#2a2a2a] px-4 py-3 flex items-center gap-3">
+            <div className="bg-gray-100 px-4 py-3 flex items-center gap-3 border-b border-gray-200">
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                 <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
                 <div className="w-3 h-3 rounded-full bg-[#28c840]" />
               </div>
               <div className="flex-1 flex justify-center">
-                <div className="bg-[#1a1a1a] rounded-md px-4 py-1.5 text-gray-400 text-sm flex items-center gap-2">
+                <div className="bg-white rounded-md px-4 py-1.5 text-gray-500 text-sm flex items-center gap-2 border border-gray-200">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
@@ -164,8 +167,8 @@ export function ProductPreview() {
               <div className="w-16" /> {/* Spacer for symmetry */}
             </div>
 
-            {/* App content - dark theme */}
-            <div className="bg-[#111111] p-6">
+            {/* App content - light theme */}
+            <div className="bg-gray-50 p-6">
               {/* App header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -177,54 +180,77 @@ export function ProductPreview() {
                     )}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white text-base">
+                    <h4 className="font-semibold text-gray-900 text-base">
                       {activeTab === 'teams' ? 'Opportunities' : 'Browse Teams'}
                     </h4>
-                    <p className="text-gray-400 text-sm">
+                    <p className="text-gray-500 text-sm">
                       {activeTab === 'teams' ? '24 matching your profile' : '156 verified teams'}
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <div className="px-3 py-1.5 bg-[#1a1a1a] rounded-lg text-gray-400 text-sm">Filter</div>
-                  <div className="px-3 py-1.5 bg-[#1a1a1a] rounded-lg text-gray-400 text-sm">Sort</div>
+                  <div className="px-3 py-1.5 bg-white rounded-lg text-gray-600 text-sm border border-gray-200">Filter</div>
+                  <div className="px-3 py-1.5 bg-white rounded-lg text-gray-600 text-sm border border-gray-200">Sort</div>
                 </div>
               </div>
 
-              {/* Cards grid */}
+              {/* Cards - matching actual dashboard design */}
               <div className="space-y-4">
                 {activeTab === 'teams' ? (
                   previewOpportunities.map((opp, index) => (
                     <div
                       key={opp.title}
-                      className={`bg-[#1a1a1a] rounded-xl p-5 border border-[#2a2a2a] hover:border-[#4C1D95]/50 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                      className={`bg-white rounded-xl p-5 border border-gray-200 hover:border-[#4C1D95]/50 hover:shadow-sm transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                       style={{ transitionDelay: isVisible ? `${(index + 3) * 100}ms` : '0ms' }}
                     >
-                      <div className="flex items-start justify-between gap-4 mb-3">
-                        <div>
-                          <h5 className="font-semibold text-white text-base mb-1">{opp.title}</h5>
-                          <p className="text-gray-400 text-sm flex items-center gap-1.5">
-                            <BuildingOffice2Icon className="w-4 h-4" />
-                            {opp.company}
-                          </p>
+                      {/* Header with title and badges */}
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <div className="flex items-center flex-wrap gap-2">
+                          <h5 className="font-bold text-gray-900 text-base">{opp.title}</h5>
+                          <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs font-medium rounded-full">
+                            {opp.status}
+                          </span>
+                          {opp.urgent && (
+                            <span className="px-2 py-0.5 bg-red-50 text-red-700 text-xs font-medium rounded-full">
+                              Urgent
+                            </span>
+                          )}
                         </div>
-                        <span className="px-2.5 py-1 bg-[#4C1D95]/20 text-[#a78bfa] text-xs font-medium rounded-full whitespace-nowrap">
-                          {opp.type}
-                        </span>
                       </div>
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        <span className="text-gray-400 flex items-center gap-1.5">
+
+                      {/* Company + location + time */}
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-3">
+                        <span className="text-gray-700">{opp.company}</span>
+                        <span className="flex items-center gap-1">
                           <MapPinIcon className="w-4 h-4" />
                           {opp.location}
                         </span>
-                        <span className="text-gray-400 flex items-center gap-1.5">
-                          <UserGroupIcon className="w-4 h-4" />
-                          {opp.teamSize} people
-                        </span>
-                        <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                        <span>Posted 2 days ago</span>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">{opp.description}</p>
+
+                      {/* Info grid */}
+                      <div className="flex flex-wrap gap-4 text-sm mb-4">
+                        <span className="text-green-600 font-medium flex items-center gap-1">
                           <CurrencyDollarIcon className="w-4 h-4" />
                           {opp.compensation}
                         </span>
+                        <span className="text-gray-500 flex items-center gap-1">
+                          <UserGroupIcon className="w-4 h-4" />
+                          {opp.teamSize}
+                        </span>
+                        <span className="text-gray-500">{opp.timeline}</span>
+                      </div>
+
+                      {/* Requirements badges */}
+                      <div className="flex flex-wrap gap-2">
+                        {opp.requirements.map((req) => (
+                          <span key={req} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                            {req}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   ))
@@ -232,31 +258,53 @@ export function ProductPreview() {
                   previewTeams.map((team, index) => (
                     <div
                       key={team.name}
-                      className={`bg-[#1a1a1a] rounded-xl p-5 border border-[#2a2a2a] hover:border-[#4C1D95]/50 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                      className={`bg-white rounded-xl p-5 border border-gray-200 hover:border-[#4C1D95]/50 hover:shadow-sm transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                       style={{ transitionDelay: isVisible ? `${(index + 3) * 100}ms` : '0ms' }}
                     >
-                      <div className="flex items-start justify-between gap-4 mb-3">
-                        <div>
-                          <h5 className="font-semibold text-white text-base mb-1">{team.name}</h5>
-                          <p className="text-gray-400 text-sm">{team.specialty}</p>
+                      <div className="flex items-start gap-4">
+                        {/* Team icon */}
+                        <div className="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+                          <UserGroupIcon className="w-6 h-6 text-[#4C1D95]" />
                         </div>
-                        <span className={`px-2.5 py-1 text-xs font-medium rounded-full whitespace-nowrap ${
-                          team.status === 'Actively Looking'
-                            ? 'bg-emerald-500/20 text-emerald-400'
-                            : 'bg-amber-500/20 text-amber-400'
-                        }`}>
-                          {team.status}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                        <span className="flex items-center gap-1.5">
-                          <MapPinIcon className="w-4 h-4" />
-                          {team.location}
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <UserGroupIcon className="w-4 h-4" />
-                          {team.size}
-                        </span>
+
+                        <div className="flex-1 min-w-0">
+                          {/* Header with name and badges */}
+                          <div className="flex items-center flex-wrap gap-2 mb-1">
+                            <h5 className="font-bold text-gray-900 text-base">{team.name}</h5>
+                            <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs font-medium rounded-full">
+                              {team.status}
+                            </span>
+                            <span className="px-2 py-0.5 bg-purple-50 text-[#4C1D95] text-xs font-medium rounded-full">
+                              {team.industry}
+                            </span>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{team.description}</p>
+
+                          {/* Meta info */}
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-3">
+                            <span className="flex items-center gap-1">
+                              <UserGroupIcon className="w-4 h-4" />
+                              {team.size}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPinIcon className="w-4 h-4" />
+                              {team.location}
+                            </span>
+                            <span className="text-amber-600">★ {team.cohesionScore}% cohesion</span>
+                            <span>{team.yearsWorking}y together</span>
+                          </div>
+
+                          {/* Skills badges */}
+                          <div className="flex flex-wrap gap-2">
+                            {team.skills.map((skill) => (
+                              <span key={skill} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))

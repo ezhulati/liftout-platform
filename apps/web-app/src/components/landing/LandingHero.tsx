@@ -46,23 +46,22 @@ export function LandingHero() {
                 Stop hoping new hires will gel. Stop leaving your colleagues behind. Liftout connects intact teams with companies who value proven chemistry.
               </p>
 
-              {/* CTAs - Equal weight for both audiences */}
+              {/* CTAs - Practical UI: ONE primary, one secondary (outline) */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {/* Primary button for teams */}
+                {/* Primary button - main CTA */}
                 <Link
-                  href="/auth/signup?type=team"
-                  className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-[#4C1D95] text-white font-bold rounded-lg shadow-lg shadow-purple-900/25 hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+                  href="/auth/signup"
+                  className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-3 group"
                 >
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="relative">Explore as a team</span>
-                  <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  Get started free
+                  <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
-                {/* Secondary button for companies */}
+                {/* Secondary button - outline style */}
                 <Link
-                  href="/auth/signup?type=company"
-                  className="min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 border-2 border-[#4C1D95] text-[#4C1D95] font-bold rounded-lg hover:bg-[#4C1D95]/5 transition-colors"
+                  href="#how-it-works"
+                  className="btn-outline min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center"
                 >
-                  Explore as a company
+                  See how it works
                 </Link>
               </div>
 

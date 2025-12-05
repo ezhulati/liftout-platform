@@ -362,7 +362,7 @@ export default function PricingPage() {
                 <button
                   onClick={() => handleSelectPlan(plan)}
                   disabled={isLoading === plan.id}
-                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
+                  className={`w-full min-h-12 py-3 px-4 rounded-lg font-semibold text-base transition-colors ${
                     plan.popular
                       ? 'bg-navy text-white hover:bg-navy-dark'
                       : plan.id === 'free'
@@ -474,15 +474,15 @@ export default function PricingPage() {
           <div className="flex flex-wrap gap-4">
             <Link
               href="/auth/signup"
-              className="px-6 py-3 bg-white text-navy font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+              className="min-h-12 px-6 py-3 bg-white text-navy font-semibold text-base rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center justify-center"
             >
-              Start Free Trial
+              Start free trial
             </Link>
             <Link
               href="/contact"
-              className="px-6 py-3 border border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              className="min-h-12 px-6 py-3 border border-white text-white font-semibold text-base rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center"
             >
-              Contact Sales
+              Contact sales
             </Link>
           </div>
         </div>

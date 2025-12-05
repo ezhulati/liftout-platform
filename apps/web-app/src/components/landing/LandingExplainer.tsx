@@ -90,9 +90,6 @@ export function LandingExplainer() {
                 </div>
               ))}
             </div>
-            <p className="mt-6 text-text-tertiary text-base">
-              And the research proves it works.
-            </p>
           </div>
         </div>
       </div>

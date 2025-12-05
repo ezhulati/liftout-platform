@@ -24,7 +24,7 @@ export function LandingCTA() {
 
         {/* Split CTA - Two columns for each audience */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
-          {/* Left - Teams */}
+          {/* Left - Teams (primary CTA) */}
           <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
             <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
               Take the leap together
@@ -34,15 +34,14 @@ export function LandingCTA() {
             </p>
             <Link
               href="/auth/signup?type=team"
-              className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+              className="btn-primary-on-dark min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-3 group"
             >
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
-              <span className="relative">Register your team</span>
-              <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              Register your team
+              <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
           </div>
 
-          {/* Right - Companies */}
+          {/* Right - Companies (secondary button style) */}
           <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
             <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
               Hire chemistry, not hope
@@ -52,11 +51,10 @@ export function LandingCTA() {
             </p>
             <Link
               href="/auth/signup?type=company"
-              className="group relative min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 bg-white text-[#4C1D95] font-bold rounded-lg shadow-lg shadow-white/20 hover:bg-white/95 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+              className="btn-secondary-on-dark min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2 group"
             >
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-purple-900/5 to-transparent" />
-              <span className="relative">Browse verified teams</span>
-              <ArrowRightIcon className="w-5 h-5 relative transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              Browse verified teams
+              <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
           </div>
         </div>
