@@ -27,10 +27,10 @@ export function LandingCTA() {
           {/* Left - Teams (primary CTA) */}
           <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
             <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
-              Progress alongside trusted colleagues
+              Move up with the people who made you better
             </h3>
             <p className="text-white/80 text-lg leading-relaxed mb-8">
-              Take your career to new levels with colleagues who bring out your best. Confidentially explore what&apos;s next—together.
+              Your best work happened with this team. Why start over with strangers? Explore what&apos;s next—together.
             </p>
             <Link
               href="/auth/signup?type=team"

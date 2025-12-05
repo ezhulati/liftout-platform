@@ -29,17 +29,17 @@ export function LandingQuote() {
             id="quote-heading"
             className="font-heading text-2xl md:text-3xl font-semibold text-text-primary mb-8 leading-relaxed max-w-prose"
           >
-            &ldquo;Gallup found that the more employees who could say they have a best friend at work, the better the company performed. The best teams are built on real relationships.&rdquo;
+            &ldquo;Stars do not develop in a vacuum; their performance depends heavily on the people with whom they work. If they can bring some of that firm-specific relational capital with them, their chances of maintaining their exceptional performance increase dramatically.&rdquo;
           </blockquote>
 
           {/* Attribution */}
           <p className="text-text-tertiary text-base mb-8">
-            Research from Gallup workplace studies
+            Boris Groysberg, Harvard Business School — &ldquo;Chasing Stars&rdquo;
           </p>
 
           {/* Transition */}
           <p className="text-text-secondary text-lg font-medium">
-            Ready to find your home?
+            Don&apos;t leave your best work behind. Bring it with you.
           </p>
         </div>
       </div>

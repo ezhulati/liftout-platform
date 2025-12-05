@@ -3,10 +3,10 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const problems = [
-  'Companies spend fortunes on personality tests hoping people will gel.',
-  'They pay referral bonuses to poach your colleagues one at a time.',
-  'You endure a scary, isolating process just to land somewhere that says "we\'re a family."',
-  'You\'ve spent years building trust and chemistry—then throw it away to start over.',
+  'Harvard research shows star performers decline 46% when they move alone—they leave behind the relationships that made them great.',
+  'Companies spend fortunes on personality tests hoping people will gel. You already have chemistry.',
+  'You endure a scary, isolating job search just to start over with strangers at "we\'re a family" companies.',
+  'You\'ve spent years building trust—why throw it away when you could bring it with you?',
 ];
 
 export function TeamProblem() {
@@ -23,7 +23,7 @@ export function TeamProblem() {
           id="team-problem-heading"
           className={`font-heading text-2xl sm:text-3xl font-bold text-white/90 tracking-tight leading-tight mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          The hiring process is broken.
+          Job searching alone means starting over.
         </h2>
 
         <ul className="space-y-8">

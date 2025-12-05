@@ -38,12 +38,12 @@ export function LandingHero() {
             <div>
               {/* H1 - Clean, impactful headline */}
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-                Connect Your Squad on Your Terms
+                Move up with the people who made you better
               </h1>
 
               {/* Subhead - direct, action-oriented for teams */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Your talented team deserves employers as bold as you are. Connect directly and confidentially with companies seeking your standout talents.
+                Your best work happened with this team. Why start over with strangers? Explore what&apos;s next—together, confidentially.
               </p>
 
               {/* CTAs - Practical UI: ONE primary, one secondary (outline) */}

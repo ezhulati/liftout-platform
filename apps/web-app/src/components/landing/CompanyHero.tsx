@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Day-one productivity, no 12-month ramp-up',
-  'Chemistry you can\'t manufacture',
-  'Skip the forming-storming-norming phases',
-  'Verified track records, not interview performances',
+  'Day-one productivity—skip the 12-month ramp-up',
+  'Relationships that took years to build, yours instantly',
+  'Skip forming, storming, norming—start performing',
+  'Proven track records, not interview performances',
 ];
 
 export function CompanyHero() {
@@ -40,7 +40,7 @@ export function CompanyHero() {
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              Great individuals don&apos;t always make great teams. Acquire teams that already perform.
+              Harvard research shows star performers decline when they move alone—they leave behind the relationships that made them great. Hire teams that bring their chemistry with them.
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}
