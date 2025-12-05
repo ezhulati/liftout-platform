@@ -5,8 +5,6 @@ import {
   UserGroupIcon,
   ShieldCheckIcon,
   RocketLaunchIcon,
-  BriefcaseIcon,
-  ChatBubbleLeftRightIcon,
   ChartBarIcon,
   ArrowRightIcon,
 } from '@heroicons/react/24/outline';
@@ -14,14 +12,8 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
-    name: 'A known in an unknown',
-    description: 'Career changes are daunting alone. Face the unknown with people you trust.',
-    icon: ChatBubbleLeftRightIcon,
-    audience: 'teams',
-  },
-  {
-    name: 'Chemistry you can\'t manufacture',
-    description: 'No personality test or team-building retreat creates what years of collaboration does.',
+    name: 'Chemistry you can\'t fake',
+    description: 'No retreat or personality test creates what years of collaboration does.',
     icon: UserGroupIcon,
     audience: 'companies',
   },
@@ -33,15 +25,9 @@ const features = [
   },
   {
     name: 'Strength in numbers',
-    description: 'Negotiate together. Your collective value is greater than the sum of individuals.',
+    description: 'Negotiate together. Your collective value exceeds the sum of individuals.',
     icon: ShieldCheckIcon,
     audience: 'teams',
-  },
-  {
-    name: 'Lower risk than M&A',
-    description: 'Acquire capability faster than acquisitions, with less integration headache.',
-    icon: BriefcaseIcon,
-    audience: 'companies',
   },
   {
     name: 'Complete confidentiality',
@@ -78,8 +64,8 @@ export function LandingFeatures() {
           </p>
         </div>
 
-        {/* Features grid - consistent 3-column */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Features grid - 2x2 layout */}
+        <div className="grid md:grid-cols-2 gap-8">
           {features.map((feature, index) => (
             <article
               key={feature.name}

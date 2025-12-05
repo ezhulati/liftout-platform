@@ -36,9 +36,9 @@ export function LandingHero() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left - Text content */}
             <div>
-              {/* Eyebrow - Practical UI: 16px minimum for small text */}
-              <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
-                Where proven teams meet bold companies
+              {/* Emotional hook - the pain before the solution */}
+              <p className="text-text-secondary text-lg italic mb-4">
+                &ldquo;The job market is a lonely desert between two places that preach teamwork.&rdquo;
               </p>
 
               {/* H1 - Clean, impactful headline */}
@@ -48,7 +48,7 @@ export function LandingHero() {
 
               {/* Subhead - balanced messaging for both audiences */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Liftout is where intact teams signal they&apos;re ready to move together—and companies find proven chemistry instead of hoping for the best.
+                Stop hoping new hires will gel. Stop leaving your colleagues behind. Liftout connects intact teams with companies who value proven chemistry.
               </p>
 
               {/* CTAs - Equal weight for both audiences */}

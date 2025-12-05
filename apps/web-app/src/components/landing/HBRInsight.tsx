@@ -47,13 +47,13 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          The research is clear
+          And the research proves it works
         </p>
 
         {/* Headline - Quote style */}
         <h2
           id="hbr-insight-heading"
-          className={`text-3xl sm:text-4xl font-bold text-text-primary leading-tight max-w-3xl mb-6 transition-all duration-500 delay-100 ${
+          className={`text-3xl sm:text-4xl font-bold text-text-primary tracking-tight leading-tight max-w-3xl mb-6 transition-all duration-500 delay-100 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >

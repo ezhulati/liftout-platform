@@ -23,6 +23,14 @@ const teamFaqs = [
     answer: 'That\'s okay. Teams can be as small as two people. Moving with even one trusted colleague transforms a lonely process into a shared adventure. Start with whoever\'s ready.',
   },
   {
+    question: 'Why put this online instead of doing it quietly?',
+    answer: 'Scale. Behind closed doors, you\'re limited to who you know. Online, your team reaches companies you\'d never meet through back channels—more offers, better terms, the right fit. Liftouts have always happened for the well-connected. We\'re just making it accessible to everyone.',
+  },
+  {
+    question: 'Isn\'t it disloyal to leave as a team?',
+    answer: 'Loyalty is earned, not owed. If your whole team is looking together, that says more about where you are than where you\'re going. Teams don\'t leave companies they love.',
+  },
+  {
     question: 'Who is Liftout for?',
     answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. Partners at law firms, specialized engineering squads, research units, creative teams—any group that performs better together than apart.',
   },
@@ -48,6 +56,14 @@ const companyFaqs = [
   {
     question: 'What if we only need some of the team?',
     answer: 'Teams understand that not every member may fit every opportunity. What matters is preserving the core chemistry. Discuss openly during conversations—most teams are flexible about composition.',
+  },
+  {
+    question: 'What about the company losing the team?',
+    answer: 'If an entire team wants to leave, that\'s not a platform problem—it\'s a signal. Teams don\'t leave places where they\'re valued, paid well, and growing. Liftout doesn\'t cause departures. It organizes them.',
+  },
+  {
+    question: 'Doesn\'t this just make poaching easier?',
+    answer: 'Talent mobility is healthy for markets. Stagnant teams don\'t innovate. The companies that thrive are the ones people want to join—and those same companies use Liftout to attract proven teams. If you\'re a great place to work, this helps you too.',
   },
   {
     question: 'What does the process look like?',

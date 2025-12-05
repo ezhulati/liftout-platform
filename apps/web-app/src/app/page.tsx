@@ -1,10 +1,12 @@
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingProblem } from '@/components/landing/LandingProblem';
+import { LandingExplainer } from '@/components/landing/LandingExplainer';
+import { HBRInsight } from '@/components/landing/HBRInsight';
 import { HowItWorksTabs } from '@/components/landing/HowItWorksTabs';
+import { LandingFlip } from '@/components/landing/LandingFlip';
+import { LandingElephant } from '@/components/landing/LandingElephant';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
 import { LandingQuote } from '@/components/landing/LandingQuote';
-import { TrustIndicators } from '@/components/landing/TrustIndicators';
-import { HBRInsight } from '@/components/landing/HBRInsight';
 import { FAQTabs } from '@/components/landing/FAQTabs';
 import { LandingCTA } from '@/components/landing/LandingCTA';
 import { LandingHeader } from '@/components/landing/LandingHeader';
@@ -58,6 +60,22 @@ const serviceSchema = {
   },
 };
 
+/**
+ * Homepage with Unified Story Flow
+ *
+ * The narrative arc:
+ * 1. Hero - Emotional hook + solution
+ * 2. Problem - The lonely desert (why this matters)
+ * 3. Explainer - What is a liftout? (definition + 2024 examples)
+ * 4. Authority - HBR research + historical success stories
+ * 5. How It Works - Simple 3-step process
+ * 6. Flip - Solo resume vs Team profile (transformation)
+ * 7. Elephant - Address the #1 objection directly
+ * 8. Features - Benefits framed as outcomes
+ * 9. Quote - Gallup research on team relationships
+ * 10. FAQ - Practical questions (objections moved up)
+ * 11. CTA - Final invitation with transformation vision
+ */
 export default function HomePage() {
   return (
     <>
@@ -75,14 +93,37 @@ export default function HomePage() {
       />
       <LandingHeader />
       <main id="main-content" tabIndex={-1} className="bg-bg outline-none">
+        {/* 1. HOOK: Emotional headline + solution */}
         <LandingHero />
+
+        {/* 2. PROBLEM: The lonely desert - why the status quo is broken */}
         <LandingProblem />
-        <HowItWorksTabs />
-        <LandingFeatures />
-        <LandingQuote />
-        <TrustIndicators />
+
+        {/* 3. DEFINITION: What is a liftout? + 2024 examples */}
+        <LandingExplainer />
+
+        {/* 4. AUTHORITY: HBR research + historical success stories */}
         <HBRInsight />
+
+        {/* 5. PLAN: How it works - simple 3 steps */}
+        <HowItWorksTabs />
+
+        {/* 6. TRANSFORMATION: Solo resume vs Team profile */}
+        <LandingFlip />
+
+        {/* 7. OBJECTION: Address "won't they leave together?" */}
+        <LandingElephant />
+
+        {/* 8. BENEFITS: Features framed as outcomes */}
+        <LandingFeatures />
+
+        {/* 9. PROOF: Gallup research on team relationships */}
+        <LandingQuote />
+
+        {/* 10. FAQ: Practical questions */}
         <FAQTabs />
+
+        {/* 11. CTA: Final invitation */}
         <LandingCTA />
       </main>
       <LandingFooter />

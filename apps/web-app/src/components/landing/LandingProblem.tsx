@@ -6,19 +6,19 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const stages = [
   {
     title: 'Where you came from',
-    description: 'Collaborative teams. Shared goals. People who had your back.',
+    description: 'Real teammates. Shared wins. People who had your back.',
     Icon: UserGroupIcon,
     variant: 'positive',
   },
   {
     title: 'The job search',
-    description: 'Alone. Isolating. Comparing yourself to strangers. Scary.',
+    description: 'Alone. Scared. Starting over with strangers.',
     Icon: UserIcon,
     variant: 'negative',
   },
   {
     title: 'Where you\'re going',
-    description: '"We\'re a team here!" Myers-Briggs. Hoping it works out.',
+    description: '"We\'re a family!" Personality tests. Fingers crossed.',
     Icon: SparklesIcon,
     variant: 'positive',
   },
@@ -89,8 +89,11 @@ export function LandingProblem() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="text-xl lg:text-2xl font-heading font-semibold text-text-primary">
+          <p className="text-xl lg:text-2xl font-heading font-semibold text-text-primary mb-4">
             Why is there a lonely desert in the middle?
+          </p>
+          <p className="text-text-secondary text-lg">
+            It doesn&apos;t have to be this way.
           </p>
         </div>
       </div>
