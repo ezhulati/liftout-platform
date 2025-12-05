@@ -7,22 +7,22 @@ const features = [
   {
     icon: UserGroupIcon,
     title: 'Proven chemistry',
-    description: 'Years of trust you can\'t recreate with offsites.',
+    description: 'Years of trust you can\'t recreate in a conference room.',
   },
   {
     icon: ClockIcon,
-    title: 'No storming phase',
-    description: 'Skip the awkward months. They already gel.',
+    title: 'Day-one productivity',
+    description: 'Skip the 12-month ramp-up. They already work together.',
   },
   {
     icon: ShieldCheckIcon,
-    title: 'Real track records',
-    description: 'Documented achievements, not interview personas.',
+    title: 'Verified performance',
+    description: 'Real track records, not rehearsed interview answers.',
   },
   {
     icon: LockClosedIcon,
-    title: 'Complete discretion',
-    description: 'Your employer never sees you. Explore safely.',
+    title: 'Confidential process',
+    description: 'Discrete exploration protects all parties.',
   },
 ];
 

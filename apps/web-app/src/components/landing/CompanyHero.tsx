@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 // Simple benefit list - Practical UI: concise, scannable
 const benefits = [
-  'Skip the Enneagram tests and trust falls',
-  'Get chemistry you can\'t manufacture',
-  'Kill two birds with one stone',
-  'Teams ready to hit the ground running',
+  'Day-one productivity, no 12-month ramp-up',
+  'Chemistry you can\'t manufacture',
+  'Skip the forming-storming-norming phases',
+  'Verified track records, not interview performances',
 ];
 
 export function CompanyHero() {
@@ -40,7 +40,7 @@ export function CompanyHero() {
 
             {/* Subhead - Practical UI: 18px+, max 65 chars per line */}
             <p className="font-body text-xl text-text-secondary leading-relaxed mb-8 max-w-lg">
-              You already pay referral bonuses to recruit former colleagues one at a time. Why not get both people now, together, with chemistry already proven?
+              Great individuals don&apos;t always make great teams. Acquire teams that already perform.
             </p>
 
             {/* Benefits list - Practical UI: simple checkmarks, no cards */}

@@ -12,7 +12,7 @@ import { TeamCTA } from '@/components/landing/TeamCTA';
 
 export const metadata = {
   title: 'For Teams - Find Your Next Opportunity Together | Liftout',
-  description: 'The job market is a lonely desert between two places that preach teamwork. Why cross it alone? Find your next opportunity with the people who helped you succeed.',
+  description: 'You love your team but you\'ve outgrown the company. Don\'t leave them behind. Find opportunities that want all of you.',
 };
 
 // JSON-LD for Teams Service Page
@@ -20,7 +20,7 @@ const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'Team Career Services',
-  description: 'The first platform for teams to find new opportunities together. Post a team profile, stay confidential, and let companies find you.',
+  description: 'The first platform for teams to move together. Create a team profile, stay confidential, and find companies looking for proven chemistry.',
   provider: {
     '@type': 'Organization',
     name: 'Liftout',

@@ -17,19 +17,19 @@ export function TeamHero() {
       {/* Main content container */}
       <div className="max-w-4xl mx-auto px-6 lg:px-8 py-16 lg:py-24 pt-[120px] lg:pt-[140px] w-full text-center">
         <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          {/* The emotional hook */}
-          <p className="font-body text-xl sm:text-2xl text-text-secondary leading-relaxed mb-6 italic">
-            &ldquo;The job market is a lonely desert between two places that preach teamwork.&rdquo;
+          {/* Eyebrow */}
+          <p className="font-semibold tracking-wider uppercase text-base mb-4 text-[#4C1D95]">
+            For teams ready to move
           </p>
 
-          {/* The question */}
-          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-8">
-            Why cross it alone?
+          {/* The headline - speaking to their internal voice */}
+          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
+            You love your team.<br />You&apos;ve outgrown the company.
           </h1>
 
-          {/* The value prop */}
+          {/* The value prop - the realization */}
           <p className="font-body text-xl lg:text-2xl text-text-secondary leading-relaxed mb-12 max-w-2xl mx-auto">
-            Find your next opportunity with the people who helped you succeed.
+            You don&apos;t have to leave them behind. Find opportunities that want all of you.
           </p>
 
           {/* CTA */}
