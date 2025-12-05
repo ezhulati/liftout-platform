@@ -3,6 +3,7 @@ import { LandingFooter } from '@/components/landing/LandingFooter';
 import { CompanyHero } from '@/components/landing/CompanyHero';
 import { CompanyProblem } from '@/components/landing/CompanyProblem';
 import { HowItWorksCompanies } from '@/components/landing/HowItWorksCompanies';
+import { CompaniesProductPreview } from '@/components/landing/CompaniesProductPreview';
 import { CompanyFeatures } from '@/components/landing/CompanyFeatures';
 import { TrustIndicators } from '@/components/landing/TrustIndicators';
 import { FAQCompanies } from '@/components/landing/FAQCompanies';
@@ -48,6 +49,10 @@ export default function ForCompaniesPage() {
 
         {/* 3. How it works - The plan */}
         <HowItWorksCompanies />
+
+        {/* 4. Preview - See the actual product */}
+        <CompaniesProductPreview />
+
         <CompanyFeatures />
         <TrustIndicators />
         <FAQCompanies />

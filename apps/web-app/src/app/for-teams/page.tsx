@@ -4,6 +4,7 @@ import { TeamHero } from '@/components/landing/TeamHero';
 import { TeamProblem } from '@/components/landing/TeamProblem';
 import { TeamFlip } from '@/components/landing/TeamFlip';
 import { HowItWorksTeams } from '@/components/landing/HowItWorksTeams';
+import { TeamsProductPreview } from '@/components/landing/TeamsProductPreview';
 import { TeamElephant } from '@/components/landing/TeamElephant';
 import { TeamLegalReality } from '@/components/landing/TeamLegalReality';
 import { TeamFeatures } from '@/components/landing/TeamFeatures';
@@ -54,19 +55,22 @@ export default function ForTeamsPage() {
         {/* 4. How it works - Simple 4 steps */}
         <HowItWorksTeams />
 
-        {/* 5. Elephant in the room - Address objection */}
+        {/* 5. Preview - See the actual product */}
+        <TeamsProductPreview />
+
+        {/* 6. Elephant in the room - Address objection */}
         <TeamElephant />
 
-        {/* 6. Legal reality - Non-competes dying */}
+        {/* 7. Legal reality - Non-competes dying */}
         <TeamLegalReality />
 
-        {/* 7. Features - Light touch, 4 bullets */}
+        {/* 8. Features - Light touch, 4 bullets */}
         <TeamFeatures />
 
-        {/* 8. FAQ - Simplified, 3-4 questions */}
+        {/* 9. FAQ - Simplified, 3-4 questions */}
         <FAQTeams />
 
-        {/* 9. CTA - Emotional close */}
+        {/* 10. CTA - Emotional close */}
         <TeamCTA />
       </main>
       <LandingFooter />
