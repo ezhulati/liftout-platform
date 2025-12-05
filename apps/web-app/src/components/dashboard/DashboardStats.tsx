@@ -121,18 +121,14 @@ export function DashboardStats({ userType }: DashboardStatsProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="card animate-pulse">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="h-12 w-12 skeleton rounded-lg"></div>
-              </div>
-              <div className="ml-4 w-0 flex-1">
-                <div className="h-4 skeleton rounded w-24 mb-2"></div>
-                <div className="h-7 skeleton rounded w-16"></div>
-              </div>
+            <div className="mb-4">
+              <div className="h-6 w-6 skeleton rounded"></div>
             </div>
+            <div className="h-3 skeleton rounded w-24 mb-2"></div>
+            <div className="h-8 skeleton rounded w-16"></div>
           </div>
         ))}
       </div>

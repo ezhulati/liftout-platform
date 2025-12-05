@@ -32,7 +32,7 @@ const teamFaqs = [
   },
   {
     question: 'Who is Liftout for?',
-    answer: 'Teams who\'ve built rare chemistry together but feel constrained in their current roles. Partners at law firms, specialized engineering squads, research units, creative teams—any group that performs better together than apart.',
+    answer: 'Teams who\'ve developed a unique blend of specialized complementary skills, cohesive dynamics, and strong client relationships—but feel constrained from reaching their full potential together. Partners at law firms, specialized engineering squads, research units, creative teams—any group that performs better together than apart.',
   },
   {
     question: 'How do I get started?',

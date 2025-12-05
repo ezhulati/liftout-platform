@@ -90,7 +90,7 @@ export function Tabs({
               onClick={() => handleTabChange(tab.id)}
               className={`
                 relative flex items-center gap-2 px-4 min-h-12
-                font-medium text-sm transition-colors duration-fast
+                font-medium text-base transition-colors duration-fast
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-inset
                 ${activeTab === tab.id
                   ? 'text-navy'

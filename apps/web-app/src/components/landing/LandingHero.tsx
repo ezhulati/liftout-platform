@@ -38,12 +38,12 @@ export function LandingHero() {
             <div>
               {/* H1 - Clean, impactful headline */}
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-                Hire teams that already work.
+                Connect Your Squad on Your Terms
               </h1>
 
-              {/* Subhead - balanced messaging for both audiences */}
+              {/* Subhead - direct, action-oriented for teams */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Stop hoping new hires will gel. Stop leaving your colleagues behind. Liftout connects intact teams with companies who value proven chemistry.
+                Your talented team deserves employers as bold as you are. Connect directly and confidentially with companies seeking your standout talents.
               </p>
 
               {/* CTAs - Practical UI: ONE primary, one secondary (outline) */}

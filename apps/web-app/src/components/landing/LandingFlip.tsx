@@ -18,10 +18,10 @@ export function LandingFlip() {
           id="flip-heading"
           className={`font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          What if you could take the chemistry with you?
+          What changes when you move together?
         </h2>
         <p className={`text-text-secondary text-xl max-w-2xl mb-16 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          Here&apos;s what changes when you move together.
+          The difference between starting over alone and arriving with momentum.
         </p>
 
         {/* Comparison */}

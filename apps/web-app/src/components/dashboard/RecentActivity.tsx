@@ -136,17 +136,17 @@ export function RecentActivity() {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Activity</h3>
+      <div className="card">
+        <h3 className="text-lg font-bold text-text-primary mb-6 font-heading">Recent Activity</h3>
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex animate-pulse">
               <div className="flex-shrink-0">
-                <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+                <div className="h-8 w-8 skeleton rounded-full"></div>
               </div>
               <div className="ml-4 flex-1">
-                <div className="h-4 bg-gray-200 rounded w-48 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-32"></div>
+                <div className="h-4 skeleton rounded w-48 mb-2"></div>
+                <div className="h-3 skeleton rounded w-32"></div>
               </div>
             </div>
           ))}

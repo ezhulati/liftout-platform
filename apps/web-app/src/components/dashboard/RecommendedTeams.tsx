@@ -101,16 +101,16 @@ export function RecommendedTeams() {
   if (isLoading) {
     return (
       <div className="card">
-        <h3 className="text-lg font-semibold text-text-primary mb-5 font-heading">Recommended Teams</h3>
+        <h3 className="text-lg font-bold text-text-primary mb-6 font-heading">Teams you may be interested in</h3>
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse">
-              <div className="flex items-start space-x-4">
-                <div className="h-12 w-12 skeleton rounded-lg"></div>
+            <div key={i} className="animate-pulse rounded-xl border border-border p-4">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 skeleton rounded-xl"></div>
                 <div className="flex-1">
-                  <div className="h-4 skeleton rounded w-32 mb-2"></div>
-                  <div className="h-3 skeleton rounded w-48 mb-2"></div>
-                  <div className="h-3 skeleton rounded w-24"></div>
+                  <div className="h-4 skeleton rounded w-40 mb-2"></div>
+                  <div className="h-3 skeleton rounded w-64 mb-2"></div>
+                  <div className="h-3 skeleton rounded w-32"></div>
                 </div>
               </div>
             </div>
@@ -122,9 +122,16 @@ export function RecommendedTeams() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-        {/* Section heading - matches Figma exactly */}
-        <h3 className="text-lg font-bold text-text-primary">Teams you may be interested in</h3>
+      <div className="flex items-center justify-between mb-6">
+        {/* Section heading - Practical UI: bold weight */}
+        <h3 className="text-lg font-bold text-text-primary font-heading">Teams you may be interested in</h3>
+        {/* Tertiary action - underlined link style */}
+        <Link
+          href="/app/teams"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
+        >
+          View all
+        </Link>
       </div>
 
       <div className="space-y-4">

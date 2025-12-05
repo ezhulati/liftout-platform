@@ -57,8 +57,11 @@ export function LandingExplainer() {
             <p className="text-text-secondary text-xl leading-relaxed mb-6">
               A <strong className="text-text-primary">liftout</strong> is hiring an entire high-performing team from another company&mdash;not just individuals who used to work together, but the whole team with their trust, chemistry, and track record intact.
             </p>
-            <p className="text-text-secondary text-lg leading-relaxed mb-8">
+            <p className="text-text-secondary text-lg leading-relaxed mb-4">
               It&apos;s been happening in law firms, investment banks, and consulting for decades. In 2024, it went mainstream in tech.
+            </p>
+            <p className="text-text-secondary text-lg leading-relaxed mb-8 italic border-l-2 border-[#4C1D95]/30 pl-4">
+              Research shows stars who move alone see immediate performance decline. Teams who move together maintain their success.
             </p>
             <Link
               href="/what-is-a-liftout"

@@ -114,11 +114,13 @@ function RecommendedOpportunities() {
 
   return (
     <div className="card">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-text-primary">Recommended for you</h2>
+      <div className="flex items-center justify-between mb-6">
+        {/* Section heading - Practical UI: bold weight */}
+        <h2 className="text-lg font-bold text-text-primary font-heading">Recommended for you</h2>
+        {/* Tertiary action - underlined link style */}
         <Link
           href="/app/opportunities"
-          className="text-sm font-bold text-purple-700 hover:text-purple-800"
+          className="text-base font-normal text-navy hover:text-navy-600 underline underline-offset-4 transition-colors duration-fast min-h-12 flex items-center"
         >
           View all
         </Link>
@@ -128,15 +130,15 @@ function RecommendedOpportunities() {
           <Link
             key={opp.id}
             href={`/app/opportunities/${opp.id}`}
-            className="block p-4 rounded-xl border border-border hover:border-purple-300 hover:shadow-soft transition-all duration-base"
+            className="block p-4 rounded-xl border border-border hover:border-purple-300 hover:shadow-soft transition-all duration-base min-h-12"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-bold text-text-primary truncate">{opp.title}</h3>
-                <p className="text-sm text-text-secondary mt-1">{opp.company}</p>
-                <div className="flex items-center gap-2 mt-2 text-sm text-text-tertiary">
+                <h3 className="text-base font-bold text-text-primary truncate leading-snug">{opp.title}</h3>
+                <p className="text-sm font-normal text-text-secondary mt-1 leading-relaxed">{opp.company}</p>
+                <div className="flex items-center gap-2 mt-2 text-sm font-normal text-text-tertiary">
                   <span>{opp.location}</span>
-                  <span>•</span>
+                  <span aria-hidden="true">·</span>
                   <span>{opp.teamSize} people</span>
                 </div>
               </div>

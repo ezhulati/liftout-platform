@@ -18,14 +18,14 @@ const features = [
     audience: 'companies',
   },
   {
-    name: 'Day-one productivity',
-    description: 'Skip the 12-month ramp-up. Teams that move together hit the ground running.',
+    name: 'Skip 12 months of hoping people gel',
+    description: 'Teams that move together hit the ground running. No forming, storming, or norming.',
     icon: RocketLaunchIcon,
     audience: 'companies',
   },
   {
-    name: 'Strength in numbers',
-    description: 'Negotiate together. Your collective value exceeds the sum of individuals.',
+    name: 'Bigger budgets, better titles together',
+    description: 'Negotiate as a collective. Your combined value exceeds what any individual could command.',
     icon: ShieldCheckIcon,
     audience: 'teams',
   },

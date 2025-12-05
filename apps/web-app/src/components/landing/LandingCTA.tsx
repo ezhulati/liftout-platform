@@ -19,7 +19,7 @@ export function LandingCTA() {
           id="cta-heading"
           className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-12"
         >
-          Ready to make your move?
+          Ready to take your careers to new heights?
         </h2>
 
         {/* Split CTA - Two columns for each audience */}
@@ -27,10 +27,10 @@ export function LandingCTA() {
           {/* Left - Teams (primary CTA) */}
           <div className="bg-white/5 rounded-2xl p-8 lg:p-10 border border-white/10">
             <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-4">
-              Take the leap together
+              Progress alongside trusted colleagues
             </h3>
             <p className="text-white/80 text-lg leading-relaxed mb-8">
-              Your next chapter doesn&apos;t have to mean leaving behind the people who made this chapter great.
+              Take your career to new levels with colleagues who bring out your best. Confidentially explore what&apos;s next—together.
             </p>
             <Link
               href="/auth/signup?type=team"
