@@ -222,18 +222,18 @@ export default async function BlogArticlePage({ params }: PageProps) {
           </section>
         )}
 
-        {/* CTA Section */}
+        {/* CTA Section - Practical UI: left-aligned */}
         <section className="py-12 md:py-20 bg-navy-lightest border-t border-border">
-          <div className="max-w-4xl mx-auto px-4 lg:px-10 text-center">
+          <div className="max-w-4xl mx-auto px-4 lg:px-10">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-3 leading-tight">
               Ready to make your move together?
             </h2>
-            <p className="text-lg text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-text-secondary mb-8 max-w-2xl leading-relaxed">
               Whether you&apos;re a team looking for new opportunities or a company seeking proven
               talent, Liftout connects you with the right match.
             </p>
-            {/* Buttons - Primary left, Secondary right */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* Buttons - Practical UI: left-aligned */}
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/auth/signup"
                 className="min-h-[48px] px-6 inline-flex items-center justify-center bg-navy text-white font-medium rounded-lg hover:bg-navy-600 transition-colors duration-200 text-base"

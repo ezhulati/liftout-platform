@@ -81,32 +81,33 @@ export function PreviewOpportunityCard({ opportunity, compact = false }: Preview
 }
 
 // Export mock data for use in preview sections
+// Using real opportunities from Liftouts.md
 export const previewOpportunities: PreviewOpportunity[] = [
   {
-    title: 'Strategic FinTech Analytics Team',
-    company: 'Goldman Sachs',
+    title: 'Quant Fund Expanding Data Science Ranks',
+    company: 'Volt Analytics',
     location: 'New York, NY',
-    teamSize: '3-5',
-    compensation: '$180k-$250k',
+    teamSize: '4-6',
+    compensation: '$400k-$800k',
     industry: 'Financial Services',
     type: 'expansion',
   },
   {
-    title: 'Healthcare AI Research Team',
-    company: 'MedTech Innovations',
-    location: 'Boston, MA',
-    teamSize: '4-6',
-    compensation: '$200k-$300k',
-    industry: 'Healthcare',
+    title: 'Tech Law Firm Expanding IP Attorney Ranks',
+    company: 'Alpha Legal',
+    location: 'Palo Alto, CA',
+    teamSize: '4-8',
+    compensation: '$300k-$500k',
+    industry: 'Legal',
     type: 'capability',
   },
   {
-    title: 'DevOps & Platform Team',
-    company: 'Scale Labs',
-    location: 'San Francisco, CA',
-    teamSize: '3-5',
-    compensation: '$170k-$230k',
-    industry: 'Developer Tools',
-    type: 'expansion',
+    title: 'Voice AI Startup Needs UX Architects',
+    company: 'Cerulean Digital',
+    location: 'Austin, TX',
+    teamSize: '5-8',
+    compensation: '$160k-$240k',
+    industry: 'Technology',
+    type: 'market_entry',
   },
 ];

@@ -318,7 +318,7 @@ export default function WhatIsALiftoutPage() {
         {/* The Lonely Desert - Why job searching feels isolating */}
         <section className="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-bg border-y border-gray-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center">
+            <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-6">
                 Job searching alone is a lonely desert
               </h2>
@@ -592,7 +592,7 @@ export default function WhatIsALiftoutPage() {
             </div>
 
             <p
-              className={`mt-8 text-base text-text-tertiary text-center transition-all duration-500 delay-500 ${
+              className={`mt-8 text-base text-text-tertiary transition-all duration-500 delay-500 ${
                 tuckmanRef.isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
@@ -704,7 +704,7 @@ export default function WhatIsALiftoutPage() {
             </div>
 
             <p
-              className={`mt-8 text-base text-text-tertiary text-center transition-all duration-500 delay-500 ${
+              className={`mt-8 text-base text-text-tertiary transition-all duration-500 delay-500 ${
                 stagesRef.isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
@@ -758,7 +758,7 @@ export default function WhatIsALiftoutPage() {
         {/* CTA Section */}
         <section className="py-16 lg:py-24">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center">
+            <div className="max-w-3xl mx-auto">
               <p className="text-base font-semibold text-purple-700 uppercase tracking-wider mb-4">
                 The platform for team-based hiring
               </p>
@@ -768,7 +768,7 @@ export default function WhatIsALiftoutPage() {
               <p className="text-lg text-text-secondary mb-8">
                 We built the first platform where teams can signal they&apos;re open to opportunities—confidentially—and companies can find proven teams instead of gambling on individuals.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/auth/signup"
                   className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-2"

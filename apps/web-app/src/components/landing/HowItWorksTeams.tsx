@@ -44,12 +44,12 @@ export function HowItWorksTeams() {
           How it works
         </h2>
 
-        {/* Steps grid */}
+        {/* Steps grid - Practical UI: left-aligned content */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {steps.map((step, index) => (
             <article
               key={step.number}
-              className={`text-center transition-all duration-500 ${
+              className={`transition-all duration-500 ${
                 isVisible
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'
@@ -57,7 +57,7 @@ export function HowItWorksTeams() {
               style={{ transitionDelay: isVisible ? `${(index + 1) * 100}ms` : '0ms' }}
             >
               {/* Step number */}
-              <div className="w-12 h-12 rounded-full bg-[#4C1D95] flex items-center justify-center mx-auto mb-4">
+              <div className="w-12 h-12 rounded-full bg-[#4C1D95] flex items-center justify-center mb-4">
                 <span className="font-heading text-lg font-bold text-white">{step.number}</span>
               </div>
 
@@ -65,7 +65,7 @@ export function HowItWorksTeams() {
               <h3 className="font-heading text-lg font-bold text-text-primary leading-snug mb-2">
                 {step.title}
               </h3>
-              <p className="text-text-secondary text-base leading-relaxed">
+              <p className="text-text-secondary text-lg leading-relaxed">
                 {step.description}
               </p>
             </article>

@@ -94,8 +94,8 @@ export function FAQTeams() {
           ))}
         </div>
 
-        {/* Contact link */}
-        <p className={`mt-8 text-center text-text-secondary transition-all duration-500 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {/* Contact link - Practical UI: left-aligned */}
+        <p className={`mt-8 text-text-secondary transition-all duration-500 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           More questions?{' '}
           <Link href="/contact" className="text-[#4C1D95] underline underline-offset-4 hover:text-[#3b1578]">
             Get in touch

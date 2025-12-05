@@ -37,7 +37,7 @@ export function CompanyProblem() {
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className={`text-center transition-all duration-500 ${
+              className={`transition-all duration-500 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
               style={{ transitionDelay: `${(index + 2) * 100}ms` }}

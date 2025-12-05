@@ -44,19 +44,19 @@ export function LandingProblem() {
           </h2>
         </div>
 
-        {/* Three-column journey */}
+        {/* Three-column journey - Practical UI: left-aligned content */}
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {stages.map((stage, index) => (
             <div
               key={stage.title}
-              className={`text-center transition-all duration-500 ${
+              className={`transition-all duration-500 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ transitionDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms' }}
             >
               {/* Icon container */}
               <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${
+                className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 ${
                   stage.variant === 'positive'
                     ? 'bg-[#4C1D95]'
                     : 'bg-gray-200'

@@ -36,27 +36,27 @@ export function CompanyCTA() {
     >
       {/* Practical UI: Left-align on desktop for body text readability */}
       <div className={`relative z-10 max-w-4xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        {/* Eyebrow */}
-        <p className="font-semibold tracking-wider uppercase text-base mb-4 text-white/60 text-center lg:text-left">
+        {/* Eyebrow - Practical UI: left-aligned */}
+        <p className="font-semibold tracking-wider uppercase text-base mb-4 text-white/60">
           Ready to transform your talent strategy?
         </p>
 
-        {/* Headline */}
+        {/* Headline - Practical UI: left-aligned */}
         <h2
           id="company-cta-heading"
-          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6 text-center lg:text-left"
+          className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-on-dark tracking-tight leading-tight mb-6"
         >
           Acquire the teams that will drive your next phase of growth
         </h2>
 
-        {/* Description - Practical UI: left-align body text, 18px min */}
-        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mb-8 text-center lg:text-left">
+        {/* Description - Practical UI: left-aligned, 18px min */}
+        <p className="font-body text-white/90 text-lg lg:text-xl leading-relaxed max-w-2xl mb-8">
           Stop building teams from scratch. Access proven, intact teams with verified track records
           who are ready to deliver immediate impact.
         </p>
 
-        {/* Trust reassurances - Practical UI: icons with labels, 18px text */}
-        <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-10">
+        {/* Trust reassurances - Practical UI: left-aligned, icons with labels, 18px text */}
+        <div className="flex flex-wrap gap-6 mb-10">
           {trustReassurances.map((item) => (
             <div key={item.text} className="flex items-center gap-2 text-white/80">
               <item.icon className="w-5 h-5 text-white" aria-hidden="true" />
@@ -65,8 +65,8 @@ export function CompanyCTA() {
           ))}
         </div>
 
-        {/* CTA buttons - Practical UI: Primary + tertiary (underlined), one primary per section */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+        {/* CTA buttons - Practical UI: left-aligned, Primary + tertiary (underlined), one primary per section */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           {/* Primary CTA - white on dark bg per Practical UI */}
           <Link
             href="/auth/signup?type=company"
@@ -85,8 +85,8 @@ export function CompanyCTA() {
           </Link>
         </div>
 
-        {/* Sign in link - Practical UI: tertiary/underlined link */}
-        <p className="text-white/70 text-lg text-center lg:text-left">
+        {/* Sign in link - Practical UI: left-aligned, tertiary/underlined link */}
+        <p className="text-white/70 text-lg">
           Already have an account?{' '}
           <Link
             href="/auth/signin"

@@ -13,10 +13,10 @@ export function TeamFlip() {
       aria-labelledby="team-flip-heading"
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
-        {/* The flip question */}
+        {/* The flip question - Practical UI: left-aligned */}
         <h2
           id="team-flip-heading"
-          className={`font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className={`font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           What if you could take the chemistry with you?
         </h2>

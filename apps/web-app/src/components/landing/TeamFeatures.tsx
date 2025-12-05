@@ -4,20 +4,20 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const features = [
   {
-    what: 'Confidential profiles',
-    means: 'Your employer never knows',
+    what: 'Keep chemistry',
+    means: 'Continue excelling alongside colleagues you trust',
   },
   {
-    what: 'AI matching',
-    means: 'Companies find you',
+    what: 'Stay confidential',
+    means: 'Your employer never knows you\'re looking',
   },
   {
-    what: 'Negotiation tools',
-    means: 'Fair collective compensation',
+    what: 'Maintain continuity',
+    means: 'No solo job searches—we put teams first',
   },
   {
-    what: 'Transition support',
-    means: 'Smooth landing together',
+    what: 'Elevate together',
+    means: 'Reach the next level without leaving anyone behind',
   },
 ];
 
@@ -37,7 +37,7 @@ export function TeamFeatures() {
           id="team-features-heading"
           className={`font-heading text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-10 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          What you get
+          Why Liftout
         </h2>
 
         {/* Simple feature list */}

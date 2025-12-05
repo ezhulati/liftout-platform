@@ -19,8 +19,8 @@ export function TeamsProductPreview() {
       aria-labelledby="teams-preview-heading"
     >
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className={`text-center mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+        {/* Header - Practical UI: left-aligned */}
+        <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
             What you&apos;ll see
           </p>
@@ -30,7 +30,7 @@ export function TeamsProductPreview() {
           >
             Opportunities built for teams
           </h2>
-          <p className="text-text-secondary text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg leading-relaxed max-w-2xl">
             Companies post roles specifically designed for intact teams—not individuals.
           </p>
         </div>

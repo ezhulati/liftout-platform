@@ -255,18 +255,18 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* Newsletter CTA - Proper form design */}
+        {/* Newsletter CTA - Practical UI: left-aligned */}
         <section className="py-10 md:py-16 bg-navy-lightest border-t border-border">
-          <div className="max-w-7xl mx-auto px-4 lg:px-10 text-center">
+          <div className="max-w-7xl mx-auto px-4 lg:px-10">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-2 leading-tight">
               Stay updated on team hiring trends
             </h2>
-            <p className="text-base text-text-secondary mb-6 max-w-2xl mx-auto">
+            <p className="text-base text-text-secondary mb-6 max-w-2xl">
               Get the latest insights on liftouts, non-compete legislation, and team-based
               recruitment strategies delivered to your inbox.
             </p>
-            {/* Form - Single column, labels would be on top if we had them */}
-            <form className="flex flex-col sm:flex-row gap-2 justify-center max-w-md mx-auto">
+            {/* Form - Practical UI: left-aligned */}
+            <form className="flex flex-col sm:flex-row gap-2 max-w-md">
               <label htmlFor="email-subscribe" className="sr-only">
                 Email address
               </label>

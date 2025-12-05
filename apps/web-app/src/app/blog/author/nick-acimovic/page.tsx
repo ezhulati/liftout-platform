@@ -361,19 +361,18 @@ export default function NickAcimovicPage() {
           </section>
         )}
 
-        {/* CTA Section */}
+        {/* CTA Section - Practical UI: left-aligned */}
         <section className="py-10 md:py-16 bg-navy-lightest border-t border-border">
-          <div className="max-w-4xl mx-auto px-4 lg:px-10 text-center">
-            {/* H2 - 28px bold */}
+          <div className="max-w-4xl mx-auto px-4 lg:px-10">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-2 leading-tight">
               Ready to transform how you hire?
             </h2>
-            <p className="text-base text-text-secondary mb-6 max-w-2xl mx-auto">
+            <p className="text-base text-text-secondary mb-6 max-w-2xl">
               Join Nick&apos;s vision for team-based hiring. Whether you&apos;re a company seeking
               proven teams or a team ready for new opportunities, Liftout can help.
             </p>
-            {/* Buttons - 48px touch targets, Verb + Noun labels */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* Buttons - Practical UI: left-aligned */}
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/auth/signup"
                 className="inline-flex items-center justify-center min-h-[48px] px-6 bg-navy text-white font-medium rounded-lg hover:bg-navy-600 transition-colors duration-200 text-base"
