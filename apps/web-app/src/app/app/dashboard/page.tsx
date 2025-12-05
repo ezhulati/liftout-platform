@@ -132,7 +132,7 @@ function RecommendedOpportunities() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold text-text-primary truncate">{opp.title}</h3>
+                <h3 className="text-base font-bold text-text-primary truncate">{opp.title}</h3>
                 <p className="text-sm text-text-secondary mt-1">{opp.company}</p>
                 <div className="flex items-center gap-2 mt-2 text-sm text-text-tertiary">
                   <span>{opp.location}</span>
