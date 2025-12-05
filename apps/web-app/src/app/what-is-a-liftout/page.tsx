@@ -70,16 +70,16 @@ const modernExamples = [
 // Research-backed stats
 const dataPoints = [
   {
+    stat: '46%',
+    label: 'Star performance decline after moving firms',
+    source: 'Groysberg (Harvard)',
+    insight: 'Unless they bring their team with them.',
+  },
+  {
     stat: '12 months',
     label: 'Time for new hires to reach peak performance',
     source: 'Gallup',
     insight: 'Teams that move together skip this entirely.',
-  },
-  {
-    stat: '64%',
-    label: 'Longer focus time for collaborative workers',
-    source: 'Stanford',
-    insight: 'Pre-existing trust enables deeper work.',
   },
   {
     stat: '43%',
@@ -796,6 +796,11 @@ export default function WhatIsALiftoutPage() {
                 <p className="font-medium text-text-primary">Academic Research</p>
                 <ul className="mt-2 space-y-1">
                   <li>
+                    <a href="https://press.princeton.edu/books/hardcover/9780691127675/chasing-stars" target="_blank" rel="noopener noreferrer" className="hover:text-purple-700 underline underline-offset-2">
+                      Groysberg: Chasing Stars (Princeton, 2010)
+                    </a>
+                  </li>
+                  <li>
                     <a href="https://hbr.org/2006/12/lift-outs-how-to-acquire-a-high-functioning-team" target="_blank" rel="noopener noreferrer" className="hover:text-purple-700 underline underline-offset-2">
                       HBR: Lift Outs (2006)
                     </a>
@@ -806,7 +811,6 @@ export default function WhatIsALiftoutPage() {
                     </a>
                   </li>
                   <li>Tuckman, B.W. (1965). Developmental Sequence in Small Groups</li>
-                  <li>Gallup: State of the American Workplace</li>
                 </ul>
               </div>
               <div>

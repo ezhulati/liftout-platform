@@ -47,7 +47,7 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          And the research proves it works
+          Harvard research proves it
         </p>
 
         {/* Headline - Quote style */}
@@ -57,17 +57,23 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          &ldquo;Teams who move together outperform those who move alone&rdquo;
+          Star performance isn&apos;t portable. Team chemistry is.
         </h2>
 
         {/* Body text */}
         <p
-          className={`text-lg text-text-secondary leading-relaxed max-w-2xl mb-12 transition-all duration-500 delay-150 ${
+          className={`text-lg text-text-secondary leading-relaxed max-w-2xl mb-6 transition-all duration-500 delay-150 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Harvard Business Review documented how liftouts work—and why teams that move together maintain their success.
-          For companies, it&apos;s a strategic advantage. For teams, it&apos;s a chance to preserve what you&apos;ve built while reaching for something greater.
+          Harvard professor Boris Groysberg studied 1,000+ Wall Street analysts over nine years. His finding: when star performers move to new firms, their performance declines sharply. They depend on relationships, systems, and support networks that don&apos;t transfer.
+        </p>
+        <p
+          className={`text-lg text-text-primary leading-relaxed max-w-2xl mb-12 transition-all duration-500 delay-200 font-medium ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          The exception? <span className="text-purple-700">Liftouts.</span> When teams move together, they bring their relationships with them—and maintain their exceptional performance.
         </p>
 
         {/* Success Stories Grid */}
@@ -120,7 +126,7 @@ export function HBRInsight() {
           }`}
         >
           <p className="text-base text-text-tertiary">
-            Source: &ldquo;Lift Outs: How to Acquire a High-Functioning Team&rdquo; — Harvard Business Review, December 2006
+            Source: Boris Groysberg, &ldquo;Chasing Stars&rdquo; (Princeton, 2010) &amp; &ldquo;Lift Outs&rdquo; — Harvard Business Review, 2006
           </p>
 
           <Link

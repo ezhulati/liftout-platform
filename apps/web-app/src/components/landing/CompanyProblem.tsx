@@ -3,8 +3,8 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const stats = [
+  { value: '46%', label: 'star performance decline after moving firms', source: 'Harvard' },
   { value: '75%', label: 'of employers admit to hiring the wrong person', source: 'SHRM' },
-  { value: '46%', label: 'of new hires fail within 18 months', source: 'Leadership IQ' },
   { value: '$240K', label: 'average cost of a bad hire', source: 'SHRM' },
   { value: '12mo', label: 'for new hires to reach peak productivity', source: 'Gallup' },
 ];
@@ -23,13 +23,13 @@ export function CompanyProblem() {
           id="company-problem-heading"
           className={`font-heading text-2xl sm:text-3xl font-bold text-white/90 tracking-tight leading-tight mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          Hiring individuals doesn&apos;t build teams.
+          Even &ldquo;star&rdquo; hires underperform at new firms.
         </h2>
 
         <p
           className={`text-white/70 text-xl lg:text-2xl leading-relaxed mb-12 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
-          You interview for skills. You pray for chemistry. Then you spend a year hoping they figure out how to work together.
+          Harvard research found that when star performers move companies, their performance drops sharply—they depend on relationships and support systems that don&apos;t transfer. You&apos;re not hiring their talent. You&apos;re hiring them minus everything that made them great.
         </p>
 
         {/* Stats grid */}

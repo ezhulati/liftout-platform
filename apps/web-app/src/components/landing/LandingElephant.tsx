@@ -31,20 +31,20 @@ export function LandingElephant() {
               className={`space-y-6 transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
               <p className="text-text-secondary text-xl leading-relaxed">
-                Teams leave because of mutual dissatisfaction&mdash;wrong fit, broken promises, missing growth.
+                Teams don&apos;t leave on a whim. They leave because something broke&mdash;wrong culture fit, promises that weren&apos;t kept, growth paths that dead-ended.
               </p>
               <p className="text-text-secondary text-xl leading-relaxed">
-                They&apos;re looking for a <em className="text-text-primary font-semibold not-italic">home</em>, not a stepping stone.
+                They&apos;re not looking for another stepping stone. They&apos;re looking for a <em className="text-text-primary font-semibold not-italic">home</em>.
               </p>
               <p className="text-text-primary text-xl leading-relaxed font-medium">
-                If you&apos;re that home, you get loyalty that was forged before they even walked in the door.
+                If you&apos;re that home? You inherit loyalty that was forged through years of working together&mdash;before they ever walked through your door.
               </p>
             </div>
 
             {/* Supporting data */}
             <div className={`mt-8 pt-8 border-t border-border transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <p className="text-text-tertiary text-base">
-                Research shows only ~20% of job changers are &quot;mercenary hoppers.&quot; Most people just want a better situation and will stay when they find it.
+                The research backs this up: only about 20% of job changers are serial hoppers. The other 80% just want a better situation. Find it, and they stay.
               </p>
             </div>
           </div>

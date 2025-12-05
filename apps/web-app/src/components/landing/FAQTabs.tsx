@@ -46,6 +46,10 @@ const teamFaqs = [
 
 const companyFaqs = [
   {
+    question: 'Does hiring teams actually work better than hiring individuals?',
+    answer: 'Harvard professor Boris Groysberg studied 1,000+ Wall Street analysts over nine years. His finding: when star performers move companies alone, their performance declines 46% and stays depressed for years. The exception? Liftouts. When teams move together, they bring their relationships and support systems with them—and maintain their exceptional performance. The book is called "Chasing Stars" if you want to dig deeper.',
+  },
+  {
     question: 'How much does it cost?',
     answer: 'Browsing and initial exploration is free. We charge a success fee only when an acquisition is completed—you pay nothing until you find the right fit. No credit card required to start.',
   },
