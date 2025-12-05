@@ -352,3 +352,113 @@ export async function PATCH(
     );
   }
 }
+
+// DELETE - Delete team (only team leader can delete)
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
+
+    // Check if user is team lead or creator
+    const team = await prisma.team.findUnique({
+      where: { id: params.id },
+      select: {
+        id: true,
+        name: true,
+        createdBy: true,
+        members: {
+          where: {
+            userId,
+            isLead: true,
+            status: 'active',
+          },
+        },
+      },
+    });
+
+    if (!team) {
+      return NextResponse.json(
+        { error: 'Team not found' },
+        { status: 404 }
+      );
+    }
+
+    // Only team creator or lead can delete
+    const isCreator = team.createdBy === userId;
+    const isLead = team.members.length > 0;
+
+    if (!isCreator && !isLead) {
+      return NextResponse.json(
+        { error: 'Only the team leader can delete this team' },
+        { status: 403 }
+      );
+    }
+
+    // Get confirmation from body
+    const body = await request.json();
+    const { confirmName } = body;
+
+    if (confirmName !== team.name) {
+      return NextResponse.json(
+        { error: 'Team name confirmation does not match' },
+        { status: 400 }
+      );
+    }
+
+    // Demo user handling
+    const userEmail = session.user.email;
+    if (userEmail === 'demo@example.com' || userEmail === 'company@example.com') {
+      console.log('[Demo] Team deletion simulated for:', team.name);
+      return NextResponse.json({
+        success: true,
+        message: 'Team deleted successfully (demo mode)',
+      });
+    }
+
+    // Delete in transaction to handle cascades
+    await prisma.$transaction(async (tx) => {
+      // Delete team members
+      await tx.teamMember.deleteMany({
+        where: { teamId: params.id },
+      });
+
+      // Cancel pending applications (submitted, reviewing, interviewing)
+      await tx.teamApplication.updateMany({
+        where: {
+          teamId: params.id,
+          status: { in: ['submitted', 'reviewing', 'interviewing'] },
+        },
+        data: {
+          status: 'withdrawn',
+        },
+      });
+
+      // Delete the team
+      await tx.team.delete({
+        where: { id: params.id },
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Team deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete team error:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete team' },
+      { status: 500 }
+    );
+  }
+}

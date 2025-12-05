@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
       where: { id: session.user.id },
       select: {
         profileCompleted: true,
+        userType: true,
         profile: {
           select: {
             title: true,
@@ -28,6 +29,17 @@ export async function GET(request: NextRequest) {
             bio: true,
             yearsExperience: true,
           },
+        },
+        // Check if user is already a member of a team
+        teamMemberships: {
+          where: { status: 'active' },
+          select: { id: true },
+          take: 1,
+        },
+        // Check if user is already a member of a company
+        companyMemberships: {
+          select: { id: true },
+          take: 1,
         },
       },
     });
@@ -37,6 +49,29 @@ export async function GET(request: NextRequest) {
         { error: 'User not found' },
         { status: 404 }
       );
+    }
+
+    // Auto-complete onboarding for invited users who already have memberships
+    // This handles users who joined via invite link
+    const hasTeamMembership = user.teamMemberships && user.teamMemberships.length > 0;
+    const hasCompanyMembership = user.companyMemberships && user.companyMemberships.length > 0;
+    const isInvitedUser = (user.userType === 'individual' && hasTeamMembership) ||
+                          (user.userType === 'company' && hasCompanyMembership);
+
+    // If user joined via invite and onboarding not yet marked complete, mark it now
+    if (isInvitedUser && !user.profileCompleted) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { profileCompleted: true },
+      });
+      // Return completed status
+      return NextResponse.json({
+        isCompleted: true,
+        skippedAt: null,
+        profileCompleteness: 50, // Partial completion for invited users
+        nextSteps: ['Complete your profile for better visibility'],
+        invitedUser: true,
+      });
     }
 
     // Check UserPreferences for skippedAt

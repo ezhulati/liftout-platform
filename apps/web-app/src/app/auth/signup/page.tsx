@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { signIn, getProviders } from 'next-auth/react';
 import { useAuth } from '@/contexts/AuthContext';
-import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, EyeSlashIcon, UserGroupIcon, BuildingOffice2Icon, CheckCircleIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 import { FormField, RequiredFieldsNote } from '@/components/ui';
 
@@ -25,14 +25,26 @@ const industries = [
   'Other',
 ];
 
+interface InviteDetails {
+  teamName: string;
+  inviterName: string;
+  role: string;
+  type: 'team' | 'company';
+}
+
 export default function SignUpPage() {
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams?.get('invite');
+  const inviteType = searchParams?.get('type') as 'team' | 'company' | null;
+  const inviteEmail = searchParams?.get('email');
+
   const [formData, setFormData] = useState({
-    email: '',
+    email: inviteEmail || '',
     password: '',
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    userType: 'individual' as 'individual' | 'company',
+    userType: (inviteType === 'company' ? 'company' : 'individual') as 'individual' | 'company',
     companyName: '',
     industry: '',
     location: '',
@@ -41,8 +53,46 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [inviteDetails, setInviteDetails] = useState<InviteDetails | null>(null);
+  const [inviteLoading, setInviteLoading] = useState(!!inviteToken);
   const router = useRouter();
   const { signUp } = useAuth();
+
+  // Fetch invite details if invite token present
+  useEffect(() => {
+    if (inviteToken) {
+      fetchInviteDetails();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inviteToken]);
+
+  const fetchInviteDetails = async () => {
+    try {
+      setInviteLoading(true);
+      const response = await fetch(`/api/invites/${inviteToken}`);
+      if (response.ok) {
+        const data = await response.json();
+        setInviteDetails({
+          teamName: data.invitation.teamName,
+          inviterName: data.invitation.inviterName,
+          role: data.invitation.role,
+          type: data.invitation.type,
+        });
+        // Pre-fill email if provided in invite
+        if (data.invitation.inviteeEmail && !formData.email) {
+          setFormData(prev => ({ ...prev, email: data.invitation.inviteeEmail }));
+        }
+        // Set user type based on invite type
+        if (data.invitation.type === 'company') {
+          setFormData(prev => ({ ...prev, userType: 'company' }));
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch invite details:', error);
+    } finally {
+      setInviteLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Fetch available OAuth providers
@@ -112,6 +162,27 @@ export default function SignUpPage() {
         toast.error('Account created but sign in failed. Please sign in manually.');
         router.push('/auth/signin');
         return;
+      }
+
+      // If there's an invite token, accept it after signup
+      if (inviteToken) {
+        try {
+          const acceptResponse = await fetch(`/api/invites/${inviteToken}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'accept' }),
+          });
+          const acceptData = await acceptResponse.json();
+
+          if (acceptResponse.ok) {
+            toast.success(acceptData.message || `You've joined ${inviteDetails?.teamName}!`);
+            router.push(acceptData.redirectTo || '/app/dashboard');
+            return;
+          }
+        } catch (err) {
+          console.error('Failed to accept invite:', err);
+          // Continue to onboarding even if invite accept fails
+        }
       }
 
       router.push('/app/onboarding');
@@ -215,12 +286,36 @@ export default function SignUpPage() {
             </div>
           </Link>
 
+          {/* Invite Banner */}
+          {inviteToken && !inviteLoading && inviteDetails && (
+            <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <EnvelopeIcon className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-purple-800">
+                    You&apos;ve been invited to join {inviteDetails.teamName}
+                  </p>
+                  <p className="text-sm text-purple-700 mt-0.5">
+                    {inviteDetails.inviterName} invited you as {inviteDetails.role === 'member' ? 'Team Member' : inviteDetails.role === 'admin' ? 'Team Admin' : inviteDetails.role}
+                  </p>
+                  <p className="text-xs text-purple-600 mt-1">
+                    Create an account to accept the invitation
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-8">
             <h2 className="font-heading text-3xl font-bold text-text-primary mb-2">
-              Create your account
+              {inviteDetails ? 'Create your account to join' : 'Create your account'}
             </h2>
             <p className="text-text-secondary">
-              Join the first platform for team-based hiring
+              {inviteDetails
+                ? `Sign up to join ${inviteDetails.teamName}`
+                : 'Join the first platform for team-based hiring'}
             </p>
           </div>
 

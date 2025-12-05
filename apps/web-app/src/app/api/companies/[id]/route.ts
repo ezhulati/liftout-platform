@@ -192,3 +192,115 @@ export async function GET(
     );
   }
 }
+
+// DELETE /api/companies/[id] - Delete company (only owner/admin can delete)
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    const { id } = await params;
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
+
+    // Check if user is company admin/owner
+    const companyUser = await prisma.companyUser.findFirst({
+      where: {
+        companyId: id,
+        userId,
+        role: { in: ['admin', 'owner'] },
+      },
+    });
+
+    if (!companyUser) {
+      return NextResponse.json(
+        { error: 'Only company admins can delete this company' },
+        { status: 403 }
+      );
+    }
+
+    // Get company to verify name
+    const company = await prisma.company.findUnique({
+      where: { id },
+      select: { id: true, name: true },
+    });
+
+    if (!company) {
+      return NextResponse.json(
+        { error: 'Company not found' },
+        { status: 404 }
+      );
+    }
+
+    // Get confirmation from body
+    const body = await request.json();
+    const { confirmName } = body;
+
+    if (confirmName !== company.name) {
+      return NextResponse.json(
+        { error: 'Company name confirmation does not match' },
+        { status: 400 }
+      );
+    }
+
+    // Demo user handling
+    const userEmail = session.user.email;
+    if (userEmail === 'demo@example.com' || userEmail === 'company@example.com') {
+      console.log('[Demo] Company deletion simulated for:', company.name);
+      return NextResponse.json({
+        success: true,
+        message: 'Company deleted successfully (demo mode)',
+      });
+    }
+
+    // Delete in transaction to handle cascades
+    await prisma.$transaction(async (tx) => {
+      // Delete company users
+      await tx.companyUser.deleteMany({
+        where: { companyId: id },
+      });
+
+      // Expire all opportunities
+      await tx.opportunity.updateMany({
+        where: { companyId: id },
+        data: { status: 'expired' },
+      });
+
+      // Cancel pending applications (submitted, reviewing, interviewing)
+      await tx.teamApplication.updateMany({
+        where: {
+          opportunity: { companyId: id },
+          status: { in: ['submitted', 'reviewing', 'interviewing'] },
+        },
+        data: {
+          status: 'withdrawn',
+        },
+      });
+
+      // Soft delete the company (set deletedAt)
+      await tx.company.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Company deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete company error:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete company' },
+      { status: 500 }
+    );
+  }
+}

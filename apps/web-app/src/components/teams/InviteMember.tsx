@@ -10,7 +10,10 @@ import {
   XMarkIcon,
   PaperAirplaneIcon,
   UserPlusIcon,
-  InformationCircleIcon
+  InformationCircleIcon,
+  LinkIcon,
+  ClipboardIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { emailInvitationService, TeamInvitation } from '@/lib/email-invitations';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,6 +35,7 @@ interface InviteMemberProps {
   onClose: () => void;
   teamId: string;
   teamName: string;
+  inviteCode?: string;
   onInvitationSent?: (invitation: TeamInvitation) => void;
 }
 
@@ -41,15 +45,31 @@ const roleDescriptions = {
   leader: 'Full control over team management and direction'
 };
 
-export function InviteMember({ 
-  isOpen, 
-  onClose, 
-  teamId, 
-  teamName, 
-  onInvitationSent 
+export function InviteMember({
+  isOpen,
+  onClose,
+  teamId,
+  teamName,
+  inviteCode,
+  onInvitationSent
 }: InviteMemberProps) {
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showLinkSection, setShowLinkSection] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const inviteLink = inviteCode
+    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/app/teams/join?code=${inviteCode}`
+    : null;
+
+  const handleCopyLink = async () => {
+    if (inviteLink) {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      toast.success('Invite link copied to clipboard');
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const {
     register,
@@ -119,6 +139,8 @@ export function InviteMember({
   const handleClose = () => {
     if (!isSubmitting) {
       reset();
+      setShowLinkSection(false);
+      setCopied(false);
       onClose();
     }
   };
@@ -175,6 +197,60 @@ export function InviteMember({
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
+
+                {/* Shareable Link Section */}
+                {inviteCode && (
+                  <div className="mb-6 p-4 bg-bg-alt rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <LinkIcon className="h-5 w-5 text-text-tertiary" />
+                        <span className="text-sm font-bold text-text-primary">Shareable invite link</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowLinkSection(!showLinkSection)}
+                        className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+                      >
+                        {showLinkSection ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
+                    {showLinkSection && (
+                      <div className="mt-3">
+                        <p className="text-xs text-text-secondary mb-2">
+                          Anyone with this link can request to join your team
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <code className="flex-1 text-sm bg-bg-surface border border-border rounded px-3 py-2 truncate">
+                            {inviteLink}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={handleCopyLink}
+                            className="btn-outline min-h-10 px-3 flex-shrink-0"
+                          >
+                            {copied ? (
+                              <CheckIcon className="h-5 w-5 text-success" />
+                            ) : (
+                              <ClipboardIcon className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Divider */}
+                {inviteCode && (
+                  <div className="relative mb-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-3 bg-bg-surface text-text-tertiary">Or invite by email</span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Form */}
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
