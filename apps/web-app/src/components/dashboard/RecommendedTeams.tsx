@@ -210,23 +210,6 @@ export function RecommendedTeams() {
         ))}
       </div>
 
-      {/* CTA Card - matches Figma "Get matched with teams..." design */}
-      <div className="bg-purple-700 rounded-xl p-6 text-white">
-        <h3 className="text-xl font-bold mb-2">Get matched with teams...</h3>
-        <p className="text-white/80 mb-6">
-          Post your team opportunity and have teams find you.
-        </p>
-        <Link
-          href="/app/opportunities/create"
-          className="inline-flex items-center gap-2 px-5 py-3 bg-white text-purple-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          Post a team opportunity
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </Link>
-      </div>
-
       {(!teams || teams.length === 0) && (
         <div className="text-center py-8">
           <div className="w-14 h-14 mx-auto rounded-full bg-bg-elevated flex items-center justify-center mb-4">
