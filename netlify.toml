@@ -1,10 +1,11 @@
 [build]
+  # Build from root (not apps/web-app) to access packages/database
+  base = "/"
   command = "npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
   publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "20"
-  # Clear cache to resolve lockfile mismatch
   NETLIFY_USE_PNPM = "true"
 
 [[plugins]]
