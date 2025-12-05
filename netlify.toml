@@ -1,14 +1,15 @@
 [build]
   # Build from root (not apps/web-app) to access packages/database
   base = "/"
-  command = "npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
+  # Skip Netlify auto-install and do it manually without frozen-lockfile
+  command = "pnpm install && npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
   publish = "apps/web-app/.next"
 
 [build.environment]
   NODE_VERSION = "20"
-  NETLIFY_USE_PNPM = "true"
-  # Disable frozen-lockfile to allow fresh install with updated lockfile
-  CI = ""
+  # Skip Netlify's automatic dependency installation
+  NPM_FLAGS = "--version"
+  YARN_FLAGS = "--version"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
