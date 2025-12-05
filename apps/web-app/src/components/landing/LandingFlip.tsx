@@ -1,7 +1,7 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { UserIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { UserIcon, UserGroupIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export function LandingFlip() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
@@ -40,23 +40,23 @@ export function LandingFlip() {
             </div>
             <ul className="space-y-4 text-text-tertiary text-lg">
               <li className="flex items-start gap-3">
-                <span className="text-gray-400 mt-0.5">&times;</span>
+                <XMarkIcon className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>One person, competing against everyone</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-gray-400 mt-0.5">&times;</span>
+                <XMarkIcon className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Generic skills list, no proof of collaboration</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-gray-400 mt-0.5">&times;</span>
+                <XMarkIcon className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Hope you mesh with strangers</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-gray-400 mt-0.5">&times;</span>
+                <XMarkIcon className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Start from scratch building trust</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-gray-400 mt-0.5">&times;</span>
+                <XMarkIcon className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>12 months to peak performance</span>
               </li>
             </ul>
@@ -76,24 +76,24 @@ export function LandingFlip() {
             </div>
             <ul className="space-y-4 text-text-primary text-lg font-medium">
               <li className="flex items-start gap-3">
-                <span className="text-[#4C1D95] mt-0.5">&check;</span>
+                <CheckIcon className="w-5 h-5 text-[#4C1D95] mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Complementary skills, proven together</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-[#4C1D95] mt-0.5">&check;</span>
+                <CheckIcon className="w-5 h-5 text-[#4C1D95] mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Shared accomplishments you can verify</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-[#4C1D95] mt-0.5">&check;</span>
+                <CheckIcon className="w-5 h-5 text-[#4C1D95] mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Trust already built over years</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-[#4C1D95] mt-0.5">&check;</span>
+                <CheckIcon className="w-5 h-5 text-[#4C1D95] mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <span>Day-one productivity, not day-one awkwardness</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-[#4C1D95] mt-0.5">&check;</span>
-                <span>Skip forming, storming, norming&mdash;start performing</span>
+                <CheckIcon className="w-5 h-5 text-[#4C1D95] mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <span>Skip forming, storming, norming—start performing</span>
               </li>
             </ul>
           </div>
