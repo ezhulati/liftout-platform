@@ -7,6 +7,8 @@
 [build.environment]
   NODE_VERSION = "20"
   NETLIFY_USE_PNPM = "true"
+  # Disable frozen-lockfile to allow fresh install with updated lockfile
+  CI = ""
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
