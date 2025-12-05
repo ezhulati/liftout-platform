@@ -28,8 +28,8 @@ export function CompanyHero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left - Copy */}
           <div className={`transition-all duration-700 ease-out-expo ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            {/* Eyebrow - Practical UI: simple, no decorative icons */}
-            <p className="font-semibold tracking-wider uppercase text-sm mb-4 text-[#4C1D95]">
+            {/* Eyebrow - Practical UI: 16px minimum for small text */}
+            <p className="font-semibold tracking-wider uppercase text-base mb-4 text-[#4C1D95]">
               The first marketplace for team hiring
             </p>
 

@@ -42,7 +42,6 @@
     "framer-motion": "^10.16.0",
     "isomorphic-dompurify": "^2.33.0",
     "jsonwebtoken": "^9.0.2",
-    "jspdf": "^3.0.4",
     "next": "^14.0.0",
     "next-auth": "^4.24.0",
     "postcss": "^8.4.0",

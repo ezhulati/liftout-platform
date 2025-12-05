@@ -228,7 +228,7 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
                           <span className="font-semibold text-gray-900 group-hover/item:text-[#4C1D95] transition-colors text-[17px] leading-tight">
                             {item.label}
                           </span>
-                          <span className="text-sm text-gray-500 group-hover/item:text-gray-600 transition-colors leading-snug">
+                          <span className="text-base text-gray-500 group-hover/item:text-gray-600 transition-colors leading-snug">
                             {item.description}
                           </span>
                         </Link>

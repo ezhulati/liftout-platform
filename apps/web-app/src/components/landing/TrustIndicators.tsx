@@ -36,8 +36,8 @@ export function TrustIndicators() {
       aria-labelledby="trust-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section label */}
-        <p className="text-white/60 text-sm font-semibold uppercase tracking-wider mb-10 text-center">
+        {/* Section label - Practical UI: 16px minimum */}
+        <p className="text-white/60 text-base font-semibold uppercase tracking-wider mb-10 text-center">
           What makes Liftout different
         </p>
         <h2 id="trust-heading" className="sr-only">Why choose Liftout</h2>

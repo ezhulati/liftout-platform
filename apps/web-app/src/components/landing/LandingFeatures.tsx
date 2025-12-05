@@ -64,7 +64,7 @@ export function LandingFeatures() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-16 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="text-[#4C1D95] text-sm font-semibold uppercase tracking-wider mb-3">
+          <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-3">
             Why it works
           </p>
           <h2

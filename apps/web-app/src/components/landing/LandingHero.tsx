@@ -36,8 +36,8 @@ export function LandingHero() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left - Text content */}
             <div>
-              {/* Eyebrow */}
-              <p className="text-[#4C1D95] text-sm font-semibold uppercase tracking-wider mb-4">
+              {/* Eyebrow - Practical UI: 16px minimum for small text */}
+              <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
                 Where proven teams meet bold companies
               </p>
 
@@ -101,7 +101,7 @@ export function LandingHero() {
           className="flex flex-col items-center gap-2 text-text-tertiary hover:text-text-secondary transition-colors min-h-12 min-w-12 justify-center"
           aria-label="Scroll to learn more"
         >
-          <span className="text-xs font-medium">See how it works</span>
+          <span className="text-base font-medium">See how it works</span>
           <ChevronDownIcon className="w-5 h-5 animate-bounce" aria-hidden="true" />
         </button>
       </div>

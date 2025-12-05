@@ -233,10 +233,10 @@ export default function PricingPage() {
           Start free—no credit card required.
         </p>
 
-        {/* Billing Toggle */}
+        {/* Billing Toggle - Practical UI: 16px minimum text */}
         <div className="flex items-center justify-center gap-4 mb-12">
           <span
-            className={`text-sm font-medium ${
+            className={`text-base font-medium ${
               billingCycle === 'monthly' ? 'text-text-primary' : 'text-text-tertiary'
             }`}
           >
@@ -255,14 +255,14 @@ export default function PricingPage() {
             />
           </button>
           <span
-            className={`text-sm font-medium ${
+            className={`text-base font-medium ${
               billingCycle === 'yearly' ? 'text-text-primary' : 'text-text-tertiary'
             }`}
           >
             Yearly
           </span>
           {billingCycle === 'yearly' && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-success-light px-2.5 py-0.5 text-xs font-medium text-success">
+            <span className="ml-2 inline-flex items-center rounded-full bg-success-light px-2.5 py-1 text-base font-medium text-success">
               Save up to 20%
             </span>
           )}
@@ -290,7 +290,7 @@ export default function PricingPage() {
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center rounded-full bg-navy px-3 py-1 text-xs font-semibold text-white">
+                    <span className="inline-flex items-center rounded-full bg-navy px-3 py-1 text-base font-semibold text-white">
                       Most Popular
                     </span>
                   </div>
@@ -306,7 +306,7 @@ export default function PricingPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-text-primary">{plan.name}</h3>
-                    <p className="text-xs text-text-tertiary">{plan.description}</p>
+                    <p className="text-base text-text-tertiary">{plan.description}</p>
                   </div>
                 </div>
 

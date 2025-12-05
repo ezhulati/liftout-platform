@@ -41,9 +41,9 @@ export function HBRInsight() {
       aria-labelledby="hbr-insight-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Eyebrow */}
+        {/* Eyebrow - Practical UI: 16px minimum */}
         <p
-          className={`text-sm font-semibold text-purple-700 uppercase tracking-wider mb-4 transition-all duration-500 ${
+          className={`text-base font-semibold text-purple-700 uppercase tracking-wider mb-4 transition-all duration-500 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
@@ -85,7 +85,7 @@ export function HBRInsight() {
                 <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
                   <story.Icon className="w-5 h-5 text-purple-700" aria-hidden="true" />
                 </div>
-                <span className="text-sm font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
+                <span className="text-base font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
                   {story.year}
                 </span>
               </div>
@@ -105,8 +105,8 @@ export function HBRInsight() {
                 {story.outcome}
               </p>
 
-              {/* Detail */}
-              <p className="text-sm text-text-tertiary">
+              {/* Detail - Practical UI: 16px minimum */}
+              <p className="text-base text-text-tertiary">
                 {story.detail}
               </p>
             </article>
@@ -119,7 +119,7 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="text-sm text-text-tertiary">
+          <p className="text-base text-text-tertiary">
             Source: &ldquo;Lift Outs: How to Acquire a High-Functioning Team&rdquo; — Harvard Business Review, December 2006
           </p>
 
