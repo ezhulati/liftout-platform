@@ -6,6 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Liftout is a team-based hiring marketplace that connects companies seeking intact teams with teams looking to move together (a "liftout"). This is a pnpm monorepo managed by Turborepo.
 
+### What is a Liftout?
+
+A **liftout** is hiring an entire high-performing team from another company—not just individuals who used to work together, but the whole team with their trust, chemistry, and track record intact.
+
+**Key characteristics:**
+- Team-based hiring (2+ people as a unit)
+- Established relationships and proven collaboration
+- Immediate productivity—skip the team formation phase
+- Common in law, banking, consulting, tech, healthcare
+
+**Value for companies:** Proven chemistry, day-one productivity, lower risk than M&A
+**Value for teams:** Move together, strength in numbers, navigate change with people you trust
+
+### Target Industries
+Investment Banking, Law Firms, Consulting, Technology/AI, Healthcare, Private Equity
+
 ## Common Commands
 
 ```bash
@@ -27,10 +43,7 @@ pnpm run type-check
 # Run tests
 pnpm run test
 
-# Format code
-pnpm run format
-
-# Database operations (from packages/database or root)
+# Database operations
 pnpm run db:generate    # Generate Prisma client
 pnpm run db:push        # Push schema to database
 pnpm run db:migrate     # Run migrations
@@ -45,12 +58,10 @@ cd apps/web-app
 pnpm run dev            # Development server on port 3000
 pnpm run test           # Jest unit tests
 pnpm run test:e2e       # Playwright E2E tests
-pnpm run migrate        # Run database migrations (tsx src/scripts/run-migrations.ts)
 
 # API server (Express)
 cd apps/api-server
 pnpm run dev            # Development server on port 8000
-pnpm run test           # Jest tests
 ```
 
 ## Architecture
@@ -70,148 +81,64 @@ liftout-platform/
 ### Web App (apps/web-app)
 
 - **Framework**: Next.js 14 with App Router
-- **Auth**: NextAuth.js with credentials provider (bcrypt password hashing)
-- **State**: TanStack Query (React Query) + Zustand
+- **Auth**: NextAuth.js with credentials provider (bcrypt)
+- **State**: TanStack Query + Zustand
 - **Styling**: Tailwind CSS with custom design tokens
-- **Forms**: React Hook Form + Zod validation
-- **Deployment**: Netlify (serverless functions)
+- **Forms**: React Hook Form + Zod
+- **Deployment**: Netlify (serverless)
 
 Key directories:
 - `src/app/` - Next.js App Router pages
-- `src/app/app/` - Authenticated dashboard routes (dashboard, teams, opportunities, etc.)
-- `src/app/auth/` - Authentication pages (signin, signup)
-- `src/app/api/` - API routes (auth, teams, opportunities, documents, seed)
-- `src/components/` - React components organized by feature
-- `src/hooks/` - Custom hooks (useTeams, useOpportunities, useAuth, etc.)
+- `src/app/app/` - Authenticated dashboard routes
+- `src/app/auth/` - Authentication pages
+- `src/app/api/` - API routes
+- `src/components/` - React components by feature
+- `src/components/landing/` - Landing page sections
+- `src/hooks/` - Custom hooks
 - `src/lib/` - Utilities and services
-- `src/lib/auth.ts` - NextAuth configuration with Prisma user lookup
-- `src/lib/services/` - Business logic services
-- `src/types/` - TypeScript type definitions
-
-### API Server (apps/api-server)
-
-- **Framework**: Express.js with TypeScript
-- **Realtime**: Socket.IO for messaging
-- **Database**: Prisma client from packages/database
-
-Key directories:
-- `src/routes/` - API route handlers (auth, teams, companies, opportunities, etc.)
-- `src/middleware/` - Express middleware (auth, error handling)
 
 ### Database (packages/database)
 
 - **ORM**: Prisma with PostgreSQL
-- **Local**: PostgreSQL on localhost:5432/liftout
+- **Local**: localhost:5432/liftout
 - **Production**: Neon serverless PostgreSQL
-- Schema location: `packages/database/prisma/schema.prisma`
-- Seed script: `packages/database/src/seed.ts`
-- Utilities: `packages/database/src/utils.ts` (hashPassword, verifyPassword, etc.)
+- Schema: `packages/database/prisma/schema.prisma`
 
-Core entities: User, Team, TeamMember, Company, CompanyUser, Opportunity, TeamApplication, Conversation, Message, IndividualProfile, Skill, UserSkill
+Core entities: User, Team, TeamMember, Company, Opportunity, TeamApplication, Conversation, Message
 
 ### User Types
 
-The platform has two primary user types:
-- **Individual/Team** (`userType: 'individual'`): Users who create/manage teams looking for opportunities
-- **Company** (`userType: 'company'`): Users who post opportunities and search for teams
+- **Individual/Team** (`userType: 'individual'`): Create/manage teams looking for opportunities
+- **Company** (`userType: 'company'`): Post opportunities and search for teams
 
 ## Infrastructure & Deployment
 
-### Production Environment
-
-- **Hosting**: Netlify (web-app deployed as serverless functions)
+- **Hosting**: Netlify (web-app as serverless functions)
 - **Database**: Neon PostgreSQL (serverless, us-east-1)
 - **Domain**: https://liftout.com
+- **Auto-deploy**: Commits to main deploy automatically
 
 ### Environment Variables (Netlify)
 
-Required environment variables in Netlify dashboard:
 ```
-DATABASE_URL=postgresql://...@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require
+DATABASE_URL=postgresql://...@neon.tech/neondb?sslmode=require
 NEXTAUTH_URL=https://liftout.com
-NEXTAUTH_SECRET=<secure-secret>
-JWT_SECRET=<jwt-secret>
-```
-
-Firebase variables (for future auth features):
-```
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXTAUTH_SECRET=<secret>
+JWT_SECRET=<secret>
 ```
 
 ### Database Management
 
 ```bash
-# Push schema to local database
-cd packages/database
-npx prisma db push
-
-# Push schema to production (Neon)
+# Push schema to production
 DATABASE_URL="postgresql://...@neon.tech/neondb?sslmode=require" npx prisma db push
 
-# Seed local database
-npx tsx src/seed.ts
-
-# Seed production database
+# Seed production
 DATABASE_URL="postgresql://...@neon.tech/neondb?sslmode=require" npx tsx src/seed.ts
 
-# Open Prisma Studio (local)
-npx prisma studio
-
-# Open Prisma Studio (production)
-DATABASE_URL="postgresql://...@neon.tech/neondb?sslmode=require" npx prisma studio
-```
-
-### Seed API Endpoint
-
-Production database can also be seeded via API:
-```bash
-# POST to seed endpoint with secret
+# Seed via API
 curl -X POST "https://liftout.com/api/seed?secret=liftout-seed-2024"
 ```
-
-## Key Patterns
-
-### Authentication Flow
-
-1. User submits credentials to `/api/auth/[...nextauth]`
-2. NextAuth credentials provider calls `authorize()` in `src/lib/auth.ts`
-3. Prisma looks up user by email in PostgreSQL
-4. bcrypt compares password against stored hash
-5. On success, JWT token created with user data + access token
-6. Session stored in cookie, accessible via `useSession()` hook
-
-### Password Hashing
-
-Uses bcryptjs with 12 rounds:
-```typescript
-import bcrypt from 'bcryptjs';
-const hash = await bcrypt.hash('password', 12);
-const isValid = await bcrypt.compare('password', hash);
-```
-
-### API Routes
-
-Web app API routes in `src/app/api/` follow Next.js App Router conventions:
-- `route.ts` exports GET, POST, PUT, DELETE handlers
-- Use `@/lib/auth` for session validation
-- Prisma client imported from `@liftout/database`
-
-### Role-Based Access
-
-Use `useRoleAccess` hook to conditionally render based on user type. Team leads have additional permissions via `useTeamPermissions`.
-
-### Real-time Messaging
-
-Socket.IO connections handled by API server. Join/leave conversation rooms for real-time updates.
-
-### UI Patterns
-
-- **Navigation**: Hide-on-scroll-down, show-on-scroll-up header (LandingHeader, AppHeader)
-- **Touch targets**: Minimum 48px height for interactive elements
-- **Design tokens**: Custom Tailwind classes (bg-bg-surface, text-text-primary, etc.)
-- **Icons**: heroicons v2 (`@heroicons/react`) - prefer `*Icon` suffix components
 
 ## Demo Credentials
 
@@ -220,62 +147,38 @@ Team User: demo@example.com / password
 Company User: company@example.com / password
 ```
 
-These are seeded by `packages/database/src/seed.ts` and work on both local and production.
+## UI Patterns
+
+- **Navigation**: Hide-on-scroll-down, show-on-scroll-up header
+- **Touch targets**: Minimum 48px height
+- **Design tokens**: Custom Tailwind (bg-bg-surface, text-text-primary, etc.)
+- **Icons**: heroicons v2 (`@heroicons/react`)
+- **Colors**: Deep purple (#4C1D95) + amber gold palette
 
 ## Development Notes
 
-### Local Development
-
-- Port 3000: Web app (Next.js) - may use 3001/3002 if 3000 is busy
-- Port 8000: API server (Express)
-- Port 4321: Marketing site (Astro)
-- Port 5555: Prisma Studio
+### Local Ports
+- 3000: Web app (Next.js)
+- 8000: API server (Express)
+- 4321: Marketing site (Astro)
+- 5555: Prisma Studio
 
 ### Troubleshooting
 
 **Login fails with "Invalid credentials":**
-1. Check DATABASE_URL is set correctly
-2. Run seed script: `npx tsx packages/database/src/seed.ts`
-3. Verify user exists: `psql $DATABASE_URL -c "SELECT email FROM users;"`
+1. Check DATABASE_URL is set
+2. Run seed: `npx tsx packages/database/src/seed.ts`
+3. Verify user: `psql $DATABASE_URL -c "SELECT email FROM users;"`
 
-**Netlify build fails with "Install dependencies" error:**
-This is typically caused by pnpm/corepack version conflicts. The fix:
-1. **DO NOT** add `packageManager` field to root `package.json` - this causes Netlify's corepack to fail
-2. Let Netlify auto-detect pnpm from `pnpm-lock.yaml`
-3. Keep `netlify.toml` simple:
-   ```toml
-   [build]
-     command = "npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm run build --filter=@liftout/web-app"
-     publish = "apps/web-app/.next"
+**Netlify build fails:**
+1. Don't add `packageManager` to root package.json
+2. Let Netlify auto-detect pnpm from lockfile
+3. Ensure Prisma generates during build
 
-   [build.environment]
-     NODE_VERSION = "20"
-   ```
-4. In `.npmrc`, do NOT set `enable-pre-post-scripts=false` (prevents prisma generate from running)
-
-**Other Netlify build issues:**
-1. Check all env vars are set in Netlify dashboard
-2. Ensure `@liftout/database` is transpiled in next.config.js
-3. Check Prisma client is generated during build (included in build command above)
-
-**Database connection issues:**
-1. For Neon: ensure `?sslmode=require` in connection string
-2. For local: ensure PostgreSQL is running on port 5432
-
-**Netlify CLI fails with Node.js 25 (TypeError: Cannot read properties of undefined):**
-The Netlify CLI has a compatibility issue with Node.js 25. The error looks like:
-```
-TypeError: Cannot read properties of undefined (reading 'prototype')
-at .../buffer-equal-constant-time/index.js:37:35
-```
-
-Workarounds:
-1. **Preferred**: Use git push to trigger auto-deploy (commits to main auto-deploy to Netlify)
-2. Use an older Node.js version: `nvm use 20 && netlify deploy --build --prod`
-3. Wait for Netlify CLI update to support Node.js 25
+**Netlify CLI + Node.js 25:**
+Use git push to deploy instead of `netlify deploy` (CLI has compatibility issues with Node 25)
 
 ### Git Workflow
-
 - Main branch: `main`
-- Commits auto-deploy to Netlify
-- Use conventional commits (feat:, fix:, chore:, etc.)
+- Auto-deploy to Netlify on push
+- Use conventional commits (feat:, fix:, chore:)
