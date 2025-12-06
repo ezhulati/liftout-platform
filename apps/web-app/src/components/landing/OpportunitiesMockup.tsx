@@ -84,7 +84,7 @@ function OpportunityCardCompact({ opportunity }: { opportunity: typeof mockOppor
 // Full opportunity card for desktop
 function OpportunityCardFull({ opportunity }: { opportunity: typeof mockOpportunities[0] }) {
   return (
-    <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-purple-200 transition-all cursor-pointer">
+    <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-start gap-4">
         {/* Company logo */}
         <div className={`w-12 h-12 ${opportunity.logoColor} rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0`}>
