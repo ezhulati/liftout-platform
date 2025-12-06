@@ -241,9 +241,9 @@ export function ProductMockup() {
               <span className="text-sm text-gray-500">Sort: Best match</span>
             </div>
 
-            {/* Team cards */}
+            {/* Team cards - show only 4 for balanced height */}
             <div className="px-6 pb-6 space-y-3">
-              {mockTeams.map((team) => (
+              {mockTeams.slice(0, 4).map((team) => (
                 <TeamCardFull key={team.name} team={team} />
               ))}
             </div>
@@ -276,7 +276,7 @@ export function ProductMockup() {
                 <span className="font-semibold">127 teams</span> available
               </p>
               <div className="space-y-2">
-                {mockTeams.map((team) => (
+                {mockTeams.slice(0, 4).map((team) => (
                   <TeamCardCompact key={team.name} team={team} />
                 ))}
               </div>
