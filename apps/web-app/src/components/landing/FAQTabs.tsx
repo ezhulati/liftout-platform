@@ -153,7 +153,7 @@ export function FAQTabs() {
                         onClick={() => handleTabChange(tab.id)}
                         className={`
                           flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md min-h-12
-                          font-medium text-base transition-all duration-fast
+                          font-medium text-base transition-all duration-fast whitespace-nowrap
                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-900 focus-visible:ring-offset-2
                           ${isActive
                             ? 'bg-bg-surface text-[#4C1D95] shadow-sm'
@@ -161,9 +161,8 @@ export function FAQTabs() {
                           }
                         `}
                       >
-                        <Icon className="w-5 h-5" aria-hidden="true" />
-                        <span className="hidden sm:inline">{tab.label}</span>
-                        <span className="sm:hidden">{tab.id === 'teams' ? 'Teams' : 'Companies'}</span>
+                        <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                        <span>{tab.label}</span>
                       </button>
                     );
                   })}
