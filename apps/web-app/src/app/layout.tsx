@@ -30,10 +30,11 @@ export const metadata: Metadata = {
   publisher: 'Liftout',
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
     ],
-    shortcut: '/favicon-32.png',
+    shortcut: '/favicon.svg',
     apple: [
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
