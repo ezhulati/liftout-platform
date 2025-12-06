@@ -13,13 +13,17 @@ import {
   ArchiveBoxIcon,
   ArrowLeftIcon,
   ExclamationTriangleIcon,
+  GlobeAltIcon,
+  LockClosedIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
 
 interface TeamSettings {
   id: string;
   name: string;
-  visibility: 'public' | 'private' | 'unlisted';
+  visibility: 'public' | 'private' | 'anonymous';
+  isAnonymous: boolean;
   openToLiftout: boolean;
   allowMessages: boolean;
   requireApproval: boolean;
@@ -43,16 +47,18 @@ export default function TeamSettingsPage() {
       const response = await fetch(`/api/teams/${teamId}`);
       if (!response.ok) throw new Error('Failed to fetch team');
       const data = await response.json();
+      const team = data.team || data;
       return {
-        id: data.team.id,
-        name: data.team.name,
-        visibility: data.team.visibility || 'public',
-        openToLiftout: data.team.openToLiftout ?? true,
-        allowMessages: data.team.allowMessages ?? true,
-        requireApproval: data.team.requireApproval ?? false,
+        id: team.id,
+        name: team.name,
+        visibility: team.visibility || 'public',
+        isAnonymous: team.isAnonymous ?? false,
+        openToLiftout: team.openToLiftout ?? (team.availabilityStatus === 'available'),
+        allowMessages: team.allowMessages ?? true,
+        requireApproval: team.requireApproval ?? false,
         notifyOnInterest: true,
         notifyOnApplication: true,
-        isArchived: data.team.isArchived ?? false,
+        isArchived: team.isArchived ?? false,
       };
     },
     enabled: !!teamId,
@@ -99,6 +105,13 @@ export default function TeamSettingsPage() {
     updateSettingsMutation.mutate({ [key]: value });
   };
 
+  const handleVisibilityChange = (visibility: 'public' | 'anonymous' | 'private') => {
+    updateSettingsMutation.mutate({
+      visibility,
+      isAnonymous: visibility === 'anonymous',
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto py-8 px-4">
@@ -139,12 +152,118 @@ export default function TeamSettingsPage() {
       </div>
 
       <div className="space-y-6">
-        {/* Visibility Settings */}
+        {/* Visibility Mode - Simple Toggle */}
+        <div className="card">
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-medium text-text-primary flex items-center">
+              <ShieldCheckIcon className="h-5 w-5 mr-2" />
+              Profile Visibility
+            </h2>
+            <p className="text-sm text-text-secondary mt-1">
+              Control who can see your team profile
+            </p>
+          </div>
+          <div className="px-6 py-4">
+            {/* Visibility Mode Options */}
+            <div className="space-y-3">
+              {[
+                {
+                  value: 'public' as const,
+                  title: 'Public',
+                  description: 'Visible to all companies. Maximum exposure for opportunities.',
+                  icon: GlobeAltIcon,
+                },
+                {
+                  value: 'anonymous' as const,
+                  title: 'Anonymous',
+                  description: 'Only verified companies can view. Your identity stays hidden until you respond.',
+                  icon: UserGroupIcon,
+                  badge: 'Recommended',
+                },
+                {
+                  value: 'private' as const,
+                  title: 'Private',
+                  description: 'Hidden from search. Only team members can view.',
+                  icon: LockClosedIcon,
+                },
+              ].map((option) => {
+                const isSelected = settings.visibility === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleVisibilityChange(option.value)}
+                    disabled={updateSettingsMutation.isPending}
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-all min-h-[72px] ${
+                      isSelected
+                        ? 'border-[#4C1D95] bg-purple-50'
+                        : 'border-border hover:border-purple-200 bg-bg-surface'
+                    } ${updateSettingsMutation.isPending ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full border-2 flex items-center justify-center ${
+                        isSelected ? 'border-[#4C1D95] bg-[#4C1D95]' : 'border-border'
+                      }`}>
+                        {isSelected && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <option.icon className={`h-4 w-4 ${isSelected ? 'text-[#4C1D95]' : 'text-text-tertiary'}`} />
+                          <span className="font-semibold text-text-primary">{option.title}</span>
+                          {option.badge && (
+                            <span className="px-2 py-0.5 text-xs font-medium bg-[#4C1D95]/10 text-[#4C1D95] rounded-full">
+                              {option.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-text-secondary mt-1">{option.description}</p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Info box for anonymous mode */}
+            {settings.visibility === 'anonymous' && (
+              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <ShieldCheckIcon className="h-5 w-5 text-[#4C1D95] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-[#4C1D95]">Anonymous mode active</p>
+                    <p className="text-sm text-purple-700 mt-1">
+                      Your team appears as &quot;Anonymous Team&quot; with masked details. Your identity is only revealed when you choose to respond to a company.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Warning for private mode */}
+            {settings.visibility === 'private' && (
+              <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <ExclamationTriangleIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-amber-800">Limited visibility</p>
+                    <p className="text-sm text-amber-700 mt-1">
+                      Companies cannot discover your team. You won&apos;t receive inbound interest.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Additional Visibility Settings */}
         <div className="card">
           <div className="px-6 py-4 border-b border-border">
             <h2 className="text-lg font-medium text-text-primary flex items-center">
               <EyeIcon className="h-5 w-5 mr-2" />
-              Visibility
+              Availability
             </h2>
           </div>
           <div className="px-6 py-4 space-y-4">
@@ -155,8 +274,8 @@ export default function TeamSettingsPage() {
               </div>
               <button
                 onClick={() => handleToggle('openToLiftout', !settings.openToLiftout)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2 ${
-                  settings.openToLiftout ? 'bg-navy' : 'bg-gray-200'
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#4C1D95] focus:ring-offset-2 ${
+                  settings.openToLiftout ? 'bg-[#4C1D95]' : 'bg-gray-200'
                 }`}
               >
                 <span
@@ -174,8 +293,8 @@ export default function TeamSettingsPage() {
               </div>
               <button
                 onClick={() => handleToggle('allowMessages', !settings.allowMessages)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2 ${
-                  settings.allowMessages ? 'bg-navy' : 'bg-gray-200'
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#4C1D95] focus:ring-offset-2 ${
+                  settings.allowMessages ? 'bg-[#4C1D95]' : 'bg-gray-200'
                 }`}
               >
                 <span

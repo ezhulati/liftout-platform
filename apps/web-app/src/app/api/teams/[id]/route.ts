@@ -3,6 +3,14 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { TeamVisibility } from '@prisma/client';
+import {
+  canViewTeam,
+  anonymizeTeamData,
+  isCompanyBlocked,
+  isVerifiedCompanyUser,
+  type TeamData,
+  type TeamMemberData,
+} from '@/lib/visibility';
 
 // Helper to check if user is team admin/lead
 async function isTeamAdmin(teamId: string, userId: string): Promise<boolean> {
@@ -15,48 +23,6 @@ async function isTeamAdmin(teamId: string, userId: string): Promise<boolean> {
     },
   });
   return !!member;
-}
-
-// Helper to check if requesting user can view team based on visibility
-async function canViewTeam(
-  team: { visibility: TeamVisibility; isAnonymous: boolean; createdBy: string },
-  viewerId: string,
-  viewerType: string
-): Promise<{ canView: boolean; showAnonymous: boolean }> {
-  // Team creator/members can always view their own team
-  const isMember = await prisma.teamMember.findFirst({
-    where: { teamId: team.createdBy, userId: viewerId, status: 'active' },
-  });
-
-  if (team.createdBy === viewerId || isMember) {
-    return { canView: true, showAnonymous: false };
-  }
-
-  switch (team.visibility) {
-    case 'public':
-      return { canView: true, showAnonymous: team.isAnonymous };
-
-    case 'private':
-      // Only visible to team members (already checked above)
-      return { canView: false, showAnonymous: false };
-
-    case 'anonymous':
-      // Visible but with anonymized info
-      if (viewerType === 'company') {
-        // Check if company is verified
-        const company = await prisma.company.findFirst({
-          where: {
-            users: { some: { userId: viewerId } },
-            verificationStatus: 'verified',
-          },
-        });
-        return { canView: !!company, showAnonymous: true };
-      }
-      return { canView: false, showAnonymous: false };
-
-    default:
-      return { canView: true, showAnonymous: false };
-  }
 }
 
 // GET - Retrieve team by ID
@@ -115,15 +81,43 @@ export async function GET(
       );
     }
 
+    // Determine viewer type
+    const viewerType = session.user.userType === 'company' ? 'company' : 'individual';
+
+    // Check visibility permissions
+    const visibilityCheck = await canViewTeam(
+      {
+        id: team.id,
+        visibility: team.visibility,
+        isAnonymous: team.isAnonymous,
+        createdBy: team.createdBy,
+        blockedCompanies: team.blockedCompanies,
+      },
+      session.user.id,
+      viewerType
+    );
+
+    // If user cannot view, return appropriate error
+    if (!visibilityCheck.canView) {
+      return NextResponse.json(
+        { error: visibilityCheck.reason || 'This team profile is not available.' },
+        { status: 403 }
+      );
+    }
+
     // Transform to expected format
-    const transformedTeam = {
+    let transformedTeam: TeamData = {
       id: team.id,
       name: team.name,
       description: team.description || '',
       industry: team.industry || '',
+      location: team.location || '',
+      createdBy: team.createdBy,
+      visibility: team.visibility,
+      isAnonymous: team.isAnonymous,
+      blockedCompanies: team.blockedCompanies as string[] | undefined,
       specialization: team.specialization || '',
       size: team.size,
-      location: team.location || '',
       remoteStatus: team.remoteStatus,
       availabilityStatus: team.availabilityStatus,
       yearsWorkingTogether: team.yearsWorkingTogether ? Number(team.yearsWorkingTogether) : 0,
@@ -136,8 +130,6 @@ export async function GET(
       performanceMetrics: team.performanceMetrics || {},
       clientTestimonials: team.clientTestimonials || [],
       awardsRecognition: team.awardsRecognition || [],
-      visibility: team.visibility,
-      isAnonymous: team.isAnonymous,
       metadata: team.metadata || {},
       salaryExpectationMin: team.salaryExpectationMin,
       salaryExpectationMax: team.salaryExpectationMax,
@@ -147,7 +139,6 @@ export async function GET(
       availabilityDate: team.availabilityDate,
       verificationStatus: team.verificationStatus,
       verifiedAt: team.verifiedAt,
-      createdBy: team.createdBy,
       creator: team.creator ? {
         id: team.creator.id,
         name: `${team.creator.firstName} ${team.creator.lastName}`.trim(),
@@ -156,29 +147,31 @@ export async function GET(
       members: team.members.map(member => ({
         id: member.id,
         userId: member.userId,
+        name: member.user ? `${member.user.firstName} ${member.user.lastName}`.trim() : 'Team Member',
+        email: member.user?.email,
         role: member.role || '',
+        title: member.user?.profile?.title || '',
+        bio: member.user?.profile?.bio || '',
+        photoUrl: member.user?.profile?.profilePhotoUrl || '',
+        yearsExperience: member.user?.profile?.yearsExperience || 0,
+        isLead: member.isLead,
         specialization: member.specialization || '',
         seniorityLevel: member.seniorityLevel,
         isAdmin: member.isAdmin,
-        isLead: member.isLead,
         keySkills: member.keySkills || [],
         status: member.status,
         joinedAt: member.joinedAt,
-        user: member.user ? {
-          id: member.user.id,
-          name: `${member.user.firstName} ${member.user.lastName}`.trim(),
-          email: member.user.email,
-          photoUrl: member.user.profile?.profilePhotoUrl || '',
-          title: member.user.profile?.title || '',
-          bio: member.user.profile?.bio || '',
-          yearsExperience: member.user.profile?.yearsExperience || 0,
-        } : null,
       })),
       createdAt: team.createdAt,
       updatedAt: team.updatedAt,
     };
 
-    return NextResponse.json(transformedTeam);
+    // If viewer should see anonymized version, apply anonymization
+    if (visibilityCheck.showAnonymous) {
+      transformedTeam = anonymizeTeamData(transformedTeam);
+    }
+
+    return NextResponse.json({ team: transformedTeam });
   } catch (error) {
     console.error('Get team error:', error);
     return NextResponse.json(

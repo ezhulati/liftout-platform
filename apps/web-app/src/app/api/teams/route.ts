@@ -3,6 +3,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { teams, addTeam, type Team } from './_data';
+import {
+  isVerifiedCompanyUser,
+  isCompanyBlocked,
+  anonymizeTeamData,
+  getVisibilitySettings,
+  type TeamData,
+} from '@/lib/visibility';
 
 // Demo user detection helper
 const isDemoUser = (email: string | null | undefined): boolean => {
@@ -28,26 +35,31 @@ export async function GET(request: NextRequest) {
   const skills = searchParams.get('skills')?.split(',').filter(Boolean) || [];
   const minCohesion = searchParams.get('minCohesion');
 
+  // Determine visibility access based on user type and company verification
+  const isCompanyUser = session.user.userType === 'company';
+  let canViewAnonymous = false;
+  let viewerCompanyId: string | undefined;
+
+  if (isCompanyUser) {
+    const verification = await isVerifiedCompanyUser(session.user.id);
+    canViewAnonymous = verification.isVerified;
+    viewerCompanyId = verification.companyId;
+  }
+
+  // Determine which visibility modes to include
+  const visibilityFilter: ('public' | 'anonymous')[] = canViewAnonymous
+    ? ['public', 'anonymous']
+    : ['public'];
+
   // Fetch real teams from database
   let dbTeams: Team[] = [];
   try {
     const realTeams = await prisma.team.findMany({
       where: {
-        visibility: 'public',
+        visibility: { in: visibilityFilter },
         availabilityStatus: 'available',
       },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        size: true,
-        yearsWorkingTogether: true,
-        availabilityStatus: true,
-        industry: true,
-        location: true,
-        createdBy: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         members: {
           include: {
             user: {
@@ -70,35 +82,54 @@ export async function GET(request: NextRequest) {
       take: 50,
     });
 
-    dbTeams = realTeams.map(team => ({
-      id: team.id,
-      name: team.name,
-      description: team.description || '',
-      size: team.size || team.members.length,
-      yearsWorking: Number(team.yearsWorkingTogether) || 0,
-      cohesionScore: 85, // Default score
-      successfulProjects: 0,
-      clientSatisfaction: 90,
-      openToLiftout: team.availabilityStatus === 'available',
-      createdBy: team.createdBy,
-      createdAt: team.createdAt.toISOString(),
-      updatedAt: team.updatedAt.toISOString(),
-      members: team.members.map(m => ({
-        id: m.id,
-        userId: m.userId,
-        name: `${m.user.firstName} ${m.user.lastName}`.trim() || 'Team Member',
-        role: m.role || 'Member',
-        experience: m.user.profile?.yearsExperience || 0,
-        skills: [],
-        title: m.user.profile?.title || undefined,
-        avatar: m.user.profile?.profilePhotoUrl || null,
-      })),
-      achievements: [],
-      industry: team.industry || '',
-      location: team.location || '',
-      availability: 'Open to strategic opportunities',
-      compensation: { range: '', equity: false, benefits: '' },
-    }));
+    // Filter out teams that have blocked the viewer's company
+    const teamsToProcess = viewerCompanyId
+      ? realTeams.filter(team => !isCompanyBlocked(team, viewerCompanyId))
+      : realTeams;
+
+    dbTeams = teamsToProcess.map(team => {
+      // Build base team data
+      let teamData: any = {
+        id: team.id,
+        name: team.name,
+        description: team.description || '',
+        size: team.size || team.members.length,
+        yearsWorking: Number(team.yearsWorkingTogether) || 0,
+        cohesionScore: 85, // Default score
+        successfulProjects: 0,
+        clientSatisfaction: 90,
+        openToLiftout: team.availabilityStatus === 'available',
+        createdBy: team.createdBy,
+        createdAt: team.createdAt.toISOString(),
+        updatedAt: team.updatedAt.toISOString(),
+        visibility: team.visibility,
+        isAnonymous: team.isAnonymous,
+        members: team.members.map(m => ({
+          id: m.id,
+          userId: m.userId,
+          name: `${m.user.firstName} ${m.user.lastName}`.trim() || 'Team Member',
+          role: m.role || 'Member',
+          experience: m.user.profile?.yearsExperience || 0,
+          skills: [],
+          title: m.user.profile?.title || undefined,
+          avatar: m.user.profile?.profilePhotoUrl || null,
+          yearsExperience: m.user.profile?.yearsExperience || 0,
+          isLead: false,
+        })),
+        achievements: [],
+        industry: team.industry || '',
+        location: team.location || '',
+        availability: 'Open to strategic opportunities',
+        compensation: { range: '', equity: false, benefits: '' },
+      };
+
+      // Apply anonymization for anonymous teams when viewing as company
+      if (team.visibility === 'anonymous' || team.isAnonymous) {
+        teamData = anonymizeTeamData(teamData as TeamData);
+      }
+
+      return teamData;
+    });
   } catch (error) {
     console.error('Error fetching teams from database:', error);
   }
