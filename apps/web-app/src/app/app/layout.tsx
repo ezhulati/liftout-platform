@@ -3,10 +3,10 @@
 import { AppSidebar } from '@/components/app/AppSidebar';
 import { AppHeader } from '@/components/app/AppHeader';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { getDemoDataForUser } from '@/lib/demo-accounts';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { DEMO_DATA, getDemoDataForUser } from '@/lib/demo-accounts';
 
 export default function AppLayout({
   children,
@@ -17,9 +17,8 @@ export default function AppLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Fullscreen routes that don't show sidebar/header
+  // Fullscreen routes that don't show sidebar
   const isFullscreenRoute = pathname?.startsWith('/app/onboarding');
-  const isOnboardingRoute = pathname?.startsWith('/app/onboarding');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -44,35 +43,20 @@ export default function AppLayout({
     return null;
   }
 
-  // Create userData from session for demo users
+  // Create userData from session for header
   const user = session.user;
   const demoData = getDemoDataForUser(user.email);
-  const userData = demoData ? {
+  const demoProfile = (demoData?.profile || {}) as Record<string, any>;
+  const userName = user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || demoProfile.name || 'User';
+  const userData = {
+    ...demoProfile,
     id: user.id,
     email: user.email,
+    name: userName,
     firstName: user.firstName || user.name?.split(' ')[0] || 'User',
     lastName: user.lastName || user.name?.split(' ')[1] || '',
-    type: user.userType as 'individual' | 'company',
-    userType: user.userType,
-    verified: user.profileCompleted ?? false,
-    profileCompleted: user.profileCompleted ?? false,
-    status: 'active' as const,
-    preferences: {
-      notifications: true,
-      marketing: false,
-      confidentialMode: false,
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ...demoData.profile,
-  } : {
-    id: user.id,
-    email: user.email,
-    name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User',
-    firstName: user.firstName || user.name?.split(' ')[0] || 'User',
-    lastName: user.lastName || user.name?.split(' ')[1] || '',
-    type: (user.userType || 'individual') as 'individual' | 'company',
-    userType: user.userType || 'individual',
+    type: (user.userType || demoData?.userType || 'individual') as 'individual' | 'company',
+    userType: user.userType || demoData?.userType || 'individual',
     verified: user.profileCompleted ?? false,
     profileCompleted: user.profileCompleted ?? false,
     status: 'active' as const,
@@ -85,7 +69,7 @@ export default function AppLayout({
     updatedAt: new Date(),
   };
 
-  // Fullscreen routes render without sidebar/header
+  // Fullscreen routes render without sidebar
   if (isFullscreenRoute) {
     return (
       <div className="min-h-screen bg-bg">
