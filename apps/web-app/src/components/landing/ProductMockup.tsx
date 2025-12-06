@@ -1,6 +1,6 @@
 'use client';
 
-import { StarIcon, MapPinIcon, UsersIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
+import { MapPinIcon, CheckBadgeIcon, ClockIcon } from '@heroicons/react/24/solid';
 
 // Sample team data for the mockup
 // Teams from target industries: Investment Banking, Law, Consulting, Healthcare, PE
@@ -12,7 +12,7 @@ const mockTeams = [
     members: 6,
     verified: true,
     skills: ['Tech M&A', 'Valuations', 'IPO'],
-    rating: 4.9,
+    yearsTogether: 5,
     avatars: [
       'https://randomuser.me/api/portraits/men/32.jpg',
       'https://randomuser.me/api/portraits/women/44.jpg',
@@ -29,7 +29,7 @@ const mockTeams = [
     members: 8,
     verified: true,
     skills: ['Spine Surgery', 'Sports Medicine', 'Joint Replacement'],
-    rating: 4.8,
+    yearsTogether: 8,
     avatars: [
       'https://randomuser.me/api/portraits/men/22.jpg',
       'https://randomuser.me/api/portraits/women/28.jpg',
@@ -46,9 +46,9 @@ const mockTeams = [
     tagline: 'Commercial litigation practice',
     location: 'Washington, DC',
     members: 5,
-    verified: false,
+    verified: true,
     skills: ['Securities', 'Class Actions', 'Antitrust'],
-    rating: 4.7,
+    yearsTogether: 3,
     avatars: [
       'https://randomuser.me/api/portraits/women/24.jpg',
       'https://randomuser.me/api/portraits/men/36.jpg',
@@ -93,9 +93,9 @@ function TeamCardCompact({ team }: { team: typeof mockTeams[0] }) {
           </div>
           <p className="text-xs text-gray-500 truncate">{team.tagline}</p>
         </div>
-        <div className="flex items-center gap-0.5 text-xs text-amber-500">
-          <StarIcon className="w-3 h-3" />
-          <span className="font-medium">{team.rating}</span>
+        <div className="flex items-center gap-1 text-xs text-gray-500">
+          <ClockIcon className="w-3 h-3" />
+          <span className="font-medium">{team.yearsTogether}y together</span>
         </div>
       </div>
       <div className="mt-2 flex items-center justify-between">
@@ -123,9 +123,9 @@ function TeamCardFull({ team }: { team: typeof mockTeams[0] }) {
           </div>
           <p className="text-sm text-gray-600 mt-0.5">{team.tagline}</p>
         </div>
-        <div className="flex items-center gap-1 text-sm text-amber-500 bg-amber-50 px-2 py-1 rounded-full">
-          <StarIcon className="w-4 h-4" />
-          <span className="font-semibold">{team.rating}</span>
+        <div className="flex items-center gap-1.5 text-sm text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full">
+          <ClockIcon className="w-4 h-4" />
+          <span className="font-medium">{team.yearsTogether}y together</span>
         </div>
       </div>
 
