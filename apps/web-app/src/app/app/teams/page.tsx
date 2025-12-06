@@ -310,6 +310,15 @@ export default function TeamsPage() {
             </button>
           </div>
 
+          {/* Team member avatars */}
+          <div className="mb-4">
+            <TeamMemberAvatars
+              members={teamMembers}
+              size="md"
+              maxDisplay={5}
+            />
+          </div>
+
           <div className="flex items-center gap-4 text-sm text-text-tertiary mb-4">
             <span className="flex items-center gap-2">
               <MapPinIcon className="h-4 w-4" />
