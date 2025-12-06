@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
-import { randomUUID } from 'crypto';
-import { alertsStore, type OpportunityAlert } from '@/lib/stores/opportunity-alerts';
-
-// NOTE: OpportunityAlert model doesn't exist in schema yet
-// This is a placeholder implementation using in-memory storage
-// TODO: Add OpportunityAlert model to Prisma schema and implement properly
+import { prisma } from '@/lib/prisma';
 
 const alertSchema = z.object({
   name: z.string().min(1).max(100),
@@ -33,7 +28,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const alerts = alertsStore.get(session.user.id) || [];
+    const alerts = await prisma.opportunityAlert.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: 'desc' },
+    });
 
     return NextResponse.json({ alerts });
   } catch (error) {
@@ -66,30 +64,29 @@ export async function POST(request: NextRequest) {
 
     const { name, filters, frequency } = parsed.data;
 
-    const userAlerts = alertsStore.get(session.user.id) || [];
+    // Check alert count limit
+    const alertCount = await prisma.opportunityAlert.count({
+      where: { userId: session.user.id },
+    });
 
     // Limit to 10 alerts per user
-    if (userAlerts.length >= 10) {
+    if (alertCount >= 10) {
       return NextResponse.json(
         { error: 'Maximum of 10 alerts allowed' },
         { status: 400 }
       );
     }
 
-    const alert: OpportunityAlert = {
-      id: randomUUID(),
-      userId: session.user.id,
-      name,
-      filters: filters || {},
-      frequency: frequency || 'daily',
-      isActive: true,
-      matchCount: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    userAlerts.push(alert);
-    alertsStore.set(session.user.id, userAlerts);
+    const alert = await prisma.opportunityAlert.create({
+      data: {
+        userId: session.user.id,
+        name,
+        filters: filters || {},
+        frequency: frequency || 'daily',
+        isActive: true,
+        matchCount: 0,
+      },
+    });
 
     return NextResponse.json({ alert });
   } catch (error) {
@@ -100,4 +97,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

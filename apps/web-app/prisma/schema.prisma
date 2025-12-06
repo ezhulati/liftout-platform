@@ -239,6 +239,7 @@ model User {
   authProviderId           String?   @map("auth_provider_id") // ID from OAuth provider
 
   // Demo/Test account marker
+  // Demo accounts use @demo.liftout.com emails and are excluded from analytics
   isDemo                   Boolean   @default(false) @map("is_demo")
 
   // Admin-specific fields
@@ -250,6 +251,10 @@ model User {
   bannedReason             String?   @map("banned_reason")
   deletedAt                DateTime? @map("deleted_at")
   deletedBy                String?   @map("deleted_by")
+
+  // Push notification fields
+  pushEnabled              Boolean   @default(false) @map("push_enabled")
+  pushSubscription         Json?     @map("push_subscription")
 
   // Relations
   profile                IndividualProfile?
@@ -269,6 +274,19 @@ model User {
   savedItems             SavedItem[]
   impersonationsByAdmin  ImpersonationSession[]   @relation("AdminImpersonator")
   impersonationsAsTarget ImpersonationSession[]   @relation("ImpersonationTarget")
+
+  // Document relations
+  uploadedDocuments      Document[]               @relation("DocumentUploader")
+  reviewedDocuments      Document[]               @relation("DocumentReviewer")
+  documentVersions       DocumentVersion[]        @relation("VersionUploader")
+  documentSharesCreated  DocumentShare[]          @relation("ShareCreator")
+  documentSharesReceived DocumentShare[]          @relation("ShareRecipient")
+  documentAccessLogs     DocumentAccessLog[]
+
+  // Reporting and blocking
+  reports                Report[]
+  blocks                 Block[]
+  opportunityAlerts      OpportunityAlert[]
 
   @@map("users")
 }
@@ -343,7 +361,7 @@ model Company {
   createdAt            DateTime            @default(now()) @map("created_at")
   updatedAt            DateTime            @updatedAt @map("updated_at")
 
-  // Demo/Test marker
+  // Demo/Test marker - demo companies are excluded from analytics and marked in UI
   isDemo               Boolean             @default(false) @map("is_demo")
 
   // Soft delete fields
@@ -354,6 +372,7 @@ model Company {
   users         CompanyUser[]
   opportunities Opportunity[]
   subscriptions Subscription[]
+  documents     Document[]
 
   @@map("companies")
 }
@@ -422,7 +441,7 @@ model Team {
   createdAt               DateTime               @default(now()) @map("created_at")
   updatedAt               DateTime               @updatedAt @map("updated_at")
 
-  // Demo/Test marker
+  // Demo/Test marker - demo teams are excluded from analytics and marked in UI
   isDemo                  Boolean                @default(false) @map("is_demo")
 
   // Verification fields (for admin)
@@ -439,6 +458,7 @@ model Team {
   creator      User              @relation("TeamCreator", fields: [createdBy], references: [id])
   members      TeamMember[]
   applications TeamApplication[]
+  documents    Document[]
 
   @@map("teams")
 }
@@ -566,6 +586,7 @@ model Opportunity {
   company      Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
   creator      User              @relation("OpportunityCreator", fields: [createdBy], references: [id])
   applications TeamApplication[]
+  documents    Document[]
 
   @@map("opportunities")
 }
@@ -608,6 +629,7 @@ model TeamApplication {
   team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
   opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   applier     User        @relation("ApplicationApplier", fields: [appliedBy], references: [id])
+  documents   Document[]
 
   @@unique([teamId, opportunityId])
   @@map("team_applications")
@@ -671,13 +693,17 @@ model Conversation {
 }
 
 model ConversationParticipant {
-  id             String   @id @default(uuid())
-  conversationId String   @map("conversation_id")
-  userId         String   @map("user_id")
-  role           String   @default("participant")
-  joinedAt       DateTime @default(now()) @map("joined_at")
+  id             String    @id @default(uuid())
+  conversationId String    @map("conversation_id")
+  userId         String    @map("user_id")
+  role           String    @default("participant")
+  joinedAt       DateTime  @default(now()) @map("joined_at")
   leftAt         DateTime? @map("left_at")
   lastReadAt     DateTime? @map("last_read_at")
+  isArchived     Boolean   @default(false) @map("is_archived")
+  archivedAt     DateTime? @map("archived_at")
+  isMuted        Boolean   @default(false) @map("is_muted")
+  mutedUntil     DateTime? @map("muted_until")
 
   // Relations
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -1038,6 +1064,223 @@ model GDPRRequest {
   @@map("gdpr_requests")
 }
 
+// ============================================
+// DOCUMENT MANAGEMENT MODELS
+// ============================================
+
+// Document type for categorization
+enum DocumentType {
+  nda
+  contract
+  term_sheet
+  due_diligence
+  team_profile
+  performance_report
+  compliance
+  reference
+  proposal
+  presentation
+  other
+}
+
+// Document access level
+enum DocumentAccessLevel {
+  public
+  internal
+  confidential
+  restricted
+  legal_only
+}
+
+// Document review status
+enum DocumentReviewStatus {
+  pending
+  in_review
+  approved
+  rejected
+  requires_changes
+}
+
+// Main document model
+model Document {
+  id                   String               @id @default(uuid())
+  name                 String
+  description          String?
+  documentType         DocumentType         @map("document_type")
+  accessLevel          DocumentAccessLevel  @default(internal) @map("access_level")
+  currentVersion       Int                  @default(1) @map("current_version")
+
+  // File metadata
+  filename             String
+  originalFilename     String               @map("original_filename")
+  fileType             String               @map("file_type")
+  mimeType             String?              @map("mime_type")
+  fileSize             Int                  @map("file_size")
+  storageUrl           String               @map("storage_url")
+  checksum             String?
+
+  // Ownership and associations
+  uploadedById         String               @map("uploaded_by_id")
+  teamId               String?              @map("team_id")
+  companyId            String?              @map("company_id")
+  opportunityId        String?              @map("opportunity_id")
+  applicationId        String?              @map("application_id")
+  conversationId       String?              @map("conversation_id")
+
+  // Security and compliance
+  isConfidential       Boolean              @default(false) @map("is_confidential")
+  isLegalPrivileged    Boolean              @default(false) @map("is_legal_privileged")
+  encryptionStatus     String?              @map("encryption_status")
+  complianceLabels     Json                 @default("[]") @map("compliance_labels")
+  retentionDate        DateTime?            @map("retention_date")
+
+  // Review workflow
+  reviewStatus         DocumentReviewStatus @default(pending) @map("review_status")
+  reviewedById         String?              @map("reviewed_by_id")
+  reviewedAt           DateTime?            @map("reviewed_at")
+  reviewComments       String?              @map("review_comments")
+
+  // Tracking
+  downloadCount        Int                  @default(0) @map("download_count")
+  viewCount            Int                  @default(0) @map("view_count")
+  lastAccessedAt       DateTime?            @map("last_accessed_at")
+  isArchived           Boolean              @default(false) @map("is_archived")
+  archivedAt           DateTime?            @map("archived_at")
+
+  // Metadata
+  tags                 Json                 @default("[]")
+  metadata             Json                 @default("{}")
+
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+
+  // Relations
+  uploadedBy           User                 @relation("DocumentUploader", fields: [uploadedById], references: [id])
+  reviewedBy           User?                @relation("DocumentReviewer", fields: [reviewedById], references: [id])
+  team                 Team?                @relation(fields: [teamId], references: [id])
+  company              Company?             @relation(fields: [companyId], references: [id])
+  opportunity          Opportunity?         @relation(fields: [opportunityId], references: [id])
+  application          TeamApplication?     @relation(fields: [applicationId], references: [id])
+  versions             DocumentVersion[]
+  shares               DocumentShare[]
+  accessLogs           DocumentAccessLog[]
+
+  @@index([uploadedById])
+  @@index([teamId])
+  @@index([companyId])
+  @@index([opportunityId])
+  @@index([applicationId])
+  @@index([documentType])
+  @@index([reviewStatus])
+  @@index([createdAt])
+  @@map("documents")
+}
+
+// Document version history
+model DocumentVersion {
+  id               String   @id @default(uuid())
+  documentId       String   @map("document_id")
+  versionNumber    Int      @map("version_number")
+
+  // File data for this version
+  filename         String
+  fileSize         Int      @map("file_size")
+  storageUrl       String   @map("storage_url")
+  checksum         String?
+
+  // Version metadata
+  changeDescription String?  @map("change_description")
+  uploadedById     String   @map("uploaded_by_id")
+
+  // Comparison data
+  diffFromPrevious Json?    @map("diff_from_previous") // Stores text diff if applicable
+
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  document         Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  uploadedBy       User     @relation("VersionUploader", fields: [uploadedById], references: [id])
+
+  @@unique([documentId, versionNumber])
+  @@index([documentId])
+  @@index([uploadedById])
+  @@index([createdAt])
+  @@map("document_versions")
+}
+
+// Document sharing
+model DocumentShare {
+  id                String    @id @default(uuid())
+  documentId        String    @map("document_id")
+  sharedById        String    @map("shared_by_id")
+  sharedWithId      String?   @map("shared_with_id") // Null for external shares
+  sharedWithEmail   String?   @map("shared_with_email") // For external shares
+
+  // Permissions
+  permissionLevel   String    @default("view") @map("permission_level") // view, download, edit
+
+  // Security
+  shareToken        String?   @unique @map("share_token")
+  passwordProtected Boolean   @default(false) @map("password_protected")
+  passwordHash      String?   @map("password_hash")
+
+  // Expiration
+  expiresAt         DateTime? @map("expires_at")
+  maxAccessCount    Int?      @map("max_access_count")
+  accessCount       Int       @default(0) @map("access_count")
+
+  // Tracking
+  lastAccessedAt    DateTime? @map("last_accessed_at")
+  notifyOnAccess    Boolean   @default(false) @map("notify_on_access")
+
+  revokedAt         DateTime? @map("revoked_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  document          Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  sharedBy          User      @relation("ShareCreator", fields: [sharedById], references: [id])
+  sharedWith        User?     @relation("ShareRecipient", fields: [sharedWithId], references: [id])
+
+  @@index([documentId])
+  @@index([sharedById])
+  @@index([sharedWithId])
+  @@index([shareToken])
+  @@index([expiresAt])
+  @@map("document_shares")
+}
+
+// Document access audit log
+model DocumentAccessLog {
+  id          String   @id @default(uuid())
+  documentId  String   @map("document_id")
+  userId      String?  @map("user_id")
+
+  action      String   // view, download, upload, edit, share, delete, restore
+  outcome     String   @default("success") // success, denied, error
+  denyReason  String?  @map("deny_reason")
+
+  // Request context
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+
+  // Additional metadata
+  versionId   String?  @map("version_id")
+  shareId     String?  @map("share_id")
+  metadata    Json     @default("{}")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("document_access_logs")
+}
+
 // Admin impersonation sessions for tracking when admins act as users
 model ImpersonationSession {
   id           String    @id @default(uuid())
@@ -1075,4 +1318,78 @@ model AdminSetting {
 
   @@index([category])
   @@map("admin_settings")
+}
+
+// ============================================
+// USER REPORTING & BLOCKING
+// ============================================
+
+// User reports for content/users/teams
+model Report {
+  id          String       @id @default(uuid())
+  reporterId  String       @map("reporter_id")
+  entityType  String       @map("entity_type") // user, team, company, opportunity, message
+  entityId    String       @map("entity_id")
+  reason      String       // spam, harassment, inappropriate_content, fake_profile, scam, other
+  description String?
+  status      ReportStatus @default(pending)
+  reviewedBy  String?      @map("reviewed_by")
+  reviewedAt  DateTime?    @map("reviewed_at")
+  resolution  String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([entityType, entityId])
+  @@index([status])
+  @@map("reports")
+}
+
+// User blocks
+model Block {
+  id         String   @id @default(uuid())
+  blockerId  String   @map("blocker_id")
+  entityType String   @map("entity_type") // user, team, company
+  entityId   String   @map("entity_id")
+  reason     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  blocker User @relation(fields: [blockerId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, entityType, entityId])
+  @@index([blockerId])
+  @@index([entityType, entityId])
+  @@map("blocks")
+}
+
+// Opportunity alerts/subscriptions
+model OpportunityAlert {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  name         String
+  filters      Json     @default("{}") // industry, location, teamSize, compensation, etc.
+  frequency    String   @default("daily") // instant, daily, weekly
+  isActive     Boolean  @default(true) @map("is_active")
+  lastSentAt   DateTime? @map("last_sent_at")
+  matchCount   Int      @default(0) @map("match_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isActive])
+  @@map("opportunity_alerts")
+}
+
+enum ReportStatus {
+  pending
+  reviewing
+  resolved
+  dismissed
 }

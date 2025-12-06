@@ -1,5 +1,6 @@
 // In-memory storage for opportunity alerts
-// TODO: Replace with proper database storage once OpportunityAlert model is in schema
+// NOTE: OpportunityAlert model exists in database schema but web-app schema is out of sync
+// TODO: Sync web-app/prisma/schema.prisma with packages/database/prisma/schema.prisma
 
 export interface OpportunityAlert {
   id: string;

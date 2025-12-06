@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
-
-// NOTE: Report model exists in schema but needs migration
-// Using in-memory storage for development until migration is run
-// TODO: Run prisma db push and switch to Prisma client
+import { prisma } from '@/lib/prisma';
 
 const reportSchema = z.object({
   entityType: z.enum(['user', 'team', 'company', 'opportunity', 'message']),
@@ -20,20 +17,6 @@ const reportSchema = z.object({
   ]),
   description: z.string().max(1000).optional(),
 });
-
-interface Report {
-  id: string;
-  reporterId: string;
-  entityType: string;
-  entityId: string;
-  reason: string;
-  description?: string;
-  status: 'pending' | 'reviewing' | 'resolved' | 'dismissed';
-  createdAt: Date;
-}
-
-// In-memory storage for development (will not persist)
-const reportsStore = new Map<string, Report[]>();
 
 // POST - Create a report
 export async function POST(request: NextRequest) {
@@ -56,16 +39,15 @@ export async function POST(request: NextRequest) {
 
     const { entityType, entityId, reason, description } = parsed.data;
 
-    // Get user's reports
-    const userReports = reportsStore.get(session.user.id) || [];
-
     // Check for duplicate reports
-    const existing = userReports.find(
-      (r) =>
-        r.entityType === entityType &&
-        r.entityId === entityId &&
-        ['pending', 'reviewing'].includes(r.status)
-    );
+    const existing = await prisma.report.findFirst({
+      where: {
+        reporterId: session.user.id,
+        entityType,
+        entityId,
+        status: { in: ['pending', 'reviewing'] },
+      },
+    });
 
     if (existing) {
       return NextResponse.json(
@@ -75,19 +57,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create report
-    const report: Report = {
-      id: `report-${Date.now()}`,
-      reporterId: session.user.id,
-      entityType,
-      entityId,
-      reason,
-      description,
-      status: 'pending',
-      createdAt: new Date(),
-    };
-
-    userReports.push(report);
-    reportsStore.set(session.user.id, userReports);
+    const report = await prisma.report.create({
+      data: {
+        reporterId: session.user.id,
+        entityType,
+        entityId,
+        reason,
+        description,
+        status: 'pending',
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -104,7 +83,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET - Get user's reports
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
@@ -112,9 +91,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const userReports = reportsStore.get(session.user.id) || [];
+    const reports = await prisma.report.findMany({
+      where: { reporterId: session.user.id },
+      orderBy: { createdAt: 'desc' },
+    });
 
-    return NextResponse.json({ reports: userReports });
+    return NextResponse.json({ reports });
   } catch (error) {
     console.error('Get reports error:', error);
     return NextResponse.json(

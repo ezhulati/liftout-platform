@@ -288,7 +288,7 @@
 
 ```
 Build Status: SUCCESS
-Total Routes: 147
+Total Routes: 154
 TypeScript: No errors
 Prisma: Generated successfully
 ```
@@ -297,4 +297,21 @@ All pages compile and build successfully for production deployment.
 
 ---
 
+## Technical Notes
+
+### Database Storage (Prisma)
+
+All APIs now use Prisma-based persistent storage with PostgreSQL (Neon):
+
+- `/api/blocks` - Block user/team/company (Prisma)
+- `/api/reports` - Report entities (Prisma)
+- `/api/opportunity-alerts` - Opportunity alert management (Prisma)
+
+### Schema Sync Complete
+
+The `apps/web-app/prisma/schema.prisma` has been synchronized with `packages/database/prisma/schema.prisma` (36 models).
+
+---
+
 *Generated: December 5, 2024*
+*Updated: December 5, 2024 - Upgraded to Prisma storage*

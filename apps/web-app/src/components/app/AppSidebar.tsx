@@ -100,7 +100,7 @@ export function AppSidebar() {
       )}
 
       {/* Mobile sidebar - Purple Figma design */}
-      <div className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-base ease-out-quart ${
+      <div className={`lg:hidden fixed inset-y-0 left-0 z-[200] w-72 transform transition-transform duration-base ease-out-quart pointer-events-auto ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex h-full flex-col bg-[#4C1D95]">
@@ -140,7 +140,7 @@ export function AppSidebar() {
       </div>
 
       {/* Desktop sidebar - Purple Figma design */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-[200] lg:flex lg:w-64 lg:flex-col pointer-events-auto">
         <div className="flex flex-col flex-grow bg-[#4C1D95]">
           {/* Header with logo */}
           <div className="flex items-center h-16 px-4">

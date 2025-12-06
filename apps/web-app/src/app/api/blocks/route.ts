@@ -2,19 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
-
-// NOTE: Block model doesn't exist in schema yet
-// This is a placeholder implementation that stores blocks in memory
-// TODO: Add Block model to Prisma schema and implement properly
+import { prisma } from '@/lib/prisma';
 
 const blockSchema = z.object({
   entityType: z.enum(['user', 'team', 'company']),
   entityId: z.string().uuid(),
   reason: z.string().max(500).optional(),
 });
-
-// In-memory storage for development (will not persist)
-const blocksStore = new Map<string, { entityType: string; entityId: string; reason?: string; createdAt: Date }[]>();
 
 // POST - Block a user/team/company
 export async function POST(request: NextRequest) {
@@ -45,11 +39,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get or create user's block list
-    const userBlocks = blocksStore.get(session.user.id) || [];
+    // Check if already blocked (using unique constraint)
+    const existing = await prisma.block.findUnique({
+      where: {
+        blockerId_entityType_entityId: {
+          blockerId: session.user.id,
+          entityType,
+          entityId,
+        },
+      },
+    });
 
-    // Check if already blocked
-    const existing = userBlocks.find(b => b.entityType === entityType && b.entityId === entityId);
     if (existing) {
       return NextResponse.json(
         { error: 'Already blocked' },
@@ -58,12 +58,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Add block
-    userBlocks.push({ entityType, entityId, reason, createdAt: new Date() });
-    blocksStore.set(session.user.id, userBlocks);
+    const block = await prisma.block.create({
+      data: {
+        blockerId: session.user.id,
+        entityType,
+        entityId,
+        reason,
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      blockId: `block-${Date.now()}`,
+      blockId: block.id,
     });
   } catch (error) {
     console.error('Create block error:', error);
@@ -86,17 +92,15 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const entityType = searchParams.get('entityType');
 
-    const userBlocks = blocksStore.get(session.user.id) || [];
-    const filteredBlocks = entityType
-      ? userBlocks.filter(b => b.entityType === entityType)
-      : userBlocks;
-
-    return NextResponse.json({
-      blocks: filteredBlocks.map((b, i) => ({
-        id: `block-${i}`,
-        ...b,
-      })),
+    const blocks = await prisma.block.findMany({
+      where: {
+        blockerId: session.user.id,
+        ...(entityType ? { entityType } : {}),
+      },
+      orderBy: { createdAt: 'desc' },
     });
+
+    return NextResponse.json({ blocks });
   } catch (error) {
     console.error('Get blocks error:', error);
     return NextResponse.json(
@@ -126,15 +130,24 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const userBlocks = blocksStore.get(session.user.id) || [];
-    const blockIndex = userBlocks.findIndex(b => b.entityType === entityType && b.entityId === entityId);
+    // Find and delete the block
+    const block = await prisma.block.findUnique({
+      where: {
+        blockerId_entityType_entityId: {
+          blockerId: session.user.id,
+          entityType,
+          entityId,
+        },
+      },
+    });
 
-    if (blockIndex === -1) {
+    if (!block) {
       return NextResponse.json({ error: 'Block not found' }, { status: 404 });
     }
 
-    userBlocks.splice(blockIndex, 1);
-    blocksStore.set(session.user.id, userBlocks);
+    await prisma.block.delete({
+      where: { id: block.id },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
