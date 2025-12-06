@@ -85,7 +85,7 @@ export function LandingHero() {
               </div>
 
               {/* H1 - Clear, instant understanding */}
-              <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
+              <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight leading-[1.05] mb-6">
                 {content.headline}
               </h1>
 
