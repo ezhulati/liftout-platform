@@ -13,7 +13,7 @@ export function LandingCTA() {
       className="py-24 lg:py-32 dark-section"
       aria-labelledby="cta-heading"
     >
-      <div className={`max-w-6xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      <div className={`max-w-7xl mx-auto px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Practical UI: left-aligned section header */}
         <h2
           id="cta-heading"

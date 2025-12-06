@@ -183,7 +183,7 @@ export function ScheduleMeetingModal({
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g., Negotiation Kick-off Call"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy"
+              className="input-field"
               required
             />
           </div>
@@ -200,7 +200,7 @@ export function ScheduleMeetingModal({
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 min={minDate}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:ring-2 focus:ring-navy focus:border-navy"
+                className="input-field"
                 required
               />
             </div>
@@ -214,7 +214,7 @@ export function ScheduleMeetingModal({
                 value={formData.time}
                 onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                 min={getMinTime()}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:ring-2 focus:ring-navy focus:border-navy"
+                className="input-field"
                 required
               />
             </div>
@@ -229,7 +229,7 @@ export function ScheduleMeetingModal({
             <select
               value={formData.duration}
               onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary focus:ring-2 focus:ring-navy focus:border-navy"
+              className="input-field"
             >
               <option value={15}>15 minutes</option>
               <option value={30}>30 minutes</option>
@@ -253,7 +253,7 @@ export function ScheduleMeetingModal({
               value={formData.meetingLink}
               onChange={(e) => setFormData({ ...formData, meetingLink: e.target.value })}
               placeholder="https://zoom.us/j/... or Google Meet link"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy"
+              className="input-field"
             />
             <p className="text-xs text-text-tertiary mt-1">
               Video call link (Zoom, Google Meet, Microsoft Teams, etc.)
@@ -271,7 +271,7 @@ export function ScheduleMeetingModal({
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               placeholder="e.g., Conference Room A or 123 Main St"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy"
+              className="input-field"
             />
           </div>
 
@@ -286,7 +286,7 @@ export function ScheduleMeetingModal({
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Add agenda, discussion topics, or other details..."
               rows={3}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy resize-none"
+              className="input-field resize-none"
             />
           </div>
 
@@ -301,7 +301,7 @@ export function ScheduleMeetingModal({
               value={formData.attendees}
               onChange={(e) => setFormData({ ...formData, attendees: e.target.value })}
               placeholder="email1@example.com, email2@example.com"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:ring-2 focus:ring-navy focus:border-navy"
+              className="input-field"
             />
             <p className="text-xs text-text-tertiary mt-1">
               Comma-separated email addresses
@@ -350,7 +350,7 @@ export function ScheduleMeetingModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-border rounded-lg text-text-primary hover:bg-bg-alt transition-colors"
+              className="flex-1 btn-outline"
               disabled={scheduleMeeting.isPending}
             >
               Cancel
@@ -359,7 +359,7 @@ export function ScheduleMeetingModal({
               type="button"
               onClick={(e) => handleSubmit(e, true)}
               disabled={scheduleMeeting.isPending || !formData.title || !formData.date || !formData.time}
-              className="flex-1 px-4 py-2.5 border border-navy text-navy rounded-lg hover:bg-navy/5 transition-colors inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 btn-outline inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowDownTrayIcon className="h-4 w-4" />
               Download .ics

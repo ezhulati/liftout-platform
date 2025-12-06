@@ -50,7 +50,7 @@ export default function SupportPage() {
 
   if (status === 'loading') {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="space-y-6">
         <div className="animate-pulse">
           <div className="h-8 bg-bg-elevated rounded w-48 mb-2"></div>
           <div className="h-4 bg-bg-elevated rounded w-72 mb-8"></div>
@@ -62,7 +62,7 @@ export default function SupportPage() {
 
   if (!session) {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="space-y-6">
         <div className="text-center py-12">
           <QuestionMarkCircleIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
           <h2 className="text-lg font-bold text-text-primary mb-2">Sign in required</h2>
@@ -85,9 +85,9 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="page-header mb-8">
+      <div className="page-header">
         <h1 className="page-title">Support</h1>
         <p className="page-subtitle">Get help with your account.</p>
       </div>

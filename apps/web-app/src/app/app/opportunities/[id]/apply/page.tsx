@@ -152,7 +152,7 @@ export default function ApplyToOpportunityPage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <div>
+      <div className="page-header">
         <Link
           href={`/app/opportunities/${params?.id}`}
           className="inline-flex items-center text-sm font-medium text-text-tertiary hover:text-navy mb-4 transition-colors"
@@ -160,8 +160,8 @@ export default function ApplyToOpportunityPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Opportunity
         </Link>
-        <h1 className="text-2xl font-bold text-text-primary">Apply</h1>
-        <p className="text-text-secondary mt-1">Submit your team application.</p>
+        <h1 className="page-title">Apply</h1>
+        <p className="page-subtitle">Submit your team application.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

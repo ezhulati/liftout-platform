@@ -87,10 +87,10 @@ export function ProductPreview() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-20 lg:py-28 bg-white overflow-hidden"
+      className="py-24 lg:py-32 bg-white overflow-hidden"
       aria-labelledby="preview-heading"
     >
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header - Practical UI: left-aligned */}
         <div className={`max-w-2xl mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-3">

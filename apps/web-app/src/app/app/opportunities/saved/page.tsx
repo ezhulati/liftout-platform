@@ -78,7 +78,7 @@ export default function SavedOpportunitiesPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="space-y-6">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-bg-elevated rounded w-64 mb-6"></div>
           {[1, 2, 3].map((i) => (
@@ -91,7 +91,7 @@ export default function SavedOpportunitiesPage() {
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="space-y-6">
         <div className="card text-center py-12">
           <p className="text-text-secondary">Failed to load saved opportunities</p>
         </div>
@@ -102,10 +102,10 @@ export default function SavedOpportunitiesPage() {
   const savedItems = data?.savedItems || [];
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="page-header">
-        <h1 className="page-title">Saved opportunities</h1>
+        <h1 className="page-title">Saved Opportunities</h1>
         <p className="page-subtitle">Opportunities you've bookmarked.</p>
       </div>
 

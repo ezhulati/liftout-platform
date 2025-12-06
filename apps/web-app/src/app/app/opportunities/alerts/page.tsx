@@ -167,9 +167,9 @@ export default function OpportunityAlertsPage() {
           Back to opportunities
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary">Opportunity alerts</h1>
-            <p className="text-text-secondary mt-1">Manage your alert preferences.</p>
+          <div className="page-header">
+            <h1 className="page-title">Opportunity alerts</h1>
+            <p className="page-subtitle">Manage your alert preferences.</p>
           </div>
           {!showForm && (
             <button onClick={() => setShowForm(true)} className="btn-primary flex items-center">
