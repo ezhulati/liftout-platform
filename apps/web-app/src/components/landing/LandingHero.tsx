@@ -33,7 +33,7 @@ const heroContent = {
     trustLine: 'Free to explore. Completely confidential.',
   },
   companies: {
-    headline: 'Hire teams that work',
+    headline: 'Hire teams that already work',
     subhead: 'Browse proven teams. Skip the ramp-up. Ship faster.',
     ctaText: 'Find your team',
     ctaHref: '/auth/signup?type=company',
@@ -57,8 +57,8 @@ export function LandingHero() {
       {/* Main content */}
       <div className="flex-1 flex items-center">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-24 pt-32 lg:pt-40 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-16 items-center">
-            {/* Left - Text content (60%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[11fr_9fr] gap-12 items-center">
+            {/* Left - Text content (55%) */}
             <div>
               {/* Audience toggle */}
               <div className="inline-flex items-center bg-gray-100 rounded-full p-1 mb-8">
