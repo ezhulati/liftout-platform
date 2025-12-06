@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { ProductMockup } from './ProductMockup';
+import { OpportunitiesMockup } from './OpportunitiesMockup';
 
 /**
  * Practical UI Hero Section
@@ -20,7 +22,29 @@ import { ProductMockup } from './ProductMockup';
  * Buttons: Verb + Noun labels
  */
 
+type AudienceType = 'teams' | 'companies';
+
+const heroContent = {
+  teams: {
+    headline: 'The job board for teams',
+    subhead: 'Register your team. Companies find you. Get hired together.',
+    ctaText: 'Register your team',
+    ctaHref: '/auth/signup?type=team',
+    trustLine: 'Free to explore. Completely confidential.',
+  },
+  companies: {
+    headline: 'Hire teams that already work',
+    subhead: 'Browse proven teams. Skip the ramp-up. Ship faster.',
+    ctaText: 'Find your team',
+    ctaHref: '/auth/signup?type=company',
+    trustLine: 'No fees until you hire. Completely confidential.',
+  },
+};
+
 export function LandingHero() {
+  const [audience, setAudience] = useState<AudienceType>('teams');
+  const content = heroContent[audience];
+
   const scrollToContent = () => {
     const howItWorks = document.getElementById('how-it-works');
     if (howItWorks) {
@@ -36,24 +60,48 @@ export function LandingHero() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left - Text content */}
             <div>
+              {/* Audience toggle */}
+              <div className="inline-flex items-center bg-gray-100 rounded-full p-1 mb-8">
+                <button
+                  onClick={() => setAudience('teams')}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all min-h-10 ${
+                    audience === 'teams'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  For Teams
+                </button>
+                <button
+                  onClick={() => setAudience('companies')}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all min-h-10 ${
+                    audience === 'companies'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  For Companies
+                </button>
+              </div>
+
               {/* H1 - Clear, instant understanding */}
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
-                The job board for teams
+                {content.headline}
               </h1>
 
               {/* Subhead - what you do, what happens, the outcome */}
               <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl">
-                Register your team. Companies find you. Get hired together.
+                {content.subhead}
               </p>
 
               {/* CTAs - Practical UI: ONE primary, one secondary (outline) */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 {/* Primary button - main CTA */}
                 <Link
-                  href="/auth/signup?type=team"
+                  href={content.ctaHref}
                   className="btn-primary min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center gap-3 group"
                 >
-                  Register your team
+                  {content.ctaText}
                   <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
                 {/* Secondary button - outline style */}
@@ -67,13 +115,13 @@ export function LandingHero() {
 
               {/* Trust signals - confident but confidential */}
               <p className="text-text-tertiary text-base">
-                Free to explore. Completely confidential.
+                {content.trustLine}
               </p>
             </div>
 
             {/* Right - Product mockup (responsive) */}
             <div className="relative">
-              <ProductMockup />
+              {audience === 'teams' ? <OpportunitiesMockup /> : <ProductMockup />}
             </div>
           </div>
         </div>
