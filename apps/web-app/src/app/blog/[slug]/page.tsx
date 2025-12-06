@@ -89,7 +89,7 @@ function RelatedArticleCard({ article }: { article: BlogArticle }) {
       </div>
       <div className="p-4">
         <span className="text-sm text-text-tertiary">{formattedDate}</span>
-        <h4 className="font-heading text-base font-bold text-text-primary mt-1 group-hover:text-navy transition-colors duration-200 line-clamp-2 leading-snug">
+        <h4 className="font-heading text-base font-bold text-text-primary mt-1 group-hover:text-[#4C1D95] transition-colors duration-200 line-clamp-2 leading-snug">
           {article.title}
         </h4>
       </div>
@@ -152,8 +152,8 @@ export default async function BlogArticlePage({ params }: PageProps) {
       />
       <LandingHeader />
       <main id="main-content" tabIndex={-1} className="bg-bg min-h-screen outline-none">
-        {/* Hero Section - Dark with proper contrast */}
-        <section className="bg-[#0f172a] pt-40 pb-20">
+        {/* Hero Section - Brand purple with proper contrast */}
+        <section className="bg-[#4C1D95] pt-32 lg:pt-40 pb-16 lg:pb-20">
           <div className="max-w-4xl mx-auto px-4 lg:px-10">
             {/* Back link - Tertiary button style */}
             <div className="mb-8">
@@ -172,7 +172,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
             <div className="flex items-center gap-3 mb-4">
               <Link
                 href={`/blog/category/${article.category.toLowerCase()}`}
-                className="text-gold font-medium text-base hover:text-gold-light transition-colors"
+                className="text-purple-300 font-medium text-base hover:text-white transition-colors"
               >
                 {article.category}
               </Link>
@@ -195,7 +195,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
               By{' '}
               <Link
                 href="/blog/author/nick-acimovic"
-                className="text-white font-medium hover:text-gold transition-colors"
+                className="text-white font-medium hover:text-purple-200 transition-colors"
               >
                 {article.author.name}
               </Link>
@@ -236,13 +236,13 @@ export default async function BlogArticlePage({ params }: PageProps) {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/auth/signup"
-                className="min-h-[48px] px-6 inline-flex items-center justify-center bg-navy text-white font-medium rounded-lg hover:bg-navy-600 transition-colors duration-200 text-base"
+                className="min-h-[48px] px-6 inline-flex items-center justify-center bg-[#4C1D95] text-white font-medium rounded-lg hover:bg-[#5B21B6] transition-colors duration-200 text-base"
               >
                 Get started
               </Link>
               <Link
                 href="/contact"
-                className="min-h-[48px] px-6 inline-flex items-center justify-center bg-white text-navy font-medium rounded-lg border border-navy hover:bg-navy-lightest transition-colors duration-200 text-base"
+                className="min-h-[48px] px-6 inline-flex items-center justify-center bg-white text-[#4C1D95] font-medium rounded-lg border border-[#4C1D95] hover:bg-purple-50 transition-colors duration-200 text-base"
               >
                 Contact us
               </Link>

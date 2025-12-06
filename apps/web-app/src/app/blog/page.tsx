@@ -69,12 +69,12 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
           <div className="p-4 md:p-6 flex flex-col justify-center">
             {/* Meta - Practical UI: 16px minimum */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-base font-medium text-navy">{article.category}</span>
+              <span className="text-base font-medium text-[#4C1D95]">{article.category}</span>
               <span className="text-base text-text-tertiary">&middot;</span>
               <span className="text-base text-text-tertiary">{formattedDate}</span>
             </div>
             {/* Title - H3 (28px bold) with tight line height */}
-            <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-2 leading-tight group-hover:text-navy transition-colors duration-200">
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-2 leading-tight group-hover:text-[#4C1D95] transition-colors duration-200">
               {article.title}
             </h2>
             {/* Description - Body text (18px) */}
@@ -82,7 +82,7 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
               {article.metaDescription}
             </p>
             {/* CTA - Tertiary button style (underlined text link) */}
-            <span className="inline-flex items-center gap-1 text-navy font-medium text-base underline underline-offset-4 decoration-navy/30 group-hover:decoration-navy transition-colors">
+            <span className="inline-flex items-center gap-1 text-[#4C1D95] font-medium text-base underline underline-offset-4 decoration-purple-300 group-hover:decoration-[#4C1D95] transition-colors">
               Read article
               <svg
                 className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
@@ -119,12 +119,12 @@ function ArticleCard({ article, featured = false }: { article: BlogArticle; feat
       <div className="p-3">
         {/* Meta */}
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-base font-medium text-navy">{article.category}</span>
+          <span className="text-base font-medium text-[#4C1D95]">{article.category}</span>
           <span className="text-base text-text-tertiary">&middot;</span>
           <span className="text-base text-text-tertiary">{formattedDate}</span>
         </div>
         {/* Title - H4 (22px bold) */}
-        <h3 className="font-heading text-lg font-bold text-text-primary mb-1 leading-snug group-hover:text-navy transition-colors duration-200 line-clamp-2">
+        <h3 className="font-heading text-lg font-bold text-text-primary mb-1 leading-snug group-hover:text-[#4C1D95] transition-colors duration-200 line-clamp-2">
           {article.title}
         </h3>
         {/* Description */}
@@ -142,7 +142,7 @@ function CategoryFilter({ categories }: { categories: BlogArticle['category'][] 
     <nav aria-label="Article categories" className="flex flex-wrap gap-2">
       <Link
         href="/blog"
-        className="min-h-[48px] px-4 inline-flex items-center text-base font-medium bg-navy text-white rounded-full hover:bg-navy-600 transition-colors duration-200"
+        className="min-h-[48px] px-5 inline-flex items-center text-base font-medium bg-[#4C1D95] text-white rounded-full hover:bg-[#5B21B6] transition-colors duration-200"
       >
         All articles
       </Link>
@@ -150,7 +150,7 @@ function CategoryFilter({ categories }: { categories: BlogArticle['category'][] 
         <Link
           key={category}
           href={`/blog/category/${category.toLowerCase()}`}
-          className="min-h-[48px] px-4 inline-flex items-center text-base font-medium bg-white text-text-secondary border border-border rounded-full hover:border-navy hover:text-navy transition-colors duration-200"
+          className="min-h-[48px] px-5 inline-flex items-center text-base font-medium bg-white text-text-secondary border border-border rounded-full hover:border-[#4C1D95] hover:text-[#4C1D95] transition-colors duration-200"
         >
           {category}
         </Link>
@@ -202,9 +202,9 @@ export default function BlogPage() {
       />
       <LandingHeader />
       <main id="main-content" tabIndex={-1} className="bg-bg min-h-screen outline-none">
-        {/* Hero Section - Practical UI: Dark section with proper contrast */}
-        <section className="bg-[#0f172a] pt-40 pb-20">
-          <div className="max-w-7xl mx-auto px-4 lg:px-10">
+        {/* Hero Section - Practical UI: Brand purple section with proper contrast */}
+        <section className="bg-[#4C1D95] pt-32 lg:pt-40 pb-16 lg:pb-20">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
               {/* H1 - 44px bold, tight line height */}
               <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-4 leading-tight tracking-tight">

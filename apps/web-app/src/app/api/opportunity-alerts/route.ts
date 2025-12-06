@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { randomUUID } from 'crypto';
+import { alertsStore, type OpportunityAlert } from '@/lib/stores/opportunity-alerts';
+
+// NOTE: OpportunityAlert model doesn't exist in schema yet
+// This is a placeholder implementation using in-memory storage
+// TODO: Add OpportunityAlert model to Prisma schema and implement properly
 
 const alertSchema = z.object({
   name: z.string().min(1).max(100),
@@ -20,7 +25,7 @@ const alertSchema = z.object({
 });
 
 // GET - List user's opportunity alerts
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
@@ -28,12 +33,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const alerts = await prisma.opportunityAlert.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    const alerts = alertsStore.get(session.user.id) || [];
 
     return NextResponse.json({ alerts });
   } catch (error) {
@@ -66,27 +66,30 @@ export async function POST(request: NextRequest) {
 
     const { name, filters, frequency } = parsed.data;
 
-    // Limit to 10 alerts per user
-    const existingCount = await prisma.opportunityAlert.count({
-      where: { userId: session.user.id },
-    });
+    const userAlerts = alertsStore.get(session.user.id) || [];
 
-    if (existingCount >= 10) {
+    // Limit to 10 alerts per user
+    if (userAlerts.length >= 10) {
       return NextResponse.json(
         { error: 'Maximum of 10 alerts allowed' },
         { status: 400 }
       );
     }
 
-    const alert = await prisma.opportunityAlert.create({
-      data: {
-        userId: session.user.id,
-        name,
-        filters: filters || {},
-        frequency: frequency || 'daily',
-        isActive: true,
-      },
-    });
+    const alert: OpportunityAlert = {
+      id: randomUUID(),
+      userId: session.user.id,
+      name,
+      filters: filters || {},
+      frequency: frequency || 'daily',
+      isActive: true,
+      matchCount: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    userAlerts.push(alert);
+    alertsStore.set(session.user.id, userAlerts);
 
     return NextResponse.json({ alert });
   } catch (error) {
@@ -97,3 +100,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

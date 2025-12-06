@@ -3,6 +3,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+// NOTE: ConversationParticipant model doesn't have isMuted/mutedUntil fields yet
+// Using in-memory storage for development until migration is run
+// TODO: Run prisma db push and switch to Prisma client
+
+// In-memory mute storage: Map<participantId, mutedUntil>
+const muteStore = new Map<string, Date | null>();
+
 // POST - Mute a conversation
 export async function POST(
   request: NextRequest,
@@ -23,6 +30,7 @@ export async function POST(
       where: {
         conversationId: id,
         userId: session.user.id,
+        leftAt: null,
       },
     });
 
@@ -49,13 +57,8 @@ export async function POST(
       }
     }
 
-    await prisma.conversationParticipant.update({
-      where: { id: participant.id },
-      data: {
-        isMuted: true,
-        mutedUntil,
-      },
-    });
+    // Store mute state in memory
+    muteStore.set(participant.id, mutedUntil);
 
     return NextResponse.json({
       success: true,
@@ -89,6 +92,7 @@ export async function DELETE(
       where: {
         conversationId: id,
         userId: session.user.id,
+        leftAt: null,
       },
     });
 
@@ -96,13 +100,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    await prisma.conversationParticipant.update({
-      where: { id: participant.id },
-      data: {
-        isMuted: false,
-        mutedUntil: null,
-      },
-    });
+    // Remove mute state from memory
+    muteStore.delete(participant.id);
 
     return NextResponse.json({ success: true, muted: false });
   } catch (error) {

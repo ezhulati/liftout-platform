@@ -975,16 +975,25 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                 <h3 className="text-lg font-bold text-text-primary">Contact information</h3>
               </div>
               <div className="px-6 py-6 space-y-4">
-                {/* Email - read only */}
+                {/* Email - read only, clickable */}
                 <div>
                   <label className="label-text mb-1 flex items-center gap-2">
                     <EnvelopeIcon className="h-4 w-4 text-text-tertiary" />
                     Email
                   </label>
-                  <p className="text-text-primary py-2">{displayUser?.email || 'Email not set'}</p>
+                  {displayUser?.email ? (
+                    <a
+                      href={`mailto:${displayUser.email}`}
+                      className="text-text-primary py-2 block hover:text-[#4C1D95] transition-colors"
+                    >
+                      {displayUser.email}
+                    </a>
+                  ) : (
+                    <p className="text-text-primary py-2">Email not set</p>
+                  )}
                 </div>
 
-                {/* Phone - editable */}
+                {/* Phone - editable, clickable when not editing */}
                 <div>
                   <label className="label-text mb-1 flex items-center gap-2">
                     <PhoneIcon className="h-4 w-4 text-text-tertiary" />
@@ -998,8 +1007,15 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                       className="input-field min-h-12"
                       placeholder="+1 (555) 123-4567"
                     />
+                  ) : profileData.phone ? (
+                    <a
+                      href={`tel:${profileData.phone.replace(/\D/g, '')}`}
+                      className="text-text-primary py-2 block hover:text-[#4C1D95] transition-colors"
+                    >
+                      {profileData.phone}
+                    </a>
                   ) : (
-                    <p className="text-text-primary py-2">{profileData.phone || 'Not set'}</p>
+                    <p className="text-text-primary py-2">Not set</p>
                   )}
                 </div>
 

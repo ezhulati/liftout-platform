@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+// NOTE: The ConversationParticipant model doesn't have isArchived/archivedAt fields
+// Using the conversation.status field instead to track archived state
+
 // POST - Archive a conversation
 export async function POST(
   request: NextRequest,
@@ -22,6 +25,7 @@ export async function POST(
       where: {
         conversationId: id,
         userId: session.user.id,
+        leftAt: null,
       },
     });
 
@@ -29,12 +33,11 @@ export async function POST(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    // Update participant's archived status
-    await prisma.conversationParticipant.update({
-      where: { id: participant.id },
+    // Update conversation status to archived
+    await prisma.conversation.update({
+      where: { id },
       data: {
-        isArchived: true,
-        archivedAt: new Date(),
+        status: 'archived',
       },
     });
 
@@ -73,11 +76,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    await prisma.conversationParticipant.update({
-      where: { id: participant.id },
+    // Update conversation status back to active
+    await prisma.conversation.update({
+      where: { id },
       data: {
-        isArchived: false,
-        archivedAt: null,
+        status: 'active',
       },
     });
 

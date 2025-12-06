@@ -160,7 +160,7 @@ export async function POST(
                 id: true,
                 email: true,
                 firstName: true,
-                settings: true,
+                metadata: true,
               },
             },
           },
@@ -173,7 +173,7 @@ export async function POST(
     for (const p of conversation.participants) {
       if (p.user.email) {
         // Check if user has email notifications enabled (default: true)
-        const settings = p.user.settings as { emailNotifications?: boolean } | null;
+        const settings = p.user.metadata as { emailNotifications?: boolean } | null;
         const emailsEnabled = settings?.emailNotifications !== false;
 
         if (emailsEnabled) {

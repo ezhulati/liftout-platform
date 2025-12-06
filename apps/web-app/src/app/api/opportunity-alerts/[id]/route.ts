@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { alertsStore, type OpportunityAlert } from '@/lib/stores/opportunity-alerts';
+
+// NOTE: OpportunityAlert model doesn't exist in schema yet
+// Using in-memory storage for development
 
 const updateSchema = z.object({
   name: z.string().min(1).max(100).optional(),
@@ -32,13 +35,8 @@ export async function GET(
     }
 
     const { id } = await params;
-
-    const alert = await prisma.opportunityAlert.findFirst({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-    });
+    const userAlerts = alertsStore.get(session.user.id) || [];
+    const alert = userAlerts.find((a) => a.id === id);
 
     if (!alert) {
       return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
@@ -77,23 +75,23 @@ export async function PATCH(
       );
     }
 
-    const existingAlert = await prisma.opportunityAlert.findFirst({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-    });
+    const userAlerts = alertsStore.get(session.user.id) || [];
+    const alertIndex = userAlerts.findIndex((a) => a.id === id);
 
-    if (!existingAlert) {
+    if (alertIndex === -1) {
       return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
     }
 
-    const alert = await prisma.opportunityAlert.update({
-      where: { id },
-      data: parsed.data,
-    });
+    const updatedAlert = {
+      ...userAlerts[alertIndex],
+      ...parsed.data,
+      updatedAt: new Date(),
+    };
 
-    return NextResponse.json({ alert });
+    userAlerts[alertIndex] = updatedAlert;
+    alertsStore.set(session.user.id, userAlerts);
+
+    return NextResponse.json({ alert: updatedAlert });
   } catch (error) {
     console.error('Update alert error:', error);
     return NextResponse.json(
@@ -116,21 +114,15 @@ export async function DELETE(
     }
 
     const { id } = await params;
+    const userAlerts = alertsStore.get(session.user.id) || [];
+    const alertIndex = userAlerts.findIndex((a) => a.id === id);
 
-    const existingAlert = await prisma.opportunityAlert.findFirst({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-    });
-
-    if (!existingAlert) {
+    if (alertIndex === -1) {
       return NextResponse.json({ error: 'Alert not found' }, { status: 404 });
     }
 
-    await prisma.opportunityAlert.delete({
-      where: { id },
-    });
+    userAlerts.splice(alertIndex, 1);
+    alertsStore.set(session.user.id, userAlerts);
 
     return NextResponse.json({ success: true });
   } catch (error) {
