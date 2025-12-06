@@ -3,32 +3,33 @@
 import { StarIcon, MapPinIcon, UsersIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
 
 // Sample team data for the mockup
+// Teams from target industries: Investment Banking, Law, Consulting, Healthcare, PE
 const mockTeams = [
   {
-    name: 'Apex Engineering',
-    tagline: 'Full-stack product team',
-    location: 'San Francisco, CA',
-    members: 5,
+    name: 'Sterling TMT Group',
+    tagline: 'Tech M&A advisory team',
+    location: 'New York, NY',
+    members: 6,
     verified: true,
-    skills: ['React', 'Node.js', 'AWS'],
+    skills: ['Tech M&A', 'Valuations', 'IPO'],
     rating: 4.9,
   },
   {
-    name: 'DataFlow Analytics',
-    tagline: 'ML & data science squad',
-    location: 'Austin, TX',
-    members: 4,
+    name: 'Chen Healthcare Partners',
+    tagline: 'Orthopedic surgery group',
+    location: 'Houston, TX',
+    members: 8,
     verified: true,
-    skills: ['Python', 'ML', 'Spark'],
+    skills: ['Spine Surgery', 'Sports Medicine', 'Joint Replacement'],
     rating: 4.8,
   },
   {
-    name: 'CloudScale Ops',
-    tagline: 'DevOps & infrastructure',
-    location: 'Remote',
-    members: 3,
+    name: 'Burke Litigation Group',
+    tagline: 'Commercial litigation practice',
+    location: 'Washington, DC',
+    members: 5,
     verified: false,
-    skills: ['Kubernetes', 'Terraform'],
+    skills: ['Securities', 'Class Actions', 'Antitrust'],
     rating: 4.7,
   },
 ];
