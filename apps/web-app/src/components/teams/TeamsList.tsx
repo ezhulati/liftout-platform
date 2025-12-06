@@ -10,6 +10,7 @@ import {
   EllipsisVerticalIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
+import { AvatarStack } from '@/components/ui/AvatarStack';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useTeams } from '@/hooks/useTeams';
@@ -90,13 +91,7 @@ export function TeamsList({ userType }: TeamsListProps) {
       {teams.map((team) => (
         <div key={team.id} className="card hover:shadow-md hover:border-purple-300 transition-all duration-base">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4 flex-1">
-              <div className="flex-shrink-0">
-                <div className="h-14 w-14 rounded-lg bg-navy-50 flex items-center justify-center">
-                  <UserGroupIcon className="h-7 w-7 text-navy" />
-                </div>
-              </div>
-
+            <div className="flex items-start space-x-4 flex-1">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center flex-wrap gap-2 mb-1">
                   <h3 className="text-base font-bold text-text-primary truncate">
@@ -116,6 +111,24 @@ export function TeamsList({ userType }: TeamsListProps) {
                 <p className="text-sm text-text-secondary mt-1 line-clamp-2 leading-relaxed">
                   {team.description}
                 </p>
+
+                {/* Team member avatars */}
+                {team.members && team.members.length > 0 && (
+                  <div className="mt-3">
+                    <AvatarStack
+                      members={team.members.map(m => ({
+                        id: m.id,
+                        userId: (m as any).userId,
+                        name: m.name,
+                        role: m.role,
+                        avatar: (m as any).avatar,
+                      }))}
+                      maxVisible={6}
+                      size="md"
+                      linkToProfile={true}
+                    />
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center mt-3 gap-x-4 gap-y-1 text-sm text-text-tertiary">
                   <div className="flex items-center">

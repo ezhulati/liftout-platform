@@ -59,6 +59,7 @@ export async function GET(request: NextRequest) {
                   select: {
                     title: true,
                     yearsExperience: true,
+                    profilePhotoUrl: true,
                   },
                 },
               },
@@ -90,6 +91,7 @@ export async function GET(request: NextRequest) {
         experience: m.user.profile?.yearsExperience || 0,
         skills: [],
         title: m.user.profile?.title || undefined,
+        avatar: m.user.profile?.profilePhotoUrl || null,
       })),
       achievements: [],
       industry: team.industry || '',

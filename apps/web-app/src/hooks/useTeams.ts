@@ -21,10 +21,12 @@ interface Team {
   updatedAt: string;
   members: Array<{
     id: string;
+    userId?: string;
     name: string;
     role: string;
     experience: number;
     skills: string[];
+    avatar?: string | null;
   }>;
   achievements: string[];
   industry: string;
