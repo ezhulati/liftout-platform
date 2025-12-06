@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 44" width="200" height="44">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 42" width="200" height="42">
   <defs>
     <linearGradient id="leftGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#c026d3"/>
@@ -19,40 +19,40 @@
     <style>
       .center-person {
         animation: lift-float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        transform-origin: 24px 24px;
+        transform-origin: 24px 22px;
       }
       @keyframes lift-float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-1.5px); }
+        50% { transform: translateY(-1px); }
       }
     </style>
   </defs>
 
   <!-- Three People Icon -->
-  <g transform="translate(2, 4)">
+  <g transform="translate(2, 2)">
     <!-- Left person -->
     <g fill="url(#leftGradient)">
       <circle cx="10" cy="10" r="5.5"/>
-      <path d="M2 36 C2 26 5.5 23 10 23 C14.5 23 18 26 18 36 Q18 38 15.5 38 L4.5 38 Q2 38 2 36 Z"/>
+      <path d="M2 36 C2 26 5.5 22 10 22 C14.5 22 18 26 18 36 Q18 38 15.5 38 L4.5 38 Q2 38 2 36 Z"/>
     </g>
 
     <!-- Right person -->
     <g fill="url(#rightGradient)">
       <circle cx="38" cy="10" r="5.5"/>
-      <path d="M30 36 C30 26 33.5 23 38 23 C42.5 23 46 26 46 36 Q46 38 43.5 38 L32.5 38 Q30 38 30 36 Z"/>
+      <path d="M30 36 C30 26 33.5 22 38 22 C42.5 22 46 26 46 36 Q46 38 43.5 38 L32.5 38 Q30 38 30 36 Z"/>
     </g>
 
     <!-- Center person (elevated) -->
     <g class="center-person" fill="url(#centerGradient)">
-      <circle cx="24" cy="4" r="7"/>
-      <path d="M13 34 C13 23 17.5 19.5 24 19.5 C30.5 19.5 35 23 35 34 Q35 37 32 37 L16 37 Q13 37 13 34 Z"/>
+      <circle cx="24" cy="7" r="7"/>
+      <path d="M13 34 C13 23 17.5 18 24 18 C30.5 18 35 23 35 34 Q35 37 32 37 L16 37 Q13 37 13 34 Z"/>
     </g>
   </g>
 
   <!-- LIFTOUT Text -->
   <text
     x="56"
-    y="31"
+    y="29"
     font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     font-size="26"
     font-weight="800"
