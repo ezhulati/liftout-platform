@@ -228,6 +228,21 @@ export function LandingFooter() {
               </svg>
               SOC 2 Compliant
             </span>
+            <a
+              href="https://enrizhulati.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-white transition-colors duration-200"
+            >
+              <Image
+                src="/EZ_White.png"
+                alt="EZ"
+                width={20}
+                height={20}
+                className="opacity-50 group-hover:opacity-100"
+              />
+              Site by EZ
+            </a>
           </div>
         </div>
       </div>
