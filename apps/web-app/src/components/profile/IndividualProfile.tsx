@@ -216,6 +216,9 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
     // For demo user, check if saved profile is complete or use mock data
     if (userEmail === 'demo@example.com') {
+      // Demo photo URL - professional placeholder
+      const demoPhotoUrl = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face';
+
       // Check if saved profile has meaningful data (not just empty defaults)
       const hasCompleteProfile = savedProfile &&
         savedProfile.headline &&
@@ -224,7 +227,8 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
       if (hasCompleteProfile && savedProfile) {
         setProfileData(savedProfile);
-        setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || null);
+        // Use saved photo, or fall back to demo photo if none saved
+        setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || demoPhotoUrl);
         setIsInitialized(true);
         return;
       }
@@ -372,9 +376,9 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       };
 
       setProfileData(demoProfileData);
-      setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || null);
+      setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || demoPhotoUrl);
       // Save to localStorage so it persists
-      saveDemoProfile(demoProfileData, null);
+      saveDemoProfile(demoProfileData, demoPhotoUrl);
       setIsInitialized(true);
       return;
     }
