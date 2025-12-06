@@ -72,16 +72,16 @@ export function CompanyCTA() {
             href="/auth/signup?type=company"
             className="btn-primary-on-dark gap-3 px-8 py-3 text-lg group"
           >
-            Browse verified teams
+            Post a team opportunity
             <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </Link>
 
-          {/* Tertiary CTA - underlined text per Practical UI */}
+          {/* Secondary CTA - browse teams */}
           <Link
-            href="/for-teams"
+            href="/browse-teams"
             className="inline-flex items-center justify-center px-4 py-3 text-lg text-white/80 underline underline-offset-4 hover:text-white transition-colors min-h-12"
           >
-            Register a team
+            Browse teams
           </Link>
         </div>
 

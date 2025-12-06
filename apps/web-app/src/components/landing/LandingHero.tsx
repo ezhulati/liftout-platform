@@ -34,8 +34,8 @@ const heroContent = {
   },
   companies: {
     headline: 'Hire teams that already work',
-    subhead: 'Browse proven teams. Skip the ramp-up. Ship faster.',
-    ctaText: 'Find your team',
+    subhead: 'Post an opportunity. Proven teams apply. Ship faster.',
+    ctaText: 'Post a team opportunity',
     ctaHref: '/auth/signup?type=company',
     trustLine: 'No fees until you hire. Completely confidential.',
   },

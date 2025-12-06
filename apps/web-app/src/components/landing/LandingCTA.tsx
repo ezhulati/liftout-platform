@@ -73,7 +73,7 @@ export function LandingCTA() {
               href="/auth/signup?type=company"
               className="bg-white text-purple-900 hover:bg-gray-100 font-semibold min-h-12 px-8 py-3 text-lg rounded-lg inline-flex items-center justify-center gap-3 group transition-colors"
             >
-              Browse available teams
+              Post an opportunity
               <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
           </div>

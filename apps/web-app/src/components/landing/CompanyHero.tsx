@@ -63,14 +63,14 @@ export function CompanyHero() {
                 href="/auth/signup?type=company"
                 className="btn-primary min-h-12 px-8 py-3 text-lg font-semibold inline-flex items-center justify-center gap-3 group"
               >
-                Browse verified teams
+                Post a team opportunity
                 <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
               <Link
-                href="#how-it-works"
-                className="btn-tertiary min-h-12 px-4 py-3 text-lg inline-flex items-center justify-center"
+                href="/browse-teams"
+                className="btn-outline min-h-12 px-8 py-3 text-lg inline-flex items-center justify-center"
               >
-                See how it works
+                Browse teams
               </Link>
             </div>
 
