@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export function LandingFooter() {
   const currentYear = new Date().getFullYear();
@@ -205,43 +204,38 @@ export function LandingFooter() {
           </nav>
         </div>
 
-        {/* Bottom bar - Practical UI: 16px minimum for small text */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <p className="text-white/50 text-base">
-              &copy; {currentYear} Liftout. All rights reserved.
-            </p>
-            <span className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 bg-white/5 rounded text-white/50 text-base">
-              Founded 2023
-            </span>
-          </div>
-          <div className="flex items-center gap-6 text-white/50 text-base">
-            <span className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        {/* Bottom bar - compact on mobile */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/50 text-xs sm:text-sm">
+            &copy; {currentYear} Liftout. All rights reserved.
+          </p>
+          <div className="flex items-center gap-3 sm:gap-5 text-white/50 text-xs sm:text-sm">
+            <span className="flex items-center gap-1">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
-              256-bit encryption
+              256-bit
             </span>
-            <span className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <span className="flex items-center gap-1">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              SOC 2 Compliant
+              SOC 2
             </span>
             <a
               href="https://enrizhulati.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-white transition-colors duration-200"
+              className="flex items-center gap-1 hover:text-white transition-colors duration-200"
             >
-              <Image
+              <img
                 src="/EZ_White.png"
                 alt="EZ"
-                width={20}
-                height={20}
-                className="opacity-50 group-hover:opacity-100"
+                width={16}
+                height={16}
+                className="w-4 h-4 sm:w-5 sm:h-5 opacity-60"
               />
-              Site by EZ
+              <span className="hidden sm:inline">Site by</span> EZ
             </a>
           </div>
         </div>

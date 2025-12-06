@@ -15,6 +15,7 @@ const recentExamples = [
     deal: '40+ lawyers',
     detail: 'Healthcare team incl. 16 partners',
     Icon: ScaleIcon,
+    slug: 'crowell-reed-smith',
   },
   {
     company: 'Mayer Brown',
@@ -22,6 +23,7 @@ const recentExamples = [
     deal: '3 partners',
     detail: 'Private capital team, London',
     Icon: BriefcaseIcon,
+    slug: 'mayer-brown-dechert',
   },
   {
     company: 'Various Am Law 100',
@@ -29,6 +31,7 @@ const recentExamples = [
     deal: '30+ groups',
     detail: 'Group laterals up 14% in 2024',
     Icon: BuildingOfficeIcon,
+    slug: null, // Links to case studies index
   },
 ];
 
@@ -79,28 +82,30 @@ export function LandingExplainer() {
             </p>
             <div className="space-y-4">
               {recentExamples.map((example, index) => (
-                <div
+                <Link
                   key={example.company}
-                  className={`bg-bg-surface rounded-xl p-5 border border-border transition-all duration-500 ${
+                  href={example.slug ? `/case-studies/${example.slug}` : '/case-studies'}
+                  className={`block bg-bg-surface rounded-xl p-5 border border-border hover:border-purple-200 hover:shadow-md transition-all duration-500 group ${
                     isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
                   }`}
                   style={{ transitionDelay: isVisible ? `${200 + index * 100}ms` : '0ms' }}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
                       <example.Icon className="w-5 h-5 text-[#4C1D95]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-text-primary">
+                      <p className="font-semibold text-text-primary group-hover:text-[#4C1D95] transition-colors">
                         {example.company} <span className="text-text-tertiary font-normal">&larr;</span> {example.target}
                       </p>
                       <p className="text-text-secondary text-sm">{example.detail}</p>
                     </div>
-                    <div className="text-[#4C1D95] font-bold text-base flex-shrink-0">
+                    <div className="text-[#4C1D95] font-bold text-base flex-shrink-0 flex items-center gap-1">
                       {example.deal}
+                      <ArrowRightIcon className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
