@@ -69,7 +69,7 @@ export function HowItWorksTabs() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className={`max-w-2xl mb-12 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="font-semibold text-base mb-3 text-[#4C1D95]">
+          <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
             How it works
           </p>
           <h2

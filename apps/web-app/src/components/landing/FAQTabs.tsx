@@ -122,7 +122,7 @@ export function FAQTabs() {
           {/* Left column - Header, tabs, and support options */}
           <div className="lg:col-span-1">
             <div className={`lg:sticky lg:top-32 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <p className="font-semibold text-base mb-3 text-[#4C1D95]">
+              <p className="text-[#4C1D95] text-base font-semibold uppercase tracking-wider mb-4">
                 Common questions
               </p>
               <h2

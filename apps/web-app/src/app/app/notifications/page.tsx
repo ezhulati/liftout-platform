@@ -37,10 +37,10 @@ export default function NotificationsPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <div className="page-header mb-8">
+        <div className="space-y-6">
+            <div className="page-header">
                 <h1 className="page-title">Notifications</h1>
-                <p className="page-subtitle">Manage your notification preferences.</p>
+                <p className="page-subtitle">View and manage notifications.</p>
             </div>
 
             <div className="card">
