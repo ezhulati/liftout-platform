@@ -1,33 +1,32 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { SparklesIcon, ChartBarIcon, ArrowTrendingUpIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const successStories = [
   {
-    year: '1946',
-    title: 'The Whiz Kids',
-    description: 'First corporate liftout in history',
-    outcome: '10 Air Force officers → Ford Motor Company',
-    detail: 'Considered founders of modern strategic management',
+    year: '2025',
+    title: 'Meta ← Scale AI',
+    description: 'Hired founder Alexandr Wang to lead superintelligence',
+    outcome: '$14.3B for 49% stake + CEO',
+    detail: 'Instant world-class AI leadership',
     Icon: SparklesIcon,
   },
   {
-    year: '2000',
-    title: 'Lehman Brothers',
-    description: 'Hired entire editorial team from Deutsche Bank',
-    outcome: '#8 → #1 in industry rankings',
-    detail: 'Largest margin of victory in 20 years',
+    year: '2025',
+    title: 'Google ← Windsurf',
+    description: 'Poached CEO, co-founder, and 40 engineers from under OpenAI',
+    outcome: '$2.4B talent deal for DeepMind',
+    detail: 'Derailed a $3B competitor acquisition',
     Icon: ChartBarIcon,
   },
   {
-    year: '1990',
-    title: 'Smith Barney',
-    description: 'Acquired restructuring team from Drexel',
-    outcome: '2 → 39 deals in three years',
-    detail: 'Became powerhouse almost overnight',
+    year: '2025',
+    title: 'Crowell ← Reed Smith',
+    description: '16 partners + 24 associates moved as one unit',
+    outcome: '40 lawyers in healthcare litigation',
+    detail: 'Became premier health practice overnight',
     Icon: ArrowTrendingUpIcon,
   },
 ];
@@ -48,7 +47,7 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Harvard research proves it
+          Liftouts happening right now
         </p>
 
         {/* Headline - Quote style */}
@@ -58,23 +57,16 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Star performance isn&apos;t portable. Team chemistry is.
+          Not ancient history—these deals happened this year.
         </h2>
 
         {/* Body text */}
         <p
-          className={`text-lg text-text-secondary leading-relaxed max-w-2xl mb-6 transition-all duration-500 delay-150 ${
+          className={`text-lg text-text-secondary leading-relaxed max-w-2xl mb-12 transition-all duration-500 delay-150 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Harvard professor Boris Groysberg studied 1,000+ Wall Street analysts over nine years. His finding: when star performers move to new firms, their performance declines sharply. They depend on relationships, systems, and support networks that don&apos;t transfer.
-        </p>
-        <p
-          className={`text-lg text-text-primary leading-relaxed max-w-2xl mb-12 transition-all duration-500 delay-200 font-medium ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          The exception? <span className="text-purple-700">Liftouts.</span> When teams move together, they bring their relationships with them—and maintain their exceptional performance.
+          Big Tech is spending billions to acquire teams intact. Law firms are moving 40+ lawyers at once. The pattern is clear: when you need to move fast, you hire a team.
         </p>
 
         {/* Success Stories Grid */}
@@ -126,24 +118,15 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <div className="flex items-center gap-4">
-            <Image
-              src="/harvard-business-review-logo-png_seeklogo-339979.png"
-              alt="Harvard Business Review"
-              width={80}
-              height={22}
-              className="opacity-50 grayscale"
-            />
-            <p className="text-base text-text-tertiary">
-              Boris Groysberg, &ldquo;Chasing Stars&rdquo; (Princeton, 2010) &amp; HBR, 2006
-            </p>
-          </div>
+          <p className="text-base text-text-tertiary">
+            Sources: CNBC, Above the Law, TechCrunch (2025)
+          </p>
 
           <Link
             href="/what-is-a-liftout"
             className="text-purple-700 hover:text-purple-600 font-semibold text-lg underline underline-offset-4 min-h-12 inline-flex items-center gap-2 group"
           >
-            Learn more about the research
+            What is a liftout?
             <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
         </div>
