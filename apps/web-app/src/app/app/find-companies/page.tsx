@@ -128,9 +128,9 @@ export default function FindCompaniesPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="page-header">
-        <h1 className="page-title">Find Companies</h1>
+        <h1 className="page-title">Find team opportunities</h1>
         <p className="page-subtitle">
-          Discover companies actively seeking high-performing teams like yours. Browse opportunities and find your next home.
+          Discover companies actively seeking teams like yours.
         </p>
       </div>
 

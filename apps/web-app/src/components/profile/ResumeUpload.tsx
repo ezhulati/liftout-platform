@@ -201,7 +201,8 @@ export default function ResumeUpload({
     if (file) {
       uploadFile(file);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useLocalStorage, userId, onResumeChange]);
 
   const handleRemove = () => {
     onResumeChange(null);

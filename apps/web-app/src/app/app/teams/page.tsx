@@ -557,9 +557,9 @@ export default function TeamsPage() {
       <div className="page-header">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="page-title">Browse High-Performing Teams</h1>
+            <h1 className="page-title">Find teams</h1>
             <p className="page-subtitle">
-              Find intact teams ready for strategic liftout opportunities
+              Browse high-performing teams available for liftout.
             </p>
           </div>
         </div>

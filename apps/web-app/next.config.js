@@ -100,8 +100,23 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['assets.liftout.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com', 'randomuser.me'],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.liftout.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
       {
         protocol: 'https',
         hostname: '**.amazonaws.com',

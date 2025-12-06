@@ -36,8 +36,8 @@ function OpportunitiesContent() {
           </h1>
           <p className="page-subtitle">
             {isCompanyUser
-              ? 'Manage your team opportunity listings here.'
-              : 'Discover opportunities for your team to join new organizations'
+              ? 'Create and manage your opportunity listings.'
+              : 'Browse opportunities for your team.'
             }
           </p>
         </div>
