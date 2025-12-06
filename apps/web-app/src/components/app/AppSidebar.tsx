@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { getDemoDataForUser } from '@/lib/demo-accounts';
 import {
   HomeIcon,
@@ -19,12 +19,13 @@ import {
   MagnifyingGlassIcon,
   UsersIcon,
   SparklesIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
 // Navigation items that show for team users (8 items per Figma)
 const teamNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
-  { name: 'My Team', href: '/app/teams', icon: UserGroupIcon },
+  { name: 'My Team', href: '/app/teams/manage', icon: UserGroupIcon },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
   { name: 'Find Companies', href: '/app/find-companies', icon: BuildingOfficeIcon },
   { name: 'Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
@@ -60,6 +61,14 @@ export function AppSidebar() {
 
   const isCompanyUser = userType === 'company';
   const currentNavigation = isCompanyUser ? companyNavigation : teamNavigation;
+
+  // User display info
+  const userName = user?.name || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User';
+  const userEmail = user?.email || '';
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/' });
+  };
 
   // Purple sidebar nav link - Practical UI: 48px touch target, 8pt grid spacing
   const NavLink = ({ item }: { item: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; badge?: number } }) => {
@@ -131,10 +140,34 @@ export function AppSidebar() {
           </nav>
 
           {/* Bottom section - Support, Settings */}
-          <div className="px-3 pb-4 space-y-1">
+          <div className="px-3 pb-2 space-y-1">
             {secondaryNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
+          </div>
+
+          {/* User profile section at bottom */}
+          <div className="px-3 pb-4 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-between px-2 py-2">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-9 w-9 flex-shrink-0 rounded-full bg-white/20 flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">
+                    {userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{userName}</p>
+                  <p className="text-xs text-white/60 truncate">{userEmail}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="p-2 min-h-10 min-w-10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                title="Sign out"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -161,10 +194,34 @@ export function AppSidebar() {
           </nav>
 
           {/* Bottom section - Support, Settings */}
-          <div className="px-3 pb-4 space-y-1">
+          <div className="px-3 pb-2 space-y-1">
             {secondaryNavigation.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
+          </div>
+
+          {/* User profile section at bottom */}
+          <div className="px-3 pb-4 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-between px-2 py-2">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-9 w-9 flex-shrink-0 rounded-full bg-white/20 flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">
+                    {userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{userName}</p>
+                  <p className="text-xs text-white/60 truncate">{userEmail}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="p-2 min-h-10 min-w-10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                title="Sign out"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

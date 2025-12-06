@@ -95,7 +95,7 @@ export default function TeamManagePage() {
     setIsInviting(true);
     try {
       await inviteMutation.mutateAsync({
-        teamId: teamData.id,
+        teamId: teamData?.team?.id,
         email: inviteEmail.trim(),
         message: inviteMessage.trim() || undefined
       });
@@ -106,7 +106,7 @@ export default function TeamManagePage() {
 
   const handleRemoveMember = async (memberUserId: string, memberName: string) => {
     if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
-      await removeMemberMutation.mutateAsync({ teamId: teamData.id, memberId: memberUserId });
+      await removeMemberMutation.mutateAsync({ teamId: teamData?.team?.id, memberId: memberUserId });
     }
   };
 
@@ -118,7 +118,7 @@ export default function TeamManagePage() {
     );
   }
 
-  if (error || !teamData) {
+  if (error) {
     return (
       <div className="text-center py-12">
         <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-error" />
@@ -130,8 +130,38 @@ export default function TeamManagePage() {
     );
   }
 
-  const isLeader = teamData.members.find((m:any) => m.userId === userData?.id)?.isAdmin;
-  const allMembers = teamData.members;
+  // No team yet - show create team prompt
+  if (!teamData?.team) {
+    return (
+      <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="page-header mb-8">
+          <h1 className="page-title">My Team</h1>
+          <p className="page-subtitle">Create or join a team to get started</p>
+        </div>
+
+        <div className="card text-center py-12">
+          <div className="w-16 h-16 mx-auto rounded-full bg-navy-50 flex items-center justify-center mb-4">
+            <UserGroupIcon className="h-8 w-8 text-navy" aria-hidden="true" />
+          </div>
+          <h2 className="text-xl font-bold text-text-primary mb-2">You don't have a team yet</h2>
+          <p className="text-base text-text-secondary max-w-md mx-auto mb-6">
+            Create a team profile to showcase your collective experience and connect with companies looking for intact teams.
+          </p>
+          <button
+            onClick={() => router.push('/app/teams/create')}
+            className="btn-primary min-h-12 inline-flex items-center"
+          >
+            <PlusIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+            Create team profile
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const team = teamData.team;
+  const isLeader = team.members.find((m:any) => m.userId === userData?.id)?.isLead;
+  const allMembers = team.members;
 
   return (
     <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -152,7 +182,7 @@ export default function TeamManagePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Team Management</h1>
-              <p className="text-base font-normal text-text-secondary mt-1">{teamData.name}</p>
+              <p className="text-base font-normal text-text-secondary mt-1">{team.name}</p>
             </div>
           </div>
 
@@ -175,49 +205,57 @@ export default function TeamManagePage() {
         </div>
         <div className="px-6 py-6">
           <div className="space-y-4">
-            {allMembers.map((member:any) => (
-              <div key={member.userId} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-bold text-white">
-                      {member.user.firstName.split(' ').map((n:any) => n[0]).join('')}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-text-primary">{member.user.firstName} {member.user.lastName}</h3>
-                      {member.isAdmin && (
-                        <CheckBadgeIcon className="h-5 w-5 text-navy" aria-hidden="true" />
+            {allMembers.map((member:any) => {
+              // Get initials from name
+              const initials = (member.name || 'TM').split(' ').map((n:string) => n[0]).join('').toUpperCase().slice(0, 2);
+              return (
+                <div key={member.id || member.userId} className="flex items-center justify-between p-4 border border-border rounded-xl hover:bg-bg-alt hover:border-navy/30 transition-all duration-fast">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
+                      {member.avatar ? (
+                        <img src={member.avatar} alt={member.name} className="h-12 w-12 rounded-xl object-cover" />
+                      ) : (
+                        <span className="text-sm font-bold text-white">{initials}</span>
                       )}
                     </div>
-                    <p className="text-sm font-normal text-text-secondary">{member.role}</p>
-                    <p className="text-sm font-normal text-text-tertiary">
-                      Joined {formatDistanceToNow(new Date(member.joinedAt), { addSuffix: true })}
-                    </p>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-bold text-text-primary">{member.name}</h3>
+                        {member.isLead && (
+                          <CheckBadgeIcon className="h-5 w-5 text-navy" aria-hidden="true" />
+                        )}
+                      </div>
+                      <p className="text-sm font-normal text-text-secondary">{member.role}</p>
+                      {member.experience > 0 && (
+                        <p className="text-sm font-normal text-text-tertiary">
+                          {member.experience} years experience
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className={`badge text-xs ${
+                      member.isLead
+                        ? 'badge-primary'
+                        : 'badge-secondary'
+                    }`}>
+                      {member.isLead ? 'Team leader' : 'Member'}
+                    </span>
+
+                    {isLeader && !member.isLead && (
+                      <button
+                        onClick={() => handleRemoveMember(member.userId, member.name)}
+                        className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
+                        title="Remove member"
+                      >
+                        <UserMinusIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <span className={`badge text-xs ${
-                    member.isAdmin
-                      ? 'badge-primary'
-                      : 'badge-secondary'
-                  }`}>
-                    {member.isAdmin ? 'Team leader' : 'Member'}
-                  </span>
-
-                  {isLeader && !member.isAdmin && (
-                    <button
-                      onClick={() => handleRemoveMember(member.userId, `${member.user.firstName} ${member.user.lastName}`)}
-                      className="text-text-tertiary hover:text-error min-h-12 min-w-12 flex items-center justify-center rounded-lg hover:bg-error-light transition-colors duration-fast"
-                      title="Remove member"
-                    >
-                      <UserMinusIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
