@@ -114,9 +114,18 @@ export function LandingHero() {
               </div>
 
               {/* Trust signals - confident but confidential */}
-              <p className="text-text-tertiary text-base">
+              <p className="text-text-tertiary text-base mb-6">
                 {content.trustLine}
               </p>
+
+              {/* Hero team image - shows real teams */}
+              <div className="relative rounded-xl overflow-hidden shadow-lg max-w-md">
+                <img
+                  src="/hero-team.jpeg"
+                  alt="A diverse professional team celebrating together"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
             </div>
 
             {/* Right - Product mockup (responsive) */}
