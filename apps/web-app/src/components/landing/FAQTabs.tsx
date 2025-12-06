@@ -152,7 +152,7 @@ export function FAQTabs() {
                         aria-selected={isActive}
                         onClick={() => handleTabChange(tab.id)}
                         className={`
-                          flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md min-h-12
+                          flex-1 flex items-center justify-center lg:justify-start gap-2 px-4 py-3 rounded-md min-h-12
                           font-medium text-base transition-all duration-fast whitespace-nowrap
                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-900 focus-visible:ring-offset-2
                           ${isActive
