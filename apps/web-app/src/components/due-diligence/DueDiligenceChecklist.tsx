@@ -256,7 +256,7 @@ export function DueDiligenceChecklist({ workflowId, applicationId }: DueDiligenc
                         <div className="text-center py-6 border-2 border-dashed border-border rounded-lg">
                           <DocumentTextIcon className="mx-auto h-8 w-8 text-text-tertiary" />
                           <p className="mt-2 text-sm text-text-tertiary">No evidence uploaded</p>
-                          <button onClick={() => toast.success('Evidence upload ready')} className="mt-2 inline-flex items-center text-sm text-navy hover:text-navy-600 font-medium">
+                          <button onClick={() => toast.success('Feature coming soon')} className="mt-2 inline-flex items-center text-sm text-navy hover:text-navy-600 font-medium">
                             <PlusIcon className="h-4 w-4 mr-1" />
                             Add evidence
                           </button>
@@ -274,7 +274,7 @@ export function DueDiligenceChecklist({ workflowId, applicationId }: DueDiligenc
                       ) : (
                         <div className="text-center py-6 border-2 border-dashed border-border rounded-lg">
                           <p className="text-sm text-text-tertiary">No notes added</p>
-                          <button onClick={() => toast.success('Note editor opened')} className="mt-2 inline-flex items-center text-sm text-navy hover:text-navy-600 font-medium">
+                          <button onClick={() => toast.success('Feature coming soon')} className="mt-2 inline-flex items-center text-sm text-navy hover:text-navy-600 font-medium">
                             <PlusIcon className="h-4 w-4 mr-1" />
                             Add note
                           </button>

@@ -149,18 +149,18 @@ export default function AIMatchingPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header - Practical UI: bold headings, regular body */}
+      {/* Page Header */}
       <div className="page-header">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-xl bg-gradient-to-r from-navy to-navy-700 flex items-center justify-center flex-shrink-0">
+          <div className="h-14 w-14 rounded-xl bg-gradient-to-r from-purple to-purple-700 flex items-center justify-center flex-shrink-0">
             <CpuChipIcon className="h-7 w-7 text-white" aria-hidden="true" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight flex items-center">
+            <h1 className="page-title flex items-center">
               AI-Powered Matching
-              <SparklesIcon className="h-6 w-6 ml-2 text-gold" aria-hidden="true" />
+              <SparklesIcon className="h-8 w-8 ml-3 text-gold" aria-hidden="true" />
             </h1>
-            <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
+            <p className="page-subtitle">
               Discover perfect team-opportunity matches using advanced compatibility analysis
             </p>
           </div>

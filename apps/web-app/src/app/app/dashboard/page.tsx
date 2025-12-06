@@ -28,13 +28,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header with action button - matches Figma */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Page header with action button */}
+      <div className="page-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-            Welcome, {firstName}
-          </h1>
-          <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
+          <h1 className="page-title">Welcome, {firstName}</h1>
+          <p className="page-subtitle">
             {isCompanyUser
               ? "Track team matches, conversations, and opportunities you've posted."
               : "Track your team's profile views, matches, and applications."}

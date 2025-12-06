@@ -128,10 +128,8 @@ export default function FindCompaniesPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-          Find Companies
-        </h1>
-        <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed max-w-2xl">
+        <h1 className="page-title">Find Companies</h1>
+        <p className="page-subtitle">
           Discover companies actively seeking high-performing teams like yours. Browse opportunities and find your next home.
         </p>
       </div>

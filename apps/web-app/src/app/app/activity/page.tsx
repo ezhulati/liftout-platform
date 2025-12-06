@@ -8,10 +8,10 @@ export default function ActivityPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Activity</h1>
-          <p className="text-text-secondary mt-1">
+          <h1 className="page-title">Activity</h1>
+          <p className="page-subtitle">
             Track all your recent activity and updates
           </p>
         </div>

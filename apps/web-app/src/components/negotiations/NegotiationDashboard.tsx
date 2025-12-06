@@ -339,16 +339,16 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
 
       {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Loading term sheet...')} className="btn-primary min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-primary min-h-12 transition-colors duration-fast">
           View full term sheet
         </button>
-        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule meeting
         </button>
-        <button onClick={() => toast.success('Status report generated')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Generate status report
         </button>
-        <button onClick={() => toast.success('Timeline updated')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Update timeline
         </button>
       </div>

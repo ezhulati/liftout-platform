@@ -328,3 +328,82 @@ export function getTimeUntilInterview(date: Date): string {
   }
   return `${minutes}m`;
 }
+
+/**
+ * Download ICS file for a generic calendar event
+ */
+export function downloadICS(event: CalendarEvent, filename: string = 'event.ics'): void {
+  const icsContent = generateICS(event);
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Create a meeting event from basic details
+ */
+export interface MeetingDetails {
+  title: string;
+  description?: string;
+  datetime: Date;
+  duration: number; // in minutes
+  location?: string;
+  meetingLink?: string;
+  attendees?: string[];
+  organizerName?: string;
+  organizerEmail?: string;
+}
+
+export function meetingToCalendarEvent(meeting: MeetingDetails): CalendarEvent {
+  const endTime = new Date(meeting.datetime);
+  endTime.setMinutes(endTime.getMinutes() + meeting.duration);
+
+  let description = meeting.description || '';
+
+  if (meeting.meetingLink) {
+    description += `\n\nMeeting Link: ${meeting.meetingLink}`;
+  }
+
+  description += '\n\n---\nScheduled via Liftout (liftout.io)';
+
+  return {
+    title: meeting.title,
+    description,
+    startTime: new Date(meeting.datetime),
+    endTime,
+    location: meeting.meetingLink || meeting.location,
+    url: meeting.meetingLink,
+    reminder: 30, // 30 minute reminder
+    organizer: meeting.organizerName && meeting.organizerEmail
+      ? { name: meeting.organizerName, email: meeting.organizerEmail }
+      : undefined,
+    attendees: meeting.attendees?.map(email => ({ email })),
+  };
+}
+
+/**
+ * Download ICS file for a meeting
+ */
+export function downloadMeetingICS(meeting: MeetingDetails, filename?: string): void {
+  const event = meetingToCalendarEvent(meeting);
+  const icsContent = generateICS(event);
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename || `meeting-${Date.now()}.ics`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

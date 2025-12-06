@@ -672,6 +672,27 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                     <span>{profileData.currentCompany || 'Company not set'}</span>
                   </div>
                 </div>
+
+                {/* Bio excerpt - 350 chars with Read more */}
+                {profileData.bio && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <p className="text-base text-text-secondary leading-relaxed">
+                      {profileData.bio.length > 350 ? (
+                        <>
+                          {profileData.bio.substring(0, 350).trim()}...{' '}
+                          <button
+                            onClick={() => setActiveTab('overview')}
+                            className="text-navy font-medium hover:underline underline-offset-2"
+                          >
+                            Read more
+                          </button>
+                        </>
+                      ) : (
+                        profileData.bio
+                      )}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -702,50 +723,6 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                     </button>
                   </>
                 )}
-              </div>
-            )}
-          </div>
-          
-          {/* Profile Completeness */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-text-secondary">Profile completeness</span>
-                <span className={`badge text-xs ${
-                  completionBadge.color === 'green' ? 'badge-success' :
-                  completionBadge.color === 'blue' ? 'badge-primary' :
-                  completionBadge.color === 'yellow' ? 'badge-warning' :
-                  'badge-error'
-                }`}>
-                  {completionBadge.icon} {completionBadge.text}
-                </span>
-              </div>
-              <span className="text-sm text-text-tertiary">{completeness}%</span>
-            </div>
-            <div className="w-full bg-bg-elevated rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all duration-base ${
-                  completeness >= 90 ? 'bg-success' :
-                  completeness >= 70 ? 'bg-navy' :
-                  completeness >= 40 ? 'bg-gold' :
-                  'bg-error'
-                }`}
-                style={{ width: `${completeness}%` }}
-              />
-            </div>
-            
-            {/* Recommendations */}
-            {completion.recommendations.length > 0 && (
-              <div className="mt-3">
-                <p className="text-xs text-text-secondary mb-2">Next steps to improve your profile:</p>
-                <ul className="text-xs text-text-tertiary space-y-1">
-                  {completion.recommendations.slice(0, 3).map((rec, index) => (
-                    <li key={index} className="flex items-start space-x-1">
-                      <span className="text-navy">•</span>
-                      <span>{rec}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             )}
           </div>

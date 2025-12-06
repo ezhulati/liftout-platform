@@ -260,7 +260,7 @@ Exported from Liftout on ${new Date().toLocaleDateString()}
               {getStatusIcon(deal.currentTermSheet.status)}
               <span className="ml-2">{deal.currentTermSheet.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
             </div>
-            <button onClick={() => toast.success('Opening term sheet editor...')} className="btn-primary min-h-12 inline-flex items-center gap-2 transition-colors duration-fast">
+            <button onClick={() => toast.success('Feature coming soon')} className="btn-primary min-h-12 inline-flex items-center gap-2 transition-colors duration-fast">
               <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
               Edit term sheet
             </button>
@@ -515,7 +515,7 @@ Exported from Liftout on ${new Date().toLocaleDateString()}
         >
           Decline offer
         </button>
-        <button onClick={() => toast.success('Change request feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Request changes
         </button>
         <button onClick={handleExportPDF} className="btn-outline min-h-12 transition-colors duration-fast">

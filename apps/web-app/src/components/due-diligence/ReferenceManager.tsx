@@ -422,7 +422,7 @@ export function ReferenceManager({
                     Mark verified
                   </button>
                 )}
-                <button onClick={() => toast.success('Contact edit feature coming soon')} className="btn-outline min-h-12">
+                <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12">
                   Edit contact
                 </button>
               </div>

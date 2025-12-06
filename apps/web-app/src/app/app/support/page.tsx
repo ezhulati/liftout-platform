@@ -87,9 +87,9 @@ export default function SupportPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Support</h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
+      <div className="page-header mb-8">
+        <h1 className="page-title">Support</h1>
+        <p className="page-subtitle">
           Get help with your Liftout account and find answers to common questions
         </p>
       </div>

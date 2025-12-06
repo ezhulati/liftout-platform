@@ -8,7 +8,8 @@ import {
   getPerformanceGrade,
   identifyKeyInsights,
   generateRecommendations,
-  mockLiftoutAnalytics
+  mockLiftoutAnalytics,
+  HistoricalAnalytics,
 } from '@/lib/analytics';
 import {
   downloadAnalyticsCSV,
@@ -30,6 +31,8 @@ import {
   DocumentTextIcon,
   TableCellsIcon,
 } from '@heroicons/react/24/outline';
+import { Modal } from '@/components/ui/Modal';
+import { NotificationPreferencesForm } from '@/components/settings/NotificationPreferencesForm';
 
 interface AnalyticsDashboardProps {
   companyId?: string;
@@ -42,6 +45,11 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
   const [selectedMetric, setSelectedMetric] = useState<string>('overview');
   const [isExporting, setIsExporting] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [historicalData, setHistoricalData] = useState<HistoricalAnalytics | null>(null);
+  const [showHistorical, setShowHistorical] = useState(false);
+  const [historicalPeriod, setHistoricalPeriod] = useState<string>('30d');
+  const [isLoadingHistorical, setIsLoadingHistorical] = useState(false);
+  const [showNotificationPreferences, setShowNotificationPreferences] = useState(false);
 
   const handleExportCSV = () => {
     if (!analytics) return;
@@ -71,6 +79,43 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
       setIsExporting(false);
       setShowExportMenu(false);
     }
+  };
+
+  const handleShowHistorical = async () => {
+    setShowHistorical(true);
+    if (!historicalData) {
+      await fetchHistoricalData(historicalPeriod);
+    }
+  };
+
+  const fetchHistoricalData = async (newPeriod: string) => {
+    setIsLoadingHistorical(true);
+    try {
+      const response = await fetch(`/api/analytics/historical?period=${newPeriod}`);
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          setHistoricalData(result.data);
+          if (result.isMockData) {
+            toast.success('Showing demo historical data');
+          }
+        } else {
+          toast.error('Failed to load historical data');
+        }
+      } else {
+        toast.error('Failed to load historical data');
+      }
+    } catch (error) {
+      console.error('Error fetching historical data:', error);
+      toast.error('Failed to load historical data');
+    } finally {
+      setIsLoadingHistorical(false);
+    }
+  };
+
+  const handlePeriodChange = async (newPeriod: string) => {
+    setHistoricalPeriod(newPeriod);
+    await fetchHistoricalData(newPeriod);
   };
 
   useEffect(() => {
@@ -448,21 +493,181 @@ export function AnalyticsDashboard({ companyId, period }: AnalyticsDashboardProp
         </div>
       </div>
 
+      {/* Historical Trends Section */}
+      {showHistorical && (
+        <div className="card p-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              <ChartBarIcon className="h-5 w-5 text-navy" aria-hidden="true" />
+              Historical trends
+            </h3>
+            <div className="flex gap-2">
+              {['7d', '30d', '90d', '1y'].map((p) => (
+                <button
+                  key={p}
+                  onClick={() => handlePeriodChange(p)}
+                  disabled={isLoadingHistorical}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    historicalPeriod === p
+                      ? 'bg-navy text-white'
+                      : 'bg-bg-alt text-text-secondary hover:bg-bg-hover'
+                  }`}
+                >
+                  {p === '1y' ? '1 year' : p}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {isLoadingHistorical ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-bg-alt rounded w-full"></div>
+              <div className="h-64 bg-bg-alt rounded w-full"></div>
+            </div>
+          ) : historicalData ? (
+            <div className="space-y-6">
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="bg-bg-alt p-4 rounded-lg">
+                  <p className="text-xs font-medium text-text-tertiary mb-1">Total Applications</p>
+                  <p className="text-2xl font-bold text-text-primary">{historicalData.summary.totalApplications}</p>
+                </div>
+                <div className="bg-bg-alt p-4 rounded-lg">
+                  <p className="text-xs font-medium text-text-tertiary mb-1">Interviews</p>
+                  <p className="text-2xl font-bold text-text-primary">{historicalData.summary.totalInterviews}</p>
+                </div>
+                <div className="bg-bg-alt p-4 rounded-lg">
+                  <p className="text-xs font-medium text-text-tertiary mb-1">Offers</p>
+                  <p className="text-2xl font-bold text-text-primary">{historicalData.summary.totalOffers}</p>
+                </div>
+                <div className="bg-bg-alt p-4 rounded-lg">
+                  <p className="text-xs font-medium text-text-tertiary mb-1">Hires</p>
+                  <p className="text-2xl font-bold text-success">{historicalData.summary.totalHires}</p>
+                </div>
+                <div className="bg-bg-alt p-4 rounded-lg">
+                  <p className="text-xs font-medium text-text-tertiary mb-1">Conversion Rate</p>
+                  <p className="text-2xl font-bold text-text-primary">{historicalData.summary.conversionRate}%</p>
+                </div>
+              </div>
+
+              {/* Data Table */}
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-bg-alt">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Period</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Applications</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Interviews</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Offers</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Hires</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-text-tertiary uppercase tracking-wider">Rejections</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-bg-surface divide-y divide-border">
+                    {historicalData.dataPoints.map((point, index) => (
+                      <tr key={index} className="hover:bg-bg-alt transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary">{point.date}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">{point.applications}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">{point.interviews}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">{point.offers}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">{point.hires}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-tertiary">{point.rejections}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Simple Visual Indicator */}
+              <div className="bg-bg-alt p-4 rounded-lg">
+                <h4 className="text-sm font-medium text-text-secondary mb-3">Trend visualization</h4>
+                <div className="space-y-2">
+                  {historicalData.dataPoints.slice(-5).map((point, index) => {
+                    const maxValue = Math.max(...historicalData.dataPoints.map(p => p.applications));
+                    const width = maxValue > 0 ? (point.applications / maxValue) * 100 : 0;
+                    return (
+                      <div key={index} className="flex items-center gap-3">
+                        <span className="text-xs text-text-tertiary w-32 flex-shrink-0">{point.date}</span>
+                        <div className="flex-1 bg-bg-surface rounded-full h-6 overflow-hidden">
+                          <div
+                            className="bg-navy h-full rounded-full flex items-center justify-end px-2"
+                            style={{ width: `${width}%` }}
+                          >
+                            {point.applications > 0 && (
+                              <span className="text-xs font-medium text-white">{point.applications}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-text-tertiary mt-3">Applications per period (last 5 periods shown)</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-text-secondary">
+              <p>No historical data available</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Report exported successfully')} className="btn-primary min-h-12 transition-colors duration-fast">
-          Export full report
-        </button>
-        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <div className="relative">
+          <button
+            onClick={() => setShowExportMenu(!showExportMenu)}
+            className="btn-primary min-h-12 transition-colors duration-fast inline-flex items-center gap-2"
+            disabled={isExporting}
+          >
+            <ArrowDownTrayIcon className="h-5 w-5" />
+            {isExporting ? 'Exporting...' : 'Export full report'}
+          </button>
+          {showExportMenu && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-bg-surface border border-border rounded-lg shadow-lg z-10">
+              <button
+                onClick={handleExportCSV}
+                className="w-full px-4 py-3 text-left hover:bg-bg-alt flex items-center gap-2 rounded-t-lg"
+              >
+                <TableCellsIcon className="h-5 w-5" />
+                Export as CSV
+              </button>
+              <button
+                onClick={handleExportPDF}
+                className="w-full px-4 py-3 text-left hover:bg-bg-alt flex items-center gap-2 rounded-b-lg"
+              >
+                <DocumentTextIcon className="h-5 w-5" />
+                Export as PDF
+              </button>
+            </div>
+          )}
+        </div>
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule review meeting
         </button>
-        <button onClick={() => toast.success('Alert preferences saved')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => setShowNotificationPreferences(true)} className="btn-outline min-h-12 transition-colors duration-fast">
           Configure alerts
         </button>
-        <button onClick={() => toast.success('Loading historical data...')} className="btn-outline min-h-12 transition-colors duration-fast">
-          Historical trends
+        <button
+          onClick={handleShowHistorical}
+          disabled={isLoadingHistorical}
+          className="btn-outline min-h-12 transition-colors duration-fast disabled:opacity-50"
+        >
+          {isLoadingHistorical ? 'Loading...' : 'Historical trends'}
         </button>
       </div>
+
+      {/* Notification Preferences Modal */}
+      <Modal
+        isOpen={showNotificationPreferences}
+        onClose={() => setShowNotificationPreferences(false)}
+        title="Notification preferences"
+        description="Configure how you want to be notified about liftout activities"
+        size="lg"
+      >
+        <NotificationPreferencesForm />
+      </Modal>
     </div>
   );
 }

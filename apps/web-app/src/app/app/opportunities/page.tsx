@@ -28,13 +28,13 @@ function OpportunitiesContent() {
 
   return (
     <div className="space-y-6">
-      {/* Page header - matches Figma */}
+      {/* Page header */}
       <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-            {isCompanyUser ? 'Opportunity listings' : 'Opportunities'}
+          <h1 className="page-title">
+            {isCompanyUser ? 'Opportunity Listings' : 'Opportunities'}
           </h1>
-          <p className="text-base font-normal text-text-secondary mt-1 leading-relaxed">
+          <p className="page-subtitle">
             {isCompanyUser
               ? 'Manage your team opportunity listings here.'
               : 'Discover opportunities for your team to join new organizations'

@@ -302,13 +302,13 @@ export function DueDiligenceOverview({ workflowId, applicationId }: DueDiligence
 
       {/* Action Buttons - Practical UI: 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Loading detailed checklist...')} className="btn-primary min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-primary min-h-12 transition-colors duration-fast">
           View detailed checklist
         </button>
-        <button onClick={() => toast.success('Report generated successfully')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Generate report
         </button>
-        <button onClick={() => toast.success('Meeting invitation sent')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule review meeting
         </button>
       </div>

@@ -184,7 +184,7 @@ export function LegalOverview({ applicationId, teamId, documents: propDocuments 
           ))}
         </div>
         {documents.length > 5 && (
-          <button onClick={() => toast.success('Loading all documents...')} className="text-link mt-4">
+          <button onClick={() => toast.success('Feature coming soon')} className="text-link mt-4">
             View all {documents.length} documents
           </button>
         )}

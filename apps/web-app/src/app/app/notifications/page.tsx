@@ -38,9 +38,9 @@ export default function NotificationsPage() {
 
     return (
         <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Notifications</h1>
-                <p className="text-base text-text-secondary mt-1">Stay updated with the latest activities.</p>
+            <div className="page-header mb-8">
+                <h1 className="page-title">Notifications</h1>
+                <p className="page-subtitle">Stay updated with the latest activities.</p>
             </div>
 
             <div className="card">

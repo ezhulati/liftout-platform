@@ -369,6 +369,127 @@ export function generateRecommendations(analytics: LiftoutAnalytics): string[] {
   return recommendations;
 }
 
+// Historical analytics types
+export interface HistoricalDataPoint {
+  date: string;
+  applications: number;
+  interviews: number;
+  offers: number;
+  hires: number;
+  rejections: number;
+}
+
+export interface HistoricalAnalytics {
+  period: string;
+  startDate: string;
+  endDate: string;
+  dataPoints: HistoricalDataPoint[];
+  summary: {
+    totalApplications: number;
+    totalInterviews: number;
+    totalOffers: number;
+    totalHires: number;
+    totalRejections: number;
+    conversionRate: number;
+    averageTimeToHire: number;
+  };
+}
+
+// Generate mock historical data based on period
+export function generateMockHistoricalData(period: string): HistoricalAnalytics {
+  const now = new Date();
+  let startDate: Date;
+  let daysBack: number;
+  let dataPointCount: number;
+
+  switch (period) {
+    case '7d':
+      daysBack = 7;
+      dataPointCount = 7;
+      startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case '90d':
+      daysBack = 90;
+      dataPointCount = 13; // weekly data
+      startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+      break;
+    case '1y':
+      daysBack = 365;
+      dataPointCount = 12; // monthly data
+      startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+      break;
+    case '30d':
+    default:
+      daysBack = 30;
+      dataPointCount = 5; // weekly data
+      startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  }
+
+  const dataPoints: HistoricalDataPoint[] = [];
+  let totalApplications = 0;
+  let totalInterviews = 0;
+  let totalOffers = 0;
+  let totalHires = 0;
+  let totalRejections = 0;
+
+  // Generate data points with realistic trends
+  for (let i = 0; i < dataPointCount; i++) {
+    const date = new Date(startDate.getTime() + (i * daysBack / dataPointCount) * 24 * 60 * 60 * 1000);
+
+    // Generate realistic numbers with growth trend
+    const baseApplications = 8 + Math.floor(i * 0.5); // Slight upward trend
+    const applications = baseApplications + Math.floor(Math.random() * 4);
+    const interviews = Math.floor(applications * (0.6 + Math.random() * 0.2)); // 60-80% conversion
+    const offers = Math.floor(interviews * (0.5 + Math.random() * 0.3)); // 50-80% conversion
+    const hires = Math.floor(offers * (0.7 + Math.random() * 0.2)); // 70-90% conversion
+    const rejections = applications - interviews - Math.floor(Math.random() * 2);
+
+    let label: string;
+    if (period === '7d') {
+      label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } else if (period === '90d' || period === '30d') {
+      label = `Week of ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    } else {
+      label = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    dataPoints.push({
+      date: label,
+      applications,
+      interviews,
+      offers,
+      hires,
+      rejections,
+    });
+
+    totalApplications += applications;
+    totalInterviews += interviews;
+    totalOffers += offers;
+    totalHires += hires;
+    totalRejections += rejections;
+  }
+
+  const conversionRate = totalApplications > 0
+    ? Math.round((totalHires / totalApplications) * 100)
+    : 0;
+
+  return {
+    period,
+    startDate: startDate.toISOString(),
+    endDate: now.toISOString(),
+    dataPoints,
+    summary: {
+      totalApplications,
+      totalInterviews,
+      totalOffers,
+      totalHires,
+      totalRejections,
+      conversionRate,
+      averageTimeToHire: 45 + Math.floor(Math.random() * 20), // 45-65 days
+    },
+  };
+}
+
 // Mock data for demonstration
 export const mockLiftoutAnalytics: LiftoutAnalytics = {
   id: 'analytics-q3-2024',

@@ -1137,6 +1137,109 @@ This email was sent via Liftout (${APP_URL})`,
   }
 }
 
+// ============================================
+// CALENDAR INVITATION EMAIL
+// ============================================
+
+export async function sendCalendarInvitationEmail(params: {
+  to: string | string[];
+  senderName: string;
+  meetingTitle: string;
+  meetingDescription?: string;
+  meetingDate: string;
+  meetingTime: string;
+  duration: number;
+  location?: string;
+  meetingLink?: string;
+  icsAttachment: string; // Base64 encoded ICS file
+}): Promise<EmailResult> {
+  const { to, senderName, meetingTitle, meetingDescription, meetingDate, meetingTime, duration, location, meetingLink, icsAttachment } = params;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Calendar invitation to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Meeting Invitation: ${meetingTitle}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px;">Meeting Invitation</h1>
+            </div>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px;">
+              <p style="font-size: 16px;">Hi,</p>
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                <strong>${senderName}</strong> has invited you to a meeting on Liftout.
+              </p>
+
+              <div style="background: #f5f3ff; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin: 20px 0;">
+                <p style="font-weight: 600; margin: 0 0 15px 0; color: #333; font-size: 18px;">${meetingTitle}</p>
+                <p style="margin: 0 0 8px 0;">📆 <strong>When:</strong> ${meetingDate} at ${meetingTime}</p>
+                <p style="margin: 0 0 8px 0;">⏱️ <strong>Duration:</strong> ${duration} minutes</p>
+                ${location ? `<p style="margin: 0 0 8px 0;">📍 <strong>Location:</strong> ${location}</p>` : ''}
+                ${meetingLink ? `
+                  <p style="margin: 0 0 8px 0;">🔗 <strong>Meeting Link:</strong></p>
+                  <a href="${meetingLink}" style="color: #667eea; word-break: break-all;">${meetingLink}</a>
+                ` : ''}
+              </div>
+
+              ${meetingDescription ? `
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="font-weight: 600; margin: 0 0 10px 0; color: #333;">Description:</p>
+                  <p style="margin: 0; color: #666; white-space: pre-wrap;">${meetingDescription}</p>
+                </div>
+              ` : ''}
+
+              ${meetingLink ? `
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${meetingLink}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    Join Meeting
+                  </a>
+                </div>
+              ` : ''}
+
+              <p style="font-size: 14px; color: #666; margin-top: 25px;">
+                A calendar invitation is attached to this email. Add it to your calendar to receive reminders.
+              </p>
+            </div>
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} Liftout. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `,
+      attachments: [
+        {
+          filename: 'meeting.ics',
+          content: icsAttachment,
+          contentType: 'text/calendar; charset=utf-8; method=REQUEST',
+        },
+      ],
+    });
+
+    if (error) {
+      console.error('Failed to send calendar invitation email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending calendar invitation email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
 // Export all functions
 export const emailService = {
   sendTeamInvitationEmail,
@@ -1152,4 +1255,5 @@ export const emailService = {
   sendInterviewScheduledEmail,
   sendReferenceRequestEmail,
   sendReferenceFollowUpEmail,
+  sendCalendarInvitationEmail,
 };

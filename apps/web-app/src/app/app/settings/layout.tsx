@@ -78,9 +78,9 @@ export default function SettingsLayout({
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Settings</h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
+      <div className="page-header mb-8">
+        <h1 className="page-title">Settings</h1>
+        <p className="page-subtitle">
           Manage your account settings and preferences
         </p>
       </div>
