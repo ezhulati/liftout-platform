@@ -103,14 +103,29 @@ const config: Config = {
         },
         // Text hierarchy - Following Practical UI WCAG contrast requirements
         // Small text needs 4.5:1, Large text 3:1, UI components 3:1
+        // Using #0f172a (slate-900) as pro dark - not pure black
         text: {
-          primary: 'hsl(220, 60%, 15%)',     // Darker for better contrast
-          secondary: 'hsl(220, 35%, 38%)',   // Darker for 4.5:1
-          tertiary: 'hsl(220, 25%, 48%)',    // Darker for 4.5:1 (was 55%)
-          muted: 'hsl(220, 15%, 60%)',       // NEW: decorative only (3:1)
-          inverse: 'hsl(0, 0%, 100%)',       // White - text on dark backgrounds
-          'on-navy': 'hsl(0, 0%, 100%)',     // White text on navy
-          'on-gold': 'hsl(220, 60%, 12%)',   // Dark text on gold
+          primary: '#0f172a',                // Pro dark, not pure black (15.5:1 contrast)
+          secondary: '#475569',              // Slate-600 for secondary
+          tertiary: '#64748b',               // Slate-500 for tertiary
+          muted: '#94a3b8',                  // Slate-400 for muted/decorative
+          inverse: '#ffffff',                // White - text on dark backgrounds
+          'on-navy': '#ffffff',              // White text on navy
+          'on-gold': '#0f172a',              // Dark text on gold
+        },
+        // Override gray scale to use slate (cooler, more professional)
+        gray: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',    // Pro dark - not pure black
+          950: '#020617',
         },
         // Borders - Following Practical UI 3:1 contrast for non-decorative
         border: {

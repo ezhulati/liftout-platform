@@ -21,13 +21,14 @@
     --bg-alt: hsl(270, 5%, 97%);
 
     /* Text hierarchy - WCAG contrast requirements (4.5:1 for small text) */
-    --text-primary: hsl(220, 60%, 15%);     /* Darker for better contrast */
-    --text-secondary: hsl(220, 35%, 38%);   /* Darker for 4.5:1 */
-    --text-tertiary: hsl(220, 25%, 48%);    /* Darker for 4.5:1 */
-    --text-muted: hsl(220, 15%, 60%);       /* Decorative only (3:1) */
-    --text-inverse: hsl(0, 0%, 100%);       /* White on dark */
-    --text-on-primary: hsl(0, 0%, 100%);    /* White on purple */
-    --text-on-accent: #1e1b4b;              /* Dark on amber */
+    /* Using #0f172a (slate-900) as pro dark - not pure black */
+    --text-primary: #0f172a;                /* Pro dark (15.5:1 contrast on white) */
+    --text-secondary: #475569;              /* Slate-600 */
+    --text-tertiary: #64748b;               /* Slate-500 */
+    --text-muted: #94a3b8;                  /* Slate-400 - decorative only */
+    --text-inverse: #ffffff;                /* White on dark */
+    --text-on-primary: #ffffff;             /* White on purple */
+    --text-on-accent: #0f172a;              /* Pro dark on amber */
 
     /* Primary: Deep Royal Purple - Full Scale */
     --primary: #4C1D95;                   /* Main brand color */
@@ -60,7 +61,7 @@
 
     /* Legacy Navy (mapped to purple for consistency) */
     --navy: #4C1D95;
-    --navy-darkest: #1e1b4b;
+    --navy-darkest: #0f172a;
     --navy-dark: #4c4687;
     --navy-medium: #8b85b1;
     --navy-light: #f3e8ff;
@@ -768,9 +769,9 @@
 
   .page-title {
     font-family: var(--font-heading);
-    font-size: 2.441rem;
+    font-size: 2.75rem; /* 44px - Practical UI H1 */
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--purple); /* Brand purple for page titles */
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
