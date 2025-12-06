@@ -144,13 +144,8 @@ export default function TeamAnalyticsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <ChartBarIcon className="h-6 w-6 mr-2" />
-              Team Analytics
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Track your team&apos;s visibility and engagement
-            </p>
+            <h1 className="text-2xl font-bold text-text-primary">Team analytics</h1>
+            <p className="text-text-secondary mt-1">Performance metrics.</p>
           </div>
           <div className="flex items-center text-sm text-text-tertiary">
             <CalendarIcon className="h-4 w-4 mr-2" />

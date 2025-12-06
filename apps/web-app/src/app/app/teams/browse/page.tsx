@@ -74,16 +74,11 @@ export default function BrowseTeamsPage() {
   const teams = data?.teams || [];
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary flex items-center">
-          <UserGroupIcon className="h-6 w-6 mr-2" />
-          Browse Teams
-        </h1>
-        <p className="mt-2 text-text-secondary">
-          Discover high-performing teams looking for liftout opportunities
-        </p>
+      <div className="page-header">
+        <h1 className="page-title">Browse Teams</h1>
+        <p className="page-subtitle">Discover high-performing teams.</p>
       </div>
 
       {/* Search and Filters */}

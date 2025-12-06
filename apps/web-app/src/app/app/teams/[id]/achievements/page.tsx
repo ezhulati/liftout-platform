@@ -145,13 +145,8 @@ export default function TeamAchievementsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <TrophyIcon className="h-6 w-6 mr-2 text-gold-500" />
-              Team Achievements
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Showcase your team&apos;s accomplishments and milestones
-            </p>
+            <h1 className="text-2xl font-bold text-text-primary">Achievements</h1>
+            <p className="text-text-secondary mt-1">Team accomplishments.</p>
           </div>
           {!isAdding && (
             <button

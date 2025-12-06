@@ -138,14 +138,9 @@ export default function CompanyBenefitsPage() {
           Back to company
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <GiftIcon className="h-6 w-6 mr-2 text-navy" />
-              Benefits & Perks
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Showcase what you offer to attract top teams
-            </p>
+          <div className="page-header">
+            <h1 className="page-title">Benefits</h1>
+            <p className="page-subtitle">Employee benefits offered.</p>
           </div>
           {!showForm && (
             <button onClick={() => setShowForm(true)} className="btn-primary flex items-center">

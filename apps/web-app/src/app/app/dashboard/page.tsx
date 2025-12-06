@@ -29,14 +29,10 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Page header with action button */}
-      <div className="page-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="page-title">Welcome, {firstName}</h1>
-          <p className="page-subtitle">
-            {isCompanyUser
-              ? "Track team matches, conversations, and opportunities you've posted."
-              : "Track your team's profile views, matches, and applications."}
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="page-header">
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle">Your team activity at a glance.</p>
         </div>
         {/* Primary action button based on user type */}
         {isCompanyUser ? (

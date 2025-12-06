@@ -94,19 +94,8 @@ function MatchingContent() {
         <div className="space-y-6">
           {/* Page Header */}
           <div className="page-header">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-gold flex items-center justify-center">
-                <SparklesIcon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="page-title">
-                  AI-Powered Matching
-                </h1>
-                <p className="page-subtitle">
-                  Find opportunities that match your team's skills and experience
-                </p>
-              </div>
-            </div>
+            <h1 className="page-title">AI Matching</h1>
+            <p className="page-subtitle">Smart team-company recommendations.</p>
           </div>
 
           {/* Team Selection */}
@@ -203,19 +192,8 @@ function MatchingContent() {
       <div className="space-y-6">
         {/* Page Header */}
         <div className="page-header">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-navy to-gold flex items-center justify-center">
-              <SparklesIcon className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="page-title">
-                AI-Powered Matching
-              </h1>
-              <p className="page-subtitle">
-                Find teams that match your opportunity requirements
-              </p>
-            </div>
-          </div>
+          <h1 className="page-title">AI Matching</h1>
+          <p className="page-subtitle">Smart team-company recommendations.</p>
         </div>
 
         {/* Opportunity Selection */}

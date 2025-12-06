@@ -4,14 +4,10 @@ import { Suspense } from 'react';
 export default function IntegrationPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header - Practical UI: bold headings, proper spacing */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-          Integration success tracking
-        </h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
-          Monitor post-liftout performance and ensure long-term success
-        </p>
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">Integration success tracking</h1>
+        <p className="page-subtitle">Monitor post-liftout performance.</p>
         <div className="mt-4 bg-navy-50 border border-navy-200 rounded-xl p-4">
           <div className="flex gap-3">
             <div className="flex-shrink-0">

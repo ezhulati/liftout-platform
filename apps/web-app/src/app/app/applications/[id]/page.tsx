@@ -272,41 +272,38 @@ export default function ApplicationDetailPage({
         Back to Applications
       </Link>
 
+      {/* Page header */}
+      <div className="page-header">
+        <h1 className="page-title">Application</h1>
+        <p className="page-subtitle">Review and manage application status.</p>
+      </div>
+
       {/* Header */}
       <div className="card">
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="h-14 w-14 rounded-xl bg-navy-50 flex items-center justify-center text-navy">
-              {getStatusIcon(application.status)}
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-text-primary mb-2">
-                {application.opportunity?.title || 'Opportunity'}
-              </h1>
-              <div className="flex flex-wrap items-center gap-3 text-text-secondary">
-                <div className="flex items-center gap-1">
-                  <BuildingOfficeIcon className="h-4 w-4" />
-                  <span>{application.opportunity?.company?.name || 'Company'}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <UserGroupIcon className="h-4 w-4" />
-                  <span>{application.team?.name || 'Team'}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>Applied {application.submittedAt ? formatDistanceToNow(new Date(application.submittedAt), { addSuffix: true }) : 'recently'}</span>
-                </div>
-              </div>
-            </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-bold text-text-primary">
+            {application.opportunity?.title || 'Application'}
+          </h2>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-text-secondary">
+          <div className="flex items-center gap-1">
+            <BuildingOfficeIcon className="h-4 w-4" />
+            <span>{application.opportunity?.company?.name || 'Company'}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className={classNames(
-              'badge px-4 py-2 text-sm font-medium',
-              getStatusColor(application.status)
-            )}>
-              {formatStatus(application.status)}
-            </span>
+          <div className="flex items-center gap-1">
+            <UserGroupIcon className="h-4 w-4" />
+            <span>{application.team?.name || 'Team'}</span>
           </div>
+          <div className="flex items-center gap-1">
+            <ClockIcon className="h-4 w-4" />
+            <span>Applied {application.submittedAt ? formatDistanceToNow(new Date(application.submittedAt), { addSuffix: true }) : 'recently'}</span>
+          </div>
+          <span className={classNames(
+            'badge px-3 py-1 text-xs font-medium ml-auto',
+            getStatusColor(application.status)
+          )}>
+            {formatStatus(application.status)}
+          </span>
         </div>
       </div>
 

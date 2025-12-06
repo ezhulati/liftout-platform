@@ -176,14 +176,9 @@ export default function CompanyLocationsPage() {
           Back to company
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <MapPinIcon className="h-6 w-6 mr-2" />
-              Office Locations
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Manage your company&apos;s office locations
-            </p>
+          <div className="page-header">
+            <h1 className="page-title">Locations</h1>
+            <p className="page-subtitle">Manage office locations.</p>
           </div>
           {!showForm && (
             <button

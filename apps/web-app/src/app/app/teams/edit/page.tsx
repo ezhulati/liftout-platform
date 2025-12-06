@@ -141,15 +141,8 @@ export default function EditTeamPage() {
           Back to team profile
         </button>
 
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-navy-50 flex items-center justify-center">
-            <UserGroupIcon className="h-6 w-6 text-navy" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Edit team profile</h1>
-            <p className="text-base text-text-secondary mt-1">Update your team information and liftout availability</p>
-          </div>
-        </div>
+        <h1 className="page-title">Edit team</h1>
+        <p className="page-subtitle">Update your team details.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">

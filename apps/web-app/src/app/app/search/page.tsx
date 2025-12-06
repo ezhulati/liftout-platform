@@ -297,15 +297,8 @@ export default function SearchPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="page-header mb-8">
-        <h1 className="page-title">
-          {isCompanyUser ? 'Search Teams' : 'Search Opportunities'}
-        </h1>
-        <p className="page-subtitle">
-          {isCompanyUser
-            ? 'Find high-performing teams ready for liftout opportunities'
-            : 'Discover liftout opportunities that match your team\'s expertise'
-          }
-        </p>
+        <h1 className="page-title">Search</h1>
+        <p className="page-subtitle">Find teams and opportunities.</p>
       </div>
 
       {/* Search Form */}

@@ -133,6 +133,12 @@ export function ProfileSettings() {
 
   return (
     <div className="space-y-6">
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">Settings</h1>
+        <p className="page-subtitle">Configure your account preferences.</p>
+      </div>
+
       {/* Header - Practical UI: bold headings, regular body */}
       <div className="pb-4 border-b border-border">
         <h3 className="text-lg font-bold text-text-primary">Profile information</h3>

@@ -41,14 +41,14 @@ export default function CompanyProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header - Practical UI: bold headings, 48px touch targets */}
+      {/* Page Header */}
       <div className="mb-8">
         <div className="md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Company profile</h1>
-            <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
-              Manage your company information and liftout requirements
-            </p>
+            <div className="page-header">
+              <h1 className="page-title">Company Profile</h1>
+              <p className="page-subtitle">Manage your company information.</p>
+            </div>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4">
             <button

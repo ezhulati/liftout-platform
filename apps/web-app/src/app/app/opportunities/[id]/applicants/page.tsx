@@ -116,13 +116,8 @@ export default function OpportunityApplicantsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <UserGroupIcon className="h-6 w-6 mr-2" />
-              Applicants
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              {data?.total || 0} teams have applied
-            </p>
+            <h1 className="text-2xl font-bold text-text-primary">Applicants</h1>
+            <p className="text-text-secondary mt-1">Review applications.</p>
           </div>
         </div>
       </div>

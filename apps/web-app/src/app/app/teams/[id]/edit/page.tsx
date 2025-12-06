@@ -20,7 +20,7 @@ export default async function EditTeamPage({ params }: EditTeamPageProps) {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <div className="page-header">
+      <div>
         <Link
           href={`/app/teams/${params.id}`}
           className="inline-flex items-center text-sm font-medium text-text-tertiary hover:text-text-secondary mb-4"
@@ -28,10 +28,8 @@ export default async function EditTeamPage({ params }: EditTeamPageProps) {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Team Profile
         </Link>
-        <h1 className="page-title">Edit Team Profile</h1>
-        <p className="page-subtitle">
-          Update your team information, members, and liftout preferences
-        </p>
+        <h1 className="text-2xl font-bold text-text-primary">Edit team</h1>
+        <p className="text-text-secondary mt-1">Update team details.</p>
       </div>
 
       {/* Edit team form */}

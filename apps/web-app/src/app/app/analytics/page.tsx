@@ -4,14 +4,10 @@ import { Suspense } from 'react';
 export default function AnalyticsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header - Practical UI: bold headings, proper spacing */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-          Liftout success analytics
-        </h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
-          Comprehensive performance tracking and business impact analysis
-        </p>
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">Analytics</h1>
+        <p className="page-subtitle">Platform usage insights.</p>
         <div className="mt-4 bg-success-light border border-success/20 rounded-xl p-4">
           <div className="flex gap-3">
             <div className="flex-shrink-0">

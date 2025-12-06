@@ -130,14 +130,12 @@ export default function CompanyProfilePage() {
                 )}
               </div>
               <div className="flex-1 pb-1">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-text-primary">{company.name}</h1>
-                  {company.verificationStatus === 'verified' && (
-                    <CheckBadgeIcon className="h-6 w-6 text-success" title="Verified Company" />
-                  )}
-                </div>
-                <p className="text-text-secondary">{company.industry}</p>
+                <h1 className="text-2xl font-bold text-text-primary">{company.name}</h1>
+                <p className="text-text-secondary mt-1">{company.industry || 'Company profile.'}</p>
               </div>
+              {company.verificationStatus === 'verified' && (
+                <CheckBadgeIcon className="h-6 w-6 text-success flex-shrink-0" title="Verified Company" />
+              )}
             </div>
 
             {/* Quick Stats */}

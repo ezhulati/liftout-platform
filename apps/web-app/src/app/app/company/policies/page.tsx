@@ -135,14 +135,9 @@ export default function CompanyPoliciesPage() {
           Back to company
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <DocumentTextIcon className="h-6 w-6 mr-2" />
-              Company Policies
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Define your workplace policies to attract teams
-            </p>
+          <div className="page-header">
+            <h1 className="page-title">Policies</h1>
+            <p className="page-subtitle">Company hiring policies.</p>
           </div>
           {!showForm && (
             <button onClick={() => setShowForm(true)} className="btn-primary flex items-center">

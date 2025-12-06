@@ -104,14 +104,9 @@ export default function SavedOpportunitiesPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading flex items-center">
-          <BookmarkIconSolid className="h-6 w-6 mr-2 text-navy" />
-          Saved Opportunities
-        </h1>
-        <p className="mt-2 text-base text-text-secondary">
-          Opportunities you&apos;ve bookmarked for later review
-        </p>
+      <div className="page-header">
+        <h1 className="page-title">Saved opportunities</h1>
+        <p className="page-subtitle">Opportunities you've bookmarked.</p>
       </div>
 
       {/* Saved Items List */}

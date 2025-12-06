@@ -99,14 +99,9 @@ export default function SavedTeamsPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading flex items-center">
-          <BookmarkIconSolid className="h-6 w-6 mr-2 text-navy" />
-          Saved Teams
-        </h1>
-        <p className="mt-2 text-base text-text-secondary">
-          Teams you&apos;ve bookmarked for later review
-        </p>
+      <div className="page-header">
+        <h1 className="page-title">Saved teams</h1>
+        <p className="page-subtitle">Teams you've bookmarked.</p>
       </div>
 
       {/* Saved Items List */}

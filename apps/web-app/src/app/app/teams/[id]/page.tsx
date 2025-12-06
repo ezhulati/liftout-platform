@@ -142,6 +142,12 @@ export default function TeamProfilePage() {
 
   return (
     <div className="space-y-6">
+      {/* Page header */}
+      <div className="page-header">
+        <h1 className="page-title">Team Profile</h1>
+        <p className="page-subtitle">Detailed team information and members.</p>
+      </div>
+
       {/* Header Section */}
       <div className="card">
         <div className="px-6 py-6">

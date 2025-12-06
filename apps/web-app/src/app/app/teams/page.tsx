@@ -198,11 +198,9 @@ function MyTeamView({ userId }: { userId: string }) {
   if (!team) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">My Team</h1>
-          <p className="text-text-secondary mt-1">
-            You're not currently part of a team.
-          </p>
+        <div className="page-header">
+          <h1 className="page-title">My Team</h1>
+          <p className="page-subtitle">You're not on a team yet.</p>
         </div>
         <div className="card text-center py-12">
           <UserGroupIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
@@ -225,11 +223,9 @@ function MyTeamView({ userId }: { userId: string }) {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
-        <p className="text-text-secondary mt-1">
-          Manage your team post, team members and their permissions.
-        </p>
+      <div className="page-header">
+        <h1 className="page-title">My Team</h1>
+        <p className="page-subtitle">Manage your team profile and members.</p>
       </div>
 
       {/* Invite Section - only for team leads */}

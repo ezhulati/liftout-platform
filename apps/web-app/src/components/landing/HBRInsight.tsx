@@ -97,7 +97,7 @@ export function HBRInsight() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-20 lg:py-28 bg-bg-elevated"
+      className="py-24 lg:py-32 bg-bg-elevated"
       aria-labelledby="hbr-insight-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

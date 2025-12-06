@@ -31,9 +31,9 @@ export default async function CreateOpportunityPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Opportunities
         </Link>
-        <h1 className="page-title">Post New Opportunity</h1>
+        <h1 className="page-title">Post opportunity</h1>
         <p className="page-subtitle">
-          Create a detailed opportunity to attract the perfect team for your project
+          Create a new team opportunity.
         </p>
       </div>
 

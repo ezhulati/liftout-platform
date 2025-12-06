@@ -22,10 +22,8 @@ export default function DocumentsPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div className="page-header">
-        <h1 className="page-title">Document Management</h1>
-        <p className="page-subtitle">
-          Securely share and manage documents for liftout transactions and due diligence
-        </p>
+        <h1 className="page-title">Documents</h1>
+        <p className="page-subtitle">Manage your files.</p>
       </div>
 
       {/* Documents List */}

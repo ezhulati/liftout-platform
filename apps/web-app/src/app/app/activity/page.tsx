@@ -8,12 +8,10 @@ export default function ActivityPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Page Header */}
-      <div className="page-header flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between">
+        <div className="page-header">
           <h1 className="page-title">Activity</h1>
-          <p className="page-subtitle">
-            Track all your recent activity and updates
-          </p>
+          <p className="page-subtitle">Recent updates and notifications.</p>
         </div>
         <button className="p-2 rounded-lg border border-border hover:bg-bg-alt transition-colors">
           <BellIcon className="h-5 w-5 text-text-secondary" />

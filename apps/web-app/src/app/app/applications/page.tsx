@@ -118,15 +118,8 @@ export default function ApplicationsPage() {
       <div className="space-y-6">
         {/* Page header */}
         <div className="page-header">
-          <h1 className="page-title">
-            {isCompanyUser ? 'Application Management' : 'My Applications'}
-          </h1>
-          <p className="page-subtitle">
-            {isCompanyUser
-              ? 'Review and manage team applications to your liftout opportunities'
-              : 'Track your team\'s expressions of interest and application status'
-            }
-          </p>
+          <h1 className="page-title">Applications</h1>
+          <p className="page-subtitle">Review team applications.</p>
         </div>
 
         {/* Empty state - Practical UI */}
@@ -158,17 +151,10 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header - Practical UI: bold headings, regular body */}
+      {/* Page header */}
       <div className="page-header">
-        <h1 className="page-title">
-          {isCompanyUser ? 'Application Management' : 'My Applications'}
-        </h1>
-        <p className="page-subtitle">
-          {isCompanyUser
-            ? 'Review and manage team applications to your liftout opportunities'
-            : 'Track your team\'s expressions of interest and application status'
-          }
-        </p>
+        <h1 className="page-title">Applications</h1>
+        <p className="page-subtitle">Review team applications.</p>
       </div>
 
       {/* Interviews Section */}

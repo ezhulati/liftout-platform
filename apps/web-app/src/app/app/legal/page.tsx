@@ -26,13 +26,13 @@ export default function LegalPage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header - Practical UI: bold headings, proper spacing */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Legal & compliance</h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">Legal & compliance</h1>
+        <p className="page-subtitle">
           {isCompanyUser
-            ? 'Manage legal documents, compliance checks, and risk assessments for team acquisitions'
-            : 'Review legal requirements and compliance status for your team\'s liftout process'}
+            ? 'Legal documents and compliance tracking.'
+            : 'Legal requirements and compliance status.'}
         </p>
       </div>
 

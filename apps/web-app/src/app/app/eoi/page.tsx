@@ -141,13 +141,9 @@ export default function EOIPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Expressions of Interest</h1>
-        <p className="text-text-secondary mt-1">
-          {session?.user?.userType === 'company'
-            ? 'Track your outreach to teams and manage responses'
-            : 'Review and respond to interest from companies'}
-        </p>
+      <div className="page-header">
+        <h1 className="page-title">Expressions of Interest</h1>
+        <p className="page-subtitle">Teams interested in your opportunities.</p>
       </div>
 
       {/* Stats Cards */}

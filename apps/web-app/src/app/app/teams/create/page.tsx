@@ -22,9 +22,9 @@ export default async function CreateTeamPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Teams
         </Link>
-        <h1 className="page-title">Create new team</h1>
+        <h1 className="page-title">Create team</h1>
         <p className="page-subtitle">
-          Create a team profile and start exploring opportunities together
+          Set up your team profile.
         </p>
       </div>
 

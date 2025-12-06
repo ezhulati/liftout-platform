@@ -193,10 +193,8 @@ export default function ComparePage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="page-header">
-          <h1 className="page-title">Compare Teams</h1>
-          <p className="page-subtitle">
-            Compare up to 4 teams side by side to find the best fit
-          </p>
+          <h1 className="page-title">Compare</h1>
+          <p className="page-subtitle">Compare teams side by side.</p>
         </div>
         {selectedTeamIds.length < 4 && (
           <button

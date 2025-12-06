@@ -672,6 +672,12 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
   return (
     <div className="space-y-6">
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">Profile</h1>
+        <p className="page-subtitle">Manage your personal information.</p>
+      </div>
+
       {/* Profile Header */}
       <div className="card">
         <div className="px-6 py-6">

@@ -131,14 +131,9 @@ export default function CompanyTeamPage() {
           Back to company
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <UsersIcon className="h-6 w-6 mr-2" />
-              Team Members
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Manage colleagues who can access your company account
-            </p>
+          <div className="page-header">
+            <h1 className="page-title">Team</h1>
+            <p className="page-subtitle">Manage your hiring team.</p>
           </div>
           {!showInviteForm && (
             <button

@@ -158,9 +158,7 @@ export default function InterviewsPage() {
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">Interviews</h1>
-        <p className="page-subtitle">
-          Manage your interview schedule and track progress
-        </p>
+        <p className="page-subtitle">Scheduled team interviews.</p>
       </div>
 
       {/* Stats Cards */}

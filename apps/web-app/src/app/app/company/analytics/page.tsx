@@ -137,14 +137,9 @@ export default function CompanyAnalyticsPage() {
           Back to company
         </button>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary flex items-center">
-              <ChartBarIcon className="h-6 w-6 mr-2" />
-              Company Analytics
-            </h1>
-            <p className="mt-2 text-text-secondary">
-              Track your hiring activity and engagement
-            </p>
+          <div className="page-header">
+            <h1 className="page-title">Analytics</h1>
+            <p className="page-subtitle">Track your hiring metrics.</p>
           </div>
           <div className="flex items-center text-sm text-text-tertiary">
             <CalendarIcon className="h-4 w-4 mr-2" />

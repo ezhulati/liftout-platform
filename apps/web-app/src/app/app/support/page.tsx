@@ -89,9 +89,7 @@ export default function SupportPage() {
       {/* Page Header */}
       <div className="page-header mb-8">
         <h1 className="page-title">Support</h1>
-        <p className="page-subtitle">
-          Get help with your Liftout account and find answers to common questions
-        </p>
+        <p className="page-subtitle">Get help with your account.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

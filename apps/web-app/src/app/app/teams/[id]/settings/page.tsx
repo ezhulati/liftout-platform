@@ -134,13 +134,8 @@ export default function TeamSettingsPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to team
         </button>
-        <h1 className="text-2xl font-bold text-text-primary flex items-center">
-          <Cog6ToothIcon className="h-6 w-6 mr-2" />
-          Team Settings
-        </h1>
-        <p className="mt-2 text-text-secondary">
-          Manage visibility, privacy, and notifications for {settings.name}
-        </p>
+        <h1 className="text-2xl font-bold text-text-primary">Team settings</h1>
+        <p className="text-text-secondary mt-1">Configure team preferences.</p>
       </div>
 
       <div className="space-y-6">

@@ -38,7 +38,7 @@ export function LandingExplainer() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-20 lg:py-28 bg-bg"
+      className="py-24 lg:py-32 bg-bg"
       aria-labelledby="explainer-heading"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

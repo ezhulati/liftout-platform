@@ -20,7 +20,7 @@ export default async function TeamMembersPage({ params }: TeamMembersPageProps) 
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <div className="page-header">
+      <div>
         <Link
           href={`/app/teams/${params.id}`}
           className="inline-flex items-center text-sm font-medium text-text-tertiary hover:text-text-secondary mb-4"
@@ -28,10 +28,8 @@ export default async function TeamMembersPage({ params }: TeamMembersPageProps) 
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Team Profile
         </Link>
-        <h1 className="page-title">Team Member Management</h1>
-        <p className="page-subtitle">
-          Manage your team members, send invitations, and track member performance
-        </p>
+        <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
+        <p className="text-text-secondary mt-1">Manage team membership.</p>
       </div>
 
       {/* Team member management component */}

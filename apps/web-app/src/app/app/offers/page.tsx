@@ -123,13 +123,8 @@ export default function OffersPage() {
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="page-header mb-8">
-        <h1 className="page-title flex items-center">
-          <GiftIcon className="h-8 w-8 mr-3 text-purple" />
-          Offers
-        </h1>
-        <p className="page-subtitle">
-          Review and respond to offers from companies
-        </p>
+        <h1 className="page-title">Offers</h1>
+        <p className="page-subtitle">Team offers and contracts.</p>
       </div>
 
       {/* Filters */}
