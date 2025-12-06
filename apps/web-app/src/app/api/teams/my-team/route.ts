@@ -38,6 +38,11 @@ export async function GET(request: NextRequest) {
                         yearsExperience: true,
                       },
                     },
+                    skills: {
+                      include: {
+                        skill: true,
+                      },
+                    },
                   },
                 },
               },
@@ -96,7 +101,7 @@ export async function GET(request: NextRequest) {
           experience: m.user.profile?.yearsExperience || 0,
           avatar: m.user.profile?.profilePhotoUrl || null,
           isLead: m.isAdmin,
-          skills: [], // TODO: Add skills from profile
+          skills: m.user.skills?.map((s) => s.skill.name) || []
         })),
         invitations: pendingInvitations.map((inv) => ({
           id: inv.id,

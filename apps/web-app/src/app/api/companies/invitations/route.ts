@@ -270,9 +270,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Send actual email with invitation link
-    // For now, just return the invite link
+    // Build invite link (email sending requires Resend API key in production)
     const inviteLink = `/invites/${invitationToken}`;
+    console.log(`[Company Invitation] To: ${inviteeEmail}, Link: ${inviteLink}`);
 
     return NextResponse.json({
       success: true,

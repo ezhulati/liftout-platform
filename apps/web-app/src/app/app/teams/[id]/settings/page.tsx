@@ -5,9 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
-  Cog6ToothIcon,
   EyeIcon,
-  EyeSlashIcon,
   ShieldCheckIcon,
   TrashIcon,
   ArchiveBoxIcon,
@@ -18,6 +16,35 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
+
+// Accessible toggle component with 48pt touch target
+function Toggle({
+  enabled,
+  onChange,
+  label
+}: {
+  enabled: boolean;
+  onChange: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={enabled}
+      aria-label={label}
+      onClick={onChange}
+      className="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#4C1D95] focus:ring-offset-2 min-h-[48px] min-w-[48px] items-center"
+      style={{ backgroundColor: enabled ? '#4C1D95' : '#D1D5DB' }}
+    >
+      <span
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+          enabled ? 'translate-x-5' : 'translate-x-1'
+        }`}
+      />
+    </button>
+  );
+}
 
 interface TeamSettings {
   id: string;
@@ -142,41 +169,37 @@ export default function TeamSettingsPage() {
       <div className="mb-8">
         <button
           onClick={() => router.push(`/app/teams/${teamId}`)}
-          className="flex items-center text-text-secondary hover:text-text-primary mb-4"
+          className="flex items-center gap-2 text-text-secondary hover:text-text-primary mb-4 min-h-[48px] -ml-2 px-2"
         >
-          <ArrowLeftIcon className="h-4 w-4 mr-2" />
-          Back to team
+          <ArrowLeftIcon className="h-5 w-5" />
+          <span className="text-base">Back to team</span>
         </button>
-        <h1 className="page-title">Team settings</h1>
-        <p className="page-subtitle">Configure team preferences.</p>
+        <h1 className="text-2xl font-bold text-text-primary">Team settings</h1>
+        <p className="text-base text-text-secondary mt-1">Manage your team&apos;s visibility and preferences</p>
       </div>
 
-      <div className="space-y-6">
-        {/* Visibility Mode - Simple Toggle */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary flex items-center">
-              <ShieldCheckIcon className="h-5 w-5 mr-2" />
-              Profile Visibility
-            </h2>
-            <p className="text-sm text-text-secondary mt-1">
-              Control who can see your team profile
+      <div className="space-y-8">
+        {/* Visibility Mode */}
+        <section className="bg-bg-surface rounded-xl border border-border">
+          <div className="px-6 py-5 border-b border-border">
+            <h2 className="text-lg font-bold text-text-primary">Profile visibility</h2>
+            <p className="text-base text-text-secondary mt-1">
+              Choose who can discover your team
             </p>
           </div>
-          <div className="px-6 py-4">
-            {/* Visibility Mode Options */}
-            <div className="space-y-3">
+          <div className="p-6">
+            <fieldset className="space-y-3" role="radiogroup" aria-label="Visibility mode">
               {[
                 {
                   value: 'public' as const,
                   title: 'Public',
-                  description: 'Visible to all companies. Maximum exposure for opportunities.',
+                  description: 'Visible to all companies. Best for maximum exposure.',
                   icon: GlobeAltIcon,
                 },
                 {
                   value: 'anonymous' as const,
                   title: 'Anonymous',
-                  description: 'Only verified companies can view. Your identity stays hidden until you respond.',
+                  description: 'Only verified companies see you. Identity hidden until you respond.',
                   icon: UserGroupIcon,
                   badge: 'Recommended',
                 },
@@ -189,212 +212,174 @@ export default function TeamSettingsPage() {
               ].map((option) => {
                 const isSelected = settings.visibility === option.value;
                 return (
-                  <button
+                  <label
                     key={option.value}
-                    type="button"
-                    onClick={() => handleVisibilityChange(option.value)}
-                    disabled={updateSettingsMutation.isPending}
-                    className={`w-full text-left p-4 rounded-lg border-2 transition-all min-h-[72px] ${
+                    className={`flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-colors min-h-[72px] ${
                       isSelected
                         ? 'border-[#4C1D95] bg-purple-50'
                         : 'border-border hover:border-purple-200 bg-bg-surface'
-                    } ${updateSettingsMutation.isPending ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+                    } ${updateSettingsMutation.isPending ? 'opacity-60 cursor-wait' : ''}`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full border-2 flex items-center justify-center ${
-                        isSelected ? 'border-[#4C1D95] bg-[#4C1D95]' : 'border-border'
-                      }`}>
-                        {isSelected && (
-                          <div className="w-2 h-2 rounded-full bg-white" />
+                    <input
+                      type="radio"
+                      name="visibility"
+                      value={option.value}
+                      checked={isSelected}
+                      onChange={() => handleVisibilityChange(option.value)}
+                      disabled={updateSettingsMutation.isPending}
+                      className="sr-only"
+                    />
+                    {/* Custom radio indicator */}
+                    <div className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full border-2 flex items-center justify-center ${
+                      isSelected ? 'border-[#4C1D95] bg-[#4C1D95]' : 'border-gray-400'
+                    }`}>
+                      {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <option.icon className={`h-5 w-5 flex-shrink-0 ${isSelected ? 'text-[#4C1D95]' : 'text-text-tertiary'}`} />
+                        <span className="font-bold text-text-primary">{option.title}</span>
+                        {option.badge && (
+                          <span className="px-2 py-0.5 text-xs font-bold bg-[#4C1D95]/10 text-[#4C1D95] rounded">
+                            {option.badge}
+                          </span>
                         )}
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <option.icon className={`h-4 w-4 ${isSelected ? 'text-[#4C1D95]' : 'text-text-tertiary'}`} />
-                          <span className="font-semibold text-text-primary">{option.title}</span>
-                          {option.badge && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-[#4C1D95]/10 text-[#4C1D95] rounded-full">
-                              {option.badge}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-text-secondary mt-1">{option.description}</p>
-                      </div>
+                      <p className="text-base text-text-secondary mt-1 leading-relaxed">{option.description}</p>
                     </div>
-                  </button>
+                  </label>
                 );
               })}
-            </div>
+            </fieldset>
 
-            {/* Info box for anonymous mode */}
+            {/* Contextual info boxes */}
             {settings.visibility === 'anonymous' && (
-              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                <div className="flex items-start gap-3">
+              <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <div className="flex gap-3">
                   <ShieldCheckIcon className="h-5 w-5 text-[#4C1D95] flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-[#4C1D95]">Anonymous mode active</p>
-                    <p className="text-sm text-purple-700 mt-1">
-                      Your team appears as &quot;Anonymous Team&quot; with masked details. Your identity is only revealed when you choose to respond to a company.
+                    <p className="font-bold text-[#4C1D95]">Anonymous mode active</p>
+                    <p className="text-base text-purple-700 mt-1 leading-relaxed">
+                      Companies see &quot;Anonymous Team&quot; with masked details. Your identity is revealed only when you respond.
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Warning for private mode */}
             {settings.visibility === 'private' && (
-              <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                <div className="flex items-start gap-3">
+              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="flex gap-3">
                   <ExclamationTriangleIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-amber-800">Limited visibility</p>
-                    <p className="text-sm text-amber-700 mt-1">
-                      Companies cannot discover your team. You won&apos;t receive inbound interest.
+                    <p className="font-bold text-amber-800">Limited discoverability</p>
+                    <p className="text-base text-amber-700 mt-1 leading-relaxed">
+                      Companies cannot find your team. You won&apos;t receive inbound interest.
                     </p>
                   </div>
                 </div>
               </div>
             )}
           </div>
-        </div>
+        </section>
 
-        {/* Additional Visibility Settings */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary flex items-center">
-              <EyeIcon className="h-5 w-5 mr-2" />
-              Availability
-            </h2>
+        {/* Availability & Communication */}
+        <section className="bg-bg-surface rounded-xl border border-border">
+          <div className="px-6 py-5 border-b border-border">
+            <h2 className="text-lg font-bold text-text-primary">Availability</h2>
           </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-text-primary">Open to opportunities</p>
-                <p className="text-sm text-text-secondary">Show that your team is looking for liftout opportunities</p>
+          <div className="divide-y divide-border">
+            <div className="px-6 py-5 flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-text-primary">Open to opportunities</p>
+                <p className="text-base text-text-secondary mt-1">Signal that your team is exploring liftout options</p>
               </div>
-              <button
-                onClick={() => handleToggle('openToLiftout', !settings.openToLiftout)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#4C1D95] focus:ring-offset-2 ${
-                  settings.openToLiftout ? 'bg-[#4C1D95]' : 'bg-gray-200'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    settings.openToLiftout ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
+              <Toggle
+                enabled={settings.openToLiftout}
+                onChange={() => handleToggle('openToLiftout', !settings.openToLiftout)}
+                label="Open to opportunities"
+              />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-text-primary">Allow messages</p>
-                <p className="text-sm text-text-secondary">Let companies send messages to your team</p>
+            <div className="px-6 py-5 flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-text-primary">Allow messages</p>
+                <p className="text-base text-text-secondary mt-1">Let companies contact your team directly</p>
               </div>
-              <button
-                onClick={() => handleToggle('allowMessages', !settings.allowMessages)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#4C1D95] focus:ring-offset-2 ${
-                  settings.allowMessages ? 'bg-[#4C1D95]' : 'bg-gray-200'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    settings.allowMessages ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
+              <Toggle
+                enabled={settings.allowMessages}
+                onChange={() => handleToggle('allowMessages', !settings.allowMessages)}
+                label="Allow messages"
+              />
             </div>
-          </div>
-        </div>
 
-        {/* Privacy Settings */}
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-lg font-medium text-text-primary flex items-center">
-              <ShieldCheckIcon className="h-5 w-5 mr-2" />
-              Privacy
-            </h2>
-          </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-text-primary">Require approval for new members</p>
-                <p className="text-sm text-text-secondary">New members must be approved by a team lead</p>
+            <div className="px-6 py-5 flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-text-primary">Require member approval</p>
+                <p className="text-base text-text-secondary mt-1">New members must be approved by a team lead</p>
               </div>
-              <button
-                onClick={() => handleToggle('requireApproval', !settings.requireApproval)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2 ${
-                  settings.requireApproval ? 'bg-navy' : 'bg-gray-200'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    settings.requireApproval ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
+              <Toggle
+                enabled={settings.requireApproval}
+                onChange={() => handleToggle('requireApproval', !settings.requireApproval)}
+                label="Require member approval"
+              />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Danger Zone */}
-        <div className="card border-error/20">
-          <div className="px-6 py-4 border-b border-error/20">
-            <h2 className="text-lg font-medium text-error flex items-center">
-              <ExclamationTriangleIcon className="h-5 w-5 mr-2" />
-              Danger Zone
-            </h2>
+        <section className="bg-bg-surface rounded-xl border border-red-200">
+          <div className="px-6 py-5 border-b border-red-200">
+            <h2 className="text-lg font-bold text-red-700">Danger zone</h2>
           </div>
-          <div className="px-6 py-4 space-y-4">
-            {/* Archive Team */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-text-primary">Archive team</p>
-                <p className="text-sm text-text-secondary">
-                  Hide your team from searches. You can unarchive later.
+          <div className="divide-y divide-red-100">
+            <div className="px-6 py-5 flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-text-primary">Archive team</p>
+                <p className="text-base text-text-secondary mt-1">
+                  Hide from searches. Can be restored later.
                 </p>
               </div>
               <button
                 onClick={() => setShowArchiveConfirm(true)}
-                className="btn-outline text-gold-600 border-gold-600 hover:bg-gold-50 flex items-center"
+                className="px-4 py-2 min-h-[48px] text-amber-700 border border-amber-300 rounded-lg hover:bg-amber-50 font-medium transition-colors flex items-center gap-2"
               >
-                <ArchiveBoxIcon className="h-4 w-4 mr-2" />
-                Archive
+                <ArchiveBoxIcon className="h-5 w-5" />
+                Archive team
               </button>
             </div>
 
-            {/* Delete Team */}
-            <div className="flex items-center justify-between pt-4 border-t border-error/20">
-              <div>
-                <p className="font-medium text-text-primary">Delete team</p>
-                <p className="text-sm text-text-secondary">
-                  Permanently delete this team and all its data
+            <div className="px-6 py-5 flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-bold text-text-primary">Delete team</p>
+                <p className="text-base text-text-secondary mt-1">
+                  Permanently remove team and all data. Cannot be undone.
                 </p>
               </div>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="btn-outline text-error border-error hover:bg-error/10 flex items-center"
+                className="px-4 py-2 min-h-[48px] text-red-700 border border-red-300 rounded-lg hover:bg-red-50 font-medium transition-colors flex items-center gap-2"
               >
-                <TrashIcon className="h-4 w-4 mr-2" />
-                Delete
+                <TrashIcon className="h-5 w-5" />
+                Delete team
               </button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       {/* Archive Confirmation Modal */}
       {showArchiveConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-bg-surface rounded-lg max-w-md w-full mx-4 p-6">
-            <h3 className="text-lg font-bold text-text-primary mb-2">Archive team?</h3>
-            <p className="text-text-secondary mb-6">
-              This will hide your team from company searches. You can unarchive at any time from this settings page.
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-surface rounded-xl max-w-md w-full p-6 shadow-xl" role="dialog" aria-modal="true">
+            <h3 className="text-xl font-bold text-text-primary mb-2">Archive team?</h3>
+            <p className="text-base text-text-secondary mb-6 leading-relaxed">
+              Your team will be hidden from company searches. You can restore it anytime from settings.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowArchiveConfirm(false)}
-                className="btn-outline"
+                className="px-4 py-2 min-h-[48px] border border-border rounded-lg hover:bg-bg-elevated font-medium transition-colors"
               >
                 Cancel
               </button>
@@ -403,9 +388,9 @@ export default function TeamSettingsPage() {
                   archiveTeamMutation.mutate();
                   setShowArchiveConfirm(false);
                 }}
-                className="btn-primary bg-gold-600 hover:bg-gold-700"
+                className="px-4 py-2 min-h-[48px] bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium transition-colors"
               >
-                Archive Team
+                Archive team
               </button>
             </div>
           </div>

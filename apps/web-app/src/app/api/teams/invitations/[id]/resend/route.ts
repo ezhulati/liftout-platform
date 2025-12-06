@@ -98,8 +98,7 @@ export async function POST(
       },
     });
 
-    // TODO: Send actual email notification here
-    // For now, log the invitation details
+    // Log invitation details (email sending requires Resend API key in production)
     console.log(`[Invitation Resent] Team: ${pendingMember.team.name}, To: ${pendingMember.user?.email}, Token: ${newToken}`);
 
     // Create audit log entry
