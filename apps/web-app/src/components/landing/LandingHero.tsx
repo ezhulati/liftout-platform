@@ -57,8 +57,8 @@ export function LandingHero() {
       {/* Main content */}
       <div className="flex-1 flex items-center">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-24 pt-32 lg:pt-40 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left - Text content */}
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-16 items-center">
+            {/* Left - Text content (60%) */}
             <div>
               {/* Audience toggle */}
               <div className="inline-flex items-center bg-gray-100 rounded-full p-1 mb-8">
@@ -128,7 +128,7 @@ export function LandingHero() {
               </div>
             </div>
 
-            {/* Right - Product mockup (responsive) */}
+            {/* Right - Product mockup (40%) */}
             <div className="relative">
               {audience === 'teams' ? <OpportunitiesMockup /> : <ProductMockup />}
             </div>
