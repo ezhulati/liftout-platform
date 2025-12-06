@@ -199,7 +199,7 @@ function MyTeamView({ userId }: { userId: string }) {
     return (
       <div className="space-y-6">
         <div className="page-header">
-          <h1 className="page-title">My Team</h1>
+          <h1 className="page-title">Team members</h1>
           <p className="page-subtitle">You're not on a team yet.</p>
         </div>
         <div className="card text-center py-12">
@@ -224,8 +224,8 @@ function MyTeamView({ userId }: { userId: string }) {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="page-header">
-        <h1 className="page-title">My Team</h1>
-        <p className="page-subtitle">Manage your team profile and members.</p>
+        <h1 className="page-title">Team members</h1>
+        <p className="page-subtitle">Manage your team post, team members and their permissions.</p>
       </div>
 
       {/* Invite Section - only for team leads */}

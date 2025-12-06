@@ -235,21 +235,21 @@ export function ProductMockup() {
 
       {/* Mobile mockup - shown on small screens */}
       <div className="block md:hidden">
-        <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl max-w-[280px] mx-auto">
-          {/* Phone notch */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-900 rounded-full z-10" />
+        <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl max-w-[280px] mx-auto relative">
+          {/* Phone notch - Dynamic Island style */}
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-900 rounded-full z-10" />
 
-          {/* Phone screen */}
-          <div className="bg-white rounded-[2rem] overflow-hidden relative">
+          {/* Phone screen - proper iPhone aspect ratio */}
+          <div className="bg-white rounded-[2rem] overflow-hidden relative min-h-[520px] flex flex-col">
             {/* Status bar */}
-            <div className="bg-gray-100 px-6 pt-8 pb-2 flex justify-between items-center text-xs text-gray-500">
+            <div className="bg-gray-100 px-6 pt-10 pb-2 flex justify-between items-center text-xs text-gray-500">
               <span>9:41</span>
               <span className="font-medium">Liftout</span>
               <span>●●●</span>
             </div>
 
-            {/* Content */}
-            <div className="px-4 pb-6">
+            {/* Content - flex-1 to fill space */}
+            <div className="px-4 pb-4 flex-1">
               {/* Search */}
               <div className="bg-gray-100 rounded-full px-4 py-2 text-xs text-gray-400 mb-4">
                 Search teams...
@@ -261,15 +261,15 @@ export function ProductMockup() {
               </p>
 
               <div className="space-y-2">
-                {mockTeams.slice(0, 2).map((team) => (
+                {mockTeams.map((team) => (
                   <TeamCardCompact key={team.name} team={team} />
                 ))}
               </div>
             </div>
 
             {/* Home indicator */}
-            <div className="flex justify-center pb-2">
-              <div className="w-24 h-1 bg-gray-300 rounded-full" />
+            <div className="flex justify-center pb-3 pt-2">
+              <div className="w-28 h-1 bg-gray-300 rounded-full" />
             </div>
           </div>
         </div>

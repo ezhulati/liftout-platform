@@ -45,10 +45,10 @@ export function LandingFooter() {
 
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
 
           {/* Brand column with personality (#29, #35, #100) */}
-          <div className="lg:col-span-2">
+          <div className="col-span-2 lg:col-span-2">
             <Link
               href="/"
               className="inline-flex items-center mb-6 group"

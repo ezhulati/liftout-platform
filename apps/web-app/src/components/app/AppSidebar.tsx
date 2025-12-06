@@ -25,7 +25,7 @@ import {
 // Navigation items that show for team users (8 items per Figma)
 const teamNavigation = [
   { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
-  { name: 'My Team', href: '/app/teams/manage', icon: UserGroupIcon },
+  { name: 'My Team', href: '/app/teams', icon: UserGroupIcon },
   { name: 'Messages', href: '/app/messages', icon: ChatBubbleLeftRightIcon, badge: 10 },
   { name: 'Find Companies', href: '/app/find-companies', icon: BuildingOfficeIcon },
   { name: 'Opportunities', href: '/app/opportunities', icon: BriefcaseIcon },
