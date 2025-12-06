@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ProductMockup } from './ProductMockup';
 
 /**
  * Practical UI Hero Section
@@ -71,18 +71,9 @@ export function LandingHero() {
               </p>
             </div>
 
-            {/* Right - Hero image */}
-            <div className="relative hidden lg:block">
-              <div className="rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/hero-team.jpeg"
-                  alt="Professional team collaborating in modern office"
-                  width={600}
-                  height={450}
-                  className="w-full h-auto object-cover"
-                  priority
-                />
-              </div>
+            {/* Right - Product mockup (responsive) */}
+            <div className="relative">
+              <ProductMockup />
             </div>
           </div>
         </div>
