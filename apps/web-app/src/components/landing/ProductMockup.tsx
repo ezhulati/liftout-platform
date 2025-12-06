@@ -133,22 +133,6 @@ export function ProductMockup() {
 
           {/* App content */}
           <div className="bg-white rounded-b-xl overflow-hidden">
-            {/* Header bar */}
-            <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <span className="font-bold text-gray-900">🐾 LIFTOUT</span>
-                <nav className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-                  <span className="text-purple-600 font-medium">Browse Teams</span>
-                  <span>Post Opportunity</span>
-                  <span>How it Works</span>
-                </nav>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Sign in</span>
-                <span className="bg-purple-600 text-white text-sm px-3 py-1.5 rounded-lg">Start free</span>
-              </div>
-            </div>
-
             {/* Search/filter bar */}
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
               <div className="flex items-center gap-3">
@@ -188,16 +172,8 @@ export function ProductMockup() {
             {/* Status bar */}
             <div className="bg-gray-100 px-4 py-1 flex justify-between items-center text-xs text-gray-500">
               <span>9:41</span>
-              <span>liftout.com</span>
+              <span>liftout.com/teams</span>
               <span>100%</span>
-            </div>
-
-            {/* Header */}
-            <div className="border-b border-gray-100 px-4 py-3 flex items-center justify-between">
-              <span className="font-bold text-gray-900 text-sm">🐾 LIFTOUT</span>
-              <div className="flex items-center gap-2">
-                <span className="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-lg">Start free</span>
-              </div>
             </div>
 
             {/* Search */}
