@@ -5,12 +5,12 @@ import { Suspense } from 'react';
 export default function NegotiationsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      {/* Page Header - Practical UI: bold headings, proper spacing */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
-          Team acquisition negotiations
+      {/* Page Header */}
+      <div className="page-header mb-8">
+        <h1 className="page-title">
+          Team Acquisition Negotiations
         </h1>
-        <p className="mt-2 text-base font-normal text-text-secondary leading-relaxed">
+        <p className="page-subtitle">
           Structured negotiation workflow for strategic team liftout deals
         </p>
         <div className="mt-4 bg-success-light border border-success/20 rounded-xl p-4">

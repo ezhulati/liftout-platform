@@ -296,11 +296,11 @@ export default function SearchPage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">
+      <div className="page-header mb-8">
+        <h1 className="page-title">
           {isCompanyUser ? 'Search Teams' : 'Search Opportunities'}
         </h1>
-        <p className="mt-2 text-sm text-text-secondary">
+        <p className="page-subtitle">
           {isCompanyUser
             ? 'Find high-performing teams ready for liftout opportunities'
             : 'Discover liftout opportunities that match your team\'s expertise'

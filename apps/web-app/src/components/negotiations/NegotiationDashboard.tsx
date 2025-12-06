@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { 
-  NegotiationDeal, 
-  calculateNegotiationProgress, 
+import {
+  NegotiationDeal,
+  calculateNegotiationProgress,
   assessDealRisk,
-  mockNegotiationDeal 
+  mockNegotiationDeal
 } from '@/lib/negotiations';
+import { ScheduleMeetingModal } from '@/components/common/ScheduleMeetingModal';
 import {
   DocumentTextIcon,
   ClockIcon,
@@ -28,6 +29,7 @@ interface NegotiationDashboardProps {
 export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
   const [deal, setDeal] = useState<NegotiationDeal | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -342,7 +344,7 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
         <button onClick={() => toast.success('Feature coming soon')} className="btn-primary min-h-12 transition-colors duration-fast">
           View full term sheet
         </button>
-        <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={() => setShowScheduleModal(true)} className="btn-outline min-h-12 transition-colors duration-fast">
           Schedule meeting
         </button>
         <button onClick={() => toast.success('Feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
@@ -352,6 +354,15 @@ export function NegotiationDashboard({ dealId }: NegotiationDashboardProps) {
           Update timeline
         </button>
       </div>
+
+      {/* Schedule Meeting Modal */}
+      <ScheduleMeetingModal
+        isOpen={showScheduleModal}
+        onClose={() => setShowScheduleModal(false)}
+        onSuccess={() => toast.success('Meeting scheduled successfully!')}
+        defaultTitle={`Negotiation Meeting - ${deal.teamId}`}
+        defaultDescription={`Negotiation meeting for ${deal.teamId} - Round ${deal.currentRound}`}
+      />
     </div>
   );
 }

@@ -122,12 +122,12 @@ export default function OffersPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary flex items-center">
-          <GiftIcon className="h-6 w-6 mr-2 text-navy" />
+      <div className="page-header mb-8">
+        <h1 className="page-title flex items-center">
+          <GiftIcon className="h-8 w-8 mr-3 text-purple" />
           Offers
         </h1>
-        <p className="mt-2 text-text-secondary">
+        <p className="page-subtitle">
           Review and respond to offers from companies
         </p>
       </div>

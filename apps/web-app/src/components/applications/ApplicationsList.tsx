@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import type { Application } from '@/types/applications';
 import { applicationService } from '@/lib/services/applicationService';
+import { ScheduleMeetingModal } from '@/components/common/ScheduleMeetingModal';
 
 interface ApplicationsListProps {
   applications: Application[];
@@ -62,6 +63,22 @@ const getOpportunityTitle = (opportunityId: string): string => {
 
 export function ApplicationsList({ applications, isCompanyUser, onRefresh }: ApplicationsListProps) {
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [schedulingApplication, setSchedulingApplication] = useState<Application | null>(null);
+
+  const handleOpenScheduleModal = (application: Application) => {
+    setSchedulingApplication(application);
+    setScheduleModalOpen(true);
+  };
+
+  const handleScheduleSuccess = async () => {
+    // Update application status to interview_scheduled after successful scheduling
+    if (schedulingApplication) {
+      await handleStatusUpdate(schedulingApplication.id, 'interview_scheduled');
+    }
+    setScheduleModalOpen(false);
+    setSchedulingApplication(null);
+  };
 
   const handleStatusUpdate = async (applicationId: string, newStatus: Application['status']) => {
     setUpdatingStatus(applicationId);
@@ -230,7 +247,7 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
                     {application.status === 'under_review' && (
                       <>
                         <button
-                          onClick={() => handleStatusUpdate(application.id, 'interview_scheduled')}
+                          onClick={() => handleOpenScheduleModal(application)}
                           disabled={updatingStatus === application.id}
                           className="btn-primary min-h-12"
                         >
@@ -306,6 +323,20 @@ export function ApplicationsList({ applications, isCompanyUser, onRefresh }: App
           </div>
         );
       })}
+
+      {/* Schedule Meeting Modal */}
+      {schedulingApplication && (
+        <ScheduleMeetingModal
+          isOpen={scheduleModalOpen}
+          onClose={() => {
+            setScheduleModalOpen(false);
+            setSchedulingApplication(null);
+          }}
+          onSuccess={handleScheduleSuccess}
+          defaultTitle={`Interview: ${getOpportunityTitle(schedulingApplication.opportunityId)}`}
+          defaultDescription={`Interview for application from team ${schedulingApplication.teamId.slice(-6)}`}
+        />
+      )}
     </div>
   );
 }

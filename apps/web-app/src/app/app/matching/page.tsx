@@ -99,10 +99,10 @@ function MatchingContent() {
                 <SparklesIcon className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-text-primary font-heading">
+                <h1 className="page-title">
                   AI-Powered Matching
                 </h1>
-                <p className="text-base text-text-secondary mt-1">
+                <p className="page-subtitle">
                   Find opportunities that match your team's skills and experience
                 </p>
               </div>
@@ -208,10 +208,10 @@ function MatchingContent() {
               <SparklesIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-text-primary font-heading">
+              <h1 className="page-title">
                 AI-Powered Matching
               </h1>
-              <p className="text-base text-text-secondary mt-1">
+              <p className="page-subtitle">
                 Find teams that match your opportunity requirements
               </p>
             </div>

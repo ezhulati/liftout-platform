@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   calculateIndividualProfileCompleteness,
@@ -43,78 +43,90 @@ export function useProfileCompletion(options: UseProfileCompletionOptions = {}) 
 
   const [isCalculating, setIsCalculating] = useState(false);
 
-  // Calculate profile completion
-  const calculateCompletion = useMemo(() => {
-    return (profileData?: any) => {
-      if (!user) return completionData;
+  // Calculate profile completion - using useCallback to avoid stale closures
+  const calculateCompletion = useCallback((profileData?: any) => {
+    // Allow calculation even without user from auth - use profileData directly
+    if (!profileData && !user) {
+      return completionData;
+    }
 
-      setIsCalculating(true);
+    setIsCalculating(true);
 
-      try {
-        const profile = profileData || user.profileData || {};
-        let result;
+    try {
+      // Prefer passed profileData over user.profileData
+      const profile = profileData || user?.profileData || {};
+      let result;
 
-        if (isIndividual) {
-          result = calculateIndividualProfileCompleteness(
-            {
-              firstName: user.name?.split(' ')[0] || '',
-              lastName: user.name?.split(' ')[1] || '',
-              location: user.location || '',
-              phone: user.phone || '',
-              currentCompany: user.companyName || '',
-              currentPosition: user.position || '',
-              industry: user.industry || '',
-              ...profile,
-            },
-            options.weights as ProfileCompletenessWeights
-          );
-        } else if (isCompany) {
-          result = calculateCompanyProfileCompleteness(
-            {
-              companyName: user.companyName || '',
-              contactEmail: user.email || '',
-              contactPhone: user.phone || '',
-              headquarters: user.location || '',
-              industry: user.industry || '',
-              ...profile,
-            },
-            options.weights as typeof DEFAULT_COMPANY_WEIGHTS
-          );
-        } else {
-          return completionData;
-        }
-
-        // Determine completion level
-        let completionLevel: ProfileCompletionData['completionLevel'] = 'incomplete';
-        if (result.score >= 90) completionLevel = 'excellent';
-        else if (result.score >= 70) completionLevel = 'good';
-        else if (result.score >= 40) completionLevel = 'basic';
-
-        // Generate next steps based on lowest scoring sections
-        const nextSteps = generateNextSteps(result.breakdown, result.recommendations, isIndividual);
-
-        // Identify missing required fields
-        const missingRequired = identifyMissingRequiredFields(profile, isIndividual);
-
-        const newCompletionData: ProfileCompletionData = {
-          score: result.score,
-          breakdown: result.breakdown,
-          recommendations: result.recommendations,
-          isComplete: result.score >= threshold,
-          completionLevel,
-          missingRequired,
-          nextSteps,
-        };
-
-        setCompletionData(newCompletionData);
-        return newCompletionData;
-      } catch (error) {
-        console.error('Error calculating profile completion:', error);
-        return completionData;
-      } finally {
+      if (isIndividual || (!isCompany && profileData)) {
+        // For individual profiles, use the passed data directly
+        result = calculateIndividualProfileCompleteness(
+          {
+            firstName: profile.firstName || user?.name?.split(' ')[0] || '',
+            lastName: profile.lastName || user?.name?.split(' ')[1] || '',
+            location: profile.location || user?.location || '',
+            phone: profile.phone || user?.phone || '',
+            currentCompany: profile.currentCompany || user?.companyName || '',
+            currentPosition: profile.currentPosition || user?.position || '',
+            industry: profile.industry || user?.industry || '',
+            bio: profile.bio || '',
+            yearsExperience: profile.yearsExperience || 0,
+            skills: profile.skills || [],
+            experiences: profile.experiences || [],
+            portfolio: profile.portfolio || [],
+            openToOpportunities: profile.openToOpportunities,
+            preferredRoles: profile.preferredRoles || [],
+            salaryRange: profile.salaryRange || { min: 0, max: 0, currency: 'USD' },
+            workAuthorization: profile.workAuthorization || '',
+          },
+          options.weights as ProfileCompletenessWeights
+        );
+      } else if (isCompany) {
+        result = calculateCompanyProfileCompleteness(
+          {
+            companyName: profile.companyName || user?.companyName || '',
+            contactEmail: profile.contactEmail || user?.email || '',
+            contactPhone: profile.contactPhone || user?.phone || '',
+            headquarters: profile.headquarters || user?.location || '',
+            industry: profile.industry || user?.industry || '',
+            ...profile,
+          },
+          options.weights as typeof DEFAULT_COMPANY_WEIGHTS
+        );
+      } else {
         setIsCalculating(false);
+        return completionData;
       }
-    };
+
+      // Determine completion level
+      let completionLevel: ProfileCompletionData['completionLevel'] = 'incomplete';
+      if (result.score >= 90) completionLevel = 'excellent';
+      else if (result.score >= 70) completionLevel = 'good';
+      else if (result.score >= 40) completionLevel = 'basic';
+
+      // Generate next steps based on lowest scoring sections
+      const nextSteps = generateNextSteps(result.breakdown, result.recommendations, isIndividual || !isCompany);
+
+      // Identify missing required fields
+      const missingRequired = identifyMissingRequiredFields(profile, isIndividual || !isCompany);
+
+      const newCompletionData: ProfileCompletionData = {
+        score: result.score,
+        breakdown: result.breakdown,
+        recommendations: result.recommendations,
+        isComplete: result.score >= threshold,
+        completionLevel,
+        missingRequired,
+        nextSteps,
+      };
+
+      setCompletionData(newCompletionData);
+      return newCompletionData;
+    } catch (error) {
+      console.error('Error calculating profile completion:', error);
+      return completionData;
+    } finally {
+      setIsCalculating(false);
+    }
   }, [user, isIndividual, isCompany, threshold, options.weights, completionData]);
 
   // Auto-update when user profile changes

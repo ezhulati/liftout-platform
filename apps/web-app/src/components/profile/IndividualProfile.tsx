@@ -25,10 +25,15 @@ import {
   AcademicCapIcon,
   CodeBracketIcon,
   ExclamationCircleIcon,
+  CheckBadgeIcon,
+  DocumentArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import {
   StarIcon as StarSolidIcon,
 } from '@heroicons/react/24/solid';
+import SkillsAutocomplete from './SkillsAutocomplete';
+import LicensesCertifications, { Certification } from './LicensesCertifications';
+import ResumeUpload, { ResumeData } from './ResumeUpload';
 
 // Local storage key for demo user profile data
 const DEMO_PROFILE_STORAGE_KEY = 'liftout_demo_profile';
@@ -79,20 +84,20 @@ interface IndividualProfileData {
   bio: string;
   location: string;
   phone: string;
-  
+
   // Professional Info
   currentCompany: string;
   currentPosition: string;
   industry: string;
   yearsExperience: number;
-  
+
   // Skills & Expertise
   skills: Skill[];
   primarySkills: string[]; // Top 5 skills for quick display
-  
+
   // Experience
   experiences: Experience[];
-  
+
   // Education
   education: Array<{
     id: string;
@@ -103,13 +108,17 @@ interface IndividualProfileData {
     endYear?: number;
     gpa?: number;
   }>;
-  
+
   // Achievements & Certifications
   achievements: Achievement[];
-  
+  certifications: Certification[];
+
   // Portfolio
   portfolio: Portfolio[];
-  
+
+  // Resume
+  resume: ResumeData | null;
+
   // Preferences
   openToOpportunities: boolean;
   preferredRoles: string[];
@@ -120,7 +129,7 @@ interface IndividualProfileData {
   };
   workAuthorization: string;
   remoteWork: 'onsite' | 'hybrid' | 'remote' | 'flexible';
-  
+
   // Social Links
   socialLinks: {
     linkedin?: string;
@@ -162,7 +171,9 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
     experiences: [],
     education: [],
     achievements: [],
+    certifications: [],
     portfolio: [],
+    resume: null,
     openToOpportunities: true,
     preferredRoles: [],
     salaryRange: { min: 0, max: 0, currency: 'USD' },
@@ -323,20 +334,41 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             organization: 'TechVentures Inc.',
           },
           {
-            id: 'ach-2',
-            title: 'Google Cloud Professional Data Engineer',
-            description: 'Certified in designing and building data processing systems on Google Cloud',
-            date: '2022-03',
-            type: 'certification',
-            organization: 'Google Cloud',
-          },
-          {
             id: 'ach-3',
             title: 'Speaker at Data Summit 2022',
             description: 'Presented "Building High-Performing Analytics Teams" to 500+ attendees',
             date: '2022-09',
             type: 'recognition',
             organization: 'Data Summit Conference',
+          },
+        ],
+        certifications: [
+          {
+            id: 'cert-1',
+            name: 'Google Cloud Professional Data Engineer',
+            issuingOrganization: 'Google Cloud',
+            issueDate: '2022-03',
+            expirationDate: '2025-03',
+            doesNotExpire: false,
+            credentialId: 'GCP-DE-123456',
+            credentialUrl: 'https://cloud.google.com/certification',
+          },
+          {
+            id: 'cert-2',
+            name: 'AWS Certified Solutions Architect',
+            issuingOrganization: 'Amazon Web Services',
+            issueDate: '2021-08',
+            expirationDate: '2024-08',
+            doesNotExpire: false,
+            credentialId: 'AWS-SA-789012',
+            credentialUrl: 'https://aws.amazon.com/certification',
+          },
+          {
+            id: 'cert-3',
+            name: 'Tableau Desktop Specialist',
+            issuingOrganization: 'Tableau',
+            issueDate: '2020-05',
+            doesNotExpire: true,
           },
         ],
         portfolio: [
@@ -370,6 +402,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
         salaryRange: { min: 200000, max: 280000, currency: 'USD' },
         workAuthorization: 'citizen',
         remoteWork: 'hybrid',
+        resume: null, // No demo resume
         socialLinks: {
           linkedin: 'https://linkedin.com/in/alexchen',
           github: 'https://github.com/alexchen',
@@ -983,8 +1016,66 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
             </div>
           </div>
           
-          {/* Contact & Social */}
+          {/* Sidebar */}
           <div className="space-y-6">
+            {/* Profile Completeness - Practical UI: subtle progress indicator */}
+            {completeness < 100 && canEdit && (
+              <div className="card bg-gradient-to-br from-purple-50 to-white border-purple-100">
+                <div className="px-6 py-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-base font-bold text-text-primary">Profile strength</h3>
+                    <span className={`text-sm font-bold ${
+                      completeness >= 70 ? 'text-success' :
+                      completeness >= 40 ? 'text-navy' :
+                      'text-gold-dark'
+                    }`}>{completeness}%</span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="w-full bg-white rounded-full h-2 mb-4 shadow-inner">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        completeness >= 70 ? 'bg-success' :
+                        completeness >= 40 ? 'bg-navy' :
+                        'bg-gold'
+                      }`}
+                      style={{ width: `${completeness}%` }}
+                    />
+                  </div>
+
+                  {/* Status badge */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                      completionBadge.color === 'green' ? 'bg-success-light text-success-dark' :
+                      completionBadge.color === 'blue' ? 'bg-purple-100 text-navy' :
+                      completionBadge.color === 'yellow' ? 'bg-gold-light text-gold-darkest' :
+                      'bg-error-light text-error-dark'
+                    }`}>
+                      {completionBadge.icon} {completionBadge.text}
+                    </span>
+                  </div>
+
+                  {/* Next steps - Practical UI: actionable recommendations */}
+                  {completion.recommendations.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-text-secondary mb-2">Complete your profile:</p>
+                      <ul className="space-y-2">
+                        {completion.recommendations.slice(0, 2).map((rec, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-text-tertiary">
+                            <span className="w-5 h-5 rounded-full bg-purple-100 text-navy flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                              {index + 1}
+                            </span>
+                            <span>{rec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Contact Information */}
             <div className="card">
               <div className="px-6 py-4 border-b border-border">
                 <h3 className="text-lg font-bold text-text-primary">Contact information</h3>
@@ -1093,127 +1184,45 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
         </div>
       )}
 
-      {/* Other tab content would go here */}
+      {/* Skills Tab - Modern Autocomplete UI */}
       {activeTab === 'skills' && (
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="text-lg font-bold text-text-primary">Skills & expertise</h3>
-            {isEditing && (
-              <button
-                onClick={addSkill}
-                className="btn-outline min-h-12 text-base"
-              >
-                <PlusIcon className="h-5 w-5 mr-2" />
-                Add skill
-              </button>
-            )}
+        <div className="space-y-6">
+          {/* Skills Section */}
+          <div className="card">
+            <div className="px-6 py-4 border-b border-border">
+              <h3 className="text-lg font-bold text-text-primary">Skills & expertise</h3>
+              <p className="text-sm text-text-tertiary mt-1">
+                Add skills to showcase your professional expertise
+              </p>
+            </div>
+            <div className="px-6 py-6">
+              <SkillsAutocomplete
+                skills={profileData.skills}
+                onSkillsChange={(skills) => setProfileData(prev => ({ ...prev, skills }))}
+                isEditing={isEditing}
+                maxSkills={20}
+              />
+            </div>
           </div>
-          <div className="px-6 py-6">
-            {profileData.skills.length === 0 ? (
-              <div className="text-center py-12">
-                <CodeBracketIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-                <p className="text-text-tertiary mb-4">No skills added yet.</p>
-                {isEditing && (
-                  <button onClick={addSkill} className="btn-primary min-h-12">
-                    <PlusIcon className="h-5 w-5 mr-2" />
-                    Add your first skill
-                  </button>
-                )}
+
+          {/* Licenses & Certifications Section */}
+          <div className="card">
+            <div className="px-6 py-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <CheckBadgeIcon className="h-5 w-5 text-navy" />
+                <h3 className="text-lg font-bold text-text-primary">Licenses & certifications</h3>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {profileData.skills.map((skill, index) => (
-                  <div key={index} className="border border-border rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="label-text mb-1">
-                            Skill name
-                          </label>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={skill.name}
-                              onChange={(e) => {
-                                const newSkills = [...profileData.skills];
-                                newSkills[index] = { ...skill, name: e.target.value };
-                                setProfileData(prev => ({ ...prev, skills: newSkills }));
-                              }}
-                              className="input-field min-h-12"
-                              placeholder="React, Python, Project Management..."
-                            />
-                          ) : (
-                            <p className="font-medium text-text-primary">{skill.name}</p>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="label-text mb-1">
-                            Proficiency level
-                          </label>
-                          {isEditing ? (
-                            <select
-                              value={skill.level}
-                              onChange={(e) => {
-                                const newSkills = [...profileData.skills];
-                                newSkills[index] = { ...skill, level: e.target.value as any };
-                                setProfileData(prev => ({ ...prev, skills: newSkills }));
-                              }}
-                              className="input-field min-h-12"
-                            >
-                              <option value="Beginner">Beginner</option>
-                              <option value="Intermediate">Intermediate</option>
-                              <option value="Advanced">Advanced</option>
-                              <option value="Expert">Expert</option>
-                            </select>
-                          ) : (
-                            <span className={`badge text-xs ${
-                              skill.level === 'Expert' ? 'badge-warning' :
-                              skill.level === 'Advanced' ? 'badge-primary' :
-                              skill.level === 'Intermediate' ? 'badge-success' :
-                              'badge-secondary'
-                            }`}>
-                              {skill.level}
-                            </span>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="label-text mb-1">
-                            Years experience
-                          </label>
-                          {isEditing ? (
-                            <input
-                              type="number"
-                              value={skill.yearsExperience}
-                              onChange={(e) => {
-                                const newSkills = [...profileData.skills];
-                                newSkills[index] = { ...skill, yearsExperience: parseInt(e.target.value) || 0 };
-                                setProfileData(prev => ({ ...prev, skills: newSkills }));
-                              }}
-                              className="input-field min-h-12"
-                              min="0"
-                              max="50"
-                            />
-                          ) : (
-                            <p className="text-text-primary">{skill.yearsExperience} years</p>
-                          )}
-                        </div>
-                      </div>
-
-                      {isEditing && (
-                        <button
-                          onClick={() => removeSkill(index)}
-                          className="ml-4 text-error hover:text-error-dark touch-target transition-colors duration-fast"
-                        >
-                          <XMarkIcon className="h-5 w-5" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+              <p className="text-sm text-text-tertiary mt-1">
+                Add professional licenses and certifications to build credibility
+              </p>
+            </div>
+            <div className="px-6 py-6">
+              <LicensesCertifications
+                certifications={profileData.certifications || []}
+                onCertificationsChange={(certifications) => setProfileData(prev => ({ ...prev, certifications }))}
+                isEditing={isEditing}
+              />
+            </div>
           </div>
         </div>
       )}
@@ -1389,150 +1398,227 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
       {/* Portfolio Tab */}
       {activeTab === 'portfolio' && (
-        <div className="card">
-          <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h3 className="text-lg font-bold text-text-primary">Portfolio & projects</h3>
-            {isEditing && (
-              <button
-                onClick={addPortfolioItem}
-                className="btn-outline min-h-12 text-base"
-              >
-                <PlusIcon className="h-5 w-5 mr-2" />
-                Add project
-              </button>
-            )}
+        <div className="space-y-6">
+          {/* Resume Upload Section */}
+          <div className="card">
+            <div className="px-6 py-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <DocumentArrowUpIcon className="h-5 w-5 text-navy" />
+                <h3 className="text-lg font-bold text-text-primary">Resume</h3>
+              </div>
+              <p className="text-sm text-text-tertiary mt-1">
+                Upload your resume to make it easy for companies to learn about you
+              </p>
+            </div>
+            <div className="px-6 py-6">
+              <ResumeUpload
+                resume={profileData.resume}
+                onResumeChange={(resume) => setProfileData(prev => ({ ...prev, resume }))}
+                userId={user?.id || sessionUser?.id || 'demo-user'}
+                isEditing={isEditing}
+                useLocalStorage={isDemoUser}
+              />
+            </div>
           </div>
-          <div className="px-6 py-6">
-            {profileData.portfolio.length === 0 ? (
-              <div className="text-center py-12">
-                <DocumentTextIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-                <p className="text-text-tertiary mb-4">No portfolio items added yet.</p>
-                {isEditing && (
-                  <button onClick={addPortfolioItem} className="btn-primary min-h-12">
-                    <PlusIcon className="h-5 w-5 mr-2" />
-                    Add your first project
-                  </button>
-                )}
+
+          {/* Portfolio Projects Section */}
+          <div className="card">
+            <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-text-primary">Portfolio & projects</h3>
+                <p className="text-sm text-text-tertiary mt-1">
+                  Showcase your best work, publications, and presentations
+                </p>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {profileData.portfolio.map((item, index) => (
-                  <div key={item.id} className="border border-border rounded-lg p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        {isEditing ? (
-                          <div className="space-y-4">
-                            <div>
-                              <label className="label-text mb-1">Project title</label>
-                              <input
-                                type="text"
-                                value={item.title}
+              {isEditing && (
+                <button
+                  onClick={addPortfolioItem}
+                  className="btn-outline min-h-12 text-base"
+                >
+                  <PlusIcon className="h-5 w-5 mr-2" />
+                  Add project
+                </button>
+              )}
+            </div>
+            <div className="px-6 py-6">
+              {profileData.portfolio.length === 0 ? (
+                <div className="text-center py-12">
+                  <DocumentTextIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+                  <p className="text-text-primary font-medium mb-2">No portfolio items added yet</p>
+                  <p className="text-text-tertiary text-sm mb-4">
+                    Add projects, publications, or presentations to showcase your work
+                  </p>
+                  {isEditing ? (
+                    <button onClick={addPortfolioItem} className="btn-primary min-h-12">
+                      <PlusIcon className="h-5 w-5 mr-2" />
+                      Add your first project
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="text-navy hover:text-navy-dark font-medium"
+                    >
+                      Edit profile to add projects
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {profileData.portfolio.map((item, index) => (
+                    <div key={item.id} className="border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          {isEditing ? (
+                            <div className="space-y-4">
+                              <div>
+                                <label className="label-text mb-1">Project title</label>
+                                <input
+                                  type="text"
+                                  value={item.title}
+                                  onChange={(e) => {
+                                    const newPortfolio = [...profileData.portfolio];
+                                    newPortfolio[index] = { ...item, title: e.target.value };
+                                    setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
+                                  }}
+                                  className="input-field min-h-12"
+                                  placeholder="My Awesome Project"
+                                />
+                              </div>
+                              <div>
+                                <label className="label-text mb-1">Type</label>
+                                <select
+                                  value={item.type}
+                                  onChange={(e) => {
+                                    const newPortfolio = [...profileData.portfolio];
+                                    newPortfolio[index] = { ...item, type: e.target.value as any };
+                                    setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
+                                  }}
+                                  className="input-field min-h-12"
+                                >
+                                  <option value="project">Project</option>
+                                  <option value="publication">Publication</option>
+                                  <option value="presentation">Presentation</option>
+                                  <option value="other">Other</option>
+                                </select>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <h4 className="text-base font-bold text-text-primary">{item.title || 'Untitled project'}</h4>
+                              <span className={`inline-block text-xs px-2 py-0.5 rounded-full mt-1 font-medium ${
+                                item.type === 'project' ? 'bg-purple-100 text-navy' :
+                                item.type === 'publication' ? 'bg-gold-light text-gold-darkest' :
+                                item.type === 'presentation' ? 'bg-success-light text-success-dark' :
+                                'bg-bg-secondary text-text-secondary'
+                              }`}>
+                                {item.type}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        {isEditing && (
+                          <button
+                            onClick={() => {
+                              setProfileData(prev => ({
+                                ...prev,
+                                portfolio: prev.portfolio.filter(p => p.id !== item.id)
+                              }));
+                            }}
+                            className="ml-4 text-text-tertiary hover:text-error p-1.5 rounded hover:bg-error-light transition-colors"
+                          >
+                            <XMarkIcon className="h-5 w-5" />
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          {isEditing ? (
+                            <>
+                              <label className="label-text mb-1">Description</label>
+                              <textarea
+                                value={item.description}
                                 onChange={(e) => {
                                   const newPortfolio = [...profileData.portfolio];
-                                  newPortfolio[index] = { ...item, title: e.target.value };
+                                  newPortfolio[index] = { ...item, description: e.target.value };
                                   setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
                                 }}
-                                className="input-field min-h-12"
-                                placeholder="My Awesome Project"
+                                className="input-field min-h-[80px]"
+                                rows={2}
+                                placeholder="Describe your project..."
                               />
-                            </div>
-                            <div>
-                              <label className="label-text mb-1">Type</label>
-                              <select
-                                value={item.type}
+                            </>
+                          ) : (
+                            <p className="text-text-secondary text-sm line-clamp-3">{item.description || 'No description'}</p>
+                          )}
+                        </div>
+
+                        {/* Technologies */}
+                        {!isEditing && item.technologies && item.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {item.technologies.slice(0, 5).map((tech, i) => (
+                              <span key={i} className="text-xs px-2 py-0.5 bg-bg-secondary rounded text-text-secondary">
+                                {tech}
+                              </span>
+                            ))}
+                            {item.technologies.length > 5 && (
+                              <span className="text-xs px-2 py-0.5 text-text-tertiary">
+                                +{item.technologies.length - 5} more
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <div>
+                          {isEditing ? (
+                            <>
+                              <label className="label-text mb-1 flex items-center gap-2">
+                                <LinkIcon className="h-4 w-4 text-text-tertiary" />
+                                Project URL
+                              </label>
+                              <input
+                                type="url"
+                                value={item.url}
                                 onChange={(e) => {
                                   const newPortfolio = [...profileData.portfolio];
-                                  newPortfolio[index] = { ...item, type: e.target.value as any };
+                                  newPortfolio[index] = { ...item, url: e.target.value };
                                   setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
                                 }}
                                 className="input-field min-h-12"
-                              >
-                                <option value="project">Project</option>
-                                <option value="publication">Publication</option>
-                                <option value="presentation">Presentation</option>
-                                <option value="other">Other</option>
-                              </select>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <h4 className="text-base font-bold text-text-primary">{item.title || 'Untitled project'}</h4>
-                            <span className={`badge text-xs mt-1 ${
-                              item.type === 'project' ? 'badge-primary' :
-                              item.type === 'publication' ? 'badge-warning' :
-                              item.type === 'presentation' ? 'badge-success' :
-                              'badge-secondary'
-                            }`}>
-                              {item.type}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      {isEditing && (
-                        <button
-                          onClick={() => {
-                            setProfileData(prev => ({
-                              ...prev,
-                              portfolio: prev.portfolio.filter(p => p.id !== item.id)
-                            }));
-                          }}
-                          className="ml-4 text-error hover:text-error-dark touch-target transition-colors duration-fast"
-                        >
-                          <XMarkIcon className="h-5 w-5" />
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="label-text mb-1">Description</label>
-                        {isEditing ? (
-                          <textarea
-                            value={item.description}
-                            onChange={(e) => {
-                              const newPortfolio = [...profileData.portfolio];
-                              newPortfolio[index] = { ...item, description: e.target.value };
-                              setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
-                            }}
-                            className="input-field min-h-[80px]"
-                            rows={2}
-                            placeholder="Describe your project..."
-                          />
-                        ) : (
-                          <p className="text-text-secondary text-sm">{item.description || 'No description'}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="label-text mb-1 flex items-center gap-2">
-                          <LinkIcon className="h-4 w-4 text-text-tertiary" />
-                          Project URL
-                        </label>
-                        {isEditing ? (
-                          <input
-                            type="url"
-                            value={item.url}
-                            onChange={(e) => {
-                              const newPortfolio = [...profileData.portfolio];
-                              newPortfolio[index] = { ...item, url: e.target.value };
-                              setProfileData(prev => ({ ...prev, portfolio: newPortfolio }));
-                            }}
-                            className="input-field min-h-12"
-                            placeholder="https://github.com/..."
-                          />
-                        ) : item.url ? (
-                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-link text-sm hover:underline">
-                            {item.url}
-                          </a>
-                        ) : (
-                          <p className="text-text-tertiary text-sm">No URL</p>
-                        )}
+                                placeholder="https://github.com/..."
+                              />
+                            </>
+                          ) : item.url ? (
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-sm text-navy hover:text-navy-dark font-medium"
+                            >
+                              <LinkIcon className="h-4 w-4" />
+                              View project
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+
+                  {/* Add More Card */}
+                  {isEditing && (
+                    <button
+                      onClick={addPortfolioItem}
+                      className="border-2 border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center min-h-[200px] hover:border-navy hover:bg-purple-50 transition-colors group"
+                    >
+                      <PlusIcon className="h-10 w-10 text-text-tertiary group-hover:text-navy transition-colors" />
+                      <span className="mt-2 text-text-secondary group-hover:text-navy transition-colors font-medium">
+                        Add another project
+                      </span>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

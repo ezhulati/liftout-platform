@@ -192,9 +192,9 @@ export default function ComparePage() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Page Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Compare Teams</h1>
-          <p className="text-text-secondary mt-1">
+        <div className="page-header">
+          <h1 className="page-title">Compare Teams</h1>
+          <p className="page-subtitle">
             Compare up to 4 teams side by side to find the best fit
           </p>
         </div>

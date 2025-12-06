@@ -116,12 +116,12 @@ export default function ApplicationsPage() {
   if (!applications || applications.length === 0) {
     return (
       <div className="space-y-6">
-        {/* Page header - Practical UI: bold headings, regular body */}
+        {/* Page header */}
         <div className="page-header">
-          <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
+          <h1 className="page-title">
             {isCompanyUser ? 'Application Management' : 'My Applications'}
           </h1>
-          <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
+          <p className="page-subtitle">
             {isCompanyUser
               ? 'Review and manage team applications to your liftout opportunities'
               : 'Track your team\'s expressions of interest and application status'
@@ -160,10 +160,10 @@ export default function ApplicationsPage() {
     <div className="space-y-6">
       {/* Page header - Practical UI: bold headings, regular body */}
       <div className="page-header">
-        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">
+        <h1 className="page-title">
           {isCompanyUser ? 'Application Management' : 'My Applications'}
         </h1>
-        <p className="text-base font-normal text-text-secondary mt-2 leading-relaxed">
+        <p className="page-subtitle">
           {isCompanyUser
             ? 'Review and manage team applications to your liftout opportunities'
             : 'Track your team\'s expressions of interest and application status'

@@ -156,9 +156,9 @@ export default function InterviewsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Interviews</h1>
-        <p className="text-text-secondary mt-1">
+      <div className="page-header">
+        <h1 className="page-title">Interviews</h1>
+        <p className="page-subtitle">
           Manage your interview schedule and track progress
         </p>
       </div>
