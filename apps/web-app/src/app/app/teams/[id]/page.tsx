@@ -26,6 +26,8 @@ import {
 } from '@heroicons/react/24/solid';
 import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
 import { TeamPostingStatus } from '@/components/teams/TeamPostingStatus';
+import { VisibilityBadge, AnonymizedIndicator } from '@/components/teams/VisibilityBadge';
+import { NDAAcceptanceModal } from '@/components/messaging/NDAAcceptanceModal';
 
 interface TeamMember {
   id: string;
@@ -58,6 +60,9 @@ interface Team {
     equity: boolean;
     benefits: string;
   };
+  visibility?: 'public' | 'anonymous' | 'private';
+  isAnonymous?: boolean;
+  _isAnonymized?: boolean;
 }
 
 export default function TeamProfilePage() {
@@ -67,6 +72,7 @@ export default function TeamProfilePage() {
   const teamId = params?.id as string;
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showNDAModal, setShowNDAModal] = useState(false);
 
   const { data: team, isLoading, refetch } = useQuery<Team | null>({
     queryKey: ['team', teamId],
@@ -158,10 +164,16 @@ export default function TeamProfilePage() {
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-text-primary flex items-center">
+                  <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
                     {team.name}
                     {team.cohesionScore >= 90 && (
-                      <CheckBadgeIconSolid className="h-6 w-6 text-navy ml-2" title="High cohesion team" />
+                      <CheckBadgeIconSolid className="h-6 w-6 text-navy" title="High cohesion team" />
+                    )}
+                    {/* Show anonymized indicator for company users viewing anonymous teams */}
+                    {isCompanyUser && team._isAnonymized && <AnonymizedIndicator />}
+                    {/* Show visibility badge for team owners */}
+                    {isTeamOwner && team.visibility && (
+                      <VisibilityBadge visibility={team.visibility} isAnonymous={team.isAnonymous} />
                     )}
                   </h1>
                   <div className="flex items-center space-x-4 mt-1">
@@ -217,7 +229,14 @@ export default function TeamProfilePage() {
                 </button>
                 <button
                   className="btn-outline min-h-12 flex items-center"
-                  onClick={() => router.push(`/app/messages?team=${teamId}`)}
+                  onClick={() => {
+                    // If team is anonymous, show NDA modal first
+                    if (team._isAnonymized || team.isAnonymous) {
+                      setShowNDAModal(true);
+                    } else {
+                      router.push(`/app/messages?team=${teamId}`);
+                    }
+                  }}
                 >
                   <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                   Message team
@@ -464,6 +483,18 @@ export default function TeamProfilePage() {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         teamId={teamId}
+        teamName={team.name}
+      />
+
+      {/* NDA Acceptance Modal for anonymous teams */}
+      <NDAAcceptanceModal
+        isOpen={showNDAModal}
+        onClose={() => setShowNDAModal(false)}
+        onAccept={() => {
+          setShowNDAModal(false);
+          // Navigate to messages with NDA acceptance flag
+          router.push(`/app/messages?team=${teamId}&nda=accepted`);
+        }}
         teamName={team.name}
       />
     </div>

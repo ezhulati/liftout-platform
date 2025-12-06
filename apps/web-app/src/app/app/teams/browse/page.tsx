@@ -13,6 +13,7 @@ import {
   BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkIconSolid } from '@heroicons/react/24/solid';
+import { AnonymizedIndicator } from '@/components/teams/VisibilityBadge';
 
 interface Team {
   id: string;
@@ -27,6 +28,9 @@ interface Team {
   postingStatus: string;
   skills: string[];
   isSaved?: boolean;
+  _isAnonymized?: boolean;
+  visibility?: 'public' | 'anonymous' | 'private';
+  isAnonymous?: boolean;
 }
 
 const industries = [
@@ -189,7 +193,10 @@ export default function BrowseTeamsPage() {
                         <UserGroupIcon className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-text-primary">{team.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-text-primary">{team.name}</h3>
+                          {team._isAnonymized && <AnonymizedIndicator />}
+                        </div>
                         <p className="text-sm text-text-secondary">{team.size} members</p>
                       </div>
                     </div>

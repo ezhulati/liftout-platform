@@ -218,13 +218,13 @@ export function ProductMockup() {
             </div>
           </div>
 
-          {/* App content */}
-          <div className="bg-white rounded-b-xl overflow-hidden">
+          {/* App content - with max height and overflow hidden for cut-off effect */}
+          <div className="bg-white rounded-b-xl overflow-hidden max-h-[720px]">
             {/* Search/filter bar */}
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
               <div className="flex items-center gap-3">
                 <div className="flex-1 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-400">
-                  Search teams by skills, location, or industry...
+                  Search by skills, location, industry...
                 </div>
                 <div className="flex gap-2">
                   <span className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600">Filters</span>
@@ -241,7 +241,7 @@ export function ProductMockup() {
               <span className="text-sm text-gray-500">Sort: Best match</span>
             </div>
 
-            {/* Team cards - show only 4 for balanced height */}
+            {/* Team cards - show 4, last one gets cut off */}
             <div className="px-6 pb-6 space-y-3">
               {mockTeams.slice(0, 4).map((team) => (
                 <TeamCardFull key={team.name} team={team} />

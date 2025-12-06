@@ -84,6 +84,10 @@ export interface CreateConversationInput {
     content: string;
     messageType?: 'text' | 'file' | 'system' | 'video_invite';
   };
+  /** Whether the team being contacted is anonymous (requires NDA acceptance) */
+  isAnonymous?: boolean;
+  /** Whether the user has accepted the NDA (required for anonymous teams) */
+  acceptNDA?: boolean;
 }
 
 export interface SendMessageInput {

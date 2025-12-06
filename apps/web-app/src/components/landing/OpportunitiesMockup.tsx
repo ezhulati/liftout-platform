@@ -206,8 +206,8 @@ export function OpportunitiesMockup() {
             </div>
           </div>
 
-          {/* App content */}
-          <div className="bg-white rounded-b-xl overflow-hidden">
+          {/* App content - with max height and overflow hidden for cut-off effect */}
+          <div className="bg-white rounded-b-xl overflow-hidden max-h-[720px]">
             {/* Search/filter bar */}
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
               <div className="flex items-center gap-3">
