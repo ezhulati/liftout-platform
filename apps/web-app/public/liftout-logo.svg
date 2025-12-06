@@ -14,28 +14,46 @@
       <stop offset="100%" stop-color="#9333ea"/>
     </linearGradient>
     <style>
-      .center-person {
-        animation: float 3s ease-in-out infinite;
+      .person-left {
+        animation: float-left 2.8s ease-in-out infinite;
       }
-      @keyframes float {
+      .person-center {
+        animation: float-center 3s ease-in-out infinite;
+      }
+      .person-right {
+        animation: float-right 3.2s ease-in-out infinite;
+      }
+      @keyframes float-left {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-2px); }
+      }
+      @keyframes float-center {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-2.5px); }
+      }
+      @keyframes float-right {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-1.5px); }
       }
     </style>
   </defs>
 
-  <!-- Three People Icon - Clean geometric style -->
+  <!-- Three People Icon - Clean geometric style with staggered animations -->
   <g transform="translate(2, 2)">
     <!-- Back left person -->
-    <circle cx="12" cy="10" r="5" fill="url(#grad3)"/>
-    <rect x="5" y="17" width="14" height="22" rx="7" fill="url(#grad3)"/>
+    <g class="person-left">
+      <circle cx="12" cy="10" r="5" fill="url(#grad3)"/>
+      <rect x="5" y="17" width="14" height="22" rx="7" fill="url(#grad3)"/>
+    </g>
 
     <!-- Back right person -->
-    <circle cx="42" cy="10" r="5" fill="url(#grad1)"/>
-    <rect x="35" y="17" width="14" height="22" rx="7" fill="url(#grad1)"/>
+    <g class="person-right">
+      <circle cx="42" cy="10" r="5" fill="url(#grad1)"/>
+      <rect x="35" y="17" width="14" height="22" rx="7" fill="url(#grad1)"/>
+    </g>
 
-    <!-- Front center person (elevated, subtle float animation) -->
-    <g class="center-person">
+    <!-- Front center person (elevated, slightly more movement) -->
+    <g class="person-center">
       <circle cx="27" cy="6" r="6" fill="url(#grad2)"/>
       <rect x="18" y="14" width="18" height="26" rx="9" fill="url(#grad2)"/>
     </g>
