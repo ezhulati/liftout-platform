@@ -179,7 +179,12 @@ export function useMyTeam(): UseMyTeamResult {
       const response = await fetch('/api/teams/invitations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ teamId: team?.id, email, role }),
+        body: JSON.stringify({
+          teamId: team?.id,
+          teamName: team?.name,
+          inviteeEmail: email,
+          role: role || 'member',
+        }),
       });
       if (!response.ok) {
         const error = await response.json();

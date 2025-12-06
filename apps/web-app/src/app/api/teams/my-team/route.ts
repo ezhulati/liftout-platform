@@ -58,6 +58,24 @@ export async function GET(request: NextRequest) {
     }
 
     const team = teamMember.team;
+
+    // Fetch pending invitations (members with status 'pending')
+    const pendingInvitations = await prisma.teamMember.findMany({
+      where: {
+        teamId: team.id,
+        status: 'pending',
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
     return NextResponse.json({
       team: {
         id: team.id,
@@ -80,7 +98,14 @@ export async function GET(request: NextRequest) {
           isLead: m.isAdmin,
           skills: [], // TODO: Add skills from profile
         })),
-        invitations: [], // Invitations feature not yet implemented
+        invitations: pendingInvitations.map((inv) => ({
+          id: inv.id,
+          email: inv.user?.email || 'Unknown',
+          role: inv.role || undefined,
+          status: 'pending' as const,
+          createdAt: inv.invitedAt?.toISOString() || inv.createdAt.toISOString(),
+          expiresAt: inv.invitationExpiresAt?.toISOString() || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        })),
         applicationCount: team._count.applications,
         memberCount: team._count.members,
         createdAt: team.createdAt.toISOString(),
