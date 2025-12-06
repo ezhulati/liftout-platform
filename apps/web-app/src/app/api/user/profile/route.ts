@@ -30,8 +30,9 @@ const profileUpdateSchema = z.object({
   salaryExpectationMin: z.number().optional(),
   salaryExpectationMax: z.number().optional(),
   willingToRelocate: z.boolean().optional(),
+  profilePhotoUrl: z.string().nullable().optional(),
   // Extended fields for onboarding
-  skills: z.array(z.string()).optional(),
+  skills: z.array(z.any()).optional(),
   certifications: z.array(z.string()).optional(),
   achievements: z.string().optional(),
   searchPreferences: z.object({
@@ -41,6 +42,10 @@ const profileUpdateSchema = z.object({
     dealbreakers: z.array(z.string()).optional(),
     preferredLocations: z.array(z.string()).optional(),
   }).optional(),
+  // Profile sections stored as JSON
+  workExperience: z.array(z.any()).optional(),
+  education: z.array(z.any()).optional(),
+  portfolio: z.array(z.any()).optional(),
 }).partial();
 
 // GET - Retrieve user profile
@@ -59,6 +64,11 @@ export async function GET() {
       where: { id: session.user.id },
       include: {
         profile: true,
+        skills: {
+          include: {
+            skill: true,
+          },
+        },
       },
     });
 
@@ -97,6 +107,19 @@ export async function GET() {
       salaryExpectationMin: user.profile?.salaryExpectationMin || null,
       salaryExpectationMax: user.profile?.salaryExpectationMax || null,
       willingToRelocate: user.profile?.willingToRelocate || false,
+      // Extended profile data
+      skills: user.skills?.map((s) => ({
+        id: s.id,
+        name: s.skill.name,
+        proficiencyLevel: s.proficiencyLevel,
+        yearsExperience: s.yearsExperience,
+      })) || [],
+      workExperience: [], // Stored elsewhere or not yet implemented
+      education: [], // Stored elsewhere or not yet implemented
+      portfolio: [], // Stored elsewhere or not yet implemented
+      achievements: user.profile?.achievements || '',
+      certifications: user.profile?.certifications || [],
+      searchPreferences: user.profile?.searchPreferences || {},
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -200,10 +223,18 @@ export async function PUT(request: Request) {
     if (updates.salaryExpectationMin !== undefined) profileUpdateData.salaryExpectationMin = updates.salaryExpectationMin;
     if (updates.salaryExpectationMax !== undefined) profileUpdateData.salaryExpectationMax = updates.salaryExpectationMax;
     if (updates.willingToRelocate !== undefined) profileUpdateData.willingToRelocate = updates.willingToRelocate;
-    if (updates.skills !== undefined) profileUpdateData.skillsSummary = updates.skills.join(', ');
+    // Skills are stored in a separate table (UserSkill), handled below
+    // Update skillsSummary on profile for backwards compatibility
+    if (updates.skills !== undefined) {
+      profileUpdateData.skillsSummary = Array.isArray(updates.skills)
+        ? updates.skills.map((s: any) => typeof s === 'string' ? s : s.name).join(', ')
+        : '';
+    }
     if (updates.certifications !== undefined) profileUpdateData.certifications = updates.certifications;
     if (updates.achievements !== undefined) profileUpdateData.achievements = updates.achievements;
     if (updates.searchPreferences !== undefined) profileUpdateData.searchPreferences = updates.searchPreferences;
+    if (updates.profilePhotoUrl !== undefined) profileUpdateData.profilePhotoUrl = updates.profilePhotoUrl;
+    // workExperience, education, portfolio not stored on profile - would need separate handling
 
     // Update user and profile in transaction
     await prisma.$transaction(async (tx) => {

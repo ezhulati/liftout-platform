@@ -318,6 +318,10 @@ model IndividualProfile {
   certifications         Json                @default("[]")
   visibilitySettings     Json                @default("{\"profile\": \"public\", \"activity\": \"connections_only\"}") @map("visibility_settings")
   searchPreferences      Json                @default("{}") @map("search_preferences")
+  workExperience         Json                @default("[]") @map("work_experience")
+  education              Json                @default("[]")
+  portfolio              Json                @default("[]")
+  skills                 Json                @default("[]")
   createdAt              DateTime            @default(now()) @map("created_at")
   updatedAt              DateTime            @updatedAt @map("updated_at")
 

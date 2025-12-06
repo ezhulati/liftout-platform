@@ -386,32 +386,58 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
       return;
     }
 
-    // For non-demo users, check if they have saved profile data
-    if (savedProfile) {
-      setProfileData(savedProfile);
-      setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || null);
+    // For non-demo users, fetch profile from API
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/user/profile');
+        if (response.ok) {
+          const profile = await response.json();
+          setProfileData(prev => ({
+            ...prev,
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+            headline: profile.title || profile.position || '',
+            bio: profile.bio || '',
+            location: profile.location || '',
+            phone: profile.phone || '',
+            currentCompany: profile.companyName || '',
+            currentPosition: profile.position || '',
+            industry: profile.industry || '',
+            yearsExperience: profile.yearsExperience || 0,
+            // Extended profile data
+            skills: Array.isArray(profile.skills) ? profile.skills : [],
+            experiences: Array.isArray(profile.workExperience) ? profile.workExperience : [],
+            education: Array.isArray(profile.education) ? profile.education : [],
+            portfolio: Array.isArray(profile.portfolio) ? profile.portfolio : [],
+            socialLinks: {
+              website: profile.website || '',
+              linkedin: profile.linkedin || '',
+              twitter: '',
+              github: profile.github || '',
+            },
+          }));
+          // Use profile photo from database, fall back to session image
+          setCurrentPhotoUrl(profile.profilePhotoUrl || sessionUser?.image || null);
+        } else {
+          // Fallback to session data if API fails
+          const name = user?.name || sessionUser?.name || '';
+          const nameParts = name.split(' ');
+          setProfileData(prev => ({
+            ...prev,
+            firstName: nameParts[0] || '',
+            lastName: nameParts.slice(1).join(' ') || '',
+          }));
+          setCurrentPhotoUrl(sessionUser?.image || null);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        // Fallback to session data
+        setCurrentPhotoUrl(sessionUser?.image || null);
+      }
       setIsInitialized(true);
-      return;
-    }
+    };
 
-    // Use session/user data as initial fallback for non-demo users
-    const name = user?.name || sessionUser?.name || '';
-    const nameParts = name.split(' ');
-
-    setProfileData(prev => ({
-      ...prev,
-      firstName: user?.name?.split(' ')[0] || nameParts[0] || '',
-      lastName: user?.name?.split(' ').slice(1).join(' ') || nameParts.slice(1).join(' ') || '',
-      location: user?.location || '',
-      phone: user?.phone || '',
-      currentCompany: user?.companyName || '',
-      currentPosition: user?.position || '',
-      industry: user?.industry || '',
-    }));
-
-    // Set current photo URL
-    setCurrentPhotoUrl(user?.photoURL || sessionUser?.image || null);
-    setIsInitialized(true);
+    fetchProfile();
   }, [userEmail, user, sessionUser, isInitialized, saveDemoProfile]);
 
   const handleSave = async () => {
@@ -425,42 +451,35 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
         return;
       }
 
-      // For real users with Firestore, update via API
-      if (user) {
-        // Transform profile data to match User.profileData type
-        const profileDataForApi = {
-          bio: profileData.bio,
-          website: profileData.socialLinks.website,
-          linkedin: profileData.socialLinks.linkedin,
-          twitter: profileData.socialLinks.twitter,
-          github: profileData.socialLinks.github,
-          headline: profileData.headline,
-          yearsExperience: profileData.yearsExperience,
-          skills: profileData.skills.map((skill: Skill) => skill.name),
-          education: profileData.education.map((edu) => ({
-            degree: edu.degree,
-            institution: edu.institution,
-            year: edu.endYear || edu.startYear,
-          })),
-          workHistory: profileData.experiences.map((exp) => ({
-            company: exp.company,
-            role: exp.position,
-            duration: exp.isCurrent
-              ? `${exp.startDate} - Present`
-              : `${exp.startDate} - ${exp.endDate || 'Present'}`,
-          })),
-        };
-        await updateProfile({
-          name: `${profileData.firstName} ${profileData.lastName}`,
+      // For real users, save via API
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: profileData.firstName,
+          lastName: profileData.lastName,
           location: profileData.location,
           phone: profileData.phone,
           companyName: profileData.currentCompany,
           position: profileData.currentPosition,
+          title: profileData.headline,
           industry: profileData.industry,
-          photoURL: currentPhotoUrl || undefined,
-          // Store extended profile data in a separate field
-          profileData: profileDataForApi,
-        });
+          bio: profileData.bio,
+          yearsExperience: profileData.yearsExperience,
+          website: profileData.socialLinks?.website,
+          linkedin: profileData.socialLinks?.linkedin,
+          profilePhotoUrl: currentPhotoUrl,
+          // Extended profile data
+          skills: profileData.skills || [],
+          workExperience: profileData.experiences || [],
+          education: profileData.education || [],
+          portfolio: profileData.portfolio || [],
+          achievements: profileData.achievements?.map((a: Achievement) => a.title).join(', ') || '',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile');
       }
 
       setIsEditing(false);
@@ -480,18 +499,25 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
     // For demo users, save to localStorage
     if (isDemoUser) {
       saveDemoProfile(profileData, photoUrl);
-      toast.success('Photo updated');
+      // Toast is shown by PhotoUpload component
       return;
     }
 
-    // Auto-save photo URL to user profile
+    // Save photo URL to database via API
     try {
-      if (user) {
-        await updateProfile({ photoURL: photoUrl || undefined });
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profilePhotoUrl: photoUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save photo');
       }
+      // Toast is shown by PhotoUpload component
     } catch (error) {
       console.error('Failed to save photo URL:', error);
-      toast.error('Failed to save photo');
+      toast.error('Failed to save photo to profile');
     }
   };
 
@@ -879,31 +905,42 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                 </div>
 
                 {/* Professional info - company and position */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-border">
-                  <div>
-                    <label className="label-text mb-1 flex items-center gap-2">
-                      <BuildingOfficeIcon className="h-4 w-4 text-text-tertiary" />
-                      Current company
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={profileData.currentCompany}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, currentCompany: e.target.value }))}
-                        className="input-field min-h-12"
-                        placeholder="Acme Inc."
-                      />
-                    ) : (
-                      <p className="text-text-primary py-3">{profileData.currentCompany || 'Not set'}</p>
-                    )}
+                <div className="pt-4 border-t border-border">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-medium text-text-secondary">Current position</h4>
+                    <button
+                      onClick={() => setActiveTab('experience')}
+                      className="text-sm text-navy hover:text-navy-light flex items-center gap-1 transition-colors"
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                      Add past experience
+                    </button>
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="label-text mb-1 flex items-center gap-2">
+                        <BuildingOfficeIcon className="h-4 w-4 text-text-tertiary" />
+                        Company
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={profileData.currentCompany}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, currentCompany: e.target.value }))}
+                          className="input-field min-h-12"
+                          placeholder="Acme Inc."
+                        />
+                      ) : (
+                        <p className="text-text-primary py-3">{profileData.currentCompany || 'Not set'}</p>
+                      )}
+                    </div>
 
-                  <div>
-                    <label className="label-text mb-1 flex items-center gap-2">
-                      <BriefcaseIcon className="h-4 w-4 text-text-tertiary" />
-                      Current position
-                    </label>
-                    {isEditing ? (
+                    <div>
+                      <label className="label-text mb-1 flex items-center gap-2">
+                        <BriefcaseIcon className="h-4 w-4 text-text-tertiary" />
+                        Position
+                      </label>
+                      {isEditing ? (
                       <input
                         type="text"
                         value={profileData.currentPosition}
@@ -914,6 +951,7 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
                     ) : (
                       <p className="text-text-primary py-3">{profileData.currentPosition || 'Not set'}</p>
                     )}
+                    </div>
                   </div>
                 </div>
 
