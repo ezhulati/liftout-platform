@@ -70,7 +70,7 @@ export function LandingHero() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  For Teams
+                  Teams
                 </button>
                 <button
                   onClick={() => setAudience('companies')}
@@ -80,7 +80,7 @@ export function LandingHero() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  For Companies
+                  Companies
                 </button>
               </div>
 
