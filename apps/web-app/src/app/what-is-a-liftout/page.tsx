@@ -314,71 +314,36 @@ export default function WhatIsALiftoutPage() {
           </div>
         </section>
 
-        {/* The Lonely Desert - Why job searching feels isolating */}
-        <section className="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-bg border-y border-gray-100">
+        {/* Individual vs Team Job Search */}
+        <section className="py-16 lg:py-24 bg-bg-elevated border-y border-border">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-6">
-                Job searching alone is a lonely desert
+                Individual job search can be isolating
               </h2>
-              <p className="text-lg text-text-secondary leading-relaxed mb-8">
-                You&apos;ve felt it. Updating your resume in secret. Interviewing while pretending everything&apos;s fine. Not being able to talk to anyone about the biggest decision in your professional life. The uncertainty. The isolation. The fear of the unknown.
+              <p className="text-lg text-text-secondary leading-relaxed mb-10">
+                Updating your resume in secret. Interviewing while pretending everything&apos;s fine. Making a major career decision without being able to talk to anyone. There&apos;s another way.
               </p>
-              <div className="grid md:grid-cols-2 gap-8 mt-12">
-                <div className="bg-white rounded-xl p-6 border border-gray-200 text-left">
-                  <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-bold text-text-primary mb-2">Going alone</h3>
-                  <ul className="space-y-2 text-text-secondary text-base">
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 mt-1">×</span>
-                      <span>Navigating interviews in isolation</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 mt-1">×</span>
-                      <span>Unknown team dynamics at new company</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 mt-1">×</span>
-                      <span>Starting from scratch building trust</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 mt-1">×</span>
-                      <span>No one to confide in during the process</span>
-                    </li>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-bg-surface rounded-xl p-6 border border-border">
+                  <h3 className="font-bold text-text-primary mb-4">Going alone</h3>
+                  <ul className="space-y-3 text-text-secondary text-base">
+                    <li>Navigating the process in isolation</li>
+                    <li>Unknown team dynamics at new company</li>
+                    <li>Starting from scratch building trust</li>
+                    <li>No one to compare notes with</li>
                   </ul>
                 </div>
-                <div className="bg-purple-50 rounded-xl p-6 border border-purple-200 text-left">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
-                    <UserGroupIcon className="w-5 h-5 text-purple-700" />
-                  </div>
-                  <h3 className="font-bold text-text-primary mb-2">Moving together</h3>
-                  <ul className="space-y-2 text-text-secondary text-base">
-                    <li className="flex items-start gap-2">
-                      <CheckCircleIcon className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <span>A known in an unknown process</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircleIcon className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <span>People you trust from day one</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircleIcon className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <span>Strength in numbers when negotiating</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircleIcon className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <span>Friends who understand exactly what you&apos;re going through</span>
-                    </li>
+                <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
+                  <h3 className="font-bold text-text-primary mb-4">Moving together</h3>
+                  <ul className="space-y-3 text-text-secondary text-base">
+                    <li>Familiar faces in an unfamiliar process</li>
+                    <li>People you trust from day one</li>
+                    <li>Collective leverage when negotiating</li>
+                    <li>Colleagues who get what you&apos;re going through</li>
                   </ul>
                 </div>
               </div>
-              <p className="mt-10 text-lg text-purple-700 font-medium">
-                There&apos;s a better way. Take that journey with the people who&apos;ve helped you succeed.
-              </p>
             </div>
           </div>
         </section>
