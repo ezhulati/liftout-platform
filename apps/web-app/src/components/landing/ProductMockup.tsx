@@ -13,6 +13,14 @@ const mockTeams = [
     verified: true,
     skills: ['Tech M&A', 'Valuations', 'IPO'],
     rating: 4.9,
+    avatars: [
+      'https://randomuser.me/api/portraits/men/32.jpg',
+      'https://randomuser.me/api/portraits/women/44.jpg',
+      'https://randomuser.me/api/portraits/men/67.jpg',
+      'https://randomuser.me/api/portraits/women/17.jpg',
+      'https://randomuser.me/api/portraits/men/52.jpg',
+      'https://randomuser.me/api/portraits/women/63.jpg',
+    ],
   },
   {
     name: 'Chen Healthcare Partners',
@@ -22,6 +30,16 @@ const mockTeams = [
     verified: true,
     skills: ['Spine Surgery', 'Sports Medicine', 'Joint Replacement'],
     rating: 4.8,
+    avatars: [
+      'https://randomuser.me/api/portraits/men/22.jpg',
+      'https://randomuser.me/api/portraits/women/28.jpg',
+      'https://randomuser.me/api/portraits/men/45.jpg',
+      'https://randomuser.me/api/portraits/women/55.jpg',
+      'https://randomuser.me/api/portraits/men/78.jpg',
+      'https://randomuser.me/api/portraits/women/82.jpg',
+      'https://randomuser.me/api/portraits/men/91.jpg',
+      'https://randomuser.me/api/portraits/women/33.jpg',
+    ],
   },
   {
     name: 'Burke Litigation Group',
@@ -31,8 +49,35 @@ const mockTeams = [
     verified: false,
     skills: ['Securities', 'Class Actions', 'Antitrust'],
     rating: 4.7,
+    avatars: [
+      'https://randomuser.me/api/portraits/women/24.jpg',
+      'https://randomuser.me/api/portraits/men/36.jpg',
+      'https://randomuser.me/api/portraits/women/47.jpg',
+      'https://randomuser.me/api/portraits/men/58.jpg',
+      'https://randomuser.me/api/portraits/women/71.jpg',
+    ],
   },
 ];
+
+// Avatar stack component
+function AvatarStack({ avatars, size = 'md' }: { avatars: string[]; size?: 'sm' | 'md' }) {
+  const sizeClasses = size === 'sm' ? 'w-6 h-6' : 'w-8 h-8';
+  const overlapClasses = size === 'sm' ? '-ml-2' : '-ml-2.5';
+
+  return (
+    <div className="flex items-center">
+      {avatars.map((avatar, index) => (
+        <img
+          key={index}
+          src={avatar}
+          alt=""
+          className={`${sizeClasses} rounded-full border-2 border-white object-cover ${index > 0 ? overlapClasses : ''}`}
+          style={{ zIndex: avatars.length - index }}
+        />
+      ))}
+    </div>
+  );
+}
 
 // Compact team card for mobile
 function TeamCardCompact({ team }: { team: typeof mockTeams[0] }) {
@@ -53,12 +98,9 @@ function TeamCardCompact({ team }: { team: typeof mockTeams[0] }) {
           <span className="font-medium">{team.rating}</span>
         </div>
       </div>
-      <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
-        <span className="flex items-center gap-1">
-          <UsersIcon className="w-3 h-3" />
-          {team.members}
-        </span>
-        <span className="flex items-center gap-1 truncate">
+      <div className="mt-2 flex items-center justify-between">
+        <AvatarStack avatars={team.avatars.slice(0, 4)} size="sm" />
+        <span className="flex items-center gap-1 text-xs text-gray-500 truncate">
           <MapPinIcon className="w-3 h-3" />
           {team.location}
         </span>
@@ -87,12 +129,9 @@ function TeamCardFull({ team }: { team: typeof mockTeams[0] }) {
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
-        <span className="flex items-center gap-1.5">
-          <UsersIcon className="w-4 h-4" />
-          {team.members} members
-        </span>
-        <span className="flex items-center gap-1.5">
+      <div className="mt-3 flex items-center justify-between">
+        <AvatarStack avatars={team.avatars} size="md" />
+        <span className="flex items-center gap-1.5 text-sm text-gray-500">
           <MapPinIcon className="w-4 h-4" />
           {team.location}
         </span>
