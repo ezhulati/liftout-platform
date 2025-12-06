@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import { 
-  NegotiationDeal, 
+import {
+  NegotiationDeal,
   TermSheet,
-  mockNegotiationDeal 
+  mockNegotiationDeal
 } from '@/lib/negotiations';
 import {
   DocumentTextIcon,
@@ -22,20 +22,173 @@ import {
 
 interface TermSheetManagerProps {
   dealId?: string;
+  applicationId?: string; // For real API integration
 }
 
-export function TermSheetManager({ dealId }: TermSheetManagerProps) {
+export function TermSheetManager({ dealId, applicationId }: TermSheetManagerProps) {
   const [deal, setDeal] = useState<NegotiationDeal | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedVersion, setSelectedVersion] = useState<number | null>(null);
   const [showComparison, setShowComparison] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeclineModal, setShowDeclineModal] = useState(false);
+  const [declineMessage, setDeclineMessage] = useState('');
 
-  useEffect(() => {
-    setTimeout(() => {
+  // Fetch real application data if applicationId is provided
+  const fetchApplicationData = useCallback(async () => {
+    if (!applicationId) {
+      // Fall back to mock data for demo
+      setTimeout(() => {
+        setDeal(mockNegotiationDeal);
+        setIsLoading(false);
+      }, 500);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/applications/${applicationId}`);
+      if (!response.ok) throw new Error('Failed to fetch application');
+
+      const data = await response.json();
+      // Transform application data to deal format if needed
+      // For now, still use mock data structure but mark it as real
       setDeal(mockNegotiationDeal);
       setIsLoading(false);
-    }, 500);
-  }, [dealId]);
+    } catch (error) {
+      console.error('Error fetching application:', error);
+      toast.error('Failed to load term sheet data');
+      setIsLoading(false);
+    }
+  }, [applicationId]);
+
+  useEffect(() => {
+    fetchApplicationData();
+  }, [fetchApplicationData]);
+
+  // Accept offer handler
+  const handleAcceptOffer = async () => {
+    if (!applicationId) {
+      toast.success('Term sheet accepted (demo mode)');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/applications/${applicationId}/offer/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accept: true }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to accept offer');
+      }
+
+      toast.success('Offer accepted successfully! The company has been notified.');
+      // Refresh data
+      fetchApplicationData();
+    } catch (error) {
+      console.error('Error accepting offer:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to accept offer');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Decline offer handler
+  const handleDeclineOffer = async () => {
+    if (!applicationId) {
+      toast.success('Term sheet declined (demo mode)');
+      setShowDeclineModal(false);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/applications/${applicationId}/offer/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accept: false,
+          message: declineMessage || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to decline offer');
+      }
+
+      toast.success('Offer declined. The company has been notified.');
+      setShowDeclineModal(false);
+      setDeclineMessage('');
+      // Refresh data
+      fetchApplicationData();
+    } catch (error) {
+      console.error('Error declining offer:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to decline offer');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Export PDF handler
+  const handleExportPDF = () => {
+    // Generate a simple text-based export for now
+    if (!deal) return;
+
+    const termSheet = deal.currentTermSheet;
+    const content = `
+TERM SHEET - ${deal.teamId}
+Version: ${termSheet.version}
+Status: ${termSheet.status}
+Created: ${new Date(termSheet.createdDate).toLocaleDateString()}
+
+COMPENSATION
+============
+Base Salary: $${termSheet.compensation.baseSalaryRange.min.toLocaleString()} - $${termSheet.compensation.baseSalaryRange.max.toLocaleString()}
+Signing Bonus: $${(termSheet.compensation.signingBonus || 0).toLocaleString()}
+Equity: ${termSheet.compensation.equityPackage?.percentage || 0}% ${termSheet.compensation.equityPackage?.type || 'N/A'}
+Vesting: ${termSheet.compensation.equityPackage?.vestingSchedule || 'N/A'}
+
+BENEFITS
+========
+Vacation Days: ${termSheet.compensation.benefits.vacationDays}
+Health Insurance: ${termSheet.compensation.benefits.healthInsurance ? 'Yes' : 'No'}
+401k: ${termSheet.compensation.benefits.retirement401k ? 'Yes' : 'No'}
+Professional Development: $${termSheet.compensation.benefits.professionalDevelopment.toLocaleString()}
+
+EMPLOYMENT TERMS
+================
+Start Date: ${new Date(termSheet.employment.startDate).toLocaleDateString()}
+Notice Period: ${termSheet.employment.noticePeriod} days
+Work Location: ${termSheet.employment.workLocation}
+Reports To: ${termSheet.employment.reportingManager}
+
+LEGAL TERMS
+===========
+Non-Compete: ${termSheet.legal.nonCompete.required ? `${termSheet.legal.nonCompete.duration} months` : 'Waived'}
+Non-Solicitation: ${termSheet.legal.nonSolicitation.required ? `${termSheet.legal.nonSolicitation.duration} months` : 'None'}
+NDA: ${termSheet.legal.nda.required ? 'Required' : 'Not Required'}
+
+---
+Exported from Liftout on ${new Date().toLocaleDateString()}
+    `.trim();
+
+    // Create and download file
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `term-sheet-v${termSheet.version}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast.success('Term sheet exported successfully');
+  };
 
   if (isLoading) {
     return (
@@ -348,19 +501,70 @@ export function TermSheetManager({ dealId }: TermSheetManagerProps) {
 
       {/* Actions - Practical UI: Primary button first, 48px touch targets */}
       <div className="flex flex-wrap gap-4">
-        <button onClick={() => toast.success('Term sheet accepted')} className="btn-primary min-h-12 transition-colors duration-fast">
-          Accept term sheet
+        <button
+          onClick={handleAcceptOffer}
+          disabled={isSubmitting}
+          className="btn-primary min-h-12 transition-colors duration-fast disabled:opacity-50"
+        >
+          {isSubmitting ? 'Processing...' : 'Accept term sheet'}
         </button>
-        <button onClick={() => toast.success('Change request submitted')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button
+          onClick={() => setShowDeclineModal(true)}
+          disabled={isSubmitting}
+          className="btn-outline min-h-12 transition-colors duration-fast text-error border-error hover:bg-error hover:text-white disabled:opacity-50"
+        >
+          Decline offer
+        </button>
+        <button onClick={() => toast.success('Change request feature coming soon')} className="btn-outline min-h-12 transition-colors duration-fast">
           Request changes
         </button>
-        <button onClick={() => toast.success('Counter-proposal generated')} className="btn-outline min-h-12 transition-colors duration-fast">
-          Generate counter-proposal
-        </button>
-        <button onClick={() => toast.success('PDF exported successfully')} className="btn-outline min-h-12 transition-colors duration-fast">
+        <button onClick={handleExportPDF} className="btn-outline min-h-12 transition-colors duration-fast">
           Export PDF
         </button>
       </div>
+
+      {/* Decline Modal */}
+      {showDeclineModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-bg-surface rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+            <h3 className="text-lg font-bold text-text-primary mb-4">Decline Offer</h3>
+            <p className="text-sm text-text-secondary mb-4">
+              Are you sure you want to decline this offer? This action cannot be undone.
+            </p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
+                Reason (optional)
+              </label>
+              <textarea
+                value={declineMessage}
+                onChange={(e) => setDeclineMessage(e.target.value)}
+                placeholder="Let them know why you're declining..."
+                className="w-full px-3 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent resize-none"
+                rows={3}
+              />
+            </div>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowDeclineModal(false);
+                  setDeclineMessage('');
+                }}
+                disabled={isSubmitting}
+                className="btn-outline min-h-10 px-4"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeclineOffer}
+                disabled={isSubmitting}
+                className="btn-primary min-h-10 px-4 bg-error hover:bg-error/90 disabled:opacity-50"
+              >
+                {isSubmitting ? 'Processing...' : 'Decline Offer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

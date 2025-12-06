@@ -959,6 +959,184 @@ export async function sendInterviewScheduledEmail(params: {
   }
 }
 
+// ============================================
+// REFERENCE REQUEST EMAILS
+// ============================================
+
+export async function sendReferenceRequestEmail(params: {
+  to: string;
+  referenceName: string;
+  teamName: string;
+  teamLeadName: string;
+  companyName: string;
+  referenceId: string;
+  message?: string;
+}): Promise<EmailResult> {
+  const { to, referenceName, teamName, teamLeadName, companyName, referenceId, message } = params;
+  const referenceUrl = `${APP_URL}/reference/${referenceId}`;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Reference request to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Reference Request: ${teamName} is applying to ${companyName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #4C1D95; margin: 0;">Liftout</h1>
+            <p style="color: #666; margin: 5px 0;">Reference Request</p>
+          </div>
+
+          <p>Hi ${referenceName},</p>
+
+          <p><strong>${teamLeadName}</strong> from <strong>${teamName}</strong> has listed you as a professional reference as they explore a new opportunity with <strong>${companyName}</strong>.</p>
+
+          ${message ? `
+          <div style="background: #f8f9fa; border-left: 4px solid #4C1D95; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; font-style: italic;">"${message}"</p>
+          </div>
+          ` : ''}
+
+          <p>We would greatly appreciate if you could take a few minutes to provide your feedback on their work and professional qualities.</p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${referenceUrl}" style="background: #4C1D95; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
+              Provide Reference
+            </a>
+          </div>
+
+          <p style="color: #666; font-size: 14px;">Your feedback will be kept confidential and used solely for the purposes of this hiring process.</p>
+
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px;">
+            <p>This email was sent via <a href="${APP_URL}" style="color: #4C1D95;">Liftout</a></p>
+            <p>If you have questions, please contact us at support@liftout.com</p>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `Hi ${referenceName},
+
+${teamLeadName} from ${teamName} has listed you as a professional reference as they explore a new opportunity with ${companyName}.
+
+${message ? `They said: "${message}"` : ''}
+
+We would greatly appreciate if you could take a few minutes to provide your feedback.
+
+Provide your reference here: ${referenceUrl}
+
+Your feedback will be kept confidential and used solely for the purposes of this hiring process.
+
+---
+This email was sent via Liftout (${APP_URL})
+If you have questions, please contact us at support@liftout.com`,
+    });
+
+    if (error) {
+      console.error('Failed to send reference request email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending reference request email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function sendReferenceFollowUpEmail(params: {
+  to: string;
+  referenceName: string;
+  teamName: string;
+  teamLeadName: string;
+  companyName: string;
+  referenceId: string;
+  daysSinceRequest: number;
+}): Promise<EmailResult> {
+  const { to, referenceName, teamName, teamLeadName, companyName, referenceId, daysSinceRequest } = params;
+  const referenceUrl = `${APP_URL}/reference/${referenceId}`;
+
+  try {
+    const resend = getResend();
+    if (!resend) {
+      console.log(`[Email skipped] Reference follow-up to ${to}`);
+      return { success: true, messageId: 'skipped-no-api-key' };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Gentle Reminder: Reference Request for ${teamName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #4C1D95; margin: 0;">Liftout</h1>
+            <p style="color: #666; margin: 5px 0;">Reference Reminder</p>
+          </div>
+
+          <p>Hi ${referenceName},</p>
+
+          <p>We wanted to follow up on the reference request we sent ${daysSinceRequest} days ago for <strong>${teamName}</strong> (led by ${teamLeadName}), who is being considered for a position at <strong>${companyName}</strong>.</p>
+
+          <p>Your feedback is important and would be greatly appreciated. It only takes a few minutes to complete.</p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${referenceUrl}" style="background: #4C1D95; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
+              Provide Reference
+            </a>
+          </div>
+
+          <p style="color: #666; font-size: 14px;">If you're unable to provide a reference or believe you received this email in error, please let us know.</p>
+
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px;">
+            <p>This email was sent via <a href="${APP_URL}" style="color: #4C1D95;">Liftout</a></p>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `Hi ${referenceName},
+
+We wanted to follow up on the reference request we sent ${daysSinceRequest} days ago for ${teamName} (led by ${teamLeadName}), who is being considered for a position at ${companyName}.
+
+Your feedback is important and would be greatly appreciated. It only takes a few minutes to complete.
+
+Provide your reference here: ${referenceUrl}
+
+If you're unable to provide a reference or believe you received this email in error, please let us know.
+
+---
+This email was sent via Liftout (${APP_URL})`,
+    });
+
+    if (error) {
+      console.error('Failed to send reference follow-up email:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error('Error sending reference follow-up email:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
 // Export all functions
 export const emailService = {
   sendTeamInvitationEmail,
@@ -972,4 +1150,6 @@ export const emailService = {
   sendOfferMadeEmail,
   sendOfferResponseEmail,
   sendInterviewScheduledEmail,
+  sendReferenceRequestEmail,
+  sendReferenceFollowUpEmail,
 };

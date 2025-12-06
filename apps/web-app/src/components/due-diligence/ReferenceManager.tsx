@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { Reference, ReferenceResponse } from '@/lib/due-diligence';
 import {
@@ -16,6 +16,9 @@ import {
 
 interface ReferenceManagerProps {
   teamId: string;
+  teamName?: string;
+  teamLeadName?: string;
+  companyName?: string;
 }
 
 const mockReferences: Reference[] = [
@@ -75,9 +78,105 @@ const mockReferences: Reference[] = [
   },
 ];
 
-export function ReferenceManager({ teamId }: ReferenceManagerProps) {
+export function ReferenceManager({
+  teamId,
+  teamName = 'Goldman Analytics Team',
+  teamLeadName = 'Alex Thompson',
+  companyName = 'MedTech Innovations',
+}: ReferenceManagerProps) {
   const [references, setReferences] = useState<Reference[]>(mockReferences);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [sendingTo, setSendingTo] = useState<string | null>(null);
+
+  // Send reference request email
+  const handleSendRequest = useCallback(async (reference: Reference) => {
+    if (!reference.contactInfo.email) {
+      toast.error('No email address for this reference');
+      return;
+    }
+
+    setSendingTo(reference.id);
+    try {
+      const response = await fetch('/api/references', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          referenceName: reference.name,
+          referenceEmail: reference.contactInfo.email,
+          teamName,
+          teamLeadName,
+          companyName,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send request');
+      }
+
+      // Update reference status locally
+      setReferences(prev =>
+        prev.map(r =>
+          r.id === reference.id ? { ...r, status: 'contacted' as const } : r
+        )
+      );
+
+      toast.success(`Reference request sent to ${reference.name}`);
+    } catch (error) {
+      console.error('Error sending reference request:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to send request');
+    } finally {
+      setSendingTo(null);
+    }
+  }, [teamName, teamLeadName, companyName]);
+
+  // Send follow-up email
+  const handleFollowUp = useCallback(async (reference: Reference) => {
+    if (!reference.contactInfo.email) {
+      toast.error('No email address for this reference');
+      return;
+    }
+
+    setSendingTo(reference.id);
+    try {
+      const response = await fetch('/api/references', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'follow_up',
+          referenceId: reference.id,
+          referenceName: reference.name,
+          referenceEmail: reference.contactInfo.email,
+          teamName,
+          teamLeadName,
+          companyName,
+          daysSinceRequest: 7, // Could be calculated from actual date
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send follow-up');
+      }
+
+      toast.success(`Follow-up sent to ${reference.name}`);
+    } catch (error) {
+      console.error('Error sending follow-up:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to send follow-up');
+    } finally {
+      setSendingTo(null);
+    }
+  }, [teamName, teamLeadName, companyName]);
+
+  // Mark reference as verified
+  const handleMarkVerified = useCallback((reference: Reference) => {
+    setReferences(prev =>
+      prev.map(r =>
+        r.id === reference.id ? { ...r, status: 'verified' as const } : r
+      )
+    );
+    toast.success(`${reference.name}'s reference marked as verified`);
+  }, []);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -298,21 +397,32 @@ export function ReferenceManager({ teamId }: ReferenceManagerProps) {
               {/* Actions */}
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 {reference.status === 'pending' && (
-                  <button onClick={() => toast.success('Reference request sent')} className="btn-primary min-h-12">
-                    Send request
+                  <button
+                    onClick={() => handleSendRequest(reference)}
+                    disabled={sendingTo === reference.id}
+                    className="btn-primary min-h-12 disabled:opacity-50"
+                  >
+                    {sendingTo === reference.id ? 'Sending...' : 'Send request'}
                   </button>
                 )}
                 {reference.status === 'contacted' && (
-                  <button onClick={() => toast.success('Follow-up email sent')} className="btn-primary min-h-12">
-                    Follow up
+                  <button
+                    onClick={() => handleFollowUp(reference)}
+                    disabled={sendingTo === reference.id}
+                    className="btn-primary min-h-12 disabled:opacity-50"
+                  >
+                    {sendingTo === reference.id ? 'Sending...' : 'Follow up'}
                   </button>
                 )}
                 {reference.status === 'responded' && (
-                  <button onClick={() => toast.success('Reference marked as verified')} className="btn-primary min-h-12">
+                  <button
+                    onClick={() => handleMarkVerified(reference)}
+                    className="btn-primary min-h-12"
+                  >
                     Mark verified
                   </button>
                 )}
-                <button onClick={() => toast.success('Contact updated')} className="btn-outline min-h-12">
+                <button onClick={() => toast.success('Contact edit feature coming soon')} className="btn-outline min-h-12">
                   Edit contact
                 </button>
               </div>
