@@ -22,7 +22,6 @@ import {
   RocketLaunchIcon,
   CheckCircleIcon,
   ArrowRightIcon,
-  ExclamationTriangleIcon,
   BeakerIcon,
   ComputerDesktopIcon,
 } from '@heroicons/react/24/outline';
@@ -95,27 +94,27 @@ const dataPoints = [
   },
 ];
 
-// Why individuals fail
-const individualHiringProblems = [
+// The challenge with building new teams
+const teamBuildingChallenges = [
   {
-    stat: '75%',
-    label: 'of employers admit to hiring the wrong person',
-    source: 'SHRM',
+    stat: '12 mo',
+    label: 'average time for new hires to reach full productivity',
+    source: 'Gallup',
+  },
+  {
+    stat: '43%',
+    label: 'of team performance depends on psychological safety',
+    source: 'Google Project Aristotle',
+  },
+  {
+    stat: '6-12 mo',
+    label: 'for new teams to move past forming and storming stages',
+    source: 'Tuckman research',
   },
   {
     stat: '46%',
-    label: 'of new hires fail within 18 months',
-    source: 'Leadership IQ',
-  },
-  {
-    stat: '89%',
-    label: 'of hiring failures are due to poor culture fit, not skills',
-    source: 'LinkedIn',
-  },
-  {
-    stat: '60%',
-    label: 'of new ventures fail because of team issues',
-    source: 'Harvard Business Review',
+    label: 'performance decline when star performers move alone',
+    source: 'Groysberg (Harvard)',
   },
 ];
 
@@ -206,22 +205,22 @@ const industries = [
 // Benefits reframed with data
 const benefits = [
   {
-    title: 'Skip 12 months of ramp-up',
+    title: 'Faster time to productivity',
     Icon: ClockIcon,
-    description: 'New hires take a year to reach peak performance. Teams that move together are productive from day one.',
+    description: 'New hires typically take 12 months to reach peak performance. Teams that move together can be productive from day one.',
     data: 'Gallup research',
   },
   {
     title: 'Preserve psychological safety',
     Icon: ShieldCheckIcon,
-    description: 'Google\'s Project Aristotle found this is the #1 factor in team performance. It takes years to build—seconds to lose.',
+    description: 'Google\'s Project Aristotle found this is the #1 factor in team performance. It takes years to build.',
     data: '43% of performance variance',
   },
   {
-    title: 'Avoid $240K bad hire costs',
+    title: 'Verified track record',
     Icon: CurrencyDollarIcon,
-    description: '75% of employers admit to hiring the wrong person. Teams have a track record you can verify.',
-    data: 'SHRM research',
+    description: 'Instead of hoping new hires will work well together, you can see a team\'s actual history of collaboration.',
+    data: 'Reduced hiring risk',
   },
   {
     title: 'Transfer client relationships',
@@ -230,15 +229,15 @@ const benefits = [
     data: 'Why law firm laterals work',
   },
   {
-    title: 'Skip forming-storming-norming',
+    title: 'Skip the team-building phase',
     Icon: RocketLaunchIcon,
-    description: 'New teams spend months in conflict before becoming productive. Liftout teams start in the performing stage.',
+    description: 'New teams typically spend months in Tuckman\'s forming and storming stages. Liftout teams start performing.',
     data: 'Tuckman\'s model',
   },
   {
-    title: '5x more likely to be high-performing',
+    title: 'Built-in collaboration',
     Icon: LightBulbIcon,
-    description: 'Companies promoting collaboration are five times more likely to be considered high-performing.',
+    description: 'Companies with strong collaboration are five times more likely to be high-performing. Liftouts come with it built in.',
     data: 'i4cp research',
   },
 ];
@@ -384,46 +383,41 @@ export default function WhatIsALiftoutPage() {
           </div>
         </section>
 
-        {/* The Problem with Individual Hiring */}
+        {/* The Challenge with Building New Teams */}
         <section
           ref={problemRef.ref as React.RefObject<HTMLElement>}
-          className="py-16 lg:py-24 bg-red-50 border-y border-red-100"
+          className="py-16 lg:py-24 bg-bg-elevated border-y border-border"
         >
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex items-start gap-4 mb-8">
-              <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
-                <ExclamationTriangleIcon className="w-6 h-6 text-red-600" />
-              </div>
-              <div>
-                <h2
-                  className={`text-2xl sm:text-3xl font-bold text-text-primary mb-2 transition-all duration-500 ${
-                    problemRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
-                >
-                  The problem with hiring individuals
-                </h2>
-                <p
-                  className={`text-lg text-text-secondary transition-all duration-500 delay-100 ${
-                    problemRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
-                >
-                  When you hire individuals, you&apos;re gambling they&apos;ll work well together. The data says that&apos;s a bad bet.
-                </p>
-              </div>
+            <div className="mb-8">
+              <h2
+                className={`text-2xl sm:text-3xl font-bold text-text-primary mb-2 transition-all duration-500 ${
+                  problemRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                Building new teams takes time
+              </h2>
+              <p
+                className={`text-lg text-text-secondary max-w-2xl transition-all duration-500 delay-100 ${
+                  problemRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                Individual hiring works—it&apos;s how most companies grow. But assembling strangers into a cohesive team has real costs. Liftouts offer an alternative when speed and chemistry matter.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {individualHiringProblems.map((problem, index) => (
+              {teamBuildingChallenges.map((challenge, index) => (
                 <div
-                  key={problem.label}
-                  className={`bg-white rounded-xl p-6 border border-red-100 transition-all duration-500 ${
+                  key={challenge.label}
+                  className={`bg-bg-surface rounded-xl p-6 border border-border transition-all duration-500 ${
                     problemRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                   style={{ transitionDelay: problemRef.isVisible ? `${150 + index * 75}ms` : '0ms' }}
                 >
-                  <p className="text-3xl sm:text-4xl font-bold text-red-600 mb-2">{problem.stat}</p>
-                  <p className="text-base text-text-secondary mb-2">{problem.label}</p>
-                  <p className="text-base text-text-tertiary">{problem.source}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">{challenge.stat}</p>
+                  <p className="text-base text-text-secondary mb-2">{challenge.label}</p>
+                  <p className="text-base text-text-tertiary">{challenge.source}</p>
                 </div>
               ))}
             </div>
@@ -441,14 +435,14 @@ export default function WhatIsALiftoutPage() {
                 dataRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              Why teams outperform individuals
+              The research behind liftouts
             </h2>
             <p
               className={`text-lg text-text-secondary mb-12 max-w-2xl transition-all duration-500 delay-100 ${
                 dataRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              It&apos;s not opinion—it&apos;s research. Here&apos;s what the data says.
+              Academic research explains why established teams can hit the ground running.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -612,14 +606,14 @@ export default function WhatIsALiftoutPage() {
                 benefitsRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              The liftout advantage
+              Why companies hire teams
             </h2>
             <p
               className={`text-lg text-white/80 mb-12 max-w-2xl transition-all duration-500 delay-100 ${
                 benefitsRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              Every benefit is backed by research—not marketing speak.
+              When speed and chemistry matter, liftouts offer distinct advantages.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
