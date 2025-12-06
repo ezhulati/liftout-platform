@@ -11,9 +11,12 @@ export const GET = withAdminAccess(async (req: NextRequest) => {
     const filters = {
       query: searchParams.get('query') || undefined,
       userType: searchParams.get('userType') || undefined,
-      status: searchParams.get('status') as 'active' | 'suspended' | 'banned' | undefined,
+      status: searchParams.get('status') as 'active' | 'suspended' | 'banned' | 'deleted' | undefined,
       verified: searchParams.has('verified')
         ? searchParams.get('verified') === 'true'
+        : undefined,
+      isDemo: searchParams.has('isDemo')
+        ? searchParams.get('isDemo') === 'true'
         : undefined,
       limit: searchParams.has('limit')
         ? parseInt(searchParams.get('limit')!, 10)

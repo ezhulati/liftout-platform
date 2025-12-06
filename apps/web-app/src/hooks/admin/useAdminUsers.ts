@@ -16,6 +16,7 @@ interface AdminUser {
   bannedAt: string | null;
   bannedReason: string | null;
   deletedAt: string | null;
+  isDemo: boolean;
   profile: {
     profilePhotoUrl: string | null;
   } | null;
@@ -58,6 +59,7 @@ interface AdminUsersFilters {
   userType?: string;
   status?: 'active' | 'suspended' | 'banned' | 'deleted';
   verified?: boolean;
+  isDemo?: boolean;
   limit?: number;
   offset?: number;
 }
@@ -97,6 +99,7 @@ export function useAdminUsers(filters?: AdminUsersFilters) {
       if (filters?.userType) params.append('userType', filters.userType);
       if (filters?.status) params.append('status', filters.status);
       if (filters?.verified !== undefined) params.append('verified', String(filters.verified));
+      if (filters?.isDemo !== undefined) params.append('isDemo', String(filters.isDemo));
       if (filters?.limit) params.append('limit', String(filters.limit));
       if (filters?.offset) params.append('offset', String(filters.offset));
 

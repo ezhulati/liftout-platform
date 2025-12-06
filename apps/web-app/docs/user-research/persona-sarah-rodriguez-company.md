@@ -1,6 +1,18 @@
-# Persona: Sarah Rodriguez - Company User
+# Persona: Sarah Rodriguez - Company Admin (Primary)
 
 > "I'm tired of hiring stars who flame out. I want to hire teams that already work."
+
+---
+
+## Platform Role
+
+| Attribute | Value |
+|-----------|-------|
+| **Platform Email** | sarah.rodriguez@nextgenfinancial.com |
+| **Platform Role** | Company Admin (Owner) |
+| **Platform Photo** | https://randomuser.me/api/portraits/women/42.jpg |
+| **Joined Platform** | First company user (created company profile) |
+| **Invited** | James Liu (Talent Manager) to join as company member |
 
 ---
 
@@ -12,13 +24,40 @@
 | **Age** | 42 |
 | **Title** | VP of Talent Acquisition |
 | **Company** | NextGen Financial |
-| **Location** | New York, NY |
-| **Education** | MBA Wharton, BA Psychology Columbia |
-| **Income** | $320,000 base + bonus + equity |
+| **Location** | New York, NY (Upper West Side) |
+| **Education** | MBA Wharton 2010, BA Psychology Columbia 2004 |
+| **Income** | $320,000 base + $180K bonus + $400K equity (4-year vest) |
+| **Total Comp** | ~$545K annually |
 | **Career Stage** | Senior executive, C-suite track |
-| **Reports To** | CHRO (dotted to CEO) |
-| **Team Size** | 12 recruiters |
+| **Reports To** | CHRO (dotted line to CEO) |
+| **Team Size** | 12 recruiters, 3 sourcers, 1 analyst |
 | **Industry** | Financial Services / FinTech |
+| **Marital Status** | Married, 2 kids (8 and 11) |
+| **Commute** | Hybrid - 3 days in office (Flatiron), 2 WFH |
+
+### Platform Profile (As Displayed on Liftout)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  [PHOTO]  Sarah Rodriguez                                       │
+│           VP of Talent Acquisition                              │
+│           NextGen Financial                                     │
+│           New York, NY                                          │
+│                                                                 │
+│  ─────────────────────────────────────────────────────────────  │
+│                                                                 │
+│  ABOUT                                                          │
+│  Talent executive with 15+ years building high-performing      │
+│  teams at Goldman Sachs, Stripe, and now NextGen Financial.    │
+│  Pioneered team-based hiring strategy that reduced             │
+│  time-to-productivity by 70%. Wharton MBA, Columbia BA.        │
+│                                                                 │
+│  LinkedIn: linkedin.com/in/sarahrodrigueznyc                   │
+│  Role: Company Admin                                            │
+│  Primary Contact: Yes                                           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ### Company Context
 | Attribute | Value |
@@ -28,7 +67,7 @@
 | **Employees** | 850 |
 | **Growth** | 40% YoY headcount |
 | **Founded** | 2019 |
-| **Offices** | New York, Austin, London |
+| **Offices** | New York (HQ), Austin, London |
 | **Liftout History** | 3 teams acquired in 2023 |
 | **Retention Rate** | 96% after 12 months |
 

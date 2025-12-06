@@ -14,6 +14,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   TrashIcon,
+  BeakerIcon,
 } from '@heroicons/react/24/outline';
 import { useAdminUsers } from '@/hooks/admin/useAdminUsers';
 
@@ -31,6 +32,7 @@ interface User {
   bannedAt: string | null;
   bannedReason: string | null;
   deletedAt: string | null;
+  isDemo: boolean;
   profile: {
     profilePhotoUrl: string | null;
   } | null;
@@ -49,6 +51,15 @@ function UserTypeBadge({ type }: { type: string }) {
     <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${config.color}`}>
       <Icon className="h-3 w-3" />
       {config.label}
+    </span>
+  );
+}
+
+function DemoBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+      <BeakerIcon className="h-3 w-3" />
+      Demo
     </span>
   );
 }
@@ -91,6 +102,7 @@ export default function UsersPage() {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [userType, setUserType] = useState('');
   const [status, setStatus] = useState<'active' | 'suspended' | 'banned' | 'deleted' | ''>('');
+  const [demoFilter, setDemoFilter] = useState<'all' | 'demo' | 'real'>('all');
   const [page, setPage] = useState(1);
   const limit = 20;
 
@@ -106,13 +118,14 @@ export default function UsersPage() {
   // Reset page when filters change
   useEffect(() => {
     setPage(1);
-  }, [userType, status]);
+  }, [userType, status, demoFilter]);
 
   // Fetch users with hook
-  const { data, isLoading, error } = useAdminUsers({
+  const { data, isLoading } = useAdminUsers({
     query: debouncedQuery || undefined,
     userType: userType || undefined,
     status: status || undefined,
+    isDemo: demoFilter === 'all' ? undefined : demoFilter === 'demo',
     limit,
     offset: (page - 1) * limit,
   });
@@ -198,6 +211,20 @@ export default function UsersPage() {
           </select>
           <FunnelIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
         </div>
+
+        {/* Demo/Real Filter */}
+        <div className="relative">
+          <select
+            value={demoFilter}
+            onChange={(e) => setDemoFilter(e.target.value as typeof demoFilter)}
+            className="appearance-none pl-4 pr-10 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          >
+            <option value="all">All Users</option>
+            <option value="real">Real Users Only</option>
+            <option value="demo">Demo Users Only</option>
+          </select>
+          <BeakerIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+        </div>
       </div>
 
       {/* Results count */}
@@ -258,25 +285,35 @@ export default function UsersPage() {
               </tr>
             ) : (
               users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-800/30 transition-colors">
+                <tr key={user.id} className={`hover:bg-gray-800/30 transition-colors ${user.isDemo ? 'bg-purple-500/5' : ''}`}>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
-                        {user.profile?.profilePhotoUrl ? (
-                          /* eslint-disable-next-line @next/next/no-img-element -- Dynamic user avatar */
-                          <img
-                            src={user.profile.profilePhotoUrl}
-                            alt=""
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <UserCircleIcon className="h-6 w-6 text-gray-400" />
+                      <div className="relative">
+                        <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
+                          {user.profile?.profilePhotoUrl ? (
+                            /* eslint-disable-next-line @next/next/no-img-element -- Dynamic user avatar */
+                            <img
+                              src={user.profile.profilePhotoUrl}
+                              alt=""
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <UserCircleIcon className="h-6 w-6 text-gray-400" />
+                          )}
+                        </div>
+                        {user.isDemo && (
+                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-purple-500 rounded-full flex items-center justify-center" title="Demo Account">
+                            <BeakerIcon className="h-2.5 w-2.5 text-white" />
+                          </div>
                         )}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white">
-                          {user.firstName} {user.lastName}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-white">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          {user.isDemo && <DemoBadge />}
+                        </div>
                         <p className="text-sm text-gray-400">{user.email}</p>
                       </div>
                     </div>

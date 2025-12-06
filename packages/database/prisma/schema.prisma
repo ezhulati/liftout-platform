@@ -231,6 +231,10 @@ model User {
   authProvider             String?   @map("auth_provider") // 'google', 'linkedin', etc.
   authProviderId           String?   @map("auth_provider_id") // ID from OAuth provider
 
+  // Demo/Test account marker
+  // Demo accounts use @demo.liftout.com emails and are excluded from analytics
+  isDemo                   Boolean   @default(false) @map("is_demo")
+
   // Admin-specific fields
   suspendedAt              DateTime? @map("suspended_at")
   suspendedBy              String?   @map("suspended_by")
@@ -345,6 +349,9 @@ model Company {
   createdAt            DateTime            @default(now()) @map("created_at")
   updatedAt            DateTime            @updatedAt @map("updated_at")
 
+  // Demo/Test marker - demo companies are excluded from analytics and marked in UI
+  isDemo               Boolean             @default(false) @map("is_demo")
+
   // Soft delete fields
   deletedAt            DateTime?           @map("deleted_at")
   deletedBy            String?             @map("deleted_by")
@@ -418,6 +425,9 @@ model Team {
   metadata                Json                   @default("{}")
   createdAt               DateTime               @default(now()) @map("created_at")
   updatedAt               DateTime               @updatedAt @map("updated_at")
+
+  // Demo/Test marker - demo teams are excluded from analytics and marked in UI
+  isDemo                  Boolean                @default(false) @map("is_demo")
 
   // Verification fields (for admin)
   verificationStatus      VerificationStatus     @default(pending) @map("verification_status")

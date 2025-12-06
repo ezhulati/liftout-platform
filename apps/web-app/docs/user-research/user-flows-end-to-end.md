@@ -4,6 +4,32 @@
 
 ---
 
+## Related Documents
+
+- **[Onboarding & Posting Flows](./onboarding-and-posting-flows.md)** — Detailed onboarding screens and team posting logic (SOURCE OF TRUTH)
+- **[User Actions Complete List](./user-actions-complete-list.md)** — Every possible action by user type with permissions matrix
+
+---
+
+## Key Flow Principles
+
+> **IMPORTANT**: The detailed screen mockups and state definitions are in
+> [onboarding-and-posting-flows.md](./onboarding-and-posting-flows.md).
+> This document provides the narrative user journeys.
+
+### Team Side
+1. **Onboarding requires team creation** — Team leads must create a team profile during onboarding (not optional)
+2. **Teams start in DRAFT status** — Not visible to companies until posted
+3. **All members must join before posting** — Team cannot be posted until all invited members have joined and completed profiles
+4. **Explicit "Post Team" action** — Team lead must explicitly post the team to make it visible
+
+### Company Side
+1. **Onboarding requires company creation** — Company users must create a company profile during onboarding
+2. **Opportunity posting is encouraged** — Prompted during onboarding but not required
+3. **Can browse teams immediately** — After onboarding, can browse and reach out to teams
+
+---
+
 ## Table of Contents
 
 1. [Alex Chen — Team Lead (Creates Team)](#1-alex-chen--team-lead-creates-team)
@@ -138,20 +164,26 @@ Screen 4: Preferences
 ───────────────────────────────────────────────────────────────────
 ```
 
-### Phase 4: Team Creation
+### Phase 4: Team Creation (MANDATORY)
 
 ```
-ONBOARDING STEP 2: CREATE OR JOIN TEAM
+ONBOARDING STEP 2: CREATE OR JOIN TEAM (REQUIRED)
 ───────────────────────────────────────────────────────────────────
+
+NOTE: This step is MANDATORY for team users. Cannot be skipped.
 
 Screen 1: Team Decision
           ┌─────────────────────────────────────────┐
-          │  Do you have a team?                    │
+          │  Now let's set up your team             │
+          │                                         │
+          │  Are you starting a new team or joining │
+          │  an existing one?                       │
           │                                         │
           │  [Create a New Team]  ← Alex clicks     │
-          │  [Join Existing Team]                   │
-          │  [Skip for Now]                         │
+          │  [I Have an Invite Code]                │
           └─────────────────────────────────────────┘
+
+NOTE: There is NO "Skip" option. Team creation is required.
 
 Screen 2: Team Basic Info
           ┌─────────────────────────────────────────┐
@@ -210,16 +242,38 @@ Screen 5: Visibility Settings
 
 RESULT: Team created with Alex as Lead and Admin
         └─ Team slug: techflow-data-science
-        └─ Team status: Draft (needs members)
+        └─ Team status: DRAFT (not visible to companies)
+        └─ Cannot be posted until all members join
+
+IMPORTANT: Team is in DRAFT status. It will NOT appear in company
+searches until Alex explicitly posts it AND all members have joined.
 
 ───────────────────────────────────────────────────────────────────
 ```
 
-### Phase 5: Invite Team Members
+### Phase 5: Invite Team Members (ENCOURAGED)
 
 ```
 TEAM SETUP: INVITE MEMBERS
 ───────────────────────────────────────────────────────────────────
+
+After team creation, Alex sees an encouragement prompt:
+
+┌─────────────────────────────────────────────────────────────────┐
+│  🎉 Team Created Successfully!                                  │
+│                                                                 │
+│  Your team "TechFlow Data Science Team" is ready.               │
+│                                                                 │
+│  NEXT STEPS TO GET NOTICED BY COMPANIES:                        │
+│                                                                 │
+│  1. ○ Invite your team members                                  │
+│  2. ○ Wait for all members to join and complete profiles        │
+│  3. ○ Post your team to make it visible to companies            │
+│                                                                 │
+│  Current Status: DRAFT (not visible to companies)               │
+│                                                                 │
+│  [Invite Team Members Now]  [I'll Do This Later]                │
+└─────────────────────────────────────────────────────────────────┘
 
 Screen: Team Dashboard → Members Tab
         URL: /app/teams/techflow-data-science/members
@@ -253,16 +307,26 @@ Action 3: Alex follows up on Slack/WhatsApp
           └─ "Hey, I just sent you an invite to Liftout.
               Check your email and sign up!"
 
-TEAM STATUS:
+TEAM STATUS DASHBOARD:
 ┌────────────────────────────────────────────────────────────┐
 │  TechFlow Data Science Team                                │
 │                                                            │
+│  STATUS: DRAFT (not visible to companies)                  │
+│                                                            │
+│  MEMBERS                                                   │
+│  ────────────────────────────────────────────────────────  │
 │  Alex Chen (Lead)      ✅ Active                           │
 │  Sarah Martinez        ⏳ Invited (pending)                │
 │  Marcus Johnson        ⏳ Invited (pending)                │
 │  Priya Patel          ⏳ Invited (pending)                 │
 │                                                            │
-│  Team Status: Incomplete (3 pending invites)               │
+│  POSTING REQUIREMENTS                                      │
+│  ────────────────────────────────────────────────────────  │
+│  ❌ All members must join (0/3 pending joined)             │
+│  ❌ All member profiles must be complete                   │
+│  ✅ Team profile is complete                               │
+│                                                            │
+│  [Post Team] ← DISABLED until requirements met             │
 └────────────────────────────────────────────────────────────┘
 
 ───────────────────────────────────────────────────────────────────
@@ -306,32 +370,92 @@ Action 4: Check Team Status Daily
 ───────────────────────────────────────────────────────────────────
 ```
 
-### Phase 7: Team Complete → Go Active
+### Phase 7: Team Complete → POST TEAM
 
 ```
 TEAM COMPLETION (After all members join)
 ───────────────────────────────────────────────────────────────────
 
-Notification: "Your team is now complete!"
+Notification: "🎉 Your team is now ready to post!"
               └─ All 4 members have accepted and completed profiles
 
-Action 1: Review Team Profile
+TEAM STATUS DASHBOARD (Updated):
+┌────────────────────────────────────────────────────────────┐
+│  TechFlow Data Science Team                                │
+│                                                            │
+│  STATUS: READY TO POST                                     │
+│                                                            │
+│  MEMBERS                                                   │
+│  ────────────────────────────────────────────────────────  │
+│  Alex Chen (Lead)      ✅ Active, Profile Complete         │
+│  Sarah Martinez        ✅ Active, Profile Complete         │
+│  Marcus Johnson        ✅ Active, Profile Complete         │
+│  Priya Patel          ✅ Active, Profile Complete          │
+│                                                            │
+│  POSTING REQUIREMENTS                                      │
+│  ────────────────────────────────────────────────────────  │
+│  ✅ All members have joined                                │
+│  ✅ All member profiles are complete                       │
+│  ✅ Team profile is complete                               │
+│                                                            │
+│  ALL REQUIREMENTS MET! 🎉                                  │
+│                                                            │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │  [🚀 Post Team - Make Visible to Companies]         │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                            │
+│  Cohesion Score: 94/100                                    │
+└────────────────────────────────────────────────────────────┘
+
+Action 1: Review Team Profile Before Posting
           └─ URL: /app/teams/techflow-data-science
           └─ Verify all information is correct
           └─ Check cohesion score: 94/100
+          └─ Review blocked companies list
 
-Action 2: Set Team to "Available"
+Action 2: POST TEAM (Critical Action)
+          └─ Click "Post Team - Make Visible to Companies"
+          ┌─────────────────────────────────────────┐
+          │  Post Your Team?                        │
+          │                                         │
+          │  By posting, your team will be visible  │
+          │  to companies searching for teams.      │
+          │                                         │
+          │  Visibility: Selective                  │
+          │  (Only approved companies can see)      │
+          │                                         │
+          │  Blocked Companies:                     │
+          │  • TechFlow Analytics                   │
+          │  • DataCorp                             │
+          │                                         │
+          │  You can unpost your team at any time.  │
+          │                                         │
+          │  [Cancel] [Post Team]                   │
+          └─────────────────────────────────────────┘
+
+RESULT: Team status changes from "READY TO POST" → "POSTED"
+        └─ Team now appears in company search results
+        └─ Team can now express interest in opportunities
+        └─ Companies can reach out to the team
+
+TEAM STATUS: POSTED
+┌────────────────────────────────────────────────────────────┐
+│  TechFlow Data Science Team                                │
+│                                                            │
+│  STATUS: POSTED ✅                                         │
+│  Visible to: Selective (approved companies only)           │
+│                                                            │
+│  [Unpost Team] [Edit Visibility] [Edit Blocked Companies]  │
+└────────────────────────────────────────────────────────────┘
+
+Action 3: Set Team Availability (optional refinement)
           ┌─────────────────────────────────────────┐
           │  Team Availability                      │
           │                                         │
-          │  ○ Not Looking                          │
+          │  ○ Not Actively Looking                 │
           │  ● Available - Actively exploring       │  ← Select
           │  ○ Urgently Available                   │
           └─────────────────────────────────────────┘
-
-Action 3: Upgrade Visibility (optional)
-          └─ Change from "Selective" to "Public" if desired
-          └─ Alex keeps "Selective" for now
 
 Action 4: Express Interest in Saved Opportunities
           └─ Go to saved opportunities
@@ -1209,14 +1333,18 @@ Action 5: Redirect to company setup
 ───────────────────────────────────────────────────────────────────
 ```
 
-### Phase 3: Company Profile Setup
+### Phase 3: Company Profile Setup (MANDATORY)
 
 ```
-COMPANY PROFILE
+COMPANY PROFILE (REQUIRED)
 ───────────────────────────────────────────────────────────────────
+
+NOTE: Company creation is MANDATORY for company users. Cannot skip.
 
 Screen 1: Company Basic Info
           ┌─────────────────────────────────────────┐
+          │  Tell us about your company             │
+          │                                         │
           │  Company Name: NextGen Financial        │
           │  Industry: Financial Services           │
           │  Company Size: 500-1000 employees       │
@@ -1248,6 +1376,32 @@ Screen 3: Your Role
           │  Admin Access: ☑ Yes                    │
           └─────────────────────────────────────────┘
           └─ Click "Complete Setup"
+
+ONBOARDING COMPLETE → OPPORTUNITY ENCOURAGEMENT:
+┌─────────────────────────────────────────────────────────────────┐
+│  🎉 Welcome to Liftout, Sarah!                                  │
+│                                                                 │
+│  Your company "NextGen Financial" is now set up.                │
+│                                                                 │
+│  WHAT WOULD YOU LIKE TO DO FIRST?                               │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  🎯 Post an Opportunity                                 │   │
+│  │  Tell teams what you're looking for                     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  👥 Browse Available Teams                              │   │
+│  │  See what teams are looking to move                     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  PRO TIP: Companies that post opportunities get 3x more         │
+│  qualified team matches!                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+Sarah clicks: "Post an Opportunity" (encouraged path)
+OR
+Sarah clicks: "Browse Available Teams" (alternate path)
 
 ───────────────────────────────────────────────────────────────────
 ```
