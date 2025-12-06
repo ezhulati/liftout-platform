@@ -14,6 +14,8 @@ import {
   GlobeAltIcon,
   LockClosedIcon,
   UserGroupIcon,
+  NoSymbolIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
 
@@ -67,6 +69,35 @@ export default function TeamSettingsPage() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
+
+  // Blocked companies query
+  const { data: blockedCompanies } = useQuery<{ id: string; name: string }[]>({
+    queryKey: ['blocked-companies', teamId],
+    queryFn: async () => {
+      const response = await fetch(`/api/teams/${teamId}/blocked-companies`);
+      if (!response.ok) return [];
+      const data = await response.json();
+      return data.blockedCompanies || [];
+    },
+    enabled: !!teamId,
+  });
+
+  const unblockCompanyMutation = useMutation({
+    mutationFn: async (companyId: string) => {
+      const response = await fetch(`/api/teams/${teamId}/blocked-companies?companyId=${companyId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to unblock company');
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success('Company unblocked');
+      queryClient.invalidateQueries({ queryKey: ['blocked-companies', teamId] });
+    },
+    onError: () => {
+      toast.error('Failed to unblock company');
+    },
+  });
 
   const { data: settings, isLoading } = useQuery<TeamSettings>({
     queryKey: ['team-settings', teamId],
@@ -324,6 +355,47 @@ export default function TeamSettingsPage() {
                 label="Require member approval"
               />
             </div>
+          </div>
+        </section>
+
+        {/* Blocked Companies */}
+        <section className="bg-bg-surface rounded-xl border border-border">
+          <div className="px-6 py-5 border-b border-border">
+            <div className="flex items-center gap-2">
+              <NoSymbolIcon className="h-5 w-5 text-text-tertiary" />
+              <h2 className="text-lg font-bold text-text-primary">Blocked companies</h2>
+            </div>
+            <p className="text-base text-text-secondary mt-1">
+              Companies you block cannot view your team or contact you
+            </p>
+          </div>
+          <div className="p-6">
+            {blockedCompanies && blockedCompanies.length > 0 ? (
+              <ul className="space-y-3">
+                {blockedCompanies.map((company) => (
+                  <li
+                    key={company.id}
+                    className="flex items-center justify-between p-3 bg-bg-elevated rounded-lg"
+                  >
+                    <span className="font-medium text-text-primary">{company.name}</span>
+                    <button
+                      onClick={() => unblockCompanyMutation.mutate(company.id)}
+                      disabled={unblockCompanyMutation.isPending}
+                      className="flex items-center gap-1 px-3 py-2 min-h-[44px] text-sm text-text-secondary hover:text-text-primary hover:bg-bg-surface rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      <XMarkIcon className="h-4 w-4" />
+                      <span>Unblock</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-center py-8 text-text-tertiary">
+                <NoSymbolIcon className="h-10 w-10 mx-auto mb-3 opacity-50" />
+                <p className="text-base">No blocked companies</p>
+                <p className="text-sm mt-1">Companies you block will appear here</p>
+              </div>
+            )}
           </div>
         </section>
 

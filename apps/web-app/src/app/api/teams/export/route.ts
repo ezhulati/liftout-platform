@@ -222,6 +222,43 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Generalize location for anonymous teams
+function generalizeLocation(location: string | null): string | null {
+  if (!location) return null;
+
+  const locationLower = location.toLowerCase();
+  const usRegions: Record<string, string> = {
+    'new york': 'Northeast US',
+    'los angeles': 'West Coast US',
+    'san francisco': 'West Coast US',
+    'chicago': 'Midwest US',
+    'boston': 'Northeast US',
+    'seattle': 'West Coast US',
+    'austin': 'Southwest US',
+    'denver': 'Mountain West US',
+    'miami': 'Southeast US',
+    'atlanta': 'Southeast US',
+    'dallas': 'Southwest US',
+    'houston': 'Southwest US',
+  };
+
+  for (const [city, region] of Object.entries(usRegions)) {
+    if (locationLower.includes(city)) {
+      return region;
+    }
+  }
+
+  if (locationLower.includes('london') || locationLower.includes('uk')) {
+    return 'United Kingdom';
+  }
+
+  if (locationLower.includes('remote')) {
+    return 'Remote';
+  }
+
+  return location;
+}
+
 function escapeCsvField(field: string): string {
   if (field.includes(',') || field.includes('"') || field.includes('\n')) {
     return `"${field.replace(/"/g, '""')}"`;

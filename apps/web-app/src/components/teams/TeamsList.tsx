@@ -15,6 +15,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useTeams } from '@/hooks/useTeams';
 import { useProfileGate } from '@/hooks/useProfileGate';
+import { VisibilityBadge, AnonymizedIndicator } from '@/components/teams/VisibilityBadge';
 
 
 function classNames(...classes: string[]) {
@@ -97,6 +98,17 @@ export function TeamsList({ userType }: TeamsListProps) {
                   <h3 className="text-base font-bold text-text-primary truncate">
                     {team.name}
                   </h3>
+                  {/* Show anonymized indicator for company users viewing anonymous teams */}
+                  {isCompanyUser && (team as any)._isAnonymized && (
+                    <AnonymizedIndicator />
+                  )}
+                  {/* Show visibility badge for team owners */}
+                  {!isCompanyUser && (team as any).visibility && (
+                    <VisibilityBadge
+                      visibility={(team as any).visibility}
+                      isAnonymous={(team as any).isAnonymous}
+                    />
+                  )}
                   <span className={classNames(
                     'badge text-xs',
                     team.openToLiftout ? 'badge-success' : 'badge-secondary'

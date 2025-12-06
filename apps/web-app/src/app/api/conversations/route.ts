@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { canViewTeam, isVerifiedCompanyUser } from '@/lib/visibility';
 
 // GET /api/conversations - List user's conversations
 export async function GET(request: NextRequest) {
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { subject, participantIds, opportunityId, teamId, companyId, isAnonymous } = body;
+    const { subject, participantIds, opportunityId, teamId, companyId, isAnonymous, acceptNDA } = body;
 
     // Check if company user is verified before allowing contact with teams
     if (session.user.userType === 'company' && teamId) {
@@ -149,19 +150,70 @@ export async function POST(request: NextRequest) {
           { status: 403 }
         );
       }
+
+      // Check visibility permissions for the team
+      const team = await prisma.team.findUnique({
+        where: { id: teamId },
+        select: {
+          id: true,
+          visibility: true,
+          isAnonymous: true,
+          createdBy: true,
+          blockedCompanies: true,
+        },
+      });
+
+      if (team) {
+        const visibilityCheck = await canViewTeam(
+          team,
+          session.user.id,
+          'company'
+        );
+
+        if (!visibilityCheck.canView) {
+          return NextResponse.json(
+            { error: visibilityCheck.reason || 'You cannot contact this team.' },
+            { status: 403 }
+          );
+        }
+      }
     }
 
     // Check if team has anonymous visibility (inherit for the conversation)
     let shouldBeAnonymous = isAnonymous || false;
-    if (teamId && !shouldBeAnonymous) {
+    let requiresNDA = false;
+    if (teamId) {
       const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: { visibility: true, isAnonymous: true },
       });
       if (team?.visibility === 'anonymous' || team?.isAnonymous) {
         shouldBeAnonymous = true;
+        requiresNDA = true;
       }
     }
+
+    // For anonymous teams, require NDA acceptance
+    if (requiresNDA && !acceptNDA) {
+      return NextResponse.json(
+        {
+          error: 'NDA acceptance required',
+          message: 'You must accept the confidentiality agreement before contacting anonymous teams.',
+          requiresNDA: true,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Build NDA acceptance data if required
+    const participantRoles = requiresNDA && acceptNDA
+      ? {
+          ndaAcceptedBy: [session.user.id],
+          ndaAcceptedAt: {
+            [session.user.id]: new Date().toISOString(),
+          },
+        }
+      : {};
 
     // Create conversation
     const conversation = await prisma.conversation.create({
@@ -171,6 +223,7 @@ export async function POST(request: NextRequest) {
         teamId,
         companyId,
         isAnonymous: shouldBeAnonymous,
+        participantRoles,
         participants: {
           create: [
             { userId: session.user.id, role: 'owner' },

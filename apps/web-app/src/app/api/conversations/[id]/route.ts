@@ -59,6 +59,12 @@ export async function GET(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Build participant map for anonymization
+    const participantMap = new Map<string, number>();
+    conversation.participants.forEach((p, index) => {
+      participantMap.set(p.userId, index);
+    });
+
     return NextResponse.json({
       data: {
         id: conversation.id,
@@ -73,37 +79,50 @@ export async function GET(
         unreadCounts: {},
         createdAt: conversation.createdAt.toISOString(),
         updatedAt: conversation.updatedAt.toISOString(),
-        participants: conversation.participants.map((p) => ({
-          id: p.id,
-          userId: p.userId,
-          role: p.role,
-          joinedAt: p.joinedAt.toISOString(),
-          leftAt: p.leftAt?.toISOString() || null,
-          lastReadAt: p.lastReadAt?.toISOString() || null,
-          user: {
-            id: p.user.id,
-            firstName: p.user.firstName || '',
-            lastName: p.user.lastName || '',
-          },
-        })),
-        messages: conversation.messages.map((m) => ({
-          id: m.id,
-          conversationId: m.conversationId,
-          content: m.content,
-          senderId: m.senderId,
-          messageType: 'text' as const,
-          attachments: [],
-          sentAt: m.createdAt.toISOString(),
-          editedAt: null,
-          deletedAt: null,
-          sender: m.sender
-            ? {
-                id: m.sender.id,
-                firstName: m.sender.firstName || '',
-                lastName: m.sender.lastName || '',
-              }
-            : undefined,
-        })),
+        participants: conversation.participants.map((p, index) => {
+          // Anonymize other participants if conversation is anonymous
+          const isCurrentUser = p.userId === session.user.id;
+          const shouldAnonymize = conversation.isAnonymous && !isCurrentUser;
+
+          return {
+            id: p.id,
+            userId: shouldAnonymize ? `anonymous-${index}` : p.userId,
+            role: p.role,
+            joinedAt: p.joinedAt.toISOString(),
+            leftAt: p.leftAt?.toISOString() || null,
+            lastReadAt: p.lastReadAt?.toISOString() || null,
+            user: {
+              id: shouldAnonymize ? `anonymous-${index}` : p.user.id,
+              firstName: shouldAnonymize ? 'Anonymous' : (p.user.firstName || ''),
+              lastName: shouldAnonymize ? `User ${index + 1}` : (p.user.lastName || ''),
+            },
+          };
+        }),
+        messages: conversation.messages.map((m) => {
+          // Anonymize sender if conversation is anonymous and not current user
+          const isCurrentUser = m.senderId === session.user.id;
+          const shouldAnonymize = conversation.isAnonymous && !isCurrentUser;
+          const senderIndex = m.senderId ? participantMap.get(m.senderId) ?? 0 : 0;
+
+          return {
+            id: m.id,
+            conversationId: m.conversationId,
+            content: m.content,
+            senderId: shouldAnonymize ? `anonymous-${senderIndex}` : m.senderId,
+            messageType: 'text' as const,
+            attachments: [],
+            sentAt: m.createdAt.toISOString(),
+            editedAt: null,
+            deletedAt: null,
+            sender: m.sender
+              ? {
+                  id: shouldAnonymize ? `anonymous-${senderIndex}` : m.sender.id,
+                  firstName: shouldAnonymize ? 'Anonymous' : (m.sender.firstName || ''),
+                  lastName: shouldAnonymize ? `User ${senderIndex + 1}` : (m.sender.lastName || ''),
+                }
+              : undefined,
+          };
+        }),
       },
     });
   } catch (error) {

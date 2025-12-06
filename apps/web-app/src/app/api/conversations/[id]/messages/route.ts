@@ -31,6 +31,17 @@ export async function GET(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Get conversation to check if it's anonymous
+    const conversation = await prisma.conversation.findUnique({
+      where: { id },
+      select: {
+        isAnonymous: true,
+        participants: {
+          select: { userId: true },
+        },
+      },
+    });
+
     const messages = await prisma.message.findMany({
       where: { conversationId: id },
       orderBy: { createdAt: 'asc' },
@@ -45,29 +56,42 @@ export async function GET(
       },
     });
 
+    // Build participant map for anonymization
+    const participantMap = new Map<string, number>();
+    conversation?.participants.forEach((p, index) => {
+      participantMap.set(p.userId, index);
+    });
+
     // Parse pagination params
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '50');
 
-    const transformedMessages = messages.map((m) => ({
-      id: m.id,
-      conversationId: m.conversationId,
-      content: m.content,
-      senderId: m.senderId,
-      messageType: 'text' as const,
-      attachments: [],
-      sentAt: m.createdAt.toISOString(),
-      editedAt: null,
-      deletedAt: null,
-      sender: m.sender
-        ? {
-            id: m.sender.id,
-            firstName: m.sender.firstName || '',
-            lastName: m.sender.lastName || '',
-          }
-        : undefined,
-    }));
+    const transformedMessages = messages.map((m) => {
+      // Anonymize sender if conversation is anonymous and not current user
+      const isCurrentUser = m.senderId === session.user.id;
+      const shouldAnonymize = conversation?.isAnonymous && !isCurrentUser;
+      const senderIndex = m.senderId ? participantMap.get(m.senderId) ?? 0 : 0;
+
+      return {
+        id: m.id,
+        conversationId: m.conversationId,
+        content: m.content,
+        senderId: shouldAnonymize ? `anonymous-${senderIndex}` : m.senderId,
+        messageType: 'text' as const,
+        attachments: [],
+        sentAt: m.createdAt.toISOString(),
+        editedAt: null,
+        deletedAt: null,
+        sender: m.sender
+          ? {
+              id: shouldAnonymize ? `anonymous-${senderIndex}` : m.sender.id,
+              firstName: shouldAnonymize ? 'Anonymous' : (m.sender.firstName || ''),
+              lastName: shouldAnonymize ? `User ${senderIndex + 1}` : (m.sender.lastName || ''),
+            }
+          : undefined,
+      };
+    });
 
     return NextResponse.json({
       data: {
