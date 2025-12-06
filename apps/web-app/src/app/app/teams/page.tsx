@@ -223,10 +223,10 @@ function MyTeamView({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Page Header - Practical UI: 18px+ body text, darker secondary */}
       <div className="page-header">
         <h1 className="page-title">Team members</h1>
-        <p className="page-subtitle">Manage your team post and members.</p>
+        <p className="text-lg text-text-secondary">Manage your team post and members.</p>
       </div>
 
       {/* Team Post Card - Practical UI: 8pt spacing, clear hierarchy */}
@@ -263,47 +263,58 @@ function MyTeamView({ userId }: { userId: string }) {
           </div>
 
           {/* Hide team details toggle - Practical UI: Toggle for instant effect, concise label */}
-          <div className="flex-shrink-0">
-            <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 -mx-2 rounded-lg hover:bg-bg-alt transition-colors">
-              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+          {canEdit && (
+            <div className="flex-shrink-0">
+              <label className="flex items-center gap-3 cursor-pointer min-h-12 px-2 -mx-2 rounded-lg hover:bg-bg-alt transition-colors">
                 <input
                   type="checkbox"
                   className="sr-only peer"
-                  checked={false}
-                  onChange={() => {}}
+                  checked={team.visibility === 'anonymous'}
+                  onChange={async () => {
+                    const newVisibility = team.visibility === 'anonymous' ? 'public' : 'anonymous';
+                    await updateTeam({ visibility: newVisibility });
+                  }}
                   aria-describedby="hide-details-desc"
                 />
-              </div>
-              <div>
-                <span className="text-sm font-medium text-text-primary block">Hide details</span>
-                <span id="hide-details-desc" className="text-xs text-text-tertiary">Anonymize member info</span>
-              </div>
-            </label>
-          </div>
+                <div className={`relative w-11 h-6 rounded-full transition-colors ${
+                  team.visibility === 'anonymous' ? 'bg-purple-600' : 'bg-gray-200'
+                }`}>
+                  <div className={`absolute top-[2px] h-5 w-5 bg-white border border-gray-300 rounded-full transition-transform ${
+                    team.visibility === 'anonymous' ? 'translate-x-5' : 'translate-x-[2px]'
+                  }`} />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-text-primary block">Hide details</span>
+                  <span id="hide-details-desc" className="text-xs text-text-tertiary">Anonymize member info</span>
+                </div>
+              </label>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Your team section - Practical UI: Clear section hierarchy */}
       <section aria-labelledby="your-team-heading">
         <div className="mb-4">
-          <h2 id="your-team-heading" className="text-lg font-bold text-text-primary">Your team</h2>
-          <p className="text-sm text-text-secondary mt-1">Manage members and permissions.</p>
+          <h2 id="your-team-heading" className="text-xl font-bold text-text-primary">Your team</h2>
+          <p className="text-base text-text-secondary mt-1">Manage members and permissions.</p>
         </div>
 
         {/* Team Members Table - Practical UI: 48pt touch targets, clear hierarchy */}
         <div className="card overflow-hidden p-0">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border bg-bg-alt">
-                <th scope="col" className="text-left text-sm font-semibold text-text-secondary px-6 py-3">Name</th>
-                <th scope="col" className="text-left text-sm font-semibold text-text-secondary px-6 py-3">Email</th>
-                <th scope="col" className="w-40 px-6 py-3"><span className="sr-only">Actions</span></th>
+              <tr className="border-b border-border bg-gray-50">
+                <th scope="col" className="text-left text-sm font-bold text-text-primary px-6 py-4">Name</th>
+                <th scope="col" className="text-left text-sm font-bold text-text-primary px-6 py-4">Email</th>
+                <th scope="col" className="text-left text-sm font-bold text-text-primary px-6 py-4">Role</th>
+                <th scope="col" className="w-32 px-6 py-4"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody>
               {teamMembers.map((member, index) => (
-                <tr key={member.id} className={index !== teamMembers.length - 1 ? 'border-b border-border' : ''}>
-                  <td className="px-6 py-3">
+                <tr key={member.id} className={`${index !== teamMembers.length - 1 ? 'border-b border-border' : ''} hover:bg-gray-50 transition-colors`}>
+                  <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {member.avatar ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
@@ -313,27 +324,28 @@ function MyTeamView({ userId }: { userId: string }) {
                           className="h-10 w-10 rounded-full object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0">
-                          <span className="text-navy font-semibold text-sm" aria-hidden="true">
+                        <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                          <span className="text-purple-700 font-semibold text-sm" aria-hidden="true">
                             {member.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'}
                           </span>
                         </div>
                       )}
-                      <span className="font-medium text-text-primary">{member.name}</span>
+                      <div>
+                        <span className="font-semibold text-text-primary block">{member.name}</span>
+                        {member.isLead && (
+                          <span className="text-xs text-purple-700 font-medium">Team Lead</span>
+                        )}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-3 text-text-secondary text-sm">{(member as any).email || '—'}</td>
-                  <td className="px-6 py-3">
-                    <div className="flex items-center gap-2 justify-end">
-                      {canRemoveMembers && !member.isLead && (
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveMember(member.id)}
-                          className="min-h-10 min-w-10 px-3 py-2 text-sm font-medium text-error hover:text-error-dark hover:bg-error/5 rounded-lg transition-colors"
-                        >
-                          Remove
-                        </button>
-                      )}
+                  <td className="px-6 py-4 text-text-secondary text-base">
+                    {(member as any).email || <span className="text-text-tertiary italic">Hidden</span>}
+                  </td>
+                  <td className="px-6 py-4 text-text-secondary text-base">
+                    {member.role || 'Member'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1 justify-end">
                       {canEdit && (
                         <button
                           type="button"
@@ -341,6 +353,15 @@ function MyTeamView({ userId }: { userId: string }) {
                           className="min-h-10 px-3 py-2 text-sm font-medium text-purple-700 hover:text-purple-800 hover:bg-purple-50 rounded-lg transition-colors"
                         >
                           Edit
+                        </button>
+                      )}
+                      {canRemoveMembers && !member.isLead && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMember(member.id)}
+                          className="min-h-10 px-3 py-2 text-sm font-medium text-text-tertiary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          Remove
                         </button>
                       )}
                     </div>
@@ -352,44 +373,52 @@ function MyTeamView({ userId }: { userId: string }) {
         </div>
       </section>
 
-      {/* Invite Member Section */}
+      {/* Invite Member Section - Practical UI: Visible labels, 8pt spacing */}
       {canInvite && (
         <section aria-labelledby="invite-heading" className="card">
-          <h2 id="invite-heading" className="text-lg font-bold text-text-primary mb-4">Invite team member</h2>
-          <form onSubmit={handleSendInvite} className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <label htmlFor="invite-email" className="sr-only">Email address</label>
-              <input
-                id="invite-email"
-                type="email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="colleague@company.com"
-                className="input w-full"
-                required
-              />
+          <h2 id="invite-heading" className="text-xl font-bold text-text-primary mb-6">Invite team member</h2>
+          <form onSubmit={handleSendInvite} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_160px] gap-4">
+              <div>
+                <label htmlFor="invite-email" className="block text-sm font-semibold text-text-primary mb-2">
+                  Email address
+                </label>
+                <input
+                  id="invite-email"
+                  type="email"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  placeholder="colleague@company.com"
+                  className="input w-full"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="invite-role" className="block text-sm font-semibold text-text-primary mb-2">
+                  Role
+                </label>
+                <select
+                  id="invite-role"
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value)}
+                  className="input w-full"
+                >
+                  <option value="">Member</option>
+                  <option value="Team Lead">Team Lead</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Junior">Junior</option>
+                </select>
+              </div>
             </div>
-            <div className="w-full sm:w-40">
-              <label htmlFor="invite-role" className="sr-only">Role</label>
-              <select
-                id="invite-role"
-                value={inviteRole}
-                onChange={(e) => setInviteRole(e.target.value)}
-                className="input w-full"
+            <div>
+              <button
+                type="submit"
+                disabled={isInviting || !inviteEmail.trim()}
+                className="btn-primary min-h-12 whitespace-nowrap disabled:opacity-50"
               >
-                <option value="">Member</option>
-                <option value="Team Lead">Team Lead</option>
-                <option value="Senior">Senior</option>
-                <option value="Junior">Junior</option>
-              </select>
+                {isInviting ? 'Sending...' : 'Send invite'}
+              </button>
             </div>
-            <button
-              type="submit"
-              disabled={isInviting || !inviteEmail.trim()}
-              className="btn-primary min-h-12 whitespace-nowrap disabled:opacity-50"
-            >
-              {isInviting ? 'Sending...' : 'Send invite'}
-            </button>
           </form>
         </section>
       )}
