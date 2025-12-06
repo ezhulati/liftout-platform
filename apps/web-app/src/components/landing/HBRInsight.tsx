@@ -143,7 +143,7 @@ export function HBRInsight() {
               <Link
                 key={story.title}
                 href={`/case-studies/${story.slug}`}
-                className={`block bg-bg-surface rounded-xl p-6 border border-border hover:border-purple-200 hover:shadow-lg transition-all duration-300 group ${
+                className={`block bg-gray-50 rounded-xl p-6 border border-gray-200 hover:bg-white hover:border-purple-200 hover:shadow-lg transition-all duration-300 group ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
                 style={{ transitionDelay: isVisible ? `${250 + index * 75}ms` : '0ms' }}
@@ -202,7 +202,7 @@ export function HBRInsight() {
               <Link
                 key={story.title}
                 href={`/case-studies/${story.slug}`}
-                className={`block bg-bg-surface rounded-xl p-6 border border-border hover:border-purple-200 hover:shadow-lg transition-all duration-300 group ${
+                className={`block bg-gray-50 rounded-xl p-6 border border-gray-200 hover:bg-white hover:border-purple-200 hover:shadow-lg transition-all duration-300 group ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
                 style={{ transitionDelay: isVisible ? `${500 + index * 75}ms` : '0ms' }}

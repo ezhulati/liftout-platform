@@ -85,7 +85,7 @@ export function LandingExplainer() {
                 <Link
                   key={example.company}
                   href={example.slug ? `/case-studies/${example.slug}` : '/case-studies'}
-                  className={`block bg-bg-surface rounded-xl p-5 border border-border hover:border-purple-200 hover:shadow-md transition-all duration-500 group ${
+                  className={`block bg-gray-50 rounded-xl p-5 border border-gray-200 hover:bg-white hover:border-purple-200 hover:shadow-md transition-all duration-500 group ${
                     isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
                   }`}
                   style={{ transitionDelay: isVisible ? `${200 + index * 100}ms` : '0ms' }}
