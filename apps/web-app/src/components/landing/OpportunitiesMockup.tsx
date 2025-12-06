@@ -195,7 +195,7 @@ export function OpportunitiesMockup() {
             {/* Status bar */}
             <div className="bg-gray-100 px-4 py-1 flex justify-between items-center text-xs text-gray-500">
               <span>9:41</span>
-              <span>liftout.com/opportunities</span>
+              <span>Liftout</span>
               <span>100%</span>
             </div>
 
