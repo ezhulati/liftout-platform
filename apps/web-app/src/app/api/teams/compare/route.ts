@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import {
+  isVerifiedCompanyUser,
+  isCompanyBlocked,
+  anonymizeTeamData,
+  type TeamData,
+} from '@/lib/visibility';
 
 // POST - Compare multiple teams
 export async function POST(request: NextRequest) {
@@ -20,6 +26,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check company verification status
+    const verification = await isVerifiedCompanyUser(session.user.id);
+    const viewerCompanyId = verification.companyId;
+
     const body = await request.json();
     const { teamIds } = body;
 
@@ -37,11 +47,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch teams with their members
+    // Determine which visibility modes user can access
+    const visibilityFilter: ('public' | 'anonymous')[] = verification.isVerified
+      ? ['public', 'anonymous']
+      : ['public'];
+
+    // Fetch teams with their members - only those visible to user
     const teams = await prisma.team.findMany({
       where: {
         id: { in: teamIds },
-        postingStatus: 'posted', // Only posted teams can be compared
+        postingStatus: 'posted',
+        visibility: { in: visibilityFilter },
       },
       include: {
         members: {
@@ -74,7 +90,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (teams.length < 2) {
+    // Filter out teams that have blocked the viewer's company
+    const accessibleTeams = viewerCompanyId
+      ? teams.filter(team => !isCompanyBlocked(team, viewerCompanyId))
+      : teams;
+
+    if (accessibleTeams.length < 2) {
       return NextResponse.json(
         { error: 'Not enough valid teams found for comparison' },
         { status: 404 }
@@ -82,7 +103,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Transform teams for comparison
-    const comparisonData = teams.map((team) => {
+    const comparisonData = accessibleTeams.map((team) => {
+      const isAnonymousTeam = team.visibility === 'anonymous' || team.isAnonymous;
       // Calculate aggregate skills from members
       const allSkills: string[] = [];
       let totalExperience = 0;
@@ -111,12 +133,13 @@ export async function POST(request: NextRequest) {
         .slice(0, 10)
         .map(([skill, count]) => ({ skill, count }));
 
-      return {
+      // Build base comparison data
+      const baseData = {
         id: team.id,
-        name: team.name,
+        name: isAnonymousTeam ? `Anonymous Team #${team.id.slice(-6).toUpperCase()}` : team.name,
         industry: team.industry,
         specialization: team.specialization,
-        location: team.location,
+        location: isAnonymousTeam ? generalizeLocation(team.location) : team.location,
         size: team.size,
         memberCount: team.members.length,
         yearsWorkingTogether: team.yearsWorkingTogether ? Number(team.yearsWorkingTogether) : 0,
@@ -124,6 +147,7 @@ export async function POST(request: NextRequest) {
         availabilityStatus: team.availabilityStatus,
         availabilityDate: team.availabilityDate,
         verificationStatus: team.verificationStatus,
+        isAnonymous: isAnonymousTeam,
         compensation: {
           salaryMin: team.salaryExpectationMin,
           salaryMax: team.salaryExpectationMax,
@@ -140,9 +164,12 @@ export async function POST(request: NextRequest) {
           totalYears: totalExperience,
         },
         topSkills,
-        notableAchievements: team.notableAchievements,
-        portfolioUrl: team.portfolioUrl,
+        // Hide identifying info for anonymous teams
+        notableAchievements: isAnonymousTeam ? null : team.notableAchievements,
+        portfolioUrl: isAnonymousTeam ? null : team.portfolioUrl,
       };
+
+      return baseData;
     });
 
     // Generate comparison insights
@@ -160,6 +187,43 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Generalize location for anonymous teams
+function generalizeLocation(location: string | null): string | null {
+  if (!location) return null;
+
+  const locationLower = location.toLowerCase();
+  const usRegions: Record<string, string> = {
+    'new york': 'Northeast US',
+    'los angeles': 'West Coast US',
+    'san francisco': 'West Coast US',
+    'chicago': 'Midwest US',
+    'boston': 'Northeast US',
+    'seattle': 'West Coast US',
+    'austin': 'Southwest US',
+    'denver': 'Mountain West US',
+    'miami': 'Southeast US',
+    'atlanta': 'Southeast US',
+    'dallas': 'Southwest US',
+    'houston': 'Southwest US',
+  };
+
+  for (const [city, region] of Object.entries(usRegions)) {
+    if (locationLower.includes(city)) {
+      return region;
+    }
+  }
+
+  if (locationLower.includes('london') || locationLower.includes('uk')) {
+    return 'United Kingdom';
+  }
+
+  if (locationLower.includes('remote')) {
+    return 'Remote';
+  }
+
+  return location;
 }
 
 function generateComparisonInsights(teams: any[]) {

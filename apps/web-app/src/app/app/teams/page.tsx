@@ -554,21 +554,15 @@ export default function TeamsPage() {
   // Company user view - browse teams
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="page-header">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="page-title">Find teams</h1>
-            <p className="page-subtitle">
-              Browse high-performing teams available for liftout.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Page Header - Practical UI: Clear hierarchy */}
+      <header className="page-header">
+        <h1 className="page-title">Find teams</h1>
+        <p className="page-subtitle">Browse high-performing teams available for liftout.</p>
+      </header>
 
       {/* Search and Filter */}
       <SearchAndFilter
-        searchPlaceholder="Search teams by name, skills, achievements, or member roles..."
+        searchPlaceholder="Search by name, skills, or location..."
         searchValue={searchValue}
         onSearchChange={setSearchValue}
         filterGroups={filterGroups}
@@ -578,43 +572,63 @@ export default function TeamsPage() {
         resultCount={teams.length}
       />
 
-      {/* Teams List */}
-      <div className="space-y-4">
-        {isLoading ? (
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="card animate-pulse">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="h-6 bg-bg-elevated rounded w-64 mb-2"></div>
-                    <div className="h-4 bg-bg-elevated rounded w-32 mb-4"></div>
-                    <div className="h-4 bg-bg-elevated rounded w-full mb-2"></div>
-                    <div className="h-4 bg-bg-elevated rounded w-3/4"></div>
+      {/* Teams List - Practical UI: Consistent spacing */}
+      <section aria-label="Team results">
+        <div className="space-y-4">
+          {isLoading ? (
+            // Loading skeleton - Practical UI: Match actual card layout
+            <div className="space-y-4" aria-busy="true" aria-label="Loading teams">
+              {[1, 2, 3].map((i) => (
+                <article key={i} className="card animate-pulse" aria-hidden="true">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex gap-2 mb-4">
+                        {[1, 2, 3, 4].map((j) => (
+                          <div key={j} className="h-10 w-10 rounded-full bg-bg-alt" />
+                        ))}
+                      </div>
+                      <div className="h-6 bg-bg-alt rounded w-48 mb-2" />
+                      <div className="h-4 bg-bg-alt rounded w-64 mb-4" />
+                      <div className="h-4 bg-bg-alt rounded w-full mb-2" />
+                      <div className="h-4 bg-bg-alt rounded w-3/4 mb-4" />
+                      <div className="flex gap-2">
+                        {[1, 2, 3].map((j) => (
+                          <div key={j} className="h-6 w-16 bg-bg-alt rounded-full" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="h-12 w-28 bg-bg-alt rounded-lg" />
                   </div>
-                  <div className="h-8 w-24 bg-bg-elevated rounded"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : teams.length === 0 ? (
-          <div className="text-center py-12">
-            <UserGroupIcon className="mx-auto h-12 w-12 text-text-tertiary" />
-            <h3 className="mt-2 text-sm font-medium text-text-primary">
-              {isCompanyUser ? 'No teams found' : 'No teams available'}
-            </h3>
-            <p className="mt-1 text-sm text-text-tertiary">
-              {isCompanyUser
-                ? 'Try adjusting your search criteria or filters.'
-                : 'Check back later for new teams or adjust your search criteria.'
-              }
-            </p>
-          </div>
-        ) : (
-          teams.map((team) => (
-            <TeamCard key={team.id} team={team} isCompanyUser={isCompanyUser} />
-          ))
-        )}
-      </div>
+                </article>
+              ))}
+            </div>
+          ) : teams.length === 0 ? (
+            // Empty state - Practical UI: Clear messaging, single CTA
+            <div className="card text-center py-16 px-6">
+              <UserGroupIcon className="mx-auto h-12 w-12 text-text-tertiary" aria-hidden="true" />
+              <h2 className="mt-4 text-xl font-bold text-text-primary">
+                No teams found
+              </h2>
+              <p className="mt-2 text-base text-text-secondary max-w-sm mx-auto">
+                Try adjusting your search or filters to find more teams.
+              </p>
+              {Object.keys(activeFilters).length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleClearFilters}
+                  className="mt-6 btn-secondary min-h-12"
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          ) : (
+            teams.map((team) => (
+              <TeamCard key={team.id} team={team} isCompanyUser={isCompanyUser} />
+            ))
+          )}
+        </div>
+      </section>
     </div>
   );
 }
@@ -627,11 +641,13 @@ interface TeamCardProps {
 
 function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
   return (
-    <div className={classNames(
-      "card hover:shadow-md hover:border-purple-300 transition-all duration-base",
-      featured ? 'ring-2 ring-purple-200' : ''
-    )}>
-      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+    <article
+      className={classNames(
+        "card hover:shadow-md hover:border-purple-200 transition-shadow",
+        featured ? 'ring-2 ring-purple-100' : ''
+      )}
+    >
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div className="flex-1 min-w-0">
           {/* Team Member Avatars */}
           <div className="mb-4">
@@ -642,96 +658,92 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
             />
           </div>
 
-          {/* Header */}
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-2 leading-snug">
-              <Link href={`/app/teams/${team.id}`} className="hover:text-purple-700 transition-colors duration-fast">
+          {/* Header - Practical UI: Clear heading hierarchy */}
+          <header className="mb-3">
+            <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-2">
+              <Link
+                href={`/app/teams/${team.id}`}
+                className="hover:text-purple-700 transition-colors focus:outline-none focus:underline"
+              >
                 {team.name}
               </Link>
-              <CheckBadgeIconSolid className="h-5 w-5 text-purple-700 flex-shrink-0" aria-label="Verified" />
+              <CheckBadgeIconSolid className="h-5 w-5 text-purple-700 flex-shrink-0" aria-label="Verified team" />
               {featured && (
-                <StarIcon className="h-5 w-5 text-purple-400 fill-current flex-shrink-0" aria-label="Featured" />
+                <span className="badge badge-warning text-xs">Featured</span>
               )}
             </h3>
-            {/* Meta info */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm font-normal text-text-tertiary">
-              <span className="flex items-center">
-                <UserGroupIcon className="h-4 w-4 mr-1" aria-hidden="true" />
+            {/* Meta info - Practical UI: Consistent icon+text spacing */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-text-secondary">
+              <span className="flex items-center gap-1.5">
+                <UserGroupIcon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                 {team.size} members
               </span>
-              <span className="flex items-center">
-                <CalendarDaysIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                {team.yearsWorkingTogether} years together
+              <span className="flex items-center gap-1.5">
+                <CalendarDaysIcon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                {team.yearsWorkingTogether}y together
               </span>
-              <span className="flex items-center">
-                <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                Added {formatDistanceToNow(new Date(team.createdAt), { addSuffix: true })}
+              <span className="flex items-center gap-1.5">
+                <MapPinIcon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                {team.location || 'Remote'}
               </span>
             </div>
+          </header>
+
+          {/* Description - Practical UI: Optimal line length */}
+          {team.description && (
+            <p className="text-base text-text-secondary mb-4 line-clamp-2 leading-relaxed max-w-prose">
+              {team.description}
+            </p>
+          )}
+
+          {/* Key Stats - Practical UI: Simplified, scannable */}
+          <div className="flex flex-wrap items-center gap-4 mb-4 text-sm">
+            <span className="flex items-center gap-1.5 text-text-secondary">
+              <StarIcon className="h-4 w-4 text-purple-600" aria-hidden="true" />
+              <strong className="font-semibold text-text-primary">{team.cohesionScore || '—'}</strong> cohesion
+            </span>
+            <span className="flex items-center gap-1.5 text-text-secondary">
+              <CheckCircleIcon className="h-4 w-4 text-success" aria-hidden="true" />
+              <strong className="font-semibold text-text-primary">{team.successfulProjects || 0}</strong> projects
+            </span>
+            {team.industry && (
+              <span className="text-text-tertiary">
+                {team.industry}
+              </span>
+            )}
           </div>
 
-          {/* Description */}
-          <p className="text-base font-normal text-text-secondary mb-4 line-clamp-2 leading-relaxed">{team.description}</p>
-
-          {/* Stats grid - Practical UI: 8pt grid spacing */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <div className="flex items-center text-sm font-normal text-text-secondary">
-              <StarIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
-              <span>Cohesion: <strong className="font-bold">{team.cohesionScore || 'N/A'}</strong>/100</span>
-            </div>
-            <div className="flex items-center text-sm font-normal text-text-secondary">
-              <CheckCircleIcon className="h-4 w-4 mr-2 text-success flex-shrink-0" aria-hidden="true" />
-              <span><strong className="font-bold">{team.successfulProjects || 0}</strong> projects</span>
-            </div>
-            <div className="flex items-center text-sm font-normal text-text-secondary">
-              <CurrencyDollarIcon className="h-4 w-4 mr-2 text-purple-700 flex-shrink-0" aria-hidden="true" />
-              <span>{team.compensation?.range || 'Negotiable'}</span>
-            </div>
-            <div className="flex items-center text-sm font-normal text-text-secondary">
-              <MapPinIcon className="h-4 w-4 mr-2 text-purple-400 flex-shrink-0" aria-hidden="true" />
-              <span>{team.location || 'Remote'}</span>
-            </div>
-          </div>
-
-          {/* Skills badges - Practical UI: 8pt grid spacing */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {(team.members || []).slice(0, 5).flatMap((member: any) => (member.skills || []).slice(0, 2)).slice(0, 6).map((skill: string, index: number) => (
-              <span key={`${skill}-${index}`} className="badge badge-primary text-xs">
-                {skill}
-              </span>
-            ))}
-          </div>
-
-          {/* Achievements and industry */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          {/* Skills badges - Practical UI: Limit to avoid clutter */}
+          {(team.members || []).length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {(team.achievements || []).slice(0, 2).map((achievement: string, index: number) => (
-                <span key={index} className="text-xs font-normal text-text-secondary bg-bg-alt px-2.5 py-1 rounded-lg">
-                  {achievement.length > 50 ? `${achievement.substring(0, 50)}...` : achievement}
-                </span>
-              ))}
+              {(team.members || [])
+                .slice(0, 3)
+                .flatMap((member: any) => (member.skills || []).slice(0, 2))
+                .slice(0, 5)
+                .map((skill: string, index: number) => (
+                  <span key={`${skill}-${index}`} className="badge badge-primary text-xs">
+                    {skill}
+                  </span>
+                ))}
             </div>
-            <div className="text-sm font-normal text-text-tertiary">
-              Industry: <strong className="font-bold">{team.industry || 'Various'}</strong>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Actions - Practical UI: 8pt grid spacing */}
-        <div className="flex flex-row lg:flex-col items-center lg:items-end gap-4 lg:ml-4">
+        {/* Actions - Practical UI: Single primary CTA per card */}
+        <div className="flex flex-row lg:flex-col items-center lg:items-end gap-3 lg:ml-4 flex-shrink-0">
           {team.openToLiftout && (
-            <span className="badge badge-success text-xs">
+            <span className="badge badge-success text-xs font-medium">
               Available
             </span>
           )}
           <Link
             href={`/app/teams/${team.id}`}
-            className="btn-primary min-h-12 whitespace-nowrap"
+            className="btn-primary min-h-12 px-6 whitespace-nowrap"
           >
-            View profile
+            View team
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
