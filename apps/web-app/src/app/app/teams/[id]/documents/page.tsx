@@ -154,8 +154,8 @@ export default function TeamDocumentsPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to team
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Documents</h1>
-        <p className="text-text-secondary mt-1">Team documents and files.</p>
+        <h1 className="page-title">Documents</h1>
+        <p className="page-subtitle">Team documents and files.</p>
       </div>
 
       {/* Upload Area */}

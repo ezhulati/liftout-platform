@@ -28,8 +28,8 @@ export default async function TeamMembersPage({ params }: TeamMembersPageProps) 
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Team Profile
         </Link>
-        <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
-        <p className="text-text-secondary mt-1">Manage team membership.</p>
+        <h1 className="page-title">Team members</h1>
+        <p className="page-subtitle">Manage team membership.</p>
       </div>
 
       {/* Team member management component */}

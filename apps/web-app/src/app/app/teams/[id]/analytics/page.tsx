@@ -144,8 +144,8 @@ export default function TeamAnalyticsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary">Team analytics</h1>
-            <p className="text-text-secondary mt-1">Performance metrics.</p>
+            <h1 className="page-title">Team analytics</h1>
+            <p className="page-subtitle">Performance metrics.</p>
           </div>
           <div className="flex items-center text-sm text-text-tertiary">
             <CalendarIcon className="h-4 w-4 mr-2" />

@@ -84,8 +84,8 @@ export default function TeamVerificationPage() {
                         <ShieldCheckIcon className="h-6 w-6 text-navy" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Team Verification</h1>
-                        <p className="text-base text-text-secondary mt-1">Submit documents to verify your team&apos;s credentials.</p>
+                        <h1 className="page-title">Team Verification</h1>
+                        <p className="page-subtitle">Submit documents to verify your team&apos;s credentials.</p>
                     </div>
                 </div>
             </div>

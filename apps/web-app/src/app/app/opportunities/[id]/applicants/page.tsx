@@ -116,8 +116,8 @@ export default function OpportunityApplicantsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary">Applicants</h1>
-            <p className="text-text-secondary mt-1">Review applications.</p>
+            <h1 className="page-title">Applicants</h1>
+            <p className="page-subtitle">Review applications.</p>
           </div>
         </div>
       </div>

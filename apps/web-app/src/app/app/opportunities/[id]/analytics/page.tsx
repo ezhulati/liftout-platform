@@ -136,8 +136,8 @@ export default function OpportunityAnalyticsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary">Opportunity analytics</h1>
-            <p className="text-text-secondary mt-1">Application metrics.</p>
+            <h1 className="page-title">Opportunity analytics</h1>
+            <p className="page-subtitle">Application metrics.</p>
           </div>
           <div className="flex items-center text-sm text-text-tertiary">
             <CalendarIcon className="h-4 w-4 mr-2" />

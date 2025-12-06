@@ -145,8 +145,8 @@ export default function TeamAchievementsPage() {
         </button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-text-primary">Achievements</h1>
-            <p className="text-text-secondary mt-1">Team accomplishments.</p>
+            <h1 className="page-title">Achievements</h1>
+            <p className="page-subtitle">Team accomplishments.</p>
           </div>
           {!isAdding && (
             <button

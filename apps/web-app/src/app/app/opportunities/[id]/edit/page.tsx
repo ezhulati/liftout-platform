@@ -255,8 +255,8 @@ export default function EditOpportunityPage() {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-text-primary">Edit opportunity</h1>
-          <p className="text-text-secondary mt-1">Update listing details.</p>
+          <h1 className="page-title">Edit opportunity</h1>
+          <p className="page-subtitle">Update listing details.</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

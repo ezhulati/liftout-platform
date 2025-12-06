@@ -181,7 +181,7 @@ export default function TeamManagePage() {
               <UserGroupIcon className="h-7 w-7 text-white" aria-hidden="true" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-text-primary font-heading leading-tight">Team Management</h1>
+              <h1 className="page-title">Team Management</h1>
               <p className="text-base font-normal text-text-secondary mt-1">{team.name}</p>
             </div>
           </div>

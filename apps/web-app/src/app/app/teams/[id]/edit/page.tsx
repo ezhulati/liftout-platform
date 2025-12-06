@@ -28,8 +28,8 @@ export default async function EditTeamPage({ params }: EditTeamPageProps) {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Team Profile
         </Link>
-        <h1 className="text-2xl font-bold text-text-primary">Edit team</h1>
-        <p className="text-text-secondary mt-1">Update team details.</p>
+        <h1 className="page-title">Edit team</h1>
+        <p className="page-subtitle">Update team details.</p>
       </div>
 
       {/* Edit team form */}

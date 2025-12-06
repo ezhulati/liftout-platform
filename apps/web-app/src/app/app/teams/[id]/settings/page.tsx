@@ -134,8 +134,8 @@ export default function TeamSettingsPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to team
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Team settings</h1>
-        <p className="text-text-secondary mt-1">Configure team preferences.</p>
+        <h1 className="page-title">Team settings</h1>
+        <p className="page-subtitle">Configure team preferences.</p>
       </div>
 
       <div className="space-y-6">
