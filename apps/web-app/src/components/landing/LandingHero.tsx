@@ -33,7 +33,7 @@ const heroContent = {
     trustLine: 'Free to explore. Completely confidential.',
   },
   companies: {
-    headline: 'Hire teams that already work',
+    headline: 'Hire teams that work',
     subhead: 'Browse proven teams. Skip the ramp-up. Ship faster.',
     ctaText: 'Find your team',
     ctaHref: '/auth/signup?type=company',
