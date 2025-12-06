@@ -12,6 +12,7 @@ const successStories = [
     outcome: '$14.3B for 49% stake + CEO',
     detail: 'Instant world-class AI leadership',
     Icon: SparklesIcon,
+    slug: 'meta-scale-ai',
   },
   {
     year: '2025',
@@ -20,6 +21,7 @@ const successStories = [
     outcome: '$2.4B talent deal for DeepMind',
     detail: 'Derailed a $3B competitor acquisition',
     Icon: ChartBarIcon,
+    slug: 'google-windsurf',
   },
   {
     year: '2025',
@@ -28,6 +30,7 @@ const successStories = [
     outcome: '40 lawyers in healthcare litigation',
     detail: 'Became premier health practice overnight',
     Icon: ArrowTrendingUpIcon,
+    slug: 'crowell-reed-smith',
   },
 ];
 
@@ -70,11 +73,12 @@ export function HBRInsight() {
         </p>
 
         {/* Success Stories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div id="liftouts" className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {successStories.map((story, index) => (
-            <article
+            <Link
               key={story.title}
-              className={`bg-bg-surface rounded-xl p-6 border border-border hover:border-purple-200 hover:shadow-lg transition-all duration-300 ${
+              href={`/case-studies/${story.slug}`}
+              className={`block bg-bg-surface rounded-xl p-6 border border-border hover:border-purple-200 hover:shadow-lg transition-all duration-300 group ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
               style={{ transitionDelay: isVisible ? `${200 + index * 100}ms` : '0ms' }}
@@ -90,7 +94,7 @@ export function HBRInsight() {
               </div>
 
               {/* Title */}
-              <h3 className="text-xl font-bold text-text-primary mb-2">
+              <h3 className="text-xl font-bold text-text-primary mb-2 group-hover:text-purple-700 transition-colors">
                 {story.title}
               </h3>
 
@@ -105,10 +109,16 @@ export function HBRInsight() {
               </p>
 
               {/* Detail - Practical UI: 16px minimum */}
-              <p className="text-base text-text-tertiary">
+              <p className="text-base text-text-tertiary mb-3">
                 {story.detail}
               </p>
-            </article>
+
+              {/* Read more indicator */}
+              <span className="text-sm font-medium text-purple-700 group-hover:underline inline-flex items-center gap-1">
+                Read full case study
+                <ArrowRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
           ))}
         </div>
 

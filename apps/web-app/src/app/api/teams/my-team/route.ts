@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
                       select: {
                         profilePhotoUrl: true,
                         title: true,
+                        yearsExperience: true,
                       },
                     },
                   },
@@ -66,26 +67,26 @@ export async function GET(request: NextRequest) {
         location: team.location,
         size: team.size,
         yearsWorkingTogether: team.yearsWorkingTogether,
-        verificationStatus: team.verificationStatus,
         availabilityStatus: team.availabilityStatus,
+        visibility: team.visibility,
+        createdBy: team.createdBy,
         members: team.members.map((m) => ({
           id: m.id,
           userId: m.userId,
-          role: m.role,
-          isAdmin: m.isAdmin,
-          user: {
-            id: m.user.id,
-            firstName: m.user.firstName,
-            lastName: m.user.lastName,
-            email: m.user.email,
-            profilePhotoUrl: m.user.profile?.profilePhotoUrl,
-            title: m.user.profile?.title,
-          },
+          name: `${m.user.firstName} ${m.user.lastName}`.trim() || 'Team Member',
+          role: m.role || 'Member',
+          experience: m.user.profile?.yearsExperience || 0,
+          avatar: m.user.profile?.profilePhotoUrl || null,
+          isLead: m.isAdmin,
+          skills: [], // TODO: Add skills from profile
         })),
+        invitations: [], // Invitations feature not yet implemented
         applicationCount: team._count.applications,
         memberCount: team._count.members,
         createdAt: team.createdAt.toISOString(),
       },
+      currentUserRole: teamMember.isAdmin ? 'lead' : 'member',
+      isOwner: team.createdBy === session.user.id,
     });
   } catch (error) {
     console.error('Failed to fetch team:', error);
