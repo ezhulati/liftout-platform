@@ -118,11 +118,11 @@ export function LandingHero() {
                 {content.trustLine}
               </p>
 
-              {/* Hero team image - shows real teams */}
+              {/* Hero image - different for teams vs companies */}
               <div className="relative rounded-xl overflow-hidden shadow-lg max-w-md">
                 <img
-                  src="/hero-team.jpeg"
-                  alt="A diverse professional team celebrating together"
+                  src={audience === 'teams' ? '/hero-team.jpeg' : '/company-hero.webp'}
+                  alt={audience === 'teams' ? 'A diverse professional team celebrating together' : 'Company hiring teams'}
                   className="w-full h-auto object-cover"
                 />
               </div>
