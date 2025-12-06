@@ -11,9 +11,55 @@ const isDemoUser = (email: string | null | undefined): boolean => {
 };
 
 const passwordChangeSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
+  currentPassword: z.string().optional(), // Optional for OAuth users setting first password
   newPassword: z.string().min(8, 'New password must be at least 8 characters'),
 });
+
+// GET endpoint to check if user has a password set
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'You must be logged in' },
+        { status: 401 }
+      );
+    }
+
+    // Demo users always have a password
+    if (isDemoUser(session.user.email)) {
+      return NextResponse.json({
+        hasPassword: true,
+        authProvider: null,
+      });
+    }
+
+    // Get user from database
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { passwordHash: true, authProvider: true },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      hasPassword: !!user.passwordHash,
+      authProvider: user.authProvider || null,
+    });
+  } catch (error) {
+    console.error('Password status check error:', error);
+    return NextResponse.json(
+      { error: 'Failed to check password status' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -51,24 +97,34 @@ export async function POST(request: Request) {
     // Get user from database
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { passwordHash: true },
+      select: { passwordHash: true, authProvider: true },
     });
 
-    if (!user || !user.passwordHash) {
+    if (!user) {
       return NextResponse.json(
-        { error: 'User not found or password not set' },
+        { error: 'User not found' },
         { status: 404 }
       );
     }
 
-    // Verify current password
-    const isValidPassword = await bcrypt.compare(currentPassword, user.passwordHash);
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: 'Current password is incorrect' },
-        { status: 400 }
-      );
+    // If user has a password, verify current password is provided and correct
+    if (user.passwordHash) {
+      if (!currentPassword) {
+        return NextResponse.json(
+          { error: 'Current password is required' },
+          { status: 400 }
+        );
+      }
+
+      const isValidPassword = await bcrypt.compare(currentPassword, user.passwordHash);
+      if (!isValidPassword) {
+        return NextResponse.json(
+          { error: 'Current password is incorrect' },
+          { status: 400 }
+        );
+      }
     }
+    // If user doesn't have a password (OAuth user), allow setting one without current password
 
     // Hash new password
     const newPasswordHash = await bcrypt.hash(newPassword, 12);

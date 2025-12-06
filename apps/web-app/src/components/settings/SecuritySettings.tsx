@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,9 +28,11 @@ interface PasswordChangeFormProps {
   onCancel: () => void;
   onSuccess: () => void;
   isDemoUser?: boolean;
+  hasExistingPassword?: boolean;
+  authProvider?: string | null;
 }
 
-function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: PasswordChangeFormProps) {
+function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false, hasExistingPassword = true, authProvider = null }: PasswordChangeFormProps) {
   const [passwords, setPasswords] = useState({
     current: '',
     new: '',
@@ -70,7 +72,8 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          currentPassword: passwords.current,
+          // Only include currentPassword if user has an existing password
+          ...(hasExistingPassword && { currentPassword: passwords.current }),
           newPassword: passwords.new,
         }),
       });
@@ -81,7 +84,7 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
         throw new Error(data.error || 'Failed to update password');
       }
 
-      toast.success('Password updated successfully');
+      toast.success(hasExistingPassword ? 'Password updated successfully' : 'Password set successfully');
       onSuccess();
     } catch (error) {
       console.error('Password change error:', error);
@@ -92,39 +95,53 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
     }
   };
 
+  const providerName = authProvider ? authProvider.charAt(0).toUpperCase() + authProvider.slice(1) : '';
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <FormField
-        label="Current password"
-        name="current-password"
-        required
-      >
-        <div className="relative">
-          <input
-            type={showPasswords.current ? 'text' : 'password'}
-            id="current-password"
-            value={passwords.current}
-            onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
-            required
-            className="input-field pr-12"
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
-            onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
-            aria-label={showPasswords.current ? 'Hide password' : 'Show password'}
-          >
-            {showPasswords.current ? (
-              <EyeSlashIcon className="h-5 w-5" />
-            ) : (
-              <EyeIcon className="h-5 w-5" />
-            )}
-          </button>
+      {/* Show info banner for OAuth users setting their first password */}
+      {!hasExistingPassword && authProvider && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-text-secondary">
+            You signed up with {providerName}. Setting a password will allow you to also sign in with your email and password.
+          </p>
         </div>
-      </FormField>
+      )}
+
+      {/* Only show current password field if user has an existing password */}
+      {hasExistingPassword && (
+        <FormField
+          label="Current password"
+          name="current-password"
+          required
+        >
+          <div className="relative">
+            <input
+              type={showPasswords.current ? 'text' : 'password'}
+              id="current-password"
+              value={passwords.current}
+              onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
+              required
+              className="input-field pr-12"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-tertiary hover:text-text-secondary transition-colors touch-target"
+              onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
+              aria-label={showPasswords.current ? 'Hide password' : 'Show password'}
+            >
+              {showPasswords.current ? (
+                <EyeSlashIcon className="h-5 w-5" />
+              ) : (
+                <EyeIcon className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+        </FormField>
+      )}
 
       <FormField
-        label="New password"
+        label={hasExistingPassword ? "New password" : "Password"}
         name="new-password"
         required
         hint="Must be at least 8 characters with a mix of letters, numbers, and symbols"
@@ -155,7 +172,7 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
       </FormField>
 
       <FormField
-        label="Confirm new password"
+        label={hasExistingPassword ? "Confirm new password" : "Confirm password"}
         name="confirm-password"
         required
       >
@@ -189,7 +206,7 @@ function PasswordChangeForm({ onCancel, onSuccess, isDemoUser = false }: Passwor
           disabled={isSubmitting}
           className="btn-primary min-h-12"
         >
-          {isSubmitting ? 'Updating...' : 'Update password'}
+          {isSubmitting ? (hasExistingPassword ? 'Updating...' : 'Setting...') : (hasExistingPassword ? 'Update password' : 'Set password')}
         </button>
         <TextLink onClick={onCancel}>
           Cancel
@@ -205,11 +222,36 @@ export function SecuritySettings() {
   const { settings, updateSecuritySettings, isLoading } = useSettings();
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showSessions, setShowSessions] = useState(false);
+  const [passwordStatus, setPasswordStatus] = useState<{ hasPassword: boolean; authProvider: string | null } | null>(null);
+  const [isLoadingPasswordStatus, setIsLoadingPasswordStatus] = useState(true);
 
   // Check if this is a demo user
   const sessionUser = session?.user as any;
   const userEmail = user?.email || sessionUser?.email || '';
   const isDemoUser = isDemoUserEmail(userEmail);
+
+  // Fetch password status on mount
+  useEffect(() => {
+    const fetchPasswordStatus = async () => {
+      try {
+        const response = await fetch('/api/user/password');
+        if (response.ok) {
+          const data = await response.json();
+          setPasswordStatus(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch password status:', error);
+        // Default to assuming user has password
+        setPasswordStatus({ hasPassword: true, authProvider: null });
+      } finally {
+        setIsLoadingPasswordStatus(false);
+      }
+    };
+
+    if (session?.user) {
+      fetchPasswordStatus();
+    }
+  }, [session?.user]);
 
   // Mock session data - in a real app, this would come from your API
   const mockSessions = [
@@ -313,8 +355,16 @@ export function SecuritySettings() {
         </div>
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="flex items-center">
-            <CheckCircleIcon className="h-5 w-5 text-success mr-2" />
-            <span className="text-sm text-text-secondary">Strong password</span>
+            {isLoadingPasswordStatus ? (
+              <div className="animate-pulse h-5 w-5 bg-bg-alt rounded-full mr-2"></div>
+            ) : passwordStatus?.hasPassword ? (
+              <CheckCircleIcon className="h-5 w-5 text-success mr-2" />
+            ) : (
+              <ExclamationTriangleIcon className="h-5 w-5 text-gold mr-2" />
+            )}
+            <span className="text-sm text-text-secondary">
+              {isLoadingPasswordStatus ? 'Checking...' : passwordStatus?.hasPassword ? 'Password set' : 'No password set'}
+            </span>
           </div>
           <div className="flex items-center">
             {settings.security.twoFactorEnabled ? (
@@ -341,25 +391,43 @@ export function SecuritySettings() {
               <KeyIcon className="h-5 w-5 text-text-tertiary mr-2" />
               <h4 className="text-base font-bold text-text-primary">Password</h4>
             </div>
-            <div className="text-sm text-text-tertiary">
-              Last changed: {settings.security.passwordLastChanged
-                ? new Date(settings.security.passwordLastChanged).toLocaleDateString()
-                : 'Never'
-              }
-            </div>
+            {passwordStatus?.hasPassword && (
+              <div className="text-sm text-text-tertiary">
+                Last changed: {settings.security.passwordLastChanged
+                  ? new Date(settings.security.passwordLastChanged).toLocaleDateString()
+                  : 'Never'
+                }
+              </div>
+            )}
           </div>
         </div>
         <div className="px-6 py-4">
-          {!showPasswordForm ? (
+          {isLoadingPasswordStatus ? (
+            <div className="animate-pulse">
+              <div className="h-4 bg-bg-alt rounded w-3/4 mb-4"></div>
+              <div className="h-10 bg-bg-alt rounded w-1/4"></div>
+            </div>
+          ) : !showPasswordForm ? (
             <div>
-              <p className="text-sm text-text-secondary mb-4">
-                Update your password to keep your account secure. Choose a strong password that you don't use elsewhere.
-              </p>
+              {passwordStatus?.hasPassword ? (
+                <p className="text-sm text-text-secondary mb-4">
+                  Update your password to keep your account secure. Choose a strong password that you don't use elsewhere.
+                </p>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-sm text-text-secondary mb-2">
+                    You signed up with {passwordStatus?.authProvider ? passwordStatus.authProvider.charAt(0).toUpperCase() + passwordStatus.authProvider.slice(1) : 'a social provider'} and don't have a password set.
+                  </p>
+                  <p className="text-sm text-text-secondary">
+                    Setting a password allows you to also sign in with your email and password.
+                  </p>
+                </div>
+              )}
               <button
                 onClick={() => setShowPasswordForm(true)}
                 className="btn-primary min-h-12"
               >
-                Change password
+                {passwordStatus?.hasPassword ? 'Change password' : 'Set password'}
               </button>
             </div>
           ) : (
@@ -368,8 +436,12 @@ export function SecuritySettings() {
               onSuccess={() => {
                 setShowPasswordForm(false);
                 updateSecuritySettings({ passwordLastChanged: new Date() });
+                // Update local state to reflect that user now has a password
+                setPasswordStatus(prev => prev ? { ...prev, hasPassword: true } : null);
               }}
               isDemoUser={isDemoUser}
+              hasExistingPassword={passwordStatus?.hasPassword ?? true}
+              authProvider={passwordStatus?.authProvider ?? null}
             />
           )}
         </div>

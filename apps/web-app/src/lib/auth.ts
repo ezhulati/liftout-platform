@@ -36,7 +36,13 @@ const providers: any[] = [
 
         if (!user) {
           console.log('User not found:', credentials.email);
-          return null;
+          throw new Error('Invalid credentials');
+        }
+
+        // Check if user signed up via OAuth and has no password
+        if (!user.passwordHash && user.authProvider) {
+          console.log('OAuth user trying email login:', credentials.email, 'provider:', user.authProvider);
+          throw new Error(`OAUTH_ACCOUNT:${user.authProvider}`);
         }
 
         // Check password (for seeded demo users, password is hashed)
@@ -44,7 +50,7 @@ const providers: any[] = [
 
         if (!isValidPassword) {
           console.log('Invalid password for:', credentials.email);
-          return null;
+          throw new Error('Invalid credentials');
         }
 
         // Generate an access token for the API server

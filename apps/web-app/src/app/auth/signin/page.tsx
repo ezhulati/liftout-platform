@@ -15,6 +15,7 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [oauthProvider, setOauthProvider] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch available OAuth providers
@@ -55,7 +56,13 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        toast.error('Invalid credentials');
+        // Check if this is an OAuth account error
+        if (result.error.includes('OAUTH_ACCOUNT:')) {
+          const provider = result.error.split(':')[1];
+          setOauthProvider(provider);
+        } else {
+          toast.error('Invalid credentials');
+        }
       } else if (result?.ok) {
         toast.success('Signed in');
         window.location.href = '/app/dashboard';
@@ -188,8 +195,28 @@ export default function SignInPage() {
             </div>
           </details>
 
+          {/* OAuth Account Alert - Show when user has OAuth but no password */}
+          {oauthProvider && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-text-primary font-medium mb-2">
+                You signed up with {oauthProvider.charAt(0).toUpperCase() + oauthProvider.slice(1)}
+              </p>
+              <p className="text-text-secondary text-sm mb-4">
+                This account doesn&apos;t have a password set. Please continue with {oauthProvider.charAt(0).toUpperCase() + oauthProvider.slice(1)}, or set a password in your account settings after signing in.
+              </p>
+              <button
+                type="button"
+                onClick={() => handleOAuthSignIn(oauthProvider as 'google' | 'linkedin')}
+                disabled={isLoading}
+                className="btn-primary w-full min-h-12"
+              >
+                Continue with {oauthProvider.charAt(0).toUpperCase() + oauthProvider.slice(1)}
+              </button>
+            </div>
+          )}
+
           {/* OAuth Sign In Buttons - Only show if providers are configured */}
-          {availableProviders.length > 0 && (
+          {availableProviders.length > 0 && !oauthProvider && (
             <>
               <div className="space-y-4">
                 {/* Google Sign In */}
