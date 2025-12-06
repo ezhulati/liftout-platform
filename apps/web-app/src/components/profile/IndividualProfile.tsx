@@ -227,8 +227,11 @@ export default function IndividualProfile({ readonly = false, userId }: Individu
 
       if (hasCompleteProfile && savedProfile) {
         setProfileData(savedProfile);
-        // Use saved photo, or fall back to demo photo if none saved
-        setCurrentPhotoUrl(savedPhoto || user?.photoURL || sessionUser?.image || demoPhotoUrl);
+        // Use saved photo if it's a valid URL, otherwise fall back to demo photo
+        const photoToUse = (savedPhoto && savedPhoto.startsWith('http'))
+          ? savedPhoto
+          : (user?.photoURL || sessionUser?.image || demoPhotoUrl);
+        setCurrentPhotoUrl(photoToUse);
         setIsInitialized(true);
         return;
       }

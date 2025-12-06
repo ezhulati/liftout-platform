@@ -29,6 +29,13 @@ enum TeamAvailabilityStatus {
   not_available
 }
 
+enum TeamPostingStatus {
+  draft       // Team created, members not yet joined, not visible to companies
+  ready       // All members joined, all profiles complete, ready to post
+  posted      // Team lead clicked "Post Team", visible to companies
+  unposted    // Team lead clicked "Unpost Team", hidden from searches
+}
+
 enum TeamVisibility {
   public
   private
@@ -399,6 +406,9 @@ model Team {
   location                String?
   remoteStatus            RemotePreference       @default(hybrid) @map("remote_status")
   availabilityStatus      TeamAvailabilityStatus @default(available) @map("availability_status")
+  postingStatus           TeamPostingStatus      @default(draft) @map("posting_status")
+  postedAt                DateTime?              @map("posted_at")
+  unpostedAt              DateTime?              @map("unposted_at")
   yearsWorkingTogether    Decimal?               @map("years_working_together")
   teamCulture             String?                @map("team_culture")
   workingStyle            String?                @map("working_style")

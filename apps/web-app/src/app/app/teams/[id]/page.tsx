@@ -25,6 +25,7 @@ import {
   HeartIcon as HeartIconSolid,
 } from '@heroicons/react/24/solid';
 import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
+import { TeamPostingStatus } from '@/components/teams/TeamPostingStatus';
 
 interface TeamMember {
   id: string;
@@ -425,6 +426,9 @@ export default function TeamProfilePage() {
               </div>
             </div>
           </div>
+
+          {/* Team Posting Status - Only for team owners */}
+          <TeamPostingStatus teamId={teamId} isTeamOwner={isTeamOwner} />
 
           {/* Danger Zone - Only for team owners */}
           {isTeamOwner && (
