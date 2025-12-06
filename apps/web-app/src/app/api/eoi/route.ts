@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@liftout/database';
+import { sendExpressionOfInterestEmail } from '@/lib/email';
 
 // Helper to check if user is a demo user
 const isDemoUser = (email: string | null | undefined): boolean => {
@@ -195,25 +196,64 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create notification for the recipient
+    // Create notification for the recipient and send emails
     // Find team members to notify
     if (toType === 'team') {
-      const teamMembers = await prisma.teamMember.findMany({
-        where: { teamId: toId, status: 'active', isAdmin: true },
-        select: { userId: true },
+      const team = await prisma.team.findUnique({
+        where: { id: toId },
+        select: {
+          name: true,
+          members: {
+            where: { status: 'active', isAdmin: true },
+            include: {
+              user: {
+                select: { id: true, email: true, firstName: true },
+              },
+            },
+          },
+        },
       });
 
-      // Create notifications for team admins
-      await prisma.notification.createMany({
-        data: teamMembers.map(member => ({
-          userId: member.userId,
-          type: 'company_interest',
-          title: 'New Expression of Interest',
-          message: `A company has expressed interest in your team${specificRole ? ` for a ${specificRole} role` : ''}`,
-          data: { eoiId: eoi.id, teamId: toId },
-          actionUrl: `/app/eoi/${eoi.id}`,
-        })),
-      });
+      if (team) {
+        // Create notifications for team admins
+        await prisma.notification.createMany({
+          data: team.members.map(member => ({
+            userId: member.user.id,
+            type: 'company_interest',
+            title: 'New Expression of Interest',
+            message: `A company has expressed interest in your team${specificRole ? ` for a ${specificRole} role` : ''}`,
+            data: { eoiId: eoi.id, teamId: toId },
+            actionUrl: `/app/eoi/${eoi.id}`,
+          })),
+        });
+
+        // Get sender info for email
+        let senderName = 'A company';
+        if (session.user.userType === 'company') {
+          const companyUser = await prisma.companyUser.findFirst({
+            where: { userId: session.user.id },
+            include: { company: { select: { name: true } } },
+          });
+          senderName = companyUser?.company?.name || 'A company';
+        }
+
+        // Send email notifications
+        for (const member of team.members) {
+          if (member.user.email) {
+            sendExpressionOfInterestEmail({
+              to: member.user.email,
+              recipientName: member.user.firstName || 'Team Lead',
+              interestedPartyName: senderName,
+              interestedPartyType: 'company',
+              targetName: team.name,
+              message: message || undefined,
+              interestId: eoi.id,
+            }).catch((err) => {
+              console.error(`Failed to send EOI email to ${member.user.email}:`, err);
+            });
+          }
+        }
+      }
     }
 
     return NextResponse.json(eoi, { status: 201 });

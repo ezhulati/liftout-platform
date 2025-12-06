@@ -283,6 +283,11 @@ model User {
   documentSharesReceived DocumentShare[]          @relation("ShareRecipient")
   documentAccessLogs     DocumentAccessLog[]
 
+  // Reporting and blocking
+  reports                Report[]
+  blocks                 Block[]
+  opportunityAlerts      OpportunityAlert[]
+
   @@map("users")
 }
 
@@ -688,13 +693,17 @@ model Conversation {
 }
 
 model ConversationParticipant {
-  id             String   @id @default(uuid())
-  conversationId String   @map("conversation_id")
-  userId         String   @map("user_id")
-  role           String   @default("participant")
-  joinedAt       DateTime @default(now()) @map("joined_at")
+  id             String    @id @default(uuid())
+  conversationId String    @map("conversation_id")
+  userId         String    @map("user_id")
+  role           String    @default("participant")
+  joinedAt       DateTime  @default(now()) @map("joined_at")
   leftAt         DateTime? @map("left_at")
   lastReadAt     DateTime? @map("last_read_at")
+  isArchived     Boolean   @default(false) @map("is_archived")
+  archivedAt     DateTime? @map("archived_at")
+  isMuted        Boolean   @default(false) @map("is_muted")
+  mutedUntil     DateTime? @map("muted_until")
 
   // Relations
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -1309,4 +1318,78 @@ model AdminSetting {
 
   @@index([category])
   @@map("admin_settings")
+}
+
+// ============================================
+// USER REPORTING & BLOCKING
+// ============================================
+
+// User reports for content/users/teams
+model Report {
+  id          String       @id @default(uuid())
+  reporterId  String       @map("reporter_id")
+  entityType  String       @map("entity_type") // user, team, company, opportunity, message
+  entityId    String       @map("entity_id")
+  reason      String       // spam, harassment, inappropriate_content, fake_profile, scam, other
+  description String?
+  status      ReportStatus @default(pending)
+  reviewedBy  String?      @map("reviewed_by")
+  reviewedAt  DateTime?    @map("reviewed_at")
+  resolution  String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([entityType, entityId])
+  @@index([status])
+  @@map("reports")
+}
+
+// User blocks
+model Block {
+  id         String   @id @default(uuid())
+  blockerId  String   @map("blocker_id")
+  entityType String   @map("entity_type") // user, team, company
+  entityId   String   @map("entity_id")
+  reason     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  blocker User @relation(fields: [blockerId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, entityType, entityId])
+  @@index([blockerId])
+  @@index([entityType, entityId])
+  @@map("blocks")
+}
+
+// Opportunity alerts/subscriptions
+model OpportunityAlert {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  name         String
+  filters      Json     @default("{}") // industry, location, teamSize, compensation, etc.
+  frequency    String   @default("daily") // instant, daily, weekly
+  isActive     Boolean  @default(true) @map("is_active")
+  lastSentAt   DateTime? @map("last_sent_at")
+  matchCount   Int      @default(0) @map("match_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isActive])
+  @@map("opportunity_alerts")
+}
+
+enum ReportStatus {
+  pending
+  reviewing
+  resolved
+  dismissed
 }

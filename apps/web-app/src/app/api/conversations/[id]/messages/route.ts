@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { EntityType } from '@prisma/client';
+import { sendNewMessageEmail } from '@/lib/email';
 
 // GET /api/conversations/[id]/messages - Get messages for a conversation
 export async function GET(
@@ -141,13 +142,54 @@ export async function POST(
     });
 
     // Update conversation's last message time
-    await prisma.conversation.update({
+    const conversation = await prisma.conversation.update({
       where: { id },
       data: {
         lastMessageAt: new Date(),
         messageCount: { increment: 1 },
       },
+      include: {
+        participants: {
+          where: {
+            leftAt: null,
+            userId: { not: session.user.id }, // Other participants only
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                settings: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // Send email notifications to other participants (async, don't block response)
+    const senderName = `${message.sender?.firstName || 'Someone'}`;
+    for (const p of conversation.participants) {
+      if (p.user.email) {
+        // Check if user has email notifications enabled (default: true)
+        const settings = p.user.settings as { emailNotifications?: boolean } | null;
+        const emailsEnabled = settings?.emailNotifications !== false;
+
+        if (emailsEnabled) {
+          sendNewMessageEmail({
+            to: p.user.email,
+            recipientName: p.user.firstName || 'there',
+            senderName,
+            messagePreview: content.trim(),
+            conversationId: id,
+            conversationSubject: conversation.subject || undefined,
+          }).catch((err) => {
+            console.error(`Failed to send message notification to ${p.user.email}:`, err);
+          });
+        }
+      }
+    }
 
     return NextResponse.json({
       data: {
