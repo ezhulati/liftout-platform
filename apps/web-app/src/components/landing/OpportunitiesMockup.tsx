@@ -165,7 +165,7 @@ export function OpportunitiesMockup() {
                 </div>
                 <div className="flex gap-2">
                   <span className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600">Filters</span>
-                  <span className="px-3 py-2 bg-purple-600 text-white rounded-lg text-sm">Search</span>
+                  <span className="px-3 py-2 bg-gray-300 text-gray-500 rounded-lg text-sm">Search</span>
                 </div>
               </div>
             </div>
