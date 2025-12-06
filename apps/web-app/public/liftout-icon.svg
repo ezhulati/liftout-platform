@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 64" width="72" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40" width="48" height="40">
   <defs>
     <linearGradient id="leftGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#d946ef"/>
-      <stop offset="100%" stop-color="#a21caf"/>
+      <stop offset="0%" stop-color="#c026d3"/>
+      <stop offset="100%" stop-color="#9333ea"/>
     </linearGradient>
 
     <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8B5CF6"/>
-      <stop offset="100%" stop-color="#6D28D9"/>
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
     </linearGradient>
 
     <linearGradient id="rightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -18,33 +18,34 @@
 
     <style>
       .center-person {
-        animation: lift-float 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        transform-origin: 36px 50px;
+        animation: lift-float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        transform-origin: 24px 20px;
       }
       @keyframes lift-float {
         0%, 100% { transform: translateY(0); }
-        40%, 60% { transform: translateY(-2px); }
+        50% { transform: translateY(-1.5px); }
       }
     </style>
   </defs>
 
+  <!-- Three People Icon -->
   <g transform="translate(0, 2)">
     <!-- Left person -->
     <g fill="url(#leftGradient)">
-      <circle cx="18" cy="10" r="10"/>
-      <ellipse cx="18" cy="44" rx="18" ry="20"/>
+      <circle cx="10" cy="8" r="5.5"/>
+      <path d="M2 34 C2 24 5.5 21 10 21 C14.5 21 18 24 18 34 Q18 36 15.5 36 L4.5 36 Q2 36 2 34 Z"/>
     </g>
 
     <!-- Right person -->
     <g fill="url(#rightGradient)">
-      <circle cx="54" cy="10" r="10"/>
-      <ellipse cx="54" cy="44" rx="18" ry="20"/>
+      <circle cx="38" cy="8" r="5.5"/>
+      <path d="M30 34 C30 24 33.5 21 38 21 C42.5 21 46 24 46 34 Q46 36 43.5 36 L32.5 36 Q30 36 30 34 Z"/>
     </g>
 
-    <!-- Center person -->
+    <!-- Center person (elevated) -->
     <g class="center-person" fill="url(#centerGradient)">
-      <circle cx="36" cy="6" r="12"/>
-      <ellipse cx="36" cy="42" rx="20" ry="22"/>
+      <circle cx="24" cy="5" r="7"/>
+      <path d="M13 32 C13 21 17.5 17.5 24 17.5 C30.5 17.5 35 21 35 32 Q35 35 32 35 L16 35 Q13 35 13 32 Z"/>
     </g>
   </g>
 </svg>

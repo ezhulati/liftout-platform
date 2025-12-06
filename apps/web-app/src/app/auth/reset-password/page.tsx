@@ -107,11 +107,12 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg py-12 px-6">
         <div className="max-w-md w-full">
-          <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
-              <span className="text-gold font-heading font-bold text-xl">L</span>
-            </div>
-            <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
+          <Link href="/" className="flex items-center justify-center mb-8">
+            <img
+              src="/liftout-logo.svg"
+              alt="Liftout"
+              className="h-10 w-auto"
+            />
           </Link>
 
           <div className="text-center">
@@ -148,11 +149,12 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg py-12 px-6">
         <div className="max-w-md w-full">
-          <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
-              <span className="text-gold font-heading font-bold text-xl">L</span>
-            </div>
-            <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
+          <Link href="/" className="flex items-center justify-center mb-8">
+            <img
+              src="/liftout-logo.svg"
+              alt="Liftout"
+              className="h-10 w-auto"
+            />
           </Link>
 
           <div className="text-center">
@@ -178,11 +180,12 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg py-12 px-6">
       <div className="max-w-md w-full">
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-navy flex items-center justify-center">
-            <span className="text-gold font-heading font-bold text-xl">L</span>
-          </div>
-          <span className="font-heading font-bold text-2xl text-navy tracking-tight">Liftout</span>
+        <Link href="/" className="flex items-center justify-center mb-8">
+          <img
+            src="/liftout-logo.svg"
+            alt="Liftout"
+            className="h-10 w-auto"
+          />
         </Link>
 
         <div className="text-center mb-8">

@@ -157,26 +157,18 @@ export function LandingHeader({ variant = 'light' }: LandingHeaderProps) {
         isScrolled ? 'py-2.5' : 'py-4'
       }`}>
         <div className="flex items-center justify-between">
-          {/* Logo - Premium badge style with subtle border and inner glow */}
+          {/* Logo - Clean enterprise style */}
           <Link
             href="/"
             className="flex items-center min-h-12 group"
             aria-label="Liftout Home"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <div className="relative bg-gradient-to-b from-white to-gray-50/80 rounded-xl px-5 py-2.5 border border-gray-200/80 group-hover:border-gray-300/90 transition-all duration-300 ease-out">
-              {/* Inner glow effect */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/60 via-transparent to-transparent" />
-              {/* Subtle bottom shadow for depth */}
-              <div className="absolute inset-x-2 -bottom-px h-px bg-gradient-to-r from-transparent via-gray-300/50 to-transparent" />
-              {/* Hover highlight */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-900/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <img
-                src="/liftout.png"
-                alt="Liftout"
-                className="h-8 w-auto relative"
-              />
-            </div>
+            <img
+              src="/liftout-logo.svg"
+              alt="Liftout"
+              className="h-9 w-auto transition-opacity duration-200 group-hover:opacity-80"
+            />
           </Link>
 
           {/* Desktop navigation - Practical UI: 18px text, 48pt touch targets, 16pt gaps */}

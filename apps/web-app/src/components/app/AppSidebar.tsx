@@ -108,9 +108,9 @@ export function AppSidebar() {
           <div className="flex items-center justify-between h-16 px-4">
             <Link href="/app/dashboard" className="flex items-center">
               <img
-                src="/liftout.png"
+                src="/liftout-logo-all-white.svg"
                 alt="Liftout"
-                className="h-8 w-auto brightness-0 invert"
+                className="h-8 w-auto"
               />
             </Link>
             <button
@@ -146,9 +146,9 @@ export function AppSidebar() {
           <div className="flex items-center h-16 px-4">
             <Link href="/app/dashboard" className="flex items-center">
               <img
-                src="/liftout.png"
+                src="/liftout-logo-all-white.svg"
                 alt="Liftout"
-                className="h-8 w-auto brightness-0 invert"
+                className="h-8 w-auto"
               />
             </Link>
           </div>

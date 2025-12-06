@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" width="200" height="40">
   <defs>
-    <linearGradient id="leftGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#c026d3"/>
-      <stop offset="100%" stop-color="#9333ea"/>
-    </linearGradient>
-
-    <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#5b21b6"/>
-    </linearGradient>
-
-    <linearGradient id="rightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
-    </linearGradient>
-
     <style>
       .center-person {
         animation: lift-float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
@@ -28,28 +13,28 @@
     </style>
   </defs>
 
-  <!-- Three People Icon -->
+  <!-- Three People Icon - All White -->
   <g transform="translate(2, 2)">
     <!-- Left person -->
-    <g fill="url(#leftGradient)">
+    <g fill="#FFFFFF" opacity="0.85">
       <circle cx="10" cy="8" r="5.5"/>
       <path d="M2 34 C2 24 5.5 21 10 21 C14.5 21 18 24 18 34 Q18 36 15.5 36 L4.5 36 Q2 36 2 34 Z"/>
     </g>
 
     <!-- Right person -->
-    <g fill="url(#rightGradient)">
+    <g fill="#FFFFFF" opacity="0.85">
       <circle cx="38" cy="8" r="5.5"/>
       <path d="M30 34 C30 24 33.5 21 38 21 C42.5 21 46 24 46 34 Q46 36 43.5 36 L32.5 36 Q30 36 30 34 Z"/>
     </g>
 
     <!-- Center person (elevated) -->
-    <g class="center-person" fill="url(#centerGradient)">
+    <g class="center-person" fill="#FFFFFF">
       <circle cx="24" cy="5" r="7"/>
       <path d="M13 32 C13 21 17.5 17.5 24 17.5 C30.5 17.5 35 21 35 32 Q35 35 32 35 L16 35 Q13 35 13 32 Z"/>
     </g>
   </g>
 
-  <!-- LIFTOUT Text -->
+  <!-- LIFTOUT Text - White -->
   <text
     x="56"
     y="28"
@@ -57,6 +42,6 @@
     font-size="26"
     font-weight="800"
     letter-spacing="-0.03em"
-    fill="#0f172a"
+    fill="#FFFFFF"
   >LIFTOUT</text>
 </svg>

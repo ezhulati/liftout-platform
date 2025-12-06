@@ -61,7 +61,7 @@ export function LandingFooter() {
                 {/* Subtle bottom highlight */}
                 <div className="absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <img
-                  src="/team-28.png"
+                  src="/liftout-logo-all-white.svg"
                   alt="Liftout"
                   className="h-10 w-auto relative"
                 />

@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
           {/* Logo */}
           <Link href="/" className="flex items-center justify-center mb-8">
             <img
-              src="/liftout.png"
+              src="/liftout-logo.svg"
               alt="Liftout"
               className="h-10 w-auto"
             />
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center mb-8">
           <img
-            src="/liftout.png"
+            src="/liftout-logo.svg"
             alt="Liftout"
             className="h-10 w-auto"
           />
