@@ -124,11 +124,6 @@ export function ProductMockup() {
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
             </div>
-            <div className="flex-1 mx-4">
-              <div className="bg-white rounded-md px-3 py-1 text-xs text-gray-500 max-w-xs mx-auto text-center">
-                liftout.com/teams
-              </div>
-            </div>
           </div>
 
           {/* App content */}
