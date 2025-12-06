@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { SparklesIcon, ChartBarIcon, ArrowTrendingUpIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
@@ -125,9 +126,18 @@ export function HBRInsight() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="text-base text-text-tertiary">
-            Source: Boris Groysberg, &ldquo;Chasing Stars&rdquo; (Princeton, 2010) &amp; &ldquo;Lift Outs&rdquo; — Harvard Business Review, 2006
-          </p>
+          <div className="flex items-center gap-4">
+            <Image
+              src="/harvard-business-review-logo-png_seeklogo-339979.png"
+              alt="Harvard Business Review"
+              width={80}
+              height={22}
+              className="opacity-50 grayscale"
+            />
+            <p className="text-base text-text-tertiary">
+              Boris Groysberg, &ldquo;Chasing Stars&rdquo; (Princeton, 2010) &amp; HBR, 2006
+            </p>
+          </div>
 
           <Link
             href="/what-is-a-liftout"

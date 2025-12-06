@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,8 +24,12 @@ import {
   ArrowDownTrayIcon,
   DocumentTextIcon,
   EyeIcon,
-  EyeSlashIcon
+  EyeSlashIcon,
+  UserPlusIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
+import { DeleteCompanyModal } from '@/components/company/DeleteCompanyModal';
+import { InviteCompanyMember } from '@/components/company/InviteCompanyMember';
 import { toast } from 'react-hot-toast';
 import { ButtonGroup, TextLink, FormField } from '@/components/ui';
 
@@ -210,8 +214,45 @@ export function AccountSettings() {
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showDeleteCompanyModal, setShowDeleteCompanyModal] = useState(false);
+  const [showInviteMemberModal, setShowInviteMemberModal] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+
+  // Check if user is a company user
+  const isCompanyUser = user?.type === 'company' || (sessionUser as any)?.userType === 'company';
+
+  // State for company info (fetched for company users)
+  const [companyInfo, setCompanyInfo] = useState<{ id: string; name: string } | null>(null);
+
+  // Fetch company info for company users
+  useEffect(() => {
+    const fetchCompanyInfo = async () => {
+      if (!isCompanyUser) return;
+
+      try {
+        const response = await fetch('/api/dashboard/stats');
+        if (response.ok) {
+          const data = await response.json();
+          // Dashboard stats for company users includes company info
+          if (data.company) {
+            setCompanyInfo({
+              id: data.company.id,
+              name: data.company.name || user?.companyName || 'Your Company',
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching company info:', error);
+      }
+    };
+
+    fetchCompanyInfo();
+  }, [isCompanyUser, user?.companyName]);
+
+  // Company info from state or fallback
+  const companyId = companyInfo?.id;
+  const companyName = companyInfo?.name || user?.companyName || 'Your Company';
 
   const handleExportData = async () => {
     setIsExporting(true);
@@ -563,6 +604,53 @@ export function AccountSettings() {
         </div>
       </div>
 
+      {/* Company Management - Only for company users */}
+      {isCompanyUser && companyId && (
+        <div className="card">
+          <div className="px-6 py-4 border-b border-border">
+            <h4 className="text-base font-bold text-text-primary flex items-center">
+              <BuildingOfficeIcon className="h-5 w-5 text-text-tertiary mr-2" />
+              Company management
+            </h4>
+          </div>
+          <div className="px-6 py-4 space-y-4">
+            {/* Invite Team Member */}
+            <div className="flex items-center justify-between p-4 border border-border rounded-lg min-h-20">
+              <div className="mr-4">
+                <h5 className="text-base font-bold text-text-primary">Invite team member</h5>
+                <p className="text-base text-text-secondary">
+                  Invite colleagues to join your company on Liftout and collaborate on hiring teams.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowInviteMemberModal(true)}
+                className="btn-primary flex items-center min-h-12"
+              >
+                <UserPlusIcon className="h-5 w-5 mr-2" />
+                Invite member
+              </button>
+            </div>
+
+            {/* Delete Company */}
+            <div className="flex items-center justify-between p-4 border border-error/30 rounded-lg min-h-20 bg-error-light/30">
+              <div className="mr-4">
+                <h5 className="text-base font-bold text-error-dark">Delete company</h5>
+                <p className="text-base text-text-secondary">
+                  Permanently delete your company profile and all associated opportunities. This cannot be undone.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowDeleteCompanyModal(true)}
+                className="btn-outline text-error border-error hover:bg-error/10 flex items-center min-h-12"
+              >
+                <TrashIcon className="h-5 w-5 mr-2" />
+                Delete company
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Account Actions */}
       <div className="space-y-4">
         {/* Deactivate Account */}
@@ -639,6 +727,24 @@ export function AccountSettings() {
         description="This will reset all your settings to their default values. This action cannot be undone."
         confirmText="Reset settings"
       />
+
+      {/* Company Modals - Only rendered for company users */}
+      {isCompanyUser && companyId && (
+        <>
+          <DeleteCompanyModal
+            isOpen={showDeleteCompanyModal}
+            onClose={() => setShowDeleteCompanyModal(false)}
+            companyId={companyId}
+            companyName={companyName}
+          />
+          <InviteCompanyMember
+            isOpen={showInviteMemberModal}
+            onClose={() => setShowInviteMemberModal(false)}
+            companyId={companyId}
+            companyName={companyName}
+          />
+        </>
+      )}
     </div>
   );
 }

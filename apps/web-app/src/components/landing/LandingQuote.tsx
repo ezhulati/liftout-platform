@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export function LandingQuote() {
@@ -32,10 +33,19 @@ export function LandingQuote() {
             &ldquo;Stars do not develop in a vacuum; their performance depends heavily on the people with whom they work. If they can bring some of that firm-specific relational capital with them, their chances of maintaining their exceptional performance increase dramatically.&rdquo;
           </blockquote>
 
-          {/* Attribution */}
-          <p className="text-text-tertiary text-base mb-8">
-            Boris Groysberg, Harvard Business School — &ldquo;Chasing Stars&rdquo;
-          </p>
+          {/* Attribution with HBR logo */}
+          <div className="flex items-center gap-4 mb-8">
+            <Image
+              src="/harvard-business-review-logo-png_seeklogo-339979.png"
+              alt="Harvard Business Review"
+              width={100}
+              height={28}
+              className="opacity-60 grayscale"
+            />
+            <p className="text-text-tertiary text-base">
+              Boris Groysberg, Harvard Business School — &ldquo;Chasing Stars&rdquo;
+            </p>
+          </div>
 
           {/* Transition */}
           <p className="text-text-secondary text-lg font-medium">

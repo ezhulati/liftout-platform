@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -31,6 +32,7 @@ function classNames(...classes: string[]) {
 }
 
 export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProps) {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({});
   
@@ -318,7 +320,7 @@ export function OpportunitiesList({ userType, activeTab }: OpportunitiesListProp
                           {({ active }) => (
                             <button
                               onClick={() => {
-                                toast.success('Edit feature coming soon!');
+                                router.push(`/app/opportunities/${opportunity.id}/edit`);
                               }}
                               className={classNames(
                                 active ? 'bg-bg-alt' : '',

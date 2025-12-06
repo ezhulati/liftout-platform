@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -18,11 +18,13 @@ import {
   BriefcaseIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import {
   CheckBadgeIcon as CheckBadgeIconSolid,
   HeartIcon as HeartIconSolid,
 } from '@heroicons/react/24/solid';
+import { DeleteTeamModal } from '@/components/teams/DeleteTeamModal';
 
 interface TeamMember {
   id: string;
@@ -59,9 +61,11 @@ interface Team {
 
 export default function TeamProfilePage() {
   const params = useParams();
+  const router = useRouter();
   const { userData } = useAuth();
   const teamId = params?.id as string;
   const [hasExpressedInterest, setHasExpressedInterest] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { data: team, isLoading, refetch } = useQuery<Team | null>({
     queryKey: ['team', teamId],
@@ -204,7 +208,10 @@ export default function TeamProfilePage() {
                   )}
                   {hasExpressedInterest ? 'Interest expressed' : 'Express interest'}
                 </button>
-                <button className="btn-outline min-h-12 flex items-center">
+                <button
+                  className="btn-outline min-h-12 flex items-center"
+                  onClick={() => router.push(`/app/messages?team=${teamId}`)}
+                >
                   <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
                   Message team
                 </button>
@@ -418,8 +425,37 @@ export default function TeamProfilePage() {
               </div>
             </div>
           </div>
+
+          {/* Danger Zone - Only for team owners */}
+          {isTeamOwner && (
+            <div className="card border-error/20">
+              <div className="px-6 py-4 border-b border-error/20">
+                <h2 className="text-lg font-medium text-error">Danger zone</h2>
+              </div>
+              <div className="px-6 py-4">
+                <p className="text-sm text-text-secondary mb-4">
+                  Once you delete a team, there is no going back. Please be certain.
+                </p>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="btn-outline min-h-10 text-error border-error hover:bg-error/10 flex items-center"
+                >
+                  <TrashIcon className="h-4 w-4 mr-2" />
+                  Delete team
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Delete Team Modal */}
+      <DeleteTeamModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        teamId={teamId}
+        teamName={team.name}
+      />
     </div>
   );
 }

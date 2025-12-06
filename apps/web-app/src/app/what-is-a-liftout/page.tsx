@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -662,13 +663,22 @@ export default function WhatIsALiftoutPage() {
               ))}
             </div>
 
-            <p
-              className={`mt-8 text-base text-text-tertiary transition-all duration-500 delay-500 ${
+            <div
+              className={`mt-8 flex items-center gap-4 transition-all duration-500 delay-500 ${
                 stagesRef.isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
-              Source: Groysberg, B. &amp; Abrahams, R. &quot;Lift Outs: How to Acquire a High-Functioning Team.&quot; Harvard Business Review, December 2006.
-            </p>
+              <Image
+                src="/harvard-business-review-logo-png_seeklogo-339979.png"
+                alt="Harvard Business Review"
+                width={80}
+                height={22}
+                className="opacity-50 grayscale"
+              />
+              <p className="text-base text-text-tertiary">
+                Groysberg &amp; Abrahams, &quot;Lift Outs: How to Acquire a High-Functioning Team&quot; — HBR, 2006
+              </p>
+            </div>
           </div>
         </section>
 
