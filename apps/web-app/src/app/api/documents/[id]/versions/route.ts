@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 // GET /api/documents/[id]/versions - List all versions of a document
 export async function GET(
@@ -15,41 +16,64 @@ export async function GET(
 
     const documentId = params.id;
 
-    // Return mock version data (document versioning feature not yet implemented)
+    // Fetch document with versions from database
+    const document = await prisma.document.findUnique({
+      where: { id: documentId },
+      include: {
+        uploadedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        versions: {
+          include: {
+            uploadedBy: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: { versionNumber: 'desc' },
+        },
+      },
+    });
+
+    if (!document) {
+      return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+    }
+
+    // Format versions with isCurrent flag
+    const versions = document.versions.map((v) => ({
+      id: v.id,
+      versionNumber: v.versionNumber,
+      filename: v.filename,
+      fileSize: v.fileSize,
+      storageUrl: v.storageUrl,
+      checksum: v.checksum,
+      changeDescription: v.changeDescription,
+      uploadedBy: v.uploadedBy,
+      createdAt: v.createdAt.toISOString(),
+      isCurrent: v.versionNumber === document.currentVersion,
+    }));
+
     return NextResponse.json({
       success: true,
       data: {
         document: {
-          id: documentId,
-          name: 'Document',
-          currentVersion: 1,
-          uploadedBy: {
-            id: session.user.id,
-            firstName: 'Demo',
-            lastName: 'User',
-          },
+          id: document.id,
+          name: document.name,
+          currentVersion: document.currentVersion,
+          uploadedBy: document.uploadedBy,
         },
-        versions: [
-          {
-            id: 'v1',
-            versionNumber: 1,
-            filename: 'document.pdf',
-            fileSize: 1024,
-            storageUrl: '#',
-            changeDescription: 'Initial version',
-            uploadedBy: {
-              id: session.user.id,
-              firstName: 'Demo',
-              lastName: 'User',
-              email: session.user.email,
-            },
-            createdAt: new Date().toISOString(),
-            isCurrent: true,
-          },
-        ],
-        total: 1,
+        versions,
+        total: versions.length,
       },
-      _mock: true,
     });
   } catch (error) {
     console.error('Error fetching document versions:', error);
@@ -82,30 +106,83 @@ export async function POST(
       );
     }
 
-    // Return mock upload response (document versioning feature not yet implemented)
+    // Fetch current document to get next version number
+    const document = await prisma.document.findUnique({
+      where: { id: documentId },
+    });
+
+    if (!document) {
+      return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+    }
+
+    const nextVersion = document.currentVersion + 1;
+
+    // Create new version and update document in transaction
+    const [newVersion, updatedDocument] = await prisma.$transaction([
+      prisma.documentVersion.create({
+        data: {
+          documentId,
+          versionNumber: nextVersion,
+          filename,
+          fileSize,
+          storageUrl,
+          checksum,
+          changeDescription: changeDescription || `Version ${nextVersion}`,
+          uploadedById: session.user.id,
+        },
+        include: {
+          uploadedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      }),
+      prisma.document.update({
+        where: { id: documentId },
+        data: {
+          currentVersion: nextVersion,
+          filename,
+          fileSize,
+          storageUrl,
+          checksum,
+          updatedAt: new Date(),
+        },
+      }),
+    ]);
+
+    // Log the upload action
+    await prisma.documentAccessLog.create({
+      data: {
+        documentId,
+        userId: session.user.id,
+        action: 'upload',
+        outcome: 'success',
+        versionId: newVersion.id,
+        metadata: { versionNumber: nextVersion },
+      },
+    });
+
     return NextResponse.json({
       success: true,
       data: {
         version: {
-          id: `v-${Date.now()}`,
-          versionNumber: 2,
-          filename,
-          fileSize,
-          storageUrl,
-          changeDescription: changeDescription || 'Version 2',
-          uploadedBy: {
-            id: session.user.id,
-            firstName: 'Demo',
-            lastName: 'User',
-          },
-          createdAt: new Date().toISOString(),
+          id: newVersion.id,
+          versionNumber: newVersion.versionNumber,
+          filename: newVersion.filename,
+          fileSize: newVersion.fileSize,
+          storageUrl: newVersion.storageUrl,
+          changeDescription: newVersion.changeDescription,
+          uploadedBy: newVersion.uploadedBy,
+          createdAt: newVersion.createdAt.toISOString(),
         },
         document: {
-          id: documentId,
-          currentVersion: 2,
+          id: updatedDocument.id,
+          currentVersion: updatedDocument.currentVersion,
         },
       },
-      _mock: true,
     }, { status: 201 });
   } catch (error) {
     console.error('Error uploading new version:', error);

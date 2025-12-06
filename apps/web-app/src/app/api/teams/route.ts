@@ -197,25 +197,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Demo user handling - simulate success
-  if (isDemoUser(session.user.email)) {
-    const body = await request.json();
-    const mockTeam = {
-      id: `demo-team-${Date.now()}`,
-      name: body.name || 'Demo Team',
-      description: body.description || 'Demo team description',
-      size: body.size || 2,
-      yearsWorkingTogether: body.yearsWorkingTogether || 1,
-      openToLiftout: true,
-      createdBy: session.user.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      industry: body.industry || '',
-      location: body.location || '',
-    };
-    console.log('[Demo] Team created:', mockTeam.id);
-    return NextResponse.json({ team: mockTeam, message: 'Team profile created successfully' }, { status: 201 });
-  }
+  // Demo users can create real teams (marked as demo)
+  const isDemo = isDemoUser(session.user.email);
 
   try {
     const body = await request.json();
@@ -272,6 +255,7 @@ export async function POST(request: NextRequest) {
         remoteStatus: 'hybrid',
         visibility: visibility,
         isAnonymous: isAnonymous || visibility === 'anonymous',
+        isDemo: isDemo,
         metadata: {
           visibilitySettings: {
             hideCurrentEmployer,

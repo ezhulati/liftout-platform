@@ -114,9 +114,9 @@ export async function GET() {
         proficiencyLevel: s.proficiencyLevel,
         yearsExperience: s.yearsExperience,
       })) || [],
-      workExperience: [], // Stored elsewhere or not yet implemented
-      education: [], // Stored elsewhere or not yet implemented
-      portfolio: [], // Stored elsewhere or not yet implemented
+      workExperience: ((user.profile as any)?.workExperience as any[]) || [],
+      education: ((user.profile as any)?.education as any[]) || [],
+      portfolio: ((user.profile as any)?.portfolio as any[]) || [],
       achievements: user.profile?.achievements || '',
       certifications: user.profile?.certifications || [],
       searchPreferences: user.profile?.searchPreferences || {},
@@ -234,7 +234,10 @@ export async function PUT(request: Request) {
     if (updates.achievements !== undefined) profileUpdateData.achievements = updates.achievements;
     if (updates.searchPreferences !== undefined) profileUpdateData.searchPreferences = updates.searchPreferences;
     if (updates.profilePhotoUrl !== undefined) profileUpdateData.profilePhotoUrl = updates.profilePhotoUrl;
-    // workExperience, education, portfolio not stored on profile - would need separate handling
+    // Profile sections stored as JSON
+    if (updates.workExperience !== undefined) profileUpdateData.workExperience = updates.workExperience;
+    if (updates.education !== undefined) profileUpdateData.education = updates.education;
+    if (updates.portfolio !== undefined) profileUpdateData.portfolio = updates.portfolio;
 
     // Update user and profile in transaction
     await prisma.$transaction(async (tx) => {

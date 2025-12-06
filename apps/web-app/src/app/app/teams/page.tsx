@@ -225,120 +225,76 @@ function MyTeamView({ userId }: { userId: string }) {
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">Team members</h1>
-        <p className="page-subtitle">Manage your team post, team members and their permissions.</p>
+        <p className="page-subtitle">Manage your team post and members.</p>
       </div>
-
-      {/* Invite Section - only for team leads */}
-      {canInvite && (
-        <div className="card">
-          <h2 className="text-lg font-bold text-text-primary mb-2">Invite people to join your team</h2>
-          <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
-          <form onSubmit={handleSendInvite} className="flex gap-3">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
-              </div>
-              <input
-                type="email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="colleague@example.com"
-                className="input-field pl-12"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isInviting || !inviteEmail.trim()}
-              className="btn-primary min-h-12 flex items-center gap-2 disabled:opacity-50"
-            >
-              <EnvelopeIcon className="h-5 w-5" />
-              {isInviting ? 'Sending...' : 'Send Invite'}
-            </button>
-          </form>
-
-          {/* Pending Invites */}
-          <PendingInvites
-            invitations={team.invitations || []}
-            canManage={canInvite}
-            onResend={resendInvite}
-            onCancel={cancelInvite}
-          />
-        </div>
-      )}
 
       {/* Team Post Card */}
       <div className="card">
-        <div className="flex items-start justify-between mb-4">
-          <div>
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
             {team.industry && (
-              <span className="badge badge-primary text-xs mb-2">{team.industry}</span>
+              <span className="text-sm font-medium text-purple-700 mb-2 block">{team.industry}</span>
             )}
-            <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-3">
+            <h3 className="text-xl font-bold text-text-primary flex items-center flex-wrap gap-3 mb-2">
               {team.name}
-              <span className="text-sm font-normal text-text-tertiary">Team of {teamMembers.length}</span>
+              <span className="badge badge-primary text-xs font-normal">Team of {teamMembers.length}</span>
             </h3>
+
+            {team.location && (
+              <div className="flex items-center gap-2 text-sm text-text-secondary mb-4">
+                <MapPinIcon className="h-4 w-4" />
+                {team.location}
+              </div>
+            )}
+
+            {team.description && (
+              <p className="text-sm text-text-secondary mb-4 leading-relaxed line-clamp-3">
+                {team.description}
+              </p>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              {team.availabilityStatus === 'available' && (
+                <span className="text-sm font-medium text-purple-700">Open to relocation</span>
+              )}
+              <span className="text-sm font-medium text-success">{totalExperience} years combined experience</span>
+            </div>
           </div>
-          <TeamCardMenu
-            teamId={team.id}
-            teamName={team.name}
-            isAvailable={team.availabilityStatus === 'available'}
-            canEdit={canEdit}
-            canDelete={canDelete}
-            onToggleAvailability={handleToggleAvailability}
-            onEditClick={() => router.push(`/app/teams/${team.id}/edit`)}
-          />
+
+          {/* Hide team details toggle */}
+          <div className="flex items-start gap-4 ml-6">
+            <div className="text-right">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={false}
+                  onChange={() => {}}
+                />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                <div>
+                  <span className="text-sm font-medium text-text-primary block">Hide team details</span>
+                  <span className="text-xs text-text-tertiary">Hide names, location, and employment details of individuals on the team.</span>
+                </div>
+              </label>
+            </div>
+          </div>
         </div>
-
-        {/* Team member avatars */}
-        <div className="mb-4">
-          <TeamMemberAvatars
-            members={teamMembers.map(m => ({ name: m.name, avatar: m.avatar || undefined }))}
-            size="md"
-            maxDisplay={5}
-          />
-        </div>
-
-        <div className="flex items-center gap-4 text-sm text-text-tertiary mb-4">
-          {team.location && (
-            <span className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4" />
-              {team.location}
-            </span>
-          )}
-          <span className="flex items-center gap-2">
-            <ClockIcon className="h-4 w-4" />
-            {team.yearsWorkingTogether || 0}y together
-          </span>
-          {team.availabilityStatus === 'available' && (
-            <span className="flex items-center gap-2 text-success">
-              <CheckCircleIcon className="h-4 w-4" />
-              Available
-            </span>
-          )}
-        </div>
-
-        {team.description && (
-          <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-            {team.description}
-          </p>
-        )}
-
-        <span className="badge badge-primary text-xs">
-          {totalExperience} years combined experience
-        </span>
       </div>
 
-      {/* Team Members Table */}
-      <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Your team section */}
+      <div>
+        <h2 className="text-base font-semibold text-text-primary mb-1">Your team</h2>
+        <p className="text-sm text-text-tertiary mb-4">Manage your existing team and change roles/permissions.</p>
+
+        {/* Team Members Table */}
+        <div className="card overflow-hidden p-0">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border">
-                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Name</th>
-                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Experience</th>
-                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Education</th>
-                <th className="w-12 px-6 py-4"></th>
+              <tr className="border-b border-border bg-bg-alt">
+                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-3">Name</th>
+                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-3">Email</th>
+                <th className="w-32 px-6 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -355,42 +311,34 @@ function MyTeamView({ userId }: { userId: string }) {
                         />
                       ) : (
                         <div className="h-10 w-10 rounded-full bg-navy-100 flex items-center justify-center">
-                          <span className="text-navy font-medium">
-                            {member.name?.charAt(0)?.toUpperCase() || '?'}
+                          <span className="text-navy font-medium text-sm">
+                            {member.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'}
                           </span>
                         </div>
                       )}
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-text-primary">{member.name}</span>
-                          {member.isLead && (
-                            <StarIconSolid className="h-4 w-4 text-gold" title="Team Lead" />
-                          )}
-                        </div>
-                        <div className="text-sm text-text-tertiary">{member.role}</div>
-                      </div>
+                      <span className="font-medium text-text-primary">{member.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-text-secondary">{member.experience} yrs</td>
-                  <td className="px-6 py-4 text-text-secondary">{member.education || '—'}</td>
+                  <td className="px-6 py-4 text-text-secondary text-sm">{(member as any).email || '—'}</td>
                   <td className="px-6 py-4">
-                    <MemberRowMenu
-                      memberId={member.id}
-                      memberUserId={member.userId}
-                      memberName={member.name}
-                      memberRole={member.role}
-                      isLead={member.isLead || false}
-                      isCurrentUser={member.userId === userId}
-                      canEdit={canEdit}
-                      canRemove={canRemoveMembers}
-                      canMakeLead={isOwner || isTeamLead}
-                      canLeave={true}
-                      teamSize={teamMembers.length}
-                      onChangeRole={handleChangeRole}
-                      onMakeLead={handleMakeLead}
-                      onRemove={handleRemoveMember}
-                      onLeave={handleLeaveTeam}
-                    />
+                    <div className="flex items-center gap-4 justify-end">
+                      {canRemoveMembers && !member.isLead && (
+                        <button
+                          onClick={() => handleRemoveMember(member.id)}
+                          className="text-sm font-medium text-text-secondary hover:text-error transition-colors"
+                        >
+                          Delete
+                        </button>
+                      )}
+                      {canEdit && (
+                        <button
+                          onClick={() => router.push(`/app/teams/${team.id}/edit`)}
+                          className="text-sm font-medium text-purple-700 hover:text-purple-800 transition-colors"
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -398,6 +346,16 @@ function MyTeamView({ userId }: { userId: string }) {
           </table>
         </div>
       </div>
+
+      {/* Pending Invites - moved to bottom */}
+      {canInvite && (team.invitations || []).length > 0 && (
+        <PendingInvites
+          invitations={team.invitations || []}
+          canManage={canInvite}
+          onResend={resendInvite}
+          onCancel={cancelInvite}
+        />
+      )}
     </div>
   );
 }
