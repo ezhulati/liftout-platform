@@ -229,9 +229,9 @@ export function OpportunitiesMockup() {
               <span className="text-sm text-gray-500">Sort: Newest first</span>
             </div>
 
-            {/* Opportunity cards */}
+            {/* Opportunity cards - show 4 for balanced height */}
             <div className="px-6 pb-6 space-y-3">
-              {mockOpportunities.map((opportunity) => (
+              {mockOpportunities.slice(0, 4).map((opportunity) => (
                 <OpportunityCardFull key={opportunity.company} opportunity={opportunity} />
               ))}
             </div>
