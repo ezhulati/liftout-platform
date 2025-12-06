@@ -100,10 +100,12 @@
 | C3-C5 | Send/Reply/Attach | `/api/conversations/[id]/messages` | PASS | API exists |
 | C6 | Download attachment | API | PARTIAL | Basic support |
 | C7-C8 | Mark read/unread | `/api/conversations/[id]/read` | PASS | API exists |
-| C9-C14 | Archive/Search/Filter/Mute | Various | UNKNOWN | Needs functional testing |
-| C15-C16 | Report/Block | Various | UNKNOWN | Needs functional testing |
+| C9-C10 | Archive/Unarchive | `/api/conversations/[id]/archive` | PASS | Prisma-based per-user archive |
+| C11-C12 | Mute/Unmute | `/api/conversations/[id]/mute` | PASS | Prisma-based with duration support |
+| C13-C14 | Search/Filter | `/app/messages` | PARTIAL | Basic client-side filtering |
+| C15-C16 | Report/Block | `/api/reports`, `/api/blocks` | PASS | Prisma-based APIs |
 
-**Conversation Score: 10/16 (63%)**
+**Conversation Score: 14/16 (88%)**
 
 ---
 
@@ -270,7 +272,7 @@
 | Profile | 88% | NEAR COMPLETE |
 | Team Actions | 100% | COMPLETE |
 | Opportunities | 88% | NEAR COMPLETE |
-| Conversations | 63% | FUNCTIONAL |
+| Conversations | 88% | NEAR COMPLETE |
 | Applications | 89% | NEAR COMPLETE |
 | Offers | 80% | FUNCTIONAL |
 | Company | 96% | NEAR COMPLETE |
@@ -280,7 +282,7 @@
 | Notifications | 100% | COMPLETE |
 | Analytics | 100% | COMPLETE |
 
-**Overall: ~85% Complete**
+**Overall: ~89% Complete**
 
 ---
 
@@ -306,6 +308,8 @@ All APIs now use Prisma-based persistent storage with PostgreSQL (Neon):
 - `/api/blocks` - Block user/team/company (Prisma)
 - `/api/reports` - Report entities (Prisma)
 - `/api/opportunity-alerts` - Opportunity alert management (Prisma)
+- `/api/conversations/[id]/archive` - Archive conversations (Prisma, per-user)
+- `/api/conversations/[id]/mute` - Mute conversations (Prisma, with duration)
 
 ### Schema Sync Complete
 
@@ -314,4 +318,4 @@ The `apps/web-app/prisma/schema.prisma` has been synchronized with `packages/dat
 ---
 
 *Generated: December 5, 2024*
-*Updated: December 5, 2024 - Upgraded to Prisma storage*
+*Updated: December 5, 2024 - Upgraded conversation APIs to Prisma, ~89% complete*

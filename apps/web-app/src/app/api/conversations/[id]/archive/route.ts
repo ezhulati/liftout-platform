@@ -3,10 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-// NOTE: The ConversationParticipant model doesn't have isArchived/archivedAt fields
-// Using the conversation.status field instead to track archived state
-
-// POST - Archive a conversation
+// POST - Archive a conversation (per-user archive via ConversationParticipant)
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -20,7 +17,7 @@ export async function POST(
 
     const { id } = await params;
 
-    // Verify user is participant in this conversation
+    // Find participant record
     const participant = await prisma.conversationParticipant.findFirst({
       where: {
         conversationId: id,
@@ -33,11 +30,12 @@ export async function POST(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    // Update conversation status to archived
-    await prisma.conversation.update({
-      where: { id },
+    // Update participant's archive status (per-user archive)
+    await prisma.conversationParticipant.update({
+      where: { id: participant.id },
       data: {
-        status: 'archived',
+        isArchived: true,
+        archivedAt: new Date(),
       },
     });
 
@@ -76,11 +74,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    // Update conversation status back to active
-    await prisma.conversation.update({
-      where: { id },
+    // Update participant's archive status
+    await prisma.conversationParticipant.update({
+      where: { id: participant.id },
       data: {
-        status: 'active',
+        isArchived: false,
+        archivedAt: null,
       },
     });
 
@@ -89,6 +88,44 @@ export async function DELETE(
     console.error('Unarchive conversation error:', error);
     return NextResponse.json(
       { error: 'Failed to unarchive conversation' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Check archive status
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    const { id } = await params;
+
+    const participant = await prisma.conversationParticipant.findFirst({
+      where: {
+        conversationId: id,
+        userId: session.user.id,
+      },
+    });
+
+    if (!participant) {
+      return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
+    }
+
+    return NextResponse.json({
+      archived: participant.isArchived,
+      archivedAt: participant.archivedAt?.toISOString() || null,
+    });
+  } catch (error) {
+    console.error('Get archive status error:', error);
+    return NextResponse.json(
+      { error: 'Failed to get archive status' },
       { status: 500 }
     );
   }

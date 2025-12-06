@@ -3,13 +3,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-// NOTE: ConversationParticipant model doesn't have isMuted/mutedUntil fields yet
-// Using in-memory storage for development until migration is run
-// TODO: Run prisma db push and switch to Prisma client
-
-// In-memory mute storage: Map<participantId, mutedUntil>
-const muteStore = new Map<string, Date | null>();
-
 // POST - Mute a conversation
 export async function POST(
   request: NextRequest,
@@ -57,8 +50,14 @@ export async function POST(
       }
     }
 
-    // Store mute state in memory
-    muteStore.set(participant.id, mutedUntil);
+    // Update participant's mute status in database
+    await prisma.conversationParticipant.update({
+      where: { id: participant.id },
+      data: {
+        isMuted: true,
+        mutedUntil,
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -100,14 +99,63 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
     }
 
-    // Remove mute state from memory
-    muteStore.delete(participant.id);
+    // Remove mute status in database
+    await prisma.conversationParticipant.update({
+      where: { id: participant.id },
+      data: {
+        isMuted: false,
+        mutedUntil: null,
+      },
+    });
 
     return NextResponse.json({ success: true, muted: false });
   } catch (error) {
     console.error('Unmute conversation error:', error);
     return NextResponse.json(
       { error: 'Failed to unmute conversation' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Check mute status
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    const { id } = await params;
+
+    const participant = await prisma.conversationParticipant.findFirst({
+      where: {
+        conversationId: id,
+        userId: session.user.id,
+      },
+    });
+
+    if (!participant) {
+      return NextResponse.json({ error: 'Not a participant' }, { status: 403 });
+    }
+
+    // Check if mute has expired
+    const now = new Date();
+    const isCurrentlyMuted = participant.isMuted &&
+      (!participant.mutedUntil || participant.mutedUntil > now);
+
+    return NextResponse.json({
+      muted: isCurrentlyMuted,
+      mutedUntil: participant.mutedUntil?.toISOString() || null,
+    });
+  } catch (error) {
+    console.error('Get mute status error:', error);
+    return NextResponse.json(
+      { error: 'Failed to get mute status' },
       { status: 500 }
     );
   }
