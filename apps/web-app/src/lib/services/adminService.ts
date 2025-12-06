@@ -325,8 +325,9 @@ export async function getAdminDashboardMetrics() {
 export async function searchUsers(filters: {
   query?: string;
   userType?: string;
-  status?: 'active' | 'suspended' | 'banned';
+  status?: 'active' | 'suspended' | 'banned' | 'deleted';
   verified?: boolean;
+  isDemo?: boolean;
   limit?: number;
   offset?: number;
 }) {
@@ -346,15 +347,25 @@ export async function searchUsers(filters: {
 
   if (filters.status === 'suspended') {
     where.suspendedAt = { not: null };
+    where.deletedAt = null;
   } else if (filters.status === 'banned') {
     where.bannedAt = { not: null };
+    where.deletedAt = null;
+  } else if (filters.status === 'deleted') {
+    where.deletedAt = { not: null };
   } else if (filters.status === 'active') {
     where.suspendedAt = null;
     where.bannedAt = null;
+    where.deletedAt = null;
   }
 
   if (filters.verified !== undefined) {
     where.emailVerified = filters.verified;
+  }
+
+  // Filter by demo status
+  if (filters.isDemo !== undefined) {
+    where.isDemo = filters.isDemo;
   }
 
   const [users, total] = await Promise.all([
@@ -373,6 +384,7 @@ export async function searchUsers(filters: {
         suspendedReason: true,
         bannedAt: true,
         bannedReason: true,
+        deletedAt: true,
         profile: {
           select: {
             profilePhotoUrl: true,

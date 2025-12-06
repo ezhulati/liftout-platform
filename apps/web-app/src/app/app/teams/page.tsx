@@ -2,8 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 import {
   UserGroupIcon,
   CheckBadgeIcon,
@@ -22,10 +24,15 @@ import {
   BriefcaseIcon,
   ChatBubbleLeftRightIcon,
   PlusIcon,
+  EnvelopeIcon,
 } from '@heroicons/react/24/outline';
-import { CheckBadgeIcon as CheckBadgeIconSolid } from '@heroicons/react/24/solid';
+import { CheckBadgeIcon as CheckBadgeIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useTeams } from '@/hooks/useTeams';
+import { useMyTeam } from '@/hooks/useMyTeam';
 import { SearchAndFilter } from '@/components/common/SearchAndFilter';
+import { TeamCardMenu } from '@/components/teams/TeamCardMenu';
+import { MemberRowMenu } from '@/components/teams/MemberRowMenu';
+import { PendingInvites } from '@/components/teams/PendingInvites';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -104,6 +111,297 @@ function TeamMemberAvatars({ members, size = 'md', maxDisplay = 5 }: TeamMemberA
           <span className="font-medium text-navy">+{remainingCount}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+// My Team View Component - for team users
+function MyTeamView({ userId }: { userId: string }) {
+  const router = useRouter();
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('');
+  const [isInviting, setIsInviting] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const {
+    team,
+    isLoading,
+    isTeamLead,
+    isOwner,
+    canEdit,
+    canInvite,
+    canRemoveMembers,
+    canDelete,
+    sendInvite,
+    cancelInvite,
+    resendInvite,
+    updateMemberRole,
+    removeMember,
+    leaveTeam,
+    updateTeam,
+  } = useMyTeam();
+
+  const handleSendInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inviteEmail.trim()) return;
+
+    setIsInviting(true);
+    try {
+      await sendInvite(inviteEmail, inviteRole || undefined);
+      setInviteEmail('');
+      setInviteRole('');
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
+  const handleToggleAvailability = async () => {
+    if (!team) return;
+    const newStatus = team.availabilityStatus === 'available' ? 'not_available' : 'available';
+    await updateTeam({ availabilityStatus: newStatus } as any);
+  };
+
+  const handleChangeRole = async (memberId: string, newRole: string) => {
+    await updateMemberRole(memberId, newRole);
+  };
+
+  const handleMakeLead = async (memberId: string) => {
+    await updateMemberRole(memberId, 'Team Lead', true);
+  };
+
+  const handleRemoveMember = async (memberId: string) => {
+    await removeMember(memberId);
+  };
+
+  const handleLeaveTeam = async () => {
+    await leaveTeam();
+    router.push('/app/dashboard');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-bg-alt rounded w-48 mb-2"></div>
+          <div className="h-4 bg-bg-alt rounded w-80"></div>
+        </div>
+        <div className="card animate-pulse">
+          <div className="h-32 bg-bg-alt rounded"></div>
+        </div>
+        <div className="card animate-pulse">
+          <div className="h-64 bg-bg-alt rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!team) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">My Team</h1>
+          <p className="text-text-secondary mt-1">
+            You're not currently part of a team.
+          </p>
+        </div>
+        <div className="card text-center py-12">
+          <UserGroupIcon className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-text-primary mb-2">No team yet</h3>
+          <p className="text-text-secondary mb-6 max-w-md mx-auto">
+            Create a new team to showcase your collective experience, or wait for an invitation from an existing team.
+          </p>
+          <Link href="/app/teams/create" className="btn-primary min-h-12 inline-flex items-center gap-2">
+            <PlusIcon className="h-5 w-5" />
+            Create a team
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const teamMembers = team.members || [];
+  const totalExperience = teamMembers.reduce((sum, m) => sum + (m.experience || 0), 0);
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
+        <p className="text-text-secondary mt-1">
+          Manage your team post, team members and their permissions.
+        </p>
+      </div>
+
+      {/* Invite Section - only for team leads */}
+      {canInvite && (
+        <div className="card">
+          <h2 className="text-lg font-bold text-text-primary mb-2">Invite people to join your team</h2>
+          <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
+          <form onSubmit={handleSendInvite} className="flex gap-3">
+            <div className="flex-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <EnvelopeIcon className="h-5 w-5 text-text-tertiary" />
+              </div>
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="colleague@example.com"
+                className="input-field pl-12"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isInviting || !inviteEmail.trim()}
+              className="btn-primary min-h-12 flex items-center gap-2 disabled:opacity-50"
+            >
+              <EnvelopeIcon className="h-5 w-5" />
+              {isInviting ? 'Sending...' : 'Send Invite'}
+            </button>
+          </form>
+
+          {/* Pending Invites */}
+          <PendingInvites
+            invitations={team.invitations || []}
+            canManage={canInvite}
+            onResend={resendInvite}
+            onCancel={cancelInvite}
+          />
+        </div>
+      )}
+
+      {/* Team Post Card */}
+      <div className="card">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            {team.industry && (
+              <span className="badge badge-primary text-xs mb-2">{team.industry}</span>
+            )}
+            <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-3">
+              {team.name}
+              <span className="text-sm font-normal text-text-tertiary">Team of {teamMembers.length}</span>
+            </h3>
+          </div>
+          <TeamCardMenu
+            teamId={team.id}
+            teamName={team.name}
+            isAvailable={team.availabilityStatus === 'available'}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            onToggleAvailability={handleToggleAvailability}
+            onEditClick={() => router.push(`/app/teams/${team.id}/edit`)}
+          />
+        </div>
+
+        {/* Team member avatars */}
+        <div className="mb-4">
+          <TeamMemberAvatars
+            members={teamMembers.map(m => ({ name: m.name, avatar: m.avatar || undefined }))}
+            size="md"
+            maxDisplay={5}
+          />
+        </div>
+
+        <div className="flex items-center gap-4 text-sm text-text-tertiary mb-4">
+          {team.location && (
+            <span className="flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4" />
+              {team.location}
+            </span>
+          )}
+          <span className="flex items-center gap-2">
+            <ClockIcon className="h-4 w-4" />
+            {team.yearsWorkingTogether || 0}y together
+          </span>
+          {team.availabilityStatus === 'available' && (
+            <span className="flex items-center gap-2 text-success">
+              <CheckCircleIcon className="h-4 w-4" />
+              Available
+            </span>
+          )}
+        </div>
+
+        {team.description && (
+          <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+            {team.description}
+          </p>
+        )}
+
+        <span className="badge badge-primary text-xs">
+          {totalExperience} years combined experience
+        </span>
+      </div>
+
+      {/* Team Members Table */}
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Name</th>
+                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Experience</th>
+                <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Education</th>
+                <th className="w-12 px-6 py-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {teamMembers.map((member, index) => (
+                <tr key={member.id} className={index !== teamMembers.length - 1 ? 'border-b border-border' : ''}>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {member.avatar ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={member.avatar}
+                          alt={member.name}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-navy-100 flex items-center justify-center">
+                          <span className="text-navy font-medium">
+                            {member.name?.charAt(0)?.toUpperCase() || '?'}
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-text-primary">{member.name}</span>
+                          {member.isLead && (
+                            <StarIconSolid className="h-4 w-4 text-gold" title="Team Lead" />
+                          )}
+                        </div>
+                        <div className="text-sm text-text-tertiary">{member.role}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-text-secondary">{member.experience} yrs</td>
+                  <td className="px-6 py-4 text-text-secondary">{member.education || '—'}</td>
+                  <td className="px-6 py-4">
+                    <MemberRowMenu
+                      memberId={member.id}
+                      memberUserId={member.userId}
+                      memberName={member.name}
+                      memberRole={member.role}
+                      isLead={member.isLead || false}
+                      isCurrentUser={member.userId === userId}
+                      canEdit={canEdit}
+                      canRemove={canRemoveMembers}
+                      canMakeLead={isOwner || isTeamLead}
+                      canLeave={true}
+                      teamSize={teamMembers.length}
+                      onChangeRole={handleChangeRole}
+                      onMakeLead={handleMakeLead}
+                      onRemove={handleRemoveMember}
+                      onLeave={handleLeaveTeam}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
@@ -247,148 +545,8 @@ export default function TeamsPage() {
 
   // Different experience for team members vs companies
   if (isTeamUser) {
-    // Team member view - matches Figma "My Team" design
-    const teamMembers = [
-      { name: 'Alex Chen', role: 'Team Lead', experience: '10 yrs', education: "Master's Degree", avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-      { name: 'Sarah Park', role: 'Senior Analyst', experience: '6 yrs', education: "Bachelor's Degree", avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-      { name: 'Marcus Johnson', role: 'Data Scientist', experience: '4 yrs', education: "Master's Degree", avatar: 'https://randomuser.me/api/portraits/men/75.jpg' },
-      { name: 'Emily Rodriguez', role: 'ML Engineer', experience: '3 yrs', education: "Bachelor's Degree", avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
-    ];
-
     return (
-      <div className="space-y-6">
-        {/* Page Header - Figma style */}
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Team members</h1>
-          <p className="text-text-secondary mt-1">
-            Manage your team post, team members and their permissions.
-          </p>
-        </div>
-
-        {/* Invite Section */}
-        <div className="card">
-          <h2 className="text-lg font-bold text-text-primary mb-2">Invite people to join your team</h2>
-          <p className="text-sm text-text-tertiary mb-4">There is no limit to how many people you can add to this team.</p>
-            <div className="flex gap-3">
-              <div className="flex-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <input
-                  type="email"
-                  placeholder="olivia@untitledui.com"
-                  className="input-field pl-12"
-                />
-              </div>
-            <button className="btn-primary min-h-12 flex items-center gap-2">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Send Invite
-            </button>
-          </div>
-        </div>
-
-        {/* Team Post Card */}
-        <div className="card">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <span className="badge badge-primary text-xs mb-2">Data Science</span>
-              <h3 className="text-lg font-bold text-text-primary flex items-center flex-wrap gap-3">
-                TechFlow Data Science Team
-                <span className="text-sm font-normal text-text-tertiary">Team of 4</span>
-              </h3>
-            </div>
-            <button className="min-h-12 min-w-12 flex items-center justify-center hover:bg-bg-alt rounded-lg transition-colors">
-              <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="6" r="2" />
-                <circle cx="12" cy="12" r="2" />
-                <circle cx="12" cy="18" r="2" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Team member avatars */}
-          <div className="mb-4">
-            <TeamMemberAvatars
-              members={teamMembers}
-              size="md"
-              maxDisplay={5}
-            />
-          </div>
-
-          <div className="flex items-center gap-4 text-sm text-text-tertiary mb-4">
-            <span className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4" />
-              San Francisco, CA
-            </span>
-            <span className="flex items-center gap-2">
-              <ClockIcon className="h-4 w-4" />
-              Full-time
-            </span>
-          </div>
-
-          <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-            Elite data science team with proven track record in fintech analytics and machine learning solutions.
-            We specialize in predictive modeling, risk assessment, and building scalable ML pipelines.
-          </p>
-
-          <span className="badge badge-primary text-xs">
-            15 years combined experience
-          </span>
-        </div>
-
-        {/* Team Members Table - Figma style */}
-        <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Name</th>
-                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Experience</th>
-                  <th className="text-left text-sm font-medium text-text-tertiary px-6 py-4">Education</th>
-                  <th className="w-12 px-6 py-4"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {teamMembers.map((member, index) => (
-                  <tr key={member.name} className={index !== teamMembers.length - 1 ? 'border-b border-border' : ''}>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={member.avatar}
-                          alt={member.name}
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                        <div>
-                          <div className="font-medium text-text-primary">{member.name}</div>
-                          <div className="text-sm text-text-tertiary">{member.role}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-text-secondary">{member.experience}</td>
-                    <td className="px-6 py-4 text-text-secondary">{member.education}</td>
-                    <td className="px-6 py-4">
-                      {index > 0 && (
-                        <button className="p-2 hover:bg-bg-alt rounded-lg transition-colors">
-                          <svg className="h-5 w-5 text-text-tertiary" fill="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="6" r="2" />
-                            <circle cx="12" cy="12" r="2" />
-                            <circle cx="12" cy="18" r="2" />
-                          </svg>
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <MyTeamView userId={(session?.user as any)?.id} />
     );
   }
 
@@ -502,7 +660,7 @@ function TeamCard({ team, isCompanyUser, featured = false }: TeamCardProps) {
               </span>
               <span className="flex items-center">
                 <CalendarDaysIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-                {team.yearsWorking} years together
+                {team.yearsWorkingTogether} years together
               </span>
               <span className="flex items-center">
                 <ClockIcon className="h-4 w-4 mr-1" aria-hidden="true" />
