@@ -12,6 +12,7 @@ const publicRoutes = [
   '/auth/error',
   '/api/auth',
   '/blog',
+  '/case-studies',
   '/for-teams',
   '/for-companies',
   '/contact',
